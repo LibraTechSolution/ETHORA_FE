@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  next-enterpise:
+    container_name: next-enterpise
+    image: next-enterpise
+    restart: always
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile
+    ports:
+      - 3000:3000
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
