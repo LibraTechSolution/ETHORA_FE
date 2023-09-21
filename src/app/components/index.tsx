@@ -1,11 +1,11 @@
 'use client';
-import TradingViewWidget from '@/app/components/Tradingview/TradingViewWidget';
+import TradingViewChart from '@/components/TradingView/TradingView';
 
 export const HomeView = () => {
   return (
     <>
       <div className="h-96">
-        <TradingViewWidget />
+        <TradingViewChart />
       </div>
     </>
   );
