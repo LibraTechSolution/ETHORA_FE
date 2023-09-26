@@ -8,6 +8,7 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const nextConfig = withPlugins([[withBundleAnalyzer({ enabled: Boolean(process.env.ANALYZE) })]], {
   basePath,
   assetPrefix: basePath || undefined,
+  output: 'standalone',
   reactStrictMode: false,
   swcMinify: true,
   images: {
