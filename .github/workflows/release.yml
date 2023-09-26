@@ -89,9 +89,9 @@ jobs:
 
       - name: Deploy develop
         if: github.ref == 'refs/heads/develop'
-        run: ssh dev "cd /home/ubuntu/cog_landingpage_part2 && ./deploy.develop.sh"
+        run: ssh dev "cd /home/ubuntu/bo-fe/bo-fe-develop && ./deploy.sh"
 
 
       - name: Deploy master
         if: github.ref == 'refs/heads/master'
-        run: ssh dev "cd /home/ubuntu/cog_landingpage_part2 && ./deploy.sh"
+        run: ssh dev "cd /home/ubuntu/bo-fe/bo-fe-prod && ./deploy.sh"
