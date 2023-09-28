@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        nunito: 'var(--chakra-fonts-nunito)',
-        bangers: 'var(--chakra-fonts-bangers)',
+        poppins: 'var(--chakra-fonts-poppins)',
+        // bangers: 'var(--chakra-fonts-bangers)',
       }
     },
   },
