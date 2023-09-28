@@ -92,7 +92,6 @@ export const Header = () => {
           {/* <ConnectWallet /> */}
           <ConnectButton />
           {nonce && <Button onClick={signMsg}>Sign msg</Button>}
-          <Button onClick={testAPI}>Test API</Button>
         </Flex>
       </Flex>
       <Flex gap={6}></Flex>

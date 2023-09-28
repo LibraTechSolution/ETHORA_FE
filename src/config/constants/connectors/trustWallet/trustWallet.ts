@@ -2,13 +2,7 @@ import { getAddress, ResourceUnavailableRpcError, RpcError, UserRejectedRequestE
 import { Chain, ConnectorNotFoundError } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
-import { Address, getConfig, WindowProvider } from '@wagmi/core';
-
-declare global {
-  interface Window {
-    trustwallet?: WindowProvider;
-  }
-}
+import { Address, getConfig } from '@wagmi/core';
 
 const mappingNetwork: Record<number, string> = {
   1: 'eth-mainnet',

@@ -1,13 +1,13 @@
 import { appConfig } from '@/config';
-import { ItemType } from '@/constants/types';
+// import { ItemType } from '@/constants/types';
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const getCdnImageUrl = (icon: string, type: ItemType) => {
-  return `${appConfig.cdnUrl}/images/icons/${type}/${icon}`;
-};
+// export const getCdnImageUrl = (icon: string, type: ItemType) => {
+//   return `${appConfig.cdnUrl}/images/icons/${type}/${icon}`;
+// };
 
 export function getAssetUrl(src: unknown) {
   return typeof src === 'string' && !src.startsWith('http') ? appConfig.basePath + src : (src as string);
