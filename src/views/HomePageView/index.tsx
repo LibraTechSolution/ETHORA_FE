@@ -1,5 +1,5 @@
 'use client';
-import TradingViewWidget from '@/app/components/Tradingview/TradingViewWidget';
+import TradingViewWidget from '../../components/Tradingview/TradingViewWidget';
 
 export const HomeView = () => {
   return (
