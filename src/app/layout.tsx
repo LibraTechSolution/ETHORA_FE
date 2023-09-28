@@ -1,4 +1,5 @@
 import '@/app/globals.scss';
+import '@rainbow-me/rainbowkit/styles.css';
 import { Global } from '@/components/Global';
 
 import { Providers } from '@/providers';

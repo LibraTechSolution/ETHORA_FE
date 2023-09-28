@@ -20,7 +20,7 @@ export const axiosInstance = axios.create({
 });
 
 const getToken = () => useUserStore.getState()?.tokens;
-const setTokens = (tokens: ITokens | null) => useUserStore.getState().setTokens(tokens);
+const setTokens = (tokens: ITokens | null) => useUserStore.getState().setUserAndTokens(null, tokens);
 const logoutUser = () => {
   const userStore = useUserStore.getState();
   userStore.setUserAndTokens(null, null);

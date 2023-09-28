@@ -3,7 +3,7 @@
 import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 
 // import { configClient } from '@/config/constants/wagmi';
-import { RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit';
+import { RainbowKitProvider, connectorsForWallets, darkTheme } from '@rainbow-me/rainbowkit';
 import {
   trustWallet,
   ledgerWallet,
@@ -58,7 +58,7 @@ const wagmiConfig = createConfig({
 export const WagmiProvider = ({ children }: React.PropsWithChildren) => {
   return (
     <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider appInfo={demoAppInfo} chains={chains}>
+      <RainbowKitProvider appInfo={demoAppInfo} chains={chains} theme={darkTheme()}>
         {children}
       </RainbowKitProvider>
     </WagmiConfig>
