@@ -8,7 +8,3 @@ export function getNonce(address: string) {
 export function login(address: `0x${string}` | undefined, signature: `0x${string}` | undefined, message: string) {
   return axiosNoAuthInstance.post<ILoginRes>('/auth/login', { address, signature, message });
 }
-
-export function test() {
-  return axiosInstance.get<any>('/auth/login');
-}
