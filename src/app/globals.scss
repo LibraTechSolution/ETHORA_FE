@@ -1,3 +1,84 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.customTable {
+  &.ant-table-wrapper .ant-table {
+    background-color: #3d3d40;
+    color: #ffffff;
+  }
+  &.ant-table-wrapper .ant-table-thead > tr > th,
+  &.ant-table-wrapper .ant-table-thead > tr > td {
+    background-color: #3d3d40;
+    color: #ffffff;
+  }
+  &.ant-table-wrapper .ant-table-thead > tr > th {
+    border-bottom: none;
+  }
+  &.ant-table-wrapper .ant-table-cell-scrollbar:not([rowspan]) {
+    box-shadow: 0 1px 0 1px #3d3d40;
+  }
+  &.ant-table-wrapper .ant-table-tbody > tr.ant-table-placeholder:hover > th,
+  &.ant-table-wrapper .ant-table-tbody > tr.ant-table-placeholder:hover > td,
+  &.ant-table-wrapper .ant-table-tbody > tr.ant-table-placeholder {
+    background-color: #3d3d40;
+  }
+  .ant-empty-normal .ant-empty-description {
+    color: #ffffff;
+  }
+
+  &.ant-table-wrapper .ant-table-tbody .ant-table-row > .ant-table-cell-row-hover {
+    background-color: #545455;
+    color: #ffffff;
+  }
+  .ant-pagination .ant-pagination-item {
+    background-color: #3d3d40;
+    border-color: #9e9e9f;
+    a {
+      color: #9e9e9f;
+    }
+  }
+  .ant-pagination .ant-pagination-item-active {
+    background-color: #545455;
+    border-color: #ffffff;
+    a {
+      color: #ffffff;
+    }
+  }
+
+  .ant-pagination .ant-pagination-prev,
+  .ant-pagination .ant-pagination-next,
+  .ant-pagination .ant-pagination-jump-next {
+    color: #9e9e9f;
+  }
+  .ant-pagination .ant-pagination-prev button,
+  .ant-pagination .ant-pagination-next button {
+    color: #9e9e9f;
+    background-color: #3d3d40;
+  }
+  .ant-pagination .ant-pagination-prev:not(.ant-pagination-disabled):hover .ant-pagination-item-link,
+  .ant-pagination .ant-pagination-next:not(.ant-pagination-disabled):hover .ant-pagination-item-link {
+    background-color: #545455;
+    border-color: #ffffff;
+    color: #ffffff;
+  }
+  .ant-pagination .ant-pagination-prev.ant-pagination-disabled:hover .ant-pagination-item-link,
+  .ant-pagination .ant-pagination-next.ant-pagination-disabled:hover .ant-pagination-item-link {
+    background-color: #545455;
+    color: #9e9e9f;
+  }
+}
+
+.customSelect{
+  &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: #3D3D40 ;
+    color: #ffffff;
+    border:none;
+  }
+  &.ant-select .ant-select-selection-item {
+    font-weight: 600;
+  }
+  &.ant-select .ant-select-arrow {
+    color: #ffffff;
+  }
+}

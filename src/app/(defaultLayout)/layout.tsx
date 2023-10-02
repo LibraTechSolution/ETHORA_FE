@@ -24,11 +24,11 @@ export default function DefaultLayout({ children, showBg, ...props }: Props) {
       overflow="hidden"
       {...props}
     >
-      {/* <Header /> */}
+      <Header />
       <Flex as="main" role="main" direction="column" flex="1" alignItems="stretch" zIndex={10} px={5}>
         {children}
       </Flex>
-      {/* <Footer /> */}
+      <Footer />
     </Flex>
   );
 }

@@ -8,6 +8,7 @@ export const useGetPosts = () => {
   return useQuery(['useGetPosts'], async () => {
     const getPostList = await graphQLClient.request(gql`
       {
+        # ------------------
         # Daily
         userStatsDaily: leaderboards(
           orderBy: netPnL
@@ -52,6 +53,7 @@ export const useGetPosts = () => {
           arbVolume
           arbWinRate
         }
+        # ------------------
         # Weekly
         userStatsWeekly: weeklyLeaderboards(
           orderBy: netPnL
@@ -96,8 +98,17 @@ export const useGetPosts = () => {
           arbVolume
           arbWinRate
         }
-        # Win Rate: (Số lượng payout > 0) / total
-        # Mót Traded Assets: reduce array để find optionContract.asset nhiều nhất
+        # ------------------
+        # Win Rate: (count payout > 0) / total count
+        # ------------------
+        # Most Traded Assets: reduce array để find optionContract.asset nhiều nhất
+        # ------------------
+        # Metrics:
+        # - TOKEN Trading Metrics:
+        # + totalPayouts[tokenName] = SUM(payout)
+        # + net_pnl[tokenName] = SUM(payout - totalFee)
+        # + volume[tokenName] = SUM(totalFee)
+        # ------------------
         userOptionDatas(first: 1000, where: { user: "0xB13332f8d4E81df0709d9Ffa15CB42D8dC0839c3", state_not: 1 }) {
           optionContract {
             address
@@ -108,6 +119,32 @@ export const useGetPosts = () => {
           totalFee
           expirationTime
         }
+        # ------------------
+        # Metrics:
+        # -  :
+        referralDatas(where: { id: "0xB13332f8d4E81df0709d9Ffa15CB42D8dC0839c3" }) {
+          totalTradesReferred
+          totalVolumeOfReferredTrades
+          totalRebateEarned
+          totalTradingVolume
+          totalDiscountAvailed
+          totalTradesReferredUSDC
+          totalVolumeOfReferredTradesUSDC
+          totalRebateEarnedUSDC
+          totalTradingVolumeUSDC
+          totalDiscountAvailedUSDC
+          totalTradesReferredBFR
+          totalVolumeOfReferredTradesBFR
+          totalRebateEarnedBFR
+          totalTradingVolumeBFR
+          totalDiscountAvailedBFR
+          totalTradesReferredARB
+          totalVolumeOfReferredTradesARB
+          totalRebateEarnedARB
+          totalTradingVolumeARB
+          totalDiscountAvailedARB
+        }
+        # ------------------
         # Interest
         activeData: userOptionDatas(
           first: 1000
