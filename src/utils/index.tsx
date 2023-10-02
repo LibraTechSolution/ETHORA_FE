@@ -1,10 +1,9 @@
 import { appConfig } from '@/config';
 // import { ItemType } from '@/constants/types';
-
+import { isNil, omitBy } from 'lodash';
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-
 // export const getCdnImageUrl = (icon: string, type: ItemType) => {
 //   return `${appConfig.cdnUrl}/images/icons/${type}/${icon}`;
 // };
@@ -36,3 +35,11 @@ export function getNetworkName(chainId?: number) {
     }
   }
 }
+
+export const deleteKeyNil = (params: object) => {
+  return omitBy(params, isNil);
+};
+
+export const isNilOrEmpty = (val: any) => {
+  return isNil(val) || val === '';
+};
