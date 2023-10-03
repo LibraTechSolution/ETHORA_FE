@@ -3,6 +3,7 @@ import axios from 'axios';
 import { appConfig } from '@/config';
 import useUserStore from '@/store/useUserStore';
 import { ILoginRes, ITokens } from '@/types/auth.type';
+import { IResponData } from '@/types/api.type';
 
 const baseURL = appConfig.publicUrl;
 const contentType = 'application/json';
@@ -31,9 +32,9 @@ const isExpired = (date: string) => {
 };
 
 const getRefreshToken = async (refreshToken: string) => {
-  const tokensData = await axiosNoAuthInstance.post<ILoginRes>('/auth/refresh-tokens', { refreshToken });
+  const tokensData = await axiosNoAuthInstance.post<IResponData<ILoginRes>>('/auth/refresh-tokens', { refreshToken });
   if (![200, 201].includes(tokensData?.status)) throw tokensData;
-  return tokensData.data.tokens;
+  return tokensData.data.data.tokens;
 };
 
 const refreshToken = async (tokens?: ITokens | null) => {
@@ -74,6 +75,7 @@ async function getAccessToken() {
 axiosInstance.interceptors.request.use(
   async (config) => {
     const accessToken = await getAccessToken();
+    console.log('accessToken', accessToken)
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }

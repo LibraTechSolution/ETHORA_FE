@@ -10,3 +10,8 @@ export interface IPaginationResponse<T = unknown> {
   nextPage: number;
   prevPage: number;
 }
+
+export interface IResponData<T = unknown> {
+  data: T;
+  statusCode: number
+}
