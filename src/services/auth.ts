@@ -1,10 +1,11 @@
-import { ILoginRes } from "@/types/auth.type";
-import { axiosInstance, axiosNoAuthInstance } from "@/utils/axios";
+import { IResponData } from "@/types/api.type";
+import { ILoginRes, INonce } from "@/types/auth.type";
+import { axiosNoAuthInstance } from "@/utils/axios";
 
 export function getNonce(address: string) {
-  return axiosNoAuthInstance.get('/auth/get-nonce/' + address);
+  return axiosNoAuthInstance.get<IResponData<INonce>>('/auth/get-nonce/' + address);
 }
 
 export function login(address: `0x${string}` | undefined, signature: `0x${string}` | undefined, message: string) {
-  return axiosNoAuthInstance.post<ILoginRes>('/auth/login', { address, signature, message });
+  return axiosNoAuthInstance.post<IResponData<ILoginRes>>('/auth/login', { address, signature, message });
 }

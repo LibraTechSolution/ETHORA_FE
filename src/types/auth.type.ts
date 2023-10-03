@@ -14,3 +14,8 @@ export interface ILoginRes {
   user: IUser;
   tokens: ITokens;
 }
+
+export interface INonce {
+  address: string;
+  nonce: string;
+}

@@ -39,8 +39,8 @@ export const Header = () => {
     if (!address || (listWallets && listWallets[address.toLowerCase()])) return;
     try {
       const nonceRes = await getNonce(address);
-      console.log(nonceRes.data.nonce);
-      const msgContent = msg + nonceRes.data.nonce;
+      console.log(nonceRes.data.data.nonce);
+      const msgContent = msg + nonceRes.data.data.nonce;
       setNonce(msgContent);
     } catch (error) {
       console.log(error);
@@ -68,7 +68,7 @@ export const Header = () => {
   const signIn = async (signMessageData: `0x${string}`) => {
     try {
       const userInfo = await login(address, signMessageData, msg);
-      setUserAndTokens(userInfo.data.user, userInfo.data.tokens);
+      setUserAndTokens(userInfo.data.data.user, userInfo.data.data.tokens);
     } catch (error) {
       console.log(error);
     }
@@ -316,7 +316,7 @@ export const Header = () => {
               );
             }}
           </ConnectButton.Custom>
-          {/* {nonce && <Button onClick={signMsg}>Sign msg</Button>} */}
+          {nonce && <Button onClick={signMsg}>Sign msg</Button>}
         </Center>
         <Center>
           <Button
