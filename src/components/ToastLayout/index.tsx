@@ -14,7 +14,6 @@ interface ToastProp {
 
 export const ToastLayout = (toastProp: ToastProp) => {
   const { title, content, status, close } = toastProp;
-  console.log(close);
 
   const toastIcon = useMemo(() => {
     switch (status) {
@@ -44,8 +43,10 @@ export const ToastLayout = (toastProp: ToastProp) => {
         <Image alt="icon" src={toastIcon} width="20px" height="20px" />
       </Center>
       <Flex flexDirection="column" ml="16px" width="340px">
-        <p className="font-medium text-white">{title}</p>
-        <p className={status === Status.SUCCESSS ? 'text-[#9E9E9F]' : 'text-white'}>{content}</p>
+        <p className="text-[14px] font-medium text-white">{title}</p>
+        <p className={`text-[14px] font-normal ${status === Status.SUCCESSS ? 'text-[#9E9E9F]' : 'text-white'}`}>
+          {content}
+        </p>
       </Flex>
       <Center>
         <Button

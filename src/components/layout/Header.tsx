@@ -229,9 +229,15 @@ export const Header = () => {
 
                     if (chain.unsupported) {
                       return (
-                        <button onClick={openChainModal} type="button">
+                        <Button
+                          onClick={openChainModal}
+                          type="button"
+                          bgColor="#ff494a"
+                          textColor="#ffffff"
+                          _hover={{ bgColor: '#ff494a' }}
+                        >
                           Wrong network
-                        </button>
+                        </Button>
                       );
                     }
 
@@ -310,7 +316,7 @@ export const Header = () => {
               );
             }}
           </ConnectButton.Custom>
-          {nonce && <Button onClick={signMsg}>Sign msg</Button>}
+          {/* {nonce && <Button onClick={signMsg}>Sign msg</Button>} */}
         </Center>
         <Center>
           <Button

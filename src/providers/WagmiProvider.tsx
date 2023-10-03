@@ -15,12 +15,12 @@ import {
   walletConnectWallet,
   rainbowWallet,
 } from '@rainbow-me/rainbowkit/wallets';
-import { mainnet, base, goerli } from 'wagmi/chains';
+import { mainnet, goerli, arbitrumGoerli, arbitrum } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import '@rainbow-me/rainbowkit/styles.css';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [...(process.env.NEXT_PUBLIC_INCLUDE_TESTNET === 'true' ? [goerli] : [mainnet])],
+  [...(process.env.NEXT_PUBLIC_INCLUDE_TESTNET === 'true' ? [arbitrumGoerli, goerli] : [arbitrum, mainnet])],
   [publicProvider()],
 );
 
