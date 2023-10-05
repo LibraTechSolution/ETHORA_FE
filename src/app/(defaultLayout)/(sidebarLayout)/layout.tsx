@@ -1,4 +1,3 @@
-'use client';
 import {
   Flex,
   Box,
@@ -17,64 +16,65 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { DashboardIcon } from 'public/images/icons/dashboardIcon';
 import NextLink from 'next/link';
 import { BarChartBig, LayoutGrid, Redo, TrendingUp, Trophy } from 'lucide-react';
-export enum ReferralTabType {
-  Tab1 = 'Tab1',
-  Tab2 = 'Tab2',
-}
-const ReferralView = () => {
-  const [defaultTabs, setDefaultTabs] = useState<ReferralTabType>(ReferralTabType.Tab1);
-  return (
-    // <Flex
-    //   color="white"
-    //   marginX={'-20px'}
-    //   height={'100%'}
-    //   flex={1}
-    //   bgImage="url('/images/profile/bg-item.png')"
-    //   bgRepeat="no-repeat"
-    //   bgPosition="top -50px left -120px"
-    // >
-    //   <Box width={'70px'} background={'rgba(28, 28, 30,.5)'} padding={'20px 0'}>
-    //     <Flex flexDirection={'column'} alignItems={'center'} justifyContent={'center'} gap={'20px'}>
-    //       <Link
-    //         as={NextLink}
-    //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
-    //       >
-    //         <LayoutGrid className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
-    //       </Link>
-    //       <Link
-    //         as={NextLink}
-    //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
-    //       >
-    //         <BarChartBig className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
-    //       </Link>
-    //       <Link
-    //         as={NextLink}
-    //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
-    //       >
-    //         <TrendingUp className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
-    //       </Link>
-    //       <Link
-    //         as={NextLink}
-    //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
-    //       >
-    //         <Trophy className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
-    //       </Link>
-    //       <Link
-    //         as={NextLink}
-    //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
-    //       >
-    //         <Redo className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
-    //       </Link>
-    //     </Flex>
-    //   </Box>
 
-    //   <Box flex={1} paddingX={'80px'}>
-        <Box maxW={'510px'} margin={'70px auto 20px auto'}>
+export default function SidebarLayout({
+  children, // will be a page or nested layout
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <Flex
+      color="white"
+      marginX={'-20px'}
+      height={'100%'}
+      flex={1}
+      bgImage="url('/images/profile/bg-item.png')"
+      bgRepeat="no-repeat"
+      bgPosition="top -50px left -120px"
+    >
+      <Box width={'70px'} background={'rgba(28, 28, 30,.5)'} padding={'20px 0'}>
+        <Flex flexDirection={'column'} alignItems={'center'} justifyContent={'center'} gap={'20px'}>
+          <Link
+            as={NextLink}
+            href="/"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+          >
+            <LayoutGrid className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+          </Link>
+          <Link
+            as={NextLink}
+            href="/"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+          >
+            <BarChartBig className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+          </Link>
+          <Link
+            as={NextLink}
+            href="/"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+          >
+            <TrendingUp className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+          </Link>
+          <Link
+            as={NextLink}
+            href="/"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+          >
+            <Trophy className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+          </Link>
+          <Link
+            as={NextLink}
+            href="/"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+          >
+            <Redo className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+          </Link>
+        </Flex>
+      </Box>
+
+      <Box flex={1} paddingX={'80px'}>
+        {children}
+        {/* <Box maxW={'510px'} margin={'70px auto 20px auto'}>
           <Heading as="h3" fontWeight={600} fontSize={'32px'} textAlign={'center'} marginBottom={'20px'}>
             Referral
           </Heading>
@@ -319,9 +319,8 @@ const ReferralView = () => {
               </Box>
             )}
           </div>
-        </Box>
-    //   </Box>
-    // </Flex>
-  );
-};
-export default ReferralView;
+        </Box> */}
+      </Box>
+    </Flex>
+  )
+}
