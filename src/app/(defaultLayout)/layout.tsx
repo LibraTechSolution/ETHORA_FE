@@ -21,14 +21,14 @@ export default function DefaultLayout({ children, showBg, ...props }: Props) {
       fontSize={'14px'}
       lineHeight={'22.4px'}
       fontWeight={400}
-      overflow="hidden"
+      // overflow="hidden"
       {...props}
     >
       <Header />
       <Flex as="main" role="main" direction="column" flex="1" alignItems="stretch" zIndex={10} px={5}>
         {children}
       </Flex>
-      <Footer />
+      {/* <Footer /> */}
     </Flex>
   );
 }
