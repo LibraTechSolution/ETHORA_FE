@@ -14,6 +14,9 @@ module.exports = {
       },
       faucetShadow: {
         border: '1px 0.5px 0px 0px #3D3D40 inset'
+      },
+      boxShadow: {
+        iconShadow: '0px 3px 11px 0px rgba(96, 82, 251, 0.40)'
       }
     },
   },
