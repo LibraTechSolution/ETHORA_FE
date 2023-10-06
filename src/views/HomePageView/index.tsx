@@ -41,6 +41,7 @@ export const HomeView = () => {
         alignItems={'center'}
         paddingBottom={'20px'}
         paddingTop="86px"
+        bgImage="linear-gradient(to bottom, #0f0f14eb, #0c0c10), url('/images/landingpage/bg-lading-top.gif');"
       >
         <GridItem>
           <Box paddingLeft={'150px'} paddingRight={'80px'}>
