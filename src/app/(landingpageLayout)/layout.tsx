@@ -1,13 +1,19 @@
-import { Flex, FlexProps } from '@chakra-ui/react';
+'use client';
+
 import { Header } from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import { Flex, FlexProps } from '@chakra-ui/react';
 
 type Props = React.PropsWithChildren &
   FlexProps & {
     showBg?: boolean;
   };
 
-export default function LandingPageLayout({ children, showBg, ...props }: Props) {
+  export default function LandingPageLayout({
+    children, // will be a page or nested layout
+  }: {
+    children: React.ReactNode
+  }) {
+
   return (
     <Flex
       direction="column"
@@ -20,7 +26,6 @@ export default function LandingPageLayout({ children, showBg, ...props }: Props)
       lineHeight={'22.4px'}
       fontWeight={400}
       overflow="hidden"
-      {...props}
     >
       <Header />
       {children}
