@@ -20,6 +20,7 @@ interface UserState {
   setUser(user: IUser | null): void;
   setToken(tokens: ITokens | null): void;
   setUserAndTokens(user: IUser | null, tokens: ITokens | null): void;
+  deactiveAccount(): void;
 }
 
 const useUserStore = create<UserState>()(
@@ -44,6 +45,19 @@ const useUserStore = create<UserState>()(
         tokens: tokens ? tokens : state.tokens,
         currentWallet: user ? user?.address : state.currentWallet
       })),
+      deactiveAccount: () => set((state) => {
+        if (state?.listWallets && state.currentWallet) {
+          delete state?.listWallets[state.currentWallet]
+        }
+        return {
+          listWallets: {
+            ...state.listWallets,
+          },
+          user: null,
+          tokens: null,
+          currentWallet: null
+        }
+      })
     }),
     {
       name: StorageStoreName.USER,

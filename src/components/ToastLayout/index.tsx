@@ -2,12 +2,12 @@
 
 import { Status } from '@/types/faucet.type';
 import { CloseIcon } from '@chakra-ui/icons';
-import { Button, Center, Flex, Image, ToastId, useToast } from '@chakra-ui/react';
+import { Button, Center, Flex, Image } from '@chakra-ui/react';
 import { useMemo } from 'react';
 
 interface ToastProp {
   title: string;
-  content: string;
+  content?: string;
   status: Status;
   close: () => void;
 }
@@ -42,11 +42,13 @@ export const ToastLayout = (toastProp: ToastProp) => {
       <Center>
         <Image alt="icon" src={toastIcon} width="20px" height="20px" />
       </Center>
-      <Flex flexDirection="column" ml="16px" width="340px">
+      <Flex flexDirection="column" ml="16px" width="340px" justifyContent="center">
         <p className="text-[14px] font-medium text-white">{title}</p>
-        <p className={`text-[14px] font-normal ${status === Status.SUCCESSS ? 'text-[#9E9E9F]' : 'text-white'}`}>
-          {content}
-        </p>
+        {content && (
+          <p className={`text-[14px] font-normal ${status === Status.SUCCESSS ? 'text-[#9E9E9F]' : 'text-white'}`}>
+            {content}
+          </p>
+        )}
       </Flex>
       <Center>
         <Button
