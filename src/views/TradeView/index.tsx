@@ -196,7 +196,12 @@ const TradeView = () => {
                         );
                       }
 
-                      return <Button>aaaaaa</Button>;
+                      return (
+                        <Grid templateColumns="repeat(2, 1fr)" gap="20pxs">
+                          <Button>Up</Button>
+                          <Button>Down</Button>
+                        </Grid>
+                      );
                     })()}
                   </div>
                 );

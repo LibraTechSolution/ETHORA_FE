@@ -118,7 +118,7 @@ export const ActiveAccountModal = () => {
             </GridItem>
             <GridItem w="100%" paddingX="2.5" borderRight="1px solid #38383A" cursor="pointer">
               <Center>
-                <Image alt="avatar" src="/images/icons/thunder.svg" w="24px" h="24px" />
+                <Image alt="avatar" src="/images/icons/thunder-line.svg" w="24px" h="24px" />
               </Center>
               <Center color="#fff" fontWeight="600" paddingTop="8px">
                 Instant

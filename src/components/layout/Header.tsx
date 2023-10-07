@@ -38,12 +38,17 @@ export const Header = () => {
       <Flex
         as="header"
         role="menu"
-        px={{ base: 2.5, md: 10 }}
-        pt={{ base: 2.5, md: 5 }}
+        // px={{ base: 2.5, md: 10 }}
+        // pt={{ base: 2.5, md: 5 }}
+        padding={'8px 20px 8px 20px'}
         justifyContent="space-between"
         alignItems="center"
         fontSize={14}
         zIndex={11}
+        // position={'sticky'}
+        top={0}
+        borderBottom={'1px solid #242428'}
+        // backgroundColor={'rgba(28, 28, 30)'}
       >
         <Flex gap={3} alignItems="center">
           <Center>

@@ -143,7 +143,13 @@ const ActiveTab = () => {
     <Table
       columns={columns}
       dataSource={dataTradingActive}
-      // pagination={{ pageSize: 50 }}
+      pagination={{
+        pageSize: 10,
+        current: 1,
+        total: 50,
+        hideOnSinglePage: true,
+        showTotal: (total: number, range: [number, number]) => `Results: ${range[0]} - ${range[1]}  of ${total}`,
+      }}
       // scroll={{ y: 300 }}
       scroll={{ x: 'max-content' }}
       loading={isLoading}
