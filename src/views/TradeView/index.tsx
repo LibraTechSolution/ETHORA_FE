@@ -1,7 +1,11 @@
 'use client';
 
+import Currency from '@/components/Currency';
+import { appConfig } from '@/config';
+import { useBalanceOf } from '@/hooks/useContractRead';
 import useModalStore from '@/store/useModalStore';
 import useUserStore from '@/store/useUserStore';
+import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -9,19 +13,17 @@ import {
   Flex,
   Grid,
   GridItem,
-  Icon,
   Image,
   Input,
   InputGroup,
   InputRightElement,
-  Radio,
-  RadioGroup,
-  Stack,
   useToast,
 } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { Radio } from 'antd';
 import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
+import { ChangeEvent, useMemo, useState } from 'react';
+import { Address } from 'viem';
 import { useAccount } from 'wagmi';
 
 const TradingViewChart = dynamic(
@@ -32,8 +34,12 @@ const TradingViewChart = dynamic(
 const TradeView = () => {
   const { address } = useAccount();
   const { onOpen } = useModalStore();
+  const balance = useBalanceOf(appConfig.usdcAddress as Address);
+  const [tradeNumber, setTradeNumber] = useState<string>('0');
+  const [tradeType, setTradeType] = useState<string>('market');
   const toast = useToast();
   const { listWallets } = useUserStore();
+  const [time, setTime] = useState<string>('15m');
   const isRegisterd = useMemo(() => {
     if (listWallets && address && listWallets[address.toLocaleLowerCase()]) {
       return true;
@@ -41,16 +47,114 @@ const TradeView = () => {
     return false;
   }, [address, listWallets]);
 
+  const handleMax = () => {
+    setTradeNumber('1000');
+  };
+
+  const handleOnChangeNumber = (e: ChangeEvent<HTMLInputElement>) => {
+    const numberRegex = /^[0-9]*([.])?([0-9]{1,2})?$/;
+    let numberValue = e.target.value;
+    if (!numberRegex.test(numberValue)) {
+      numberValue = tradeNumber.toString();
+    }
+    console.log(numberValue);
+    setTradeNumber(numberValue);
+  };
+
+  const handleOnChangeType = (e: ChangeEvent<HTMLInputElement>) => {
+    setTradeType(e.target.value);
+  };
+
   return (
     <Grid templateColumns="repeat(24, 1fr)" gap={4} paddingTop="20px">
       <GridItem colSpan={6}>
         <Box className="pl-5">
           <p className="mb-3 text-xs font-normal text-[#9E9E9F]">Time</p>
           <Box marginBottom="12px">
-            <button>3m</button>
-            <button>5m</button>
-            <button>15m</button>
-            <button>1h</button>
+            <Button
+              border={time === '3m' ? '1px solid #6052FB' : ''}
+              bgColor="#0C0C10"
+              rounded="10px"
+              textColor={time === '3m' ? '#fff' : '#6D6D70'}
+              fontSize="sm"
+              fontWeight="normal"
+              width="48px"
+              marginRight="4px"
+              _hover={{
+                border: '1px solid #6052FB',
+                textColor: '#fff',
+              }}
+              _active={{
+                border: '1px solid #6052FB',
+                textColor: '#fff',
+              }}
+              onClick={() => setTime('3m')}
+            >
+              3m
+            </Button>
+            <Button
+              border={time === '5m' ? '1px solid #6052FB' : ''}
+              bgColor="#0C0C10"
+              rounded="10px"
+              textColor={time === '5m' ? '#fff' : '#6D6D70'}
+              fontSize="sm"
+              fontWeight="normal"
+              width="48px"
+              marginRight="4px"
+              _hover={{
+                border: '1px solid #6052FB',
+                textColor: '#fff',
+              }}
+              _active={{
+                border: '1px solid #6052FB',
+                textColor: '#fff',
+              }}
+              onClick={() => setTime('5m')}
+            >
+              5m
+            </Button>
+            <Button
+              border={time === '15m' ? '1px solid #6052FB' : ''}
+              bgColor="#0C0C10"
+              rounded="10px"
+              textColor={time === '15m' ? '#fff' : '#6D6D70'}
+              fontSize="sm"
+              fontWeight="normal"
+              width="48px"
+              marginRight="4px"
+              _hover={{
+                border: '1px solid #6052FB',
+                textColor: '#fff',
+              }}
+              _active={{
+                border: '1px solid #6052FB',
+                textColor: '#fff',
+              }}
+              onClick={() => setTime('15m')}
+            >
+              15m
+            </Button>
+            <Button
+              border={time === '1h' ? '1px solid #6052FB' : ''}
+              bgColor="#0C0C10"
+              rounded="10px"
+              textColor={time === '1h' ? '#fff' : '#6D6D70'}
+              fontSize="sm"
+              fontWeight="normal"
+              width="48px"
+              marginRight="4px"
+              _hover={{
+                border: '1px solid #6052FB',
+                textColor: '#fff',
+              }}
+              _active={{
+                border: '1px solid #6052FB',
+                textColor: '#fff',
+              }}
+              onClick={() => setTime('1h')}
+            >
+              1h
+            </Button>
           </Box>
           <Flex alignItems="center" justifyContent="space-between" marginBottom="12px">
             <Center>
@@ -58,7 +162,9 @@ const TradeView = () => {
             </Center>
             <Center>
               <Image src="/images/icons/wallet.svg" alt="wallet" w="20px" h="20px" marginRight="8px" />
-              <span className="text-sm font-normal text-[#ffffff]">0 USDC</span>
+              <span className="text-sm font-normal text-[#ffffff]">
+                <Currency decimalNumber={6} value={balance} /> USDC
+              </span>
             </Center>
           </Flex>
           <Box marginBottom="12px">
@@ -69,6 +175,8 @@ const TradeView = () => {
                 rounded="10px"
                 _hover={{ borderColor: '#6052FB' }}
                 _focusVisible={{ borderColor: '#6052FB', borderWidth: '2px' }}
+                value={tradeNumber}
+                onChange={handleOnChangeNumber}
               />
               <InputRightElement width="8rem">
                 <Flex alignItems="center">
@@ -79,7 +187,7 @@ const TradeView = () => {
                     fontSize="14px"
                     textColor="#fff"
                     paddingX="3"
-                    onClick={() => console.log('====')}
+                    onClick={handleMax}
                     _hover={{ bgColor: '#000' }}
                   >
                     Max
@@ -88,12 +196,14 @@ const TradeView = () => {
                 </Flex>
               </InputRightElement>
             </InputGroup>
-            <RadioGroup defaultValue="2">
-              <Stack spacing={10} direction="row">
-                <Radio value="market">Market</Radio>
-                <Radio value="limit">Limit</Radio>
-              </Stack>
-            </RadioGroup>
+            <Radio.Group name="radiogroup" className="radio-custom" value={tradeType} onChange={handleOnChangeType}>
+              <Radio value="market" className="text-[#fff]">
+                Market
+              </Radio>
+              <Radio value="limit" className="text-[#fff]">
+                Limit
+              </Radio>
+            </Radio.Group>
           </Box>
           <Flex alignItems="center" justifyContent="space-between" marginBottom="12px">
             <Center>
@@ -113,7 +223,7 @@ const TradeView = () => {
             </Box>
             <Box>
               <p className="text-right text-xs font-normal text-[#9E9E9F]">Profit</p>
-              <span className="text-base font-normal text-[#1ED768]">0.00 USDC</span>
+              <span className="text-base font-normal text-[#1ED768]">0 USDC</span>
             </Box>
           </Flex>
           <Box>
@@ -197,9 +307,31 @@ const TradeView = () => {
                       }
 
                       return (
-                        <Grid templateColumns="repeat(2, 1fr)" gap="20pxs">
-                          <Button>Up</Button>
-                          <Button>Down</Button>
+                        <Grid templateColumns="repeat(2, 1fr)" gap="20px">
+                          <GridItem>
+                            <Button
+                              bgColor="#1ED768"
+                              textColor="#fff"
+                              w="full"
+                              _hover={{ bgColor: '#1ED768', textColor: '#fff' }}
+                              _active={{ bgColor: '#1ED768', textColor: '#fff' }}
+                            >
+                              <TriangleUpIcon color="#fff" w="14px" h="14px" marginRight="10px" />
+                              Up
+                            </Button>
+                          </GridItem>
+                          <GridItem>
+                            <Button
+                              bgColor="#F03D3E"
+                              textColor="#fff"
+                              w="full"
+                              _hover={{ bgColor: '#F03D3E', textColor: '#fff' }}
+                              _active={{ bgColor: '#F03D3E', textColor: '#fff' }}
+                            >
+                              <TriangleDownIcon color="#fff" w="14px" h="14px" marginRight="10px" />
+                              Down
+                            </Button>
+                          </GridItem>
                         </Grid>
                       );
                     })()}

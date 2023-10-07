@@ -1,5 +1,6 @@
 import { listChains, polygon } from './constants/chains';
 
+
 export const appConfig = {
   basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '',
   publicUrl: process.env.NEXT_PUBLIC_URL,
@@ -7,7 +8,8 @@ export const appConfig = {
   includeTestnet: (process.env.NEXT_PUBLIC_INCLUDE_TESTNET ?? 'false') === 'true',
   cdnUrl: process.env.NEXT_PUBLIC_CDN_URL,
   faucetSC: process.env.NEXT_PUBLIC_FAUCET_SC,
-  arbiscan: process.env.NEXT_PUBLIC_ARBISCAN
+  arbiscan: process.env.NEXT_PUBLIC_ARBISCAN,
+  usdcAddress: process.env.NEXT_PUBLIC_USDC_ADD
 };
 
 export const targetChainId = appConfig.chainId;
