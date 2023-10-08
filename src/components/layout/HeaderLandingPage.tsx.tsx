@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
+import { useEffect, useState } from 'react';
 
 export const HeaderLanding = () => {
   const [isMobile] = useMediaQuery('(max-width: 768px)');
@@ -30,6 +31,23 @@ export const HeaderLanding = () => {
   const activeStyle = linkStyle + ' bg-[#6052FB] text-[#fff]';
   const nonActiveStyle = linkStyle + ' text-[#6D6D70]';
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   return (
     <Flex
       as="header"
@@ -41,6 +59,7 @@ export const HeaderLanding = () => {
       zIndex={11}
       position={'fixed'}
       width={'100%'}
+      backgroundColor={scrolled ? '#0f0f14eb' : 'transparent'}
       top={0}
     >
       <Flex gap={3} alignItems="center" width={'100%'} justifyContent={isMobile ? 'space-between' : 'start'}>
