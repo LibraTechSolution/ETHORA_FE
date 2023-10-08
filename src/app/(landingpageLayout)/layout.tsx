@@ -1,19 +1,9 @@
 'use client';
 
-import { Header } from '@/components/layout/Header';
-import { Flex, FlexProps } from '@chakra-ui/react';
+import { HeaderLanding } from '@/components/layout/HeaderLandingPage.tsx';
+import { Flex } from '@chakra-ui/react';
 
-type Props = React.PropsWithChildren &
-  FlexProps & {
-    showBg?: boolean;
-  };
-
-  export default function LandingPageLayout({
-    children, // will be a page or nested layout
-  }: {
-    children: React.ReactNode
-  }) {
-
+export default function LandingPageLayout({ children }: { children: React.ReactNode }) {
   return (
     <Flex
       direction="column"
@@ -27,7 +17,7 @@ type Props = React.PropsWithChildren &
       fontWeight={400}
       overflow="hidden"
     >
-      <Header />
+      <HeaderLanding />
       {children}
     </Flex>
   );

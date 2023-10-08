@@ -5,6 +5,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 import CardEthora from './conponent/cardEthora';
 import CardDualToken from './conponent/cartDualToken';
 import Link from 'next/link';
+import FooterLadingPage from '@/components/layout/FooterLandingPage';
 
 const dataCardEthora = [
   {
@@ -40,7 +41,9 @@ export const HomeView = () => {
         gap="25px"
         alignItems={'center'}
         paddingBottom={'20px'}
-        paddingTop={{ base: '57px', md: '86px' }}
+        backgroundRepeat={'no-repeat'}
+        backgroundSize={'cover'}
+        paddingTop={'86px'}
         bgImage={{
           base: "linear-gradient(to bottom, #0f0f14eb, #0f0f1a), url('/images/landingpage/bg-lading-top.gif')",
           md: "linear-gradient(to bottom, #0f0f14eb, #0c0c10), url('/images/landingpage/bg-lading-top.gif')",
@@ -227,32 +230,7 @@ export const HomeView = () => {
             />
           </Grid>
         </Box>
-        <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={'24px'} margin={'80px 0 40px'}>
-          <Link href="/" className="z-10 flex items-center gap-1 text-sm">
-            <Image alt="ethora" src="/images/icons/twitter.svg" w="24px" h="24p" />
-            <Text as={'span'} display={{ base: 'none', sm: 'none', md: 'inline-block', lg: 'inline-block' }}>
-              Twitter
-            </Text>
-          </Link>
-          <Link href="/" className="z-10  flex items-center gap-1 text-sm">
-            <Image alt="ethora" src="/images/icons/twitter.svg" w="24p" h="24p" />
-            <Text as={'span'} display={{ base: 'none', sm: 'none', md: 'inline-block', lg: 'inline-block' }}>
-              Discord
-            </Text>
-          </Link>
-          <Link href="/" className="z-10  flex items-center gap-1 text-sm">
-            <Image alt="ethora" src="/images/icons/medium.svg" w="24p" h="24p" />
-            <Text as={'span'} display={{ base: 'none', sm: 'none', md: 'inline-block', lg: 'inline-block' }}>
-              Medium
-            </Text>
-          </Link>
-          <Link href="/" className="z-10 flex items-center gap-1 text-sm">
-            <Image alt="ethora" src="/images/icons/instagram.svg" w="24p" h="24p" />
-            <Text as={'span'} display={{ base: 'none', sm: 'none', md: 'inline-block', lg: 'inline-block' }}>
-              Instagram
-            </Text>
-          </Link>
-        </Box>
+        <FooterLadingPage />
       </Box>
     </Flex>
   );
