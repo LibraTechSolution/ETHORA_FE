@@ -17,10 +17,17 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Progress,
+  Tab,
+  TabIndicator,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   useToast,
 } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Radio } from 'antd';
+import { Radio, RadioChangeEvent } from 'antd';
 import dynamic from 'next/dynamic';
 import { ChangeEvent, useMemo, useState } from 'react';
 import { Address } from 'viem';
@@ -61,12 +68,12 @@ const TradeView = () => {
     setTradeNumber(numberValue);
   };
 
-  const handleOnChangeType = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChangeType = (e: RadioChangeEvent) => {
     setTradeType(e.target.value);
   };
 
   return (
-    <Grid templateColumns="repeat(24, 1fr)" gap={4} paddingTop="20px">
+    <Grid templateColumns="repeat(24, 1fr)" gap={4} paddingTop="20px" bg="rgba(28, 28, 30, 0.50)">
       <GridItem colSpan={6}>
         <Box className="pl-5">
           <p className="mb-3 text-xs font-normal text-[#9E9E9F]">Time</p>
@@ -340,10 +347,229 @@ const TradeView = () => {
               }}
             </ConnectButton.Custom>
           </Box>
+          <Box marginTop="12px">
+            <Tabs>
+              <TabList borderBottom="1px solid #3d3d40" bg="#0c0c10" roundedTop="10px">
+                <Tab
+                  color="#6D6D70"
+                  fontSize={'sm'}
+                  fontWeight={'medium'}
+                  _selected={{ color: '#6052FB' }}
+                  _active={{ bgColor: 'transparent' }}
+                  paddingX="12px"
+                  paddingY="8px"
+                >
+                  Trades
+                </Tab>
+                <Tab
+                  color="#6D6D70"
+                  fontSize={'sm'}
+                  fontWeight={'medium'}
+                  _selected={{ color: '#6052FB' }}
+                  _active={{ bgColor: 'transparent' }}
+                  paddingX="12px"
+                  paddingY="8px"
+                >
+                  Limit Orders
+                </Tab>
+              </TabList>
+              <TabIndicator mt="-1.5px" height="2px" bg="#6052FB" borderRadius="1px" />
+
+              <TabPanels>
+                <TabPanel padding="0">
+                  <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
+                    <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
+                    <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+                  </Flex>
+                </TabPanel>
+                <TabPanel padding="0">
+                  <Box bg="#0c0c10" padding="20px">
+                    <Flex alignItems="center" justifyContent="space-between">
+                      <Center>
+                        <Image alt="" src="/images/icons/bitcoin.png" w="20px" h="20px" />
+                        <p className="px-2 text-sm font-normal text-[#fff]">BTC-USD</p>
+                        <span className="h-6 rounded border border-[#1ED768] px-[6px] text-sm font-normal text-[#1ED768]">
+                          <TriangleUpIcon color={'#1ED768'} marginRight="4px" />
+                          Up
+                        </span>
+                      </Center>
+                      <Center>
+                        <span className="rounded bg-[#252528] px-2 text-[#9E9E9F]">Market</span>
+                      </Center>
+                    </Flex>
+                    <p className="pb-1 pt-3 text-xs font-normal text-[#fff]">000h 04m 55s</p>
+                    <Progress
+                      value={20}
+                      size="xs"
+                      colorScheme="purple"
+                      bgColor="#303035"
+                      rounded="2xl"
+                      h="2"
+                      w="full"
+                    />
+                    <Box marginTop="2" marginBottom="3">
+                      <span className="rounded bg-[#252528] px-2 py-1 text-sm text-[#fff]">USDC</span>
+                    </Box>
+                    <Grid
+                      templateColumns="repeat(2, 1fr)"
+                      borderBottom="1px solid #242428"
+                      paddingBottom="3"
+                      marginBottom="3"
+                    >
+                      <GridItem>
+                        <p className="mb-2 text-xs font-normal text-[#9E9E9F]">PnL|Probability</p>
+                        <p>
+                          <span className="pr-1 text-sm font-normal text-[#F03D3E]">-3.91</span>
+                          <span className="text-xs font-normal text-[#38383A]">11.75%</span>
+                        </p>
+                      </GridItem>
+                      <GridItem>
+                        <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Current Price</p>
+                        <p className="text-sm font-normal text-[#FFFFFF]">26,129.96</p>
+                      </GridItem>
+                    </Grid>
+                    <Grid templateColumns="repeat(2, 1fr)" marginBottom="3">
+                      <GridItem>
+                        <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Trade Size</p>
+                        <p className="text-sm font-normal text-[#FFFFFF]">5.00 USDC</p>
+                      </GridItem>
+                      <GridItem>
+                        <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Max Payout</p>
+                        <p className="text-sm font-normal text-[#FFFFFF]">9.25 USDC</p>
+                      </GridItem>
+                    </Grid>
+                    <Button
+                      bg="#F03D3E"
+                      color="#fff"
+                      w="full"
+                      _hover={{ bgColor: '#F03D3E', textColor: '#fff' }}
+                      _active={{ bgColor: '#F03D3E', textColor: '#fff' }}
+                      rounded="md"
+                    >
+                      Close at -3.91
+                    </Button>
+                  </Box>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </Box>
         </Box>
       </GridItem>
       <GridItem colSpan={18}>
         <TradingViewChart />
+
+        <Box marginTop="12px">
+          <Tabs>
+            <TabList borderBottom="1px solid #3d3d40" bg="#0c0c10" roundedTop="10px">
+              <Tab
+                color="#6D6D70"
+                fontSize={'sm'}
+                fontWeight={'medium'}
+                _selected={{ color: '#6052FB' }}
+                _active={{ bgColor: 'transparent' }}
+                paddingX="12px"
+                paddingY="8px"
+              >
+                Trades
+              </Tab>
+              <Tab
+                color="#6D6D70"
+                fontSize={'sm'}
+                fontWeight={'medium'}
+                _selected={{ color: '#6052FB' }}
+                _active={{ bgColor: 'transparent' }}
+                paddingX="12px"
+                paddingY="8px"
+              >
+                Limit Orders
+              </Tab>
+              <Tab
+                color="#6D6D70"
+                fontSize={'sm'}
+                fontWeight={'medium'}
+                _selected={{ color: '#6052FB' }}
+                _active={{ bgColor: 'transparent' }}
+                paddingX="12px"
+                paddingY="8px"
+              >
+                History
+              </Tab>
+              <Tab
+                color="#6D6D70"
+                fontSize={'sm'}
+                fontWeight={'medium'}
+                _selected={{ color: '#6052FB' }}
+                _active={{ bgColor: 'transparent' }}
+                paddingX="12px"
+                paddingY="8px"
+              >
+                Cancelled
+              </Tab>
+              <Tab
+                color="#6D6D70"
+                fontSize={'sm'}
+                fontWeight={'medium'}
+                _selected={{ color: '#6052FB' }}
+                _active={{ bgColor: 'transparent' }}
+                paddingX="12px"
+                paddingY="8px"
+              >
+                Platform Trades
+              </Tab>
+              <Tab
+                color="#6D6D70"
+                fontSize={'sm'}
+                fontWeight={'medium'}
+                _selected={{ color: '#6052FB' }}
+                _active={{ bgColor: 'transparent' }}
+                paddingX="12px"
+                paddingY="8px"
+              >
+                Platform History
+              </Tab>
+            </TabList>
+            <TabIndicator mt="-1.5px" height="2px" bg="#6052FB" borderRadius="1px" />
+
+            <TabPanels>
+              <TabPanel padding="0">
+                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
+                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
+                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+                </Flex>
+              </TabPanel>
+              <TabPanel padding="0">
+                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
+                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
+                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+                </Flex>
+              </TabPanel>
+              <TabPanel padding="0">
+                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
+                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
+                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+                </Flex>
+              </TabPanel>
+              <TabPanel padding="0">
+                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
+                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
+                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+                </Flex>
+              </TabPanel>
+              <TabPanel padding="0">
+                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
+                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
+                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+                </Flex>
+              </TabPanel>
+              <TabPanel padding="0">
+                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
+                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
+                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+                </Flex>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
       </GridItem>
     </Grid>
   );

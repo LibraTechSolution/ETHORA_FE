@@ -18,25 +18,85 @@ import {
   GridItem,
   useToast,
 } from '@chakra-ui/react';
-import { disconnect } from '@wagmi/core';
+import { disconnect, readContract } from '@wagmi/core';
 import { CopyIcon, ExternalLink, LogOut } from 'lucide-react';
 import Link from 'next/link';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork, useSignTypedData } from 'wagmi';
 import { ToastLayout } from '../ToastLayout';
 import useUserStore from '@/store/useUserStore';
 import { useEffect } from 'react';
 import useModalStore from '@/store/useModalStore';
+import registerABI from '@/config/abi/registerABI';
+import { BaseError } from 'viem';
 
 interface ModalProp {
   isOpen: boolean;
   onClose: () => void;
 }
 
+// The named list of all type definitions
+const types = {
+  DeregisterAccount: [
+    { name: 'user', type: 'address' },
+    { name: 'nonce', type: 'uint256' },
+  ],
+} as const;
+
 export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
   const { address, isDisconnected } = useAccount();
   const toast = useToast();
-  const { tokens, deactiveAccount } = useUserStore();
+  const { tokens, deactiveAccount, user } = useUserStore();
   const { onOpen } = useModalStore();
+  const { chain } = useNetwork();
+
+  const domain = {
+    name: 'Validator',
+    version: '1',
+    chain: chain ? chain.id : 1,
+    verifyingContract: appConfig.registerSC as `0x${string}`,
+  } as const;
+
+  let messageV4 = {
+    user: user?.address ? user.address : '0x0',
+    nonce: BigInt(0),
+  } as const;
+
+  const { signTypedData } = useSignTypedData({
+    domain,
+    message: messageV4,
+    primaryType: 'DeregisterAccount',
+    types,
+    onSuccess(data) {
+      if (!chain) return;
+      console.log('call API deactive');
+
+      deactiveAccount();
+      onClose();
+    },
+    onError(error) {
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Deactive account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+    },
+  });
 
   useEffect(() => {
     if (isDisconnected) {
@@ -59,15 +119,28 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
     });
   };
 
-  const handleDeactiveAcc = () => {
-    console.log('handleDeactiveAcc');
-    deactiveAccount();
-    onClose();
-  };
-
   const handleActiveModal = () => {
     onClose();
     onOpen();
+  };
+
+  const handleDeactiveAcc = async () => {
+    try {
+      const data = await readContract({
+        address: appConfig.registerSC as `0x${string}`,
+        abi: registerABI,
+        functionName: 'accountMapping',
+        args: [user?.address as `0x${string}`],
+      });
+      messageV4 = {
+        ...messageV4,
+        nonce: BigInt(data[1]),
+      };
+      signTypedData();
+    } catch (error) {
+      console.log(error);
+    }
+    // refetch();
   };
 
   return (
@@ -123,7 +196,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
         </ModalBody>
 
         <ModalFooter paddingTop="0px" paddingBottom="40px">
-          {!tokens ? (
+          {!user?.isRegistered ? (
             <Center width="100%">
               <Button
                 onClick={handleActiveModal}

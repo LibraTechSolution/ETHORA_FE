@@ -9,7 +9,8 @@ export const appConfig = {
   cdnUrl: process.env.NEXT_PUBLIC_CDN_URL,
   faucetSC: process.env.NEXT_PUBLIC_FAUCET_SC,
   arbiscan: process.env.NEXT_PUBLIC_ARBISCAN,
-  usdcAddress: process.env.NEXT_PUBLIC_USDC_ADD
+  usdcAddress: process.env.NEXT_PUBLIC_USDC_ADD,
+  registerSC: process.env.NEXT_PUBLIC_REGISTER_SC
 };
 
 export const targetChainId = appConfig.chainId;

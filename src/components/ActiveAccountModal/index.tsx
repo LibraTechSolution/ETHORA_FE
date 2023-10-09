@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Modal,
   Button,
@@ -6,7 +8,6 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter,
   Center,
   Flex,
   Image,
@@ -15,38 +16,95 @@ import {
   useToast,
   Box,
 } from '@chakra-ui/react';
-import { useAccount, useSignMessage } from 'wagmi';
+import { useAccount, useSignMessage, useSignTypedData, useNetwork } from 'wagmi';
 import { ToastLayout } from '../ToastLayout';
 import useUserStore from '@/store/useUserStore';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import useModalStore from '@/store/useModalStore';
-import { getNonce, login } from '@/services/auth';
+import { getNonce, login, register } from '@/services/auth';
 import { Check } from 'lucide-react';
+import { appConfig } from '@/config';
+import registerABI from '@/config/abi/registerABI';
+import { readContract } from '@wagmi/core';
+import { Address, BaseError } from 'viem';
+import { Status } from '@/types/faucet.type';
+
+// The named list of all type definitions
+const types = {
+  RegisterAccount: [
+    { name: 'oneCT', type: 'address' },
+    { name: 'user', type: 'address' },
+    { name: 'nonce', type: 'uint256' },
+  ],
+} as const;
 
 export const ActiveAccountModal = () => {
   const { address, isDisconnected } = useAccount();
   const toast = useToast();
-  const { listWallets, setUserAndTokens } = useUserStore();
+  const { listWallets, setUserAndTokens, user } = useUserStore();
   const { isOpen, onClose } = useModalStore();
   const [nonce, setNonce] = useState<string>('');
-  const isRegisterd = useMemo(() => {
+  const msg = 'test ';
+  const { chain } = useNetwork();
+  const domain = {
+    name: 'Validator',
+    version: '1',
+    chain: chain ? chain?.id : 5,
+    verifyingContract: appConfig.registerSC as Address,
+  } as const;
+
+  let messageV4 = {
+    oneCT: user?.oneCT ? user.oneCT : '0x0',
+    user: user?.address ? user.address : '0x0',
+    nonce: BigInt(0),
+  } as const;
+
+  const { signTypedData } = useSignTypedData({
+    domain,
+    message: messageV4,
+    primaryType: 'RegisterAccount',
+    types,
+    onSuccess(data) {
+      console.log(data);
+      if (!chain) return;
+      register(data, chain.id);
+    },
+    onError(error) {
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Register account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+    },
+  });
+
+  const isCreated = useMemo(() => {
     if (listWallets && address && listWallets[address.toLocaleLowerCase()]) {
       return true;
     }
     return false;
   }, [address, listWallets]);
-  const msg = 'test ';
+
   const signMessage = useSignMessage({
     message: nonce,
     onSuccess(data) {
-      console.log('Success', data);
       signIn(data);
-    },
-    onMutate(data) {
-      console.log('Mutate', data);
-    },
-    onError(data) {
-      console.log('Error', data);
     },
   });
 
@@ -75,7 +133,8 @@ export const ActiveAccountModal = () => {
 
   const signIn = async (signMessageData: `0x${string}`) => {
     try {
-      const userInfo = await login(address, signMessageData, msg);
+      if (!address || !signMessageData) return;
+      const userInfo = await login(421613, address, signMessageData, msg);
       setUserAndTokens(userInfo.data.data.user, userInfo.data.data.tokens);
     } catch (error) {
       console.log(error);
@@ -84,6 +143,27 @@ export const ActiveAccountModal = () => {
 
   const signMsg = () => {
     signMessage.signMessage();
+  };
+
+  const registerAccount = async () => {
+    try {
+      const data = await readContract({
+        address: appConfig.registerSC as `0x${string}`,
+        abi: registerABI,
+        functionName: 'accountMapping',
+        args: [user?.address as `0x${string}`],
+      });
+      console.log(data);
+      messageV4 = {
+        ...messageV4,
+        nonce: BigInt(data[1]),
+      };
+      console.log(messageV4);
+      signTypedData();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   return (
@@ -153,7 +233,7 @@ export const ActiveAccountModal = () => {
               <p className="text-sm font-normal text-[#9E9E9F]">No gas required</p>
             </Box>
 
-            {!isRegisterd ? (
+            {!isCreated ? (
               <Button
                 onClick={signMsg}
                 type="button"
@@ -182,7 +262,7 @@ export const ActiveAccountModal = () => {
                 paddingY="15px"
                 rounded="10px"
               >
-                Create
+                Created
               </Button>
             )}
           </Flex>
@@ -198,9 +278,9 @@ export const ActiveAccountModal = () => {
               <p className="text-sm font-normal text-[#9E9E9F]">No gas required</p>
             </Box>
 
-            {!isRegisterd ? (
+            {!user?.isRegistered ? (
               <Button
-                onClick={signMsg}
+                onClick={registerAccount}
                 type="button"
                 bgColor="#6052FB"
                 textColor="#ffffff"

@@ -6,9 +6,10 @@ import {
   ResolutionString,
   widget,
 } from 'public/static/charting_library';
-import { UDFCompatibleDatafeed } from 'public/static/datafeeds/udf/src/udf-compatible-datafeed';
+import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { useEffect, useRef, useState } from 'react';
 import { DataFeed } from './datafeed.js';
+import { Box, Center, Flex, Image, Progress } from '@chakra-ui/react';
 
 export const supported_resolutions = [
   // '1S' as ResolutionString,
@@ -86,8 +87,45 @@ export const TradingViewChart = () => {
 
   return (
     <div>
-      <button onClick={addLine}>Add Line</button>
-      <div ref={chartContainerRef} id="chart-element" className="h-96" />
+      <Flex alignItems="center" justifyContent="space-between">
+        <Flex>
+          <Center>
+            <Image alt="bitcoin" src="/images/icons/bitcoin.png" w="32px" h="32px" />
+            <p className="pl-3 text-xl font-semibold text-[#fff]">BTC/USD</p>
+          </Center>
+          <Center paddingX={10}>
+            <p className="text-2xl font-normal text-[#fff]">26,597.04</p>
+          </Center>
+          <Center>
+            <Box borderRight="1px solid #38383A" paddingRight="20px">
+              <p className="pb-2 text-xs font-normal text-[#9E9E9F]">24h Change</p>
+              <span className="h-6 rounded border border-[#1ED768] px-[6px] text-sm font-normal text-[#1ED768]">
+                <TriangleUpIcon color={'#1ED768'} marginRight="4px" />
+                20%
+              </span>
+            </Box>
+            <Box borderRight="1px solid #38383A" paddingX="20px">
+              <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Max Trade Size</p>
+              <p className="text-sm font-normal leading-6 text-[#fff]">100 USDC</p>
+            </Box>
+            <Box borderRight="1px solid #38383A" paddingX="20px">
+              <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Payout</p>
+              <p className="text-sm font-normal leading-6 text-[#fff]">6%</p>
+            </Box>
+            <Box paddingLeft="20px">
+              <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Max OI: 1,000 USDC</p>
+              <p className="flex h-6 items-center text-sm font-normal text-[#fff]">
+                <Progress value={20} size="xs" colorScheme="purple" bgColor="#303035" rounded="2xl" h="2" w="168px" />
+                <span className="pl-3 text-sm font-normal text-[#fff]">20%</span>
+              </p>
+            </Box>
+          </Center>
+        </Flex>
+        <Box>
+          <Image alt="bitcoin" src="/images/icons/apps.svg" w="20x" h="20x" />
+        </Box>
+      </Flex>
+      <div ref={chartContainerRef} id="chart-element" className="h-[655px]" />
     </div>
   );
 };
