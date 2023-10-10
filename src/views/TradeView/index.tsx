@@ -28,6 +28,7 @@ import {
 } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Radio, RadioChangeEvent } from 'antd';
+import BigNumber from 'bignumber.js';
 import dynamic from 'next/dynamic';
 import { ChangeEvent, useMemo, useState } from 'react';
 import { Address } from 'viem';
@@ -55,7 +56,9 @@ const TradeView = () => {
   }, [address, listWallets]);
 
   const handleMax = () => {
-    setTradeNumber('1000');
+    if (!balance) return;
+    const maxBalance = BigNumber(balance.toString()).div(1000000).toString();
+    setTradeNumber(maxBalance);
   };
 
   const handleOnChangeNumber = (e: ChangeEvent<HTMLInputElement>) => {
