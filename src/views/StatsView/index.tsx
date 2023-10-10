@@ -1,6 +1,8 @@
 'use client';
-import { Grid, GridItem } from '@chakra-ui/react';
+import { addComma } from '@/utils/number';
+import { Box, Button, Grid, GridItem, Heading, Text } from '@chakra-ui/react';
 import { maxBy, minBy, sortBy } from 'lodash';
+import { Download } from 'lucide-react';
 import {
   ComposedChart,
   Bar,
@@ -13,7 +15,9 @@ import {
   ResponsiveContainer,
   Line,
   Area,
+  LineChart,
 } from 'recharts';
+
 const data = [
   {
     name: 'Page A',
@@ -571,106 +575,468 @@ const StatsView = () => {
   //   return [ret];
   // }
 
+  const CustomTooltip = (data: any) => {
+    const { active, payload } = data;
+    if (active && payload && payload.length) {
+      console.log(data);
+      return (
+        // eslint-disable-next-line tailwindcss/no-custom-classname
+        <div className="custom-tooltip min-w-[118px] rounded-lg bg-[#050506] p-[10px]">
+          <p className=" text-sm font-medium text-white">{payload[0]?.payload?.name}</p>
+          {payload.map((item: any, index: number) => {
+            console.log(item.color);
+
+            return (
+              // eslint-disable-next-line tailwindcss/no-custom-classname
+              <p className={`flex items-center text-sm`} key={index} style={{ color: item.color }}>
+                {`${item.name}: ${item.payload[item.dataKey] ? addComma(item.payload[item.dataKey]) : 0}`}
+              </p>
+            );
+          })}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
-    <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-      <GridItem>
-        <ResponsiveContainer width="100%" height="100%" aspect={2}>
-          <ComposedChart
-            width={500}
-            height={300}
-            data={data}
-            // margin={{
-            //   top: 5,
-            //   right: 10,
-            //   left: 10,
-            //   bottom: 5,
-            // }}
-            barGap={0}
+    <>
+      <Heading as="h3" marginY={'20px'} fontSize={'24px'} fontWeight={600}>
+        Stats
+      </Heading>
+
+      <Grid templateColumns="repeat(5, 1fr)" gap={6} marginBottom={'20px'}>
+        <GridItem>
+          <Box>
+            <Box marginBottom={'20px'} display={'flex'} alignItems={'flex-start'} justifyContent={'space-between'}>
+              <Text fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                Total Volume
+              </Text>
+              <Box>
+                <LineChart width={70} height={22} data={data}>
+                  <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeWidth={2} dot={false}/>
+                </LineChart>
+              </Box>
+            </Box>
+            <Text fontSize={'24px'} fontWeight={600} color={'white'}>
+              $6,893,187
+            </Text>
+            <Box as="span">+$19.6K</Box>
+          </Box>
+        </GridItem>
+      </Grid>
+
+      <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
+        <GridItem colSpan={{ md: 2, lg: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
-            <XAxis
-              dataKey="name"
-              stroke="#6D6D70"
-              style={{
-                fontSize: '12px',
-              }}
-              tickLine={false}
-            />
-            {/* <YAxis /> */}
-            <YAxis
-              yAxisId="left"
-              orientation="left"
-              stroke="#6D6D70"
-              style={{
-                fontSize: '12px',
-              }}
-            />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              stroke="#6D6D70"
-              style={{
-                fontSize: '12px',
-              }}
-            />
-            <Tooltip />
-            <Legend />
-            <Bar yAxisId="left" dataKey="pv" fill="#4CC0C0" />
-            <Bar yAxisId="left" dataKey="uv" fill="#8042FF" />
-            <Line type="monotone" dataKey="amt" stroke="#FE1A67" connectNulls yAxisId="right" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </GridItem>
-      <GridItem>
-        <ResponsiveContainer width="100%" height="100%" aspect={2}>
-          <ComposedChart
-            width={500}
-            height={300}
-            data={dataMap as any[]}
-            // margin={{
-            //   top: 5,
-            //   right: 10,
-            //   left: 10,
-            //   bottom: 5,
-            // }}
-            barGap={0}
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
+              <Text>Volume</Text>
+              <Button
+                leftIcon={<Download size={14} />}
+                colorScheme="primary"
+                variant="outline"
+                size={'xs'}
+                background={'#050506'}
+              >
+                Download CSV
+              </Button>
+            </Box>
+            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+              <ComposedChart
+                // width={500}
+                // height={300}
+                data={data}
+                // margin={{
+                //   top: 5,
+                //   right: 10,
+                //   left: 10,
+                //   bottom: 5,
+                // }}
+                barGap={0}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
+                <Tooltip content={CustomTooltip} />
+                <XAxis
+                  dataKey="name"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  tickLine={false}
+                />
+                {/* <YAxis /> */}
+                <YAxis
+                  yAxisId="left"
+                  orientation="left"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#FFCE57" barSize={16} />
+                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#FE1A67" connectNulls yAxisId="right" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={{ md: 2, lg: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
-            <XAxis
-              dataKey="timestamp"
-              stroke="#6D6D70"
-              style={{
-                fontSize: '12px',
-              }}
-              tickLine={false}
-            />
-            {/* <YAxis /> */}
-            <YAxis
-              yAxisId="left"
-              orientation="left"
-              stroke="#6D6D70"
-              style={{
-                fontSize: '12px',
-              }}
-            />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              stroke="#6D6D70"
-              style={{
-                fontSize: '12px',
-              }}
-            />
-            <Tooltip />
-            <Legend />
-            <Bar yAxisId="left" dataKey="profit" fill="#22c761" />
-            <Bar yAxisId="left" dataKey="loss" fill="#f93333" />
-            <Area yAxisId="right" type="monotone" dataKey="currentProfitCumulative" fill="#22c761" stroke="#22c761" />
-            <Area yAxisId="right" type="monotone" dataKey="currentLossCumulative" fill="#f93333" stroke="#f93333" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </GridItem>
-    </Grid>
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
+              <Text>Fees</Text>
+              <Button
+                leftIcon={<Download size={14} />}
+                colorScheme="primary"
+                variant="outline"
+                size={'xs'}
+                background={'#050506'}
+              >
+                Download CSV
+              </Button>
+            </Box>
+            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+              <ComposedChart
+                // width={500}
+                // height={300}
+                data={data}
+                // margin={{
+                //   top: 5,
+                //   right: 10,
+                //   left: 10,
+                //   bottom: 5,
+                // }}
+                barGap={0}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
+                <Tooltip content={CustomTooltip} />
+                <XAxis
+                  dataKey="name"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  tickLine={false}
+                />
+                {/* <YAxis /> */}
+                <YAxis
+                  yAxisId="left"
+                  orientation="left"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#8042FF" barSize={16} />
+                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#FE1A67" connectNulls yAxisId="right" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </Box>
+        </GridItem>
+      </Grid>
+      <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
+        <GridItem colSpan={{ md: 2, lg: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+          >
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
+              <Text>USD/ELP rate</Text>
+              <Button
+                leftIcon={<Download size={14} />}
+                colorScheme="primary"
+                variant="outline"
+                size={'xs'}
+                background={'#050506'}
+              >
+                Download CSV
+              </Button>
+            </Box>
+            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+              <ComposedChart
+                // width={500}
+                // height={300}
+                data={data}
+                margin={{
+                  right: 60,
+                }}
+                barGap={0}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
+                <Tooltip content={CustomTooltip} />
+                <XAxis
+                  dataKey="name"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  tickLine={false}
+                />
+                {/* <YAxis /> */}
+                <YAxis
+                  yAxisId="left"
+                  orientation="left"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                {/* <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                /> */}
+                <Tooltip />
+                <Legend />
+                {/* <Bar yAxisId="left" dataKey="pv" fill="#8042FF" barSize={16} /> */}
+                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#DD6FB5" connectNulls yAxisId="left" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={{ md: 2, lg: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+          >
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
+              <Text>USD/ELP rate</Text>
+              <Button
+                leftIcon={<Download size={14} />}
+                colorScheme="primary"
+                variant="outline"
+                size={'xs'}
+                background={'#050506'}
+              >
+                Download CSV
+              </Button>
+            </Box>
+            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+              <ComposedChart
+                // width={500}
+                // height={300}
+                data={data}
+                margin={{
+                  right: 60,
+                }}
+                barGap={0}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
+                <Tooltip content={CustomTooltip} />
+                <XAxis
+                  dataKey="name"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  tickLine={false}
+                />
+                {/* <YAxis /> */}
+                <YAxis
+                  yAxisId="left"
+                  orientation="left"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                {/* <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                /> */}
+                <Tooltip />
+                <Legend />
+                {/* <Bar yAxisId="left" dataKey="pv" fill="#8042FF" barSize={16} /> */}
+                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#7A72F6" connectNulls yAxisId="left" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </Box>
+        </GridItem>
+      </Grid>
+      <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
+        <GridItem colSpan={{ md: 2, lg: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+          >
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
+              <Text>New vs. Existing Users</Text>
+              <Button
+                leftIcon={<Download size={14} />}
+                colorScheme="primary"
+                variant="outline"
+                size={'xs'}
+                background={'#050506'}
+              >
+                Download CSV
+              </Button>
+            </Box>
+            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+              <ComposedChart
+                // width={500}
+                // height={300}
+                data={data}
+                // margin={{
+                //   top: 5,
+                //   right: 10,
+                //   left: 10,
+                //   bottom: 5,
+                // }}
+                barGap={0}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
+                <Tooltip content={CustomTooltip} />
+                <XAxis
+                  dataKey="name"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  tickLine={false}
+                />
+                {/* <YAxis /> */}
+                <YAxis
+                  yAxisId="left"
+                  orientation="left"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#FFCE57" barSize={16} />
+                <Bar yAxisId="left" dataKey="uv" name="uv Name" fill="#8042FF" barSize={16} />
+                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#4CC0C0" connectNulls yAxisId="right" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={{ md: 2, lg: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+          >
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
+              <Text>USD/ELP rate</Text>
+              <Button
+                leftIcon={<Download size={14} />}
+                colorScheme="primary"
+                variant="outline"
+                size={'xs'}
+                background={'#050506'}
+              >
+                Download CSV
+              </Button>
+            </Box>
+            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+              <ComposedChart
+                // width={500}
+                // height={300}
+                data={data}
+                // margin={{
+                //   top: 5,
+                //   right: 10,
+                //   left: 10,
+                //   bottom: 5,
+                // }}
+                barGap={0}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
+                <Tooltip content={CustomTooltip} />
+                <XAxis
+                  dataKey="name"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  tickLine={false}
+                />
+                {/* <YAxis /> */}
+                <YAxis
+                  yAxisId="left"
+                  orientation="left"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#DEDCFD" barSize={16} />
+                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#4CC0C0" connectNulls yAxisId="right" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </Box>
+        </GridItem>
+      </Grid>
+    </>
   );
 };
 
