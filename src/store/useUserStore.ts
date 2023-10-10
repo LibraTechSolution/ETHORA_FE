@@ -20,6 +20,8 @@ interface UserState {
   setUser(user: IUser | null): void;
   setToken(tokens: ITokens | null): void;
   setUserAndTokens(user: IUser | null, tokens: ITokens | null): void;
+  deactiveAccount(): void;
+  togleAccount(isRegistered: boolean): void;
 }
 
 const useUserStore = create<UserState>()(
@@ -44,6 +46,33 @@ const useUserStore = create<UserState>()(
         tokens: tokens ? tokens : state.tokens,
         currentWallet: user ? user?.address : state.currentWallet
       })),
+      togleAccount: (isRegistered) => set((state) => {
+        const tempUser = state.user as IUser;
+        tempUser.isRegistered = isRegistered
+        return {
+          listWallets: {
+            ...state.listWallets,
+            [state.currentWallet as string]: {
+              user: tempUser,
+              tokens: state.tokens,
+            }
+          },
+          user: tempUser,
+        }
+      }),
+      deactiveAccount: () => set((state) => {
+        if (state?.listWallets && state.currentWallet) {
+          delete state?.listWallets[state.currentWallet]
+        }
+        return {
+          listWallets: {
+            ...state.listWallets,
+          },
+          user: null,
+          tokens: null,
+          currentWallet: null
+        }
+      })
     }),
     {
       name: StorageStoreName.USER,
