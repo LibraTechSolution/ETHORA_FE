@@ -25,7 +25,7 @@ import { getNonce, login, register } from '@/services/auth';
 import { Check } from 'lucide-react';
 import { appConfig } from '@/config';
 import registerABI from '@/config/abi/registerABI';
-import { readContract } from '@wagmi/core';
+import { readContract, signTypedData } from '@wagmi/core';
 import { Address, BaseError } from 'viem';
 import { Status } from '@/types/faucet.type';
 
@@ -41,7 +41,7 @@ const types = {
 export const ActiveAccountModal = () => {
   const { address, isDisconnected } = useAccount();
   const toast = useToast();
-  const { listWallets, setUserAndTokens, user } = useUserStore();
+  const { listWallets, setUserAndTokens, user, togleAccount } = useUserStore();
   const { isOpen, onClose } = useModalStore();
   const [nonce, setNonce] = useState<string>('');
   const msg = 'test ';
@@ -49,27 +49,195 @@ export const ActiveAccountModal = () => {
   const domain = {
     name: 'Validator',
     version: '1',
-    chain: chain ? chain?.id : 5,
+    chainId: chain ? chain?.id : 5,
     verifyingContract: appConfig.registerSC as Address,
-  } as const;
+  };
 
-  let messageV4 = {
-    oneCT: user?.oneCT ? user.oneCT : '0x0',
-    user: user?.address ? user.address : '0x0',
-    nonce: BigInt(0),
-  } as const;
+  const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
+  const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
 
-  const { signTypedData } = useSignTypedData({
-    domain,
-    message: messageV4,
-    primaryType: 'RegisterAccount',
-    types,
+  // const { signTypedData, data: msgTypedData } = useSignTypedData({
+  //   domain,
+  //   message: {
+  //     oneCT: user?.oneCT ? user.oneCT : '0x0',
+  //     user: user?.address ? user.address : '0x0',
+  //     nonce: oneCTNonce,
+  //   },
+  //   primaryType: 'RegisterAccount',
+  //   types,
+  //   onError(error) {
+  //     let msgContent = '';
+  //     if (error instanceof BaseError) {
+  //       if (error.shortMessage.includes('User rejected the request.')) {
+  //         msgContent = 'User rejected the request!';
+  //       } else if (error.shortMessage.includes('the balance of the account')) {
+  //         msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+  //       } else {
+  //         msgContent = 'Something went wrong. Please try again later.';
+  //       }
+  //     }
+  //     toast({
+  //       position: 'top',
+  //       render: ({ onClose }) => (
+  //         <ToastLayout
+  //           title="Register account Unsuccessfully"
+  //           content={msgContent}
+  //           status={Status.ERROR}
+  //           close={onClose}
+  //         />
+  //       ),
+  //     });
+  //   },
+  // });
+
+  const isCreated = useMemo(() => {
+    if (listWallets && address && listWallets[address.toLocaleLowerCase()]) {
+      return true;
+    }
+    return false;
+  }, [address, listWallets]);
+
+  const signMessage = useSignMessage({
+    message: nonce,
     onSuccess(data) {
-      console.log(data);
-      if (!chain) return;
-      register(data, chain.id);
+      signIn(data);
     },
     onError(error) {
+      let msgContent = '';
+      setIsLoadingLogin(false);
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Create account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+    },
+  });
+
+  const fetchNonce = useCallback(async () => {
+    if (!address || (listWallets && listWallets[address.toLowerCase()])) return;
+    try {
+      const nonceRes = await getNonce(address);
+      const msgContent = msg + nonceRes.data.data.nonce;
+      setNonce(msgContent);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [address, listWallets]);
+
+  // useEffect(() => {
+  //   if (msgTypedData) {
+  //     registerAcc();
+  //   }
+  // }, [msgTypedData, registerAcc]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchNonce();
+    }
+  }, [fetchNonce, isOpen]);
+
+  useEffect(() => {
+    if (isDisconnected) {
+      onClose();
+    }
+  }, [isDisconnected, onClose]);
+
+  const signIn = async (signMessageData: `0x${string}`) => {
+    try {
+      if (!address || !signMessageData) return;
+      const userInfo = await login(chain?.id as number, address, signMessageData, msg);
+      setUserAndTokens(userInfo.data.data.user, userInfo.data.data.tokens);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Create account successfully" status={Status.SUCCESSS} close={onClose} />
+        ),
+      });
+      setIsLoadingLogin(false);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log(error);
+      setIsLoadingLogin(false);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Create account Unsuccessfully"
+            content={error.response.data.message}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+    }
+  };
+
+  const signMsg = () => {
+    setIsLoadingLogin(true);
+    signMessage.signMessage();
+  };
+
+  const registerAcc = async (signature: Address) => {
+    if (!chain || !signature) return;
+    try {
+      await register(signature, chain.id, true);
+      togleAccount(true);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Register account successfully" status={Status.SUCCESSS} close={onClose} />
+        ),
+      });
+      setIsLoadingRegister(false);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setIsLoadingRegister(false);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Register account Unsuccessfully"
+            content={error.response.data.message}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+    }
+  };
+
+  const signTypedDataV4 = async (nonce: bigint) => {
+    try {
+      const signature = await signTypedData({
+        domain,
+        message: {
+          oneCT: user?.oneCT ? user.oneCT : '0x0',
+          user: user?.address ? user.address : '0x0',
+          nonce: BigInt(nonce),
+        },
+        primaryType: 'RegisterAccount',
+        types,
+      });
+      registerAcc(signature);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setIsLoadingRegister(false);
       let msgContent = '';
       if (error instanceof BaseError) {
         if (error.shortMessage.includes('User rejected the request.')) {
@@ -91,62 +259,12 @@ export const ActiveAccountModal = () => {
           />
         ),
       });
-    },
-  });
-
-  const isCreated = useMemo(() => {
-    if (listWallets && address && listWallets[address.toLocaleLowerCase()]) {
-      return true;
     }
-    return false;
-  }, [address, listWallets]);
-
-  const signMessage = useSignMessage({
-    message: nonce,
-    onSuccess(data) {
-      signIn(data);
-    },
-  });
-
-  const fetchNonce = useCallback(async () => {
-    if (!address || (listWallets && listWallets[address.toLowerCase()])) return;
-    try {
-      const nonceRes = await getNonce(address);
-      const msgContent = msg + nonceRes.data.data.nonce;
-      setNonce(msgContent);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [address, listWallets]);
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchNonce();
-    }
-  }, [fetchNonce, isOpen]);
-
-  useEffect(() => {
-    if (isDisconnected) {
-      onClose();
-    }
-  }, [isDisconnected, onClose]);
-
-  const signIn = async (signMessageData: `0x${string}`) => {
-    try {
-      if (!address || !signMessageData) return;
-      const userInfo = await login(421613, address, signMessageData, msg);
-      setUserAndTokens(userInfo.data.data.user, userInfo.data.data.tokens);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const signMsg = () => {
-    signMessage.signMessage();
   };
 
   const registerAccount = async () => {
     try {
+      setIsLoadingRegister(true);
       const data = await readContract({
         address: appConfig.registerSC as `0x${string}`,
         abi: registerABI,
@@ -154,14 +272,11 @@ export const ActiveAccountModal = () => {
         args: [user?.address as `0x${string}`],
       });
       console.log(data);
-      messageV4 = {
-        ...messageV4,
-        nonce: BigInt(data[1]),
-      };
-      console.log(messageV4);
-      signTypedData();
+      signTypedDataV4(data[1]);
+      // signTypedData();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+      setIsLoadingRegister(false);
       console.log(error);
     }
   };
@@ -196,7 +311,7 @@ export const ActiveAccountModal = () => {
                 Zero gas
               </Center>
             </GridItem>
-            <GridItem w="100%" paddingX="2.5" borderRight="1px solid #38383A" cursor="pointer">
+            <GridItem w="100%" paddingX="2.5" borderRight="1px solid #38383A">
               <Center>
                 <Image alt="avatar" src="/images/icons/thunder-line.svg" w="24px" h="24px" />
               </Center>
@@ -245,6 +360,7 @@ export const ActiveAccountModal = () => {
                 paddingX="12px"
                 paddingY="15px"
                 rounded="10px"
+                isLoading={isLoadingLogin}
               >
                 Create
               </Button>
@@ -290,6 +406,7 @@ export const ActiveAccountModal = () => {
                 paddingX="12px"
                 paddingY="15px"
                 rounded="10px"
+                isLoading={isLoadingRegister}
               >
                 Register
               </Button>

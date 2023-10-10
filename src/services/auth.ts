@@ -10,6 +10,6 @@ export function login(network: number, address: `0x${string}`, signature: `0x${s
   return axiosNoAuthInstance.post<IResponData<ILoginRes>>('/auth/login', { network, address, signature, message });
 }
 
-export function register(signature: `0x${string}`, network: number) {
-  return axiosInstance.post<IResponData<ILoginRes>>('/auth/register', { signature, network });
+export function register(signature: `0x${string}`, network: number, isRegister: boolean) {
+  return axiosInstance.post<IResponData<ILoginRes>>('/auth/register', { signature, network, isRegister });
 }

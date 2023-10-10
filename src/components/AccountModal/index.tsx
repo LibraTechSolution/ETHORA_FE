@@ -18,16 +18,17 @@ import {
   GridItem,
   useToast,
 } from '@chakra-ui/react';
-import { disconnect, readContract } from '@wagmi/core';
+import { disconnect, readContract, signTypedData } from '@wagmi/core';
 import { CopyIcon, ExternalLink, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useAccount, useNetwork, useSignTypedData } from 'wagmi';
 import { ToastLayout } from '../ToastLayout';
 import useUserStore from '@/store/useUserStore';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useModalStore from '@/store/useModalStore';
 import registerABI from '@/config/abi/registerABI';
-import { BaseError } from 'viem';
+import { Address, BaseError } from 'viem';
+import { register } from '@/services/auth';
 
 interface ModalProp {
   isOpen: boolean;
@@ -45,58 +46,82 @@ const types = {
 export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
   const { address, isDisconnected } = useAccount();
   const toast = useToast();
-  const { tokens, deactiveAccount, user } = useUserStore();
+  const { user, togleAccount } = useUserStore();
   const { onOpen } = useModalStore();
   const { chain } = useNetwork();
+  const [isLoadingDeactive, setIsLoadingDeactive] = useState<boolean>(false);
 
   const domain = {
     name: 'Validator',
     version: '1',
-    chain: chain ? chain.id : 1,
+    chainId: chain ? chain.id : 1,
     verifyingContract: appConfig.registerSC as `0x${string}`,
   } as const;
 
-  let messageV4 = {
-    user: user?.address ? user.address : '0x0',
-    nonce: BigInt(0),
-  } as const;
+  // const { signTypedData, data: msgTypedData } = useSignTypedData({
+  //   domain,
+  //   message: {
+  //     user: user?.address ? user.address : '0x0',
+  //     nonce: oneCTNonce,
+  //   },
+  //   primaryType: 'DeregisterAccount',
+  //   types,
+  //   onError(error) {
+  //     let msgContent = '';
+  //     if (error instanceof BaseError) {
+  //       if (error.shortMessage.includes('User rejected the request.')) {
+  //         msgContent = 'User rejected the request!';
+  //       } else if (error.shortMessage.includes('the balance of the account')) {
+  //         msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+  //       } else {
+  //         msgContent = 'Something went wrong. Please try again later.';
+  //       }
+  //     }
+  //     toast({
+  //       position: 'top',
+  //       render: ({ onClose }) => (
+  //         <ToastLayout
+  //           title="Deactive account Unsuccessfully"
+  //           content={msgContent}
+  //           status={Status.ERROR}
+  //           close={onClose}
+  //         />
+  //       ),
+  //     });
+  //   },
+  // });
 
-  const { signTypedData } = useSignTypedData({
-    domain,
-    message: messageV4,
-    primaryType: 'DeregisterAccount',
-    types,
-    onSuccess(data) {
-      if (!chain) return;
-      console.log('call API deactive');
-
-      deactiveAccount();
-      onClose();
-    },
-    onError(error) {
-      let msgContent = '';
-      if (error instanceof BaseError) {
-        if (error.shortMessage.includes('User rejected the request.')) {
-          msgContent = 'User rejected the request!';
-        } else if (error.shortMessage.includes('the balance of the account')) {
-          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
-        } else {
-          msgContent = 'Something went wrong. Please try again later.';
-        }
-      }
+  const deRegisterAcc = async (signature: Address) => {
+    if (!chain || !signature) {
+      setIsLoadingDeactive(false);
+      return;
+    }
+    try {
+      await register(signature, chain.id, false);
+      togleAccount(false);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Deactive account successfully" status={Status.SUCCESSS} close={onClose} />
+        ),
+      });
+      setIsLoadingDeactive(false);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       toast({
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
             title="Deactive account Unsuccessfully"
-            content={msgContent}
+            content={error.response.data.message}
             status={Status.ERROR}
             close={onClose}
           />
         ),
       });
-    },
-  });
+      setIsLoadingDeactive(false);
+    }
+  };
 
   useEffect(() => {
     if (isDisconnected) {
@@ -124,20 +149,58 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
     onOpen();
   };
 
+  const signTypedDataV4 = async (nonce: bigint) => {
+    try {
+      const signature = await signTypedData({
+        domain,
+        message: {
+          user: user?.address ? user.address : '0x0',
+          nonce: BigInt(nonce),
+        },
+        primaryType: 'DeregisterAccount',
+        types,
+      });
+      deRegisterAcc(signature);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setIsLoadingDeactive(false);
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Deactive account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+    }
+  };
+
   const handleDeactiveAcc = async () => {
     try {
+      setIsLoadingDeactive(true);
       const data = await readContract({
         address: appConfig.registerSC as `0x${string}`,
         abi: registerABI,
         functionName: 'accountMapping',
         args: [user?.address as `0x${string}`],
       });
-      messageV4 = {
-        ...messageV4,
-        nonce: BigInt(data[1]),
-      };
-      signTypedData();
+      console.log(data);
+      signTypedDataV4(data[1]);
     } catch (error) {
+      setIsLoadingDeactive(false);
       console.log(error);
     }
     // refetch();
@@ -227,6 +290,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
                   paddingX="12px"
                   paddingY="15px"
                   rounded="10px"
+                  isLoading={isLoadingDeactive}
                 >
                   Deactivate account
                 </Button>
