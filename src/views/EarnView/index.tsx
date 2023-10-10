@@ -4,8 +4,24 @@ import { Flex, Heading, Text, Box, GridItem, Grid, Button } from '@chakra-ui/rea
 import { ArrowRight } from 'lucide-react';
 import CardEarn from './component/CardEarn';
 import CustomConnectButton from '@/components/CustomConnectButton';
+import AddFundsModal from './component/AddFundsModal';
+import { useState } from 'react';
+import WithdrawFundsModal from './component/WithdrawFundsModal';
+import StakeModal from './component/StakeModal';
+import UnStakeModal from './component/UnStakeModal';
+import DepositModal from './component/DepositModal';
+import ClaimModal from './component/ClaimModal';
+import CompoundRewardsModal from './component/CompoundRewardsModal';
 
 const EarnView = () => {
+  const [openAddFundModal, setOpenAddFundModal] = useState<boolean>(false);
+  const [openWithdrawFundModal, setOpenWithdrawFundModal] = useState<boolean>(false);
+  const [openStakeModal, setOpenStakeModal] = useState<boolean>(false);
+  const [openUnStakeModal, setOpenUnStakeModal] = useState<boolean>(false);
+  const [openDepositModal, setOpenDepositModal] = useState<boolean>(false);
+  const [openClaimModal, setOpenClaimModal] = useState<boolean>(false);
+  const [openCompoundRewardsModal, setOpenCompoundRewardsModal] = useState<boolean>(false);
+
   return (
     <Flex flexWrap={'wrap'} flexDirection={'column'} gap={'20px'} paddingY={'20px'}>
       <Box>
@@ -110,10 +126,10 @@ const EarnView = () => {
               <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
                 <CustomConnectButton>
                   <Flex gap={'8px'} justifyContent={'flex-end'}>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                    <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenUnStakeModal(true)}>
                       Unstake
                     </Button>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                    <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenStakeModal(true)}>
                       Stake
                     </Button>
                     <Button colorScheme="primary" fontSize={'16px'} size="md">
@@ -168,13 +184,18 @@ const EarnView = () => {
               <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
                 <CustomConnectButton>
                   <Flex gap={'8px'} justifyContent={'flex-end'}>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                    <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
                       Claim ARB
                     </Button>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                    <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
                       Claim
                     </Button>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                    <Button
+                      colorScheme="primary"
+                      fontSize={'16px'}
+                      size="md"
+                      onClick={() => setOpenCompoundRewardsModal(true)}
+                    >
                       Compound
                     </Button>
                   </Flex>
@@ -277,10 +298,15 @@ const EarnView = () => {
               <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
                 <CustomConnectButton>
                   <Flex gap={'8px'} justifyContent={'flex-end'}>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                    <Button
+                      colorScheme="primary"
+                      fontSize={'16px'}
+                      size="md"
+                      onClick={() => setOpenWithdrawFundModal(true)}
+                    >
                       With draw Funds
                     </Button>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                    <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenAddFundModal(true)}>
                       Add Funds
                     </Button>
                   </Flex>
@@ -292,7 +318,7 @@ const EarnView = () => {
       </Grid>
 
       <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
-        <GridItem w="100%">
+        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
           <CardEarn>
             <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
               Escrowed ETR
@@ -499,7 +525,7 @@ const EarnView = () => {
       </Box>
 
       <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
-        <GridItem w="100%">
+        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
           <CardEarn>
             <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
               ETR Vault
@@ -544,7 +570,14 @@ const EarnView = () => {
                     <Button colorScheme="primary" fontSize={'16px'} size="md">
                       Withdraw
                     </Button>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                    <Button
+                      colorScheme="primary"
+                      fontSize={'16px'}
+                      size="md"
+                      onClick={() => {
+                        setOpenDepositModal(true);
+                      }}
+                    >
                       Deposit
                     </Button>
                   </Flex>
@@ -597,7 +630,7 @@ const EarnView = () => {
                 <CustomConnectButton>
                   <Flex gap={'8px'} justifyContent={'flex-end'}>
                     <Button colorScheme="primary" fontSize={'16px'} size="md">
-                      Withdraw 
+                      Withdraw
                     </Button>
                     <Button colorScheme="primary" fontSize={'16px'} size="md">
                       Deposit
@@ -609,6 +642,13 @@ const EarnView = () => {
           </CardEarn>
         </GridItem>
       </Grid>
+      <AddFundsModal isOpen={openAddFundModal} onDismiss={() => setOpenAddFundModal(false)} />
+      <WithdrawFundsModal isOpen={openWithdrawFundModal} onDismiss={() => setOpenWithdrawFundModal(false)} />
+      <StakeModal isOpen={openStakeModal} onDismiss={() => setOpenStakeModal(false)} />
+      <UnStakeModal isOpen={openUnStakeModal} onDismiss={() => setOpenUnStakeModal(false)} />
+      <DepositModal isOpen={openDepositModal} onDismiss={() => setOpenDepositModal(false)} />
+      <ClaimModal isOpen={openClaimModal} onDismiss={() => setOpenClaimModal(false)} />
+      <CompoundRewardsModal isOpen={openCompoundRewardsModal} onDismiss={() => setOpenCompoundRewardsModal(false)} />
     </Flex>
   );
 };
