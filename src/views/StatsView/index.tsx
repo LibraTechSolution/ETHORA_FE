@@ -601,34 +601,190 @@ const StatsView = () => {
   };
 
   return (
-    <>
+    <Box marginX={'-60px'}>
       <Heading as="h3" marginY={'20px'} fontSize={'24px'} fontWeight={600}>
         Stats
       </Heading>
-
-      <Grid templateColumns="repeat(5, 1fr)" gap={6} marginBottom={'20px'}>
-        <GridItem>
-          <Box>
+      
+      <Grid templateColumns={{ base: "repeat(4, 1fr)", md: "repeat(4, 1fr)", xl: "repeat(5, 1fr)" }} gap={6} marginBottom={'20px'}>
+        <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+            padding={'20px'}
+          >
             <Box marginBottom={'20px'} display={'flex'} alignItems={'flex-start'} justifyContent={'space-between'}>
               <Text fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
                 Total Volume
               </Text>
               <Box>
                 <LineChart width={70} height={22} data={data}>
-                  <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeWidth={2} dot={false}/>
+                  <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
                 </LineChart>
               </Box>
             </Box>
-            <Text fontSize={'24px'} fontWeight={600} color={'white'}>
+            <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
               $6,893,187
             </Text>
-            <Box as="span">+$19.6K</Box>
+            <Box
+              as="span"
+              border={'1px solid #1ED768'}
+              backgroundColor={'rgba(21, 189, 89, 0.10)'}
+              borderRadius={'4px'}
+              padding={'2px 6px'}
+              fontSize={'14px'}
+              color={'#1ED768'}
+            >
+              +$19.6K
+            </Box>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+            padding={'20px'}
+          >
+            <Box marginBottom={'20px'} display={'flex'} alignItems={'flex-start'} justifyContent={'space-between'}>
+              <Text fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                Total Fees
+              </Text>
+              <Box>
+                <LineChart width={70} height={22} data={data}>
+                  <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
+                </LineChart>
+              </Box>
+            </Box>
+            <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
+              $896,412
+            </Text>
+            <Box
+              as="span"
+              border={'1px solid #1ED768'}
+              backgroundColor={'rgba(21, 189, 89, 0.10)'}
+              borderRadius={'4px'}
+              padding={'2px 6px'}
+              fontSize={'14px'}
+              color={'#1ED768'}
+            >
+              +$2.58K
+            </Box>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+            padding={'20px'}
+          >
+            <Box marginBottom={'20px'} display={'flex'} alignItems={'flex-start'} justifyContent={'space-between'}>
+              <Text fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                ELP Pool
+              </Text>
+              <Box>
+                <LineChart width={70} height={22} data={data}>
+                  <Line type="monotone" dataKey="pv" stroke="#F03D3E" strokeWidth={2} dot={false} />
+                </LineChart>
+              </Box>
+            </Box>
+            <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
+              $6,893,187
+            </Text>
+            <Box
+              as="span"
+              border={'1px solid #F03D3E'}
+              backgroundColor={'rgba(240, 61, 62, 0.10)'}
+              borderRadius={'4px'}
+              padding={'2px 6px'}
+              fontSize={'14px'}
+              color={'#F03D3E'}
+            >
+              -$91.8K
+            </Box>
+          </Box>
+        </GridItem >
+        <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+            padding={'20px'}
+          >
+            <Box marginBottom={'20px'} display={'flex'} alignItems={'flex-start'} justifyContent={'space-between'}>
+              <Text fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                Total Users
+              </Text>
+              <Box>
+                <LineChart width={70} height={22} data={data}>
+                  <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
+                </LineChart>
+              </Box>
+            </Box>
+            <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
+              630
+            </Text>
+            <Box
+              as="span"
+              border={'1px solid #1ED768'}
+              backgroundColor={'rgba(21, 189, 89, 0.10)'}
+              borderRadius={'4px'}
+              padding={'2px 6px'}
+              fontSize={'14px'}
+              color={'#1ED768'}
+            >
+              +1
+            </Box>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={{ base: 4,xl: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+            padding={'20px'}
+          >
+            <Box marginBottom={'20px'} display={'flex'} alignItems={'flex-start'} justifyContent={'space-between'}>
+              <Text fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                Net Payout
+              </Text>
+              <Box>
+                <LineChart width={70} height={22} data={data}>
+                  <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
+                </LineChart>
+              </Box>
+            </Box>
+            <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
+              $813,360
+            </Text>
+            <Box
+              as="span"
+              border={'1px solid #1ED768'}
+              backgroundColor={'rgba(21, 189, 89, 0.10)'}
+              borderRadius={'4px'}
+              padding={'2px 6px'}
+              fontSize={'14px'}
+              color={'#1ED768'}
+            >
+              +$5.07K
+            </Box>
           </Box>
         </GridItem>
       </Grid>
-
       <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
-        <GridItem colSpan={{ md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -648,7 +804,7 @@ const StatsView = () => {
                 Download CSV
               </Button>
             </Box>
-            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+            <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
@@ -696,7 +852,7 @@ const StatsView = () => {
             </ResponsiveContainer>
           </Box>
         </GridItem>
-        <GridItem colSpan={{ md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -716,7 +872,7 @@ const StatsView = () => {
                 Download CSV
               </Button>
             </Box>
-            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+            <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
@@ -766,7 +922,7 @@ const StatsView = () => {
         </GridItem>
       </Grid>
       <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
-        <GridItem colSpan={{ md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -786,7 +942,7 @@ const StatsView = () => {
                 Download CSV
               </Button>
             </Box>
-            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+            <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
@@ -831,7 +987,7 @@ const StatsView = () => {
             </ResponsiveContainer>
           </Box>
         </GridItem>
-        <GridItem colSpan={{ md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -851,7 +1007,7 @@ const StatsView = () => {
                 Download CSV
               </Button>
             </Box>
-            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+            <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
@@ -898,7 +1054,7 @@ const StatsView = () => {
         </GridItem>
       </Grid>
       <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
-        <GridItem colSpan={{ md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -918,7 +1074,7 @@ const StatsView = () => {
                 Download CSV
               </Button>
             </Box>
-            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+            <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
@@ -967,7 +1123,7 @@ const StatsView = () => {
             </ResponsiveContainer>
           </Box>
         </GridItem>
-        <GridItem colSpan={{ md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -987,7 +1143,7 @@ const StatsView = () => {
                 Download CSV
               </Button>
             </Box>
-            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+            <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
@@ -1036,7 +1192,85 @@ const StatsView = () => {
           </Box>
         </GridItem>
       </Grid>
-    </>
+      <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
+        <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+          >
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
+              <Text>New vs. Existing Users</Text>
+              <Button
+                leftIcon={<Download size={14} />}
+                colorScheme="primary"
+                variant="outline"
+                size={'xs'}
+                background={'#050506'}
+              >
+                Download CSV
+              </Button>
+            </Box>
+            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+              <ComposedChart
+                width={500}
+                height={300}
+                data={dataMap as any[]}
+                // margin={{
+                //   top: 5,
+                //   right: 10,
+                //   left: 10,
+                //   bottom: 5,
+                // }}
+                barGap={0}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
+                <Tooltip content={CustomTooltip} />
+                <XAxis
+                  dataKey="timestamp"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  tickLine={false}
+                />
+                {/* <YAxis /> */}
+                <YAxis
+                  yAxisId="left"
+                  orientation="left"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="profit" fill="#22c761" />
+                <Bar yAxisId="left" dataKey="loss" fill="#f93333" />
+                <Area
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="currentProfitCumulative"
+                  fill="#22c761"
+                  stroke="#22c761"
+                />
+                <Area yAxisId="right" type="monotone" dataKey="currentLossCumulative" fill="#f93333" stroke="#f93333" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </Box>
+        </GridItem>
+      </Grid>
+    </Box>
   );
 };
 
