@@ -116,10 +116,10 @@ export const SaleTokenView = () => {
           display={{ base: 'none', sm: 'none', md: 'block', lg: 'block' }}
           flex={{ base: 'none', sm: 'none', md: '1', lg: '1' }}
         >
-          <Image alt="base" src="/images/saleToken/ethora-twitter.png" w="627px" h="370px" />
+          <Image alt="base" src="/images/saleToken/ethora-twitter.png" w="627px" h="full" />
         </Box>
         <Box display={{ base: 'block', sm: 'block', md: 'none', lg: 'none' }}>
-          <Image alt="base" src="/images/saleToken/ethora-twitter-mobile.png" w="627px" h="370px" />
+          <Image alt="base" src="/images/saleToken/ethora-twitter-mobile.png" w="627px" h="full" />
         </Box>
       </Box>
       <Box

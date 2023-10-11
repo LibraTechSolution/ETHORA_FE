@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 .customTable {
+  .ant-table-content::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .ant-table-content::-webkit-scrollbar-track {
+    background: #38383a;
+  }
+
+  .ant-table-content::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    border: 3px solid #9e9e9f;
+  }
   &.no-radius table,
   &.no-radius .ant-table-container,
   &.no-radius .ant-table {
@@ -94,8 +107,11 @@
     background-color: #6052fb;
   }
   .ant-pagination .ant-pagination-total-text {
-    color: #9E9E9F;
+    color: #9e9e9f;
     margin-right: auto;
+  }
+  span.ant-table-column-sorter.ant-table-column-sorter-full {
+    color: #6d6d70;
   }
 }
 
@@ -110,5 +126,14 @@
   }
   &.ant-select .ant-select-arrow {
     color: #ffffff;
+  }
+}
+
+.customProgress {
+  .ant-progress-inner {
+    background-color: rgba(158, 158, 159, 0.2);
+  }
+  .ant-progress-bg {
+    background-color: #6052fb;
   }
 }
