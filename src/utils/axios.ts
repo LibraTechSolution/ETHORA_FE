@@ -75,7 +75,6 @@ async function getAccessToken() {
 axiosInstance.interceptors.request.use(
   async (config) => {
     const accessToken = await getAccessToken();
-    console.log('accessToken', accessToken)
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }

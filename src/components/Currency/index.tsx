@@ -12,16 +12,27 @@ interface Props extends PropsWithChildren {
   isWei?: boolean;
   rounded?: boolean;
   decimal?: number;
+  decimalNumber?: number;
 }
 
-const getValue = (value: Value, isWei: boolean | undefined, rounded: boolean | undefined, decimal = 3) => {
+const getValue = (
+  value: Value,
+  isWei: boolean | undefined,
+  rounded: boolean | undefined,
+  decimal = 3,
+  decimalNumber = 0,
+) => {
   let valueShow = '---';
   let fullValue = '---';
   let isRounded = false;
   try {
     if (!isNil(value)) {
       const valueTemp = value instanceof BigNumber ? value.toFixed() : value.toString();
-      const valTemp = isWei ? formatEther(BigInt(valueTemp)) : valueTemp;
+      const valTemp = isWei
+        ? formatEther(BigInt(valueTemp))
+        : decimalNumber
+        ? BigNumber(valueTemp).dividedBy(Math.pow(10, decimalNumber))
+        : valueTemp;
       const valueBig = BigNumber(valTemp);
       if (valueBig.isNaN()) {
         throw new Error();
@@ -51,8 +62,8 @@ const getValue = (value: Value, isWei: boolean | undefined, rounded: boolean | u
   };
 };
 
-const Currency: FC<Props> = ({ value, isWei, rounded, decimal }) => {
-  const { value: valueShow, isRounded, fullValue } = getValue(value, isWei, rounded, decimal);
+const Currency: FC<Props> = ({ value, isWei, rounded, decimal, decimalNumber }) => {
+  const { value: valueShow, isRounded, fullValue } = getValue(value, isWei, rounded, decimal, decimalNumber);
   if (!isRounded) return <>{valueShow}</>;
   return <Tooltip label={fullValue}>{valueShow}</Tooltip>;
 };

@@ -2,6 +2,7 @@
 
 import { useNetworkConnectorUpdater } from '@/hooks/useActiveWeb3React';
 import useEagerConnect from '@/hooks/useEagerConnect';
+import { ActiveAccountModal } from '../ActiveAccountModal';
 
 // import { UnsupportedNetworkModal } from '../NetworkModal/UnsupportedNetworkModal';
 
@@ -32,6 +33,7 @@ const GlobalComponents = () => {
 export const Global = () => {
   return (
     <>
+      <ActiveAccountModal />
       <GlobalComponents />
       <GlobalHooks />
     </>

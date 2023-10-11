@@ -9,12 +9,13 @@ import faucetABI from '@/config/abi/faucetABI';
 import { useContractWrite } from 'wagmi';
 import { BaseError, parseEther } from 'viem';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { appConfig } from '@/config';
 
 export const FaucetView = () => {
   const toast = useToast();
 
   const { writeAsync, isLoading } = useContractWrite({
-    address: '0xEc4C9c881fA72bfe957717dB9812fEE6EFd80C2a',
+    address: appConfig.faucetSC as `0x${string}`,
     abi: faucetABI,
     functionName: 'claim',
   });

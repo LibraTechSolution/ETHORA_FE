@@ -129,6 +129,18 @@
   }
 }
 
+.radio-custom {
+  .ant-radio-wrapper .ant-radio-inner {
+    background-color: transparent;
+    border-color: #d9d9d9;
+    &::after {
+      background-color: #6052FB;
+    }
+  }
+  .ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+    border-color: #6052FB;    
+  }
+}
 .customProgress {
   .ant-progress-inner {
     background-color: rgba(158, 158, 159, 0.2);
