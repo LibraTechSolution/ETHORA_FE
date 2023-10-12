@@ -33,6 +33,8 @@ import dynamic from 'next/dynamic';
 import { ChangeEvent, useMemo, useState } from 'react';
 import { Address } from 'viem';
 import { useAccount } from 'wagmi';
+import useTradeStore from '@/store/useTradeStore';
+import { addComma } from '@/utils/number';
 
 const TradingViewChart = dynamic(
   () => import('@/components/TradingView/TradingView').then((mod) => mod.TradingViewChart),
@@ -45,6 +47,7 @@ const TradeView = () => {
   const balance = useBalanceOf(appConfig.usdcAddress as Address);
   const [tradeNumber, setTradeNumber] = useState<string>('0');
   const [tradeType, setTradeType] = useState<string>('market');
+  const { price } = useTradeStore();
   const toast = useToast();
   const { listWallets } = useUserStore();
   const [time, setTime] = useState<string>('15m');
@@ -220,7 +223,7 @@ const TradeView = () => {
               <p className="text-xs font-normal text-[#9E9E9F]">Price</p>
             </Center>
             <Center>
-              <span className="text-base font-normal text-[#ffffff]">26.565.65</span>
+              <span className="text-base font-normal text-[#ffffff]">{addComma(price, 2)}</span>
             </Center>
           </Flex>
           <Flex alignItems="center" justifyContent="space-between" marginBottom="12px">
