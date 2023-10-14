@@ -33,6 +33,7 @@ const datafeed = {
       response
         .json()
         .then((symbolInfo) => {
+          console.log('symbolInfo', symbolInfo)
           onSymbolResolvedCallback(symbolInfo)
         })
         .catch((error) => {

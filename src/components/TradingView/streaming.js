@@ -36,7 +36,7 @@ function handleStreamingData(data) {
       low: Math.min(lastDailyBar.low, tradePrice),
       close: tradePrice,
     }
-	useTradeStore.getState().setPrice(tradePrice)
+	  useTradeStore.getState().setPrice(tradePrice)
     // console.log('[stream] Update the latest bar by price', tradePrice)
   }
 
@@ -57,7 +57,7 @@ function startStreaming(retries = 3, delay = 3000) {
           .read()
           .then(({ value, done }) => {
             if (done) {
-              console.error('[stream] Streaming ended.')
+              // console.error('[stream] Streaming ended.')
               return
             }
 
@@ -70,7 +70,7 @@ function startStreaming(retries = 3, delay = 3000) {
                   var jsonData = JSON.parse(trimmedDataString)
                   handleStreamingData(jsonData)
                 } catch (e) {
-                  console.error('Error parsing JSON:', e.message)
+                  // console.error('Error parsing JSON:', e.message)
                 }
               }
             })
@@ -78,7 +78,7 @@ function startStreaming(retries = 3, delay = 3000) {
             streamData() // Continue processing the stream
           })
           .catch((error) => {
-            console.error('[stream] Error reading from stream:', error)
+            // console.error('[stream] Error reading from stream:', error)
             attemptReconnect(retries, delay)
           })
       }
@@ -86,10 +86,10 @@ function startStreaming(retries = 3, delay = 3000) {
       streamData()
     })
     .catch((error) => {
-      console.error(
-        '[stream] Error fetching from the streaming endpoint:',
-        error
-      )
+      // console.error(
+      //   '[stream] Error fetching from the streaming endpoint:',
+      //   error
+      // )
     })
   function attemptReconnect(retriesLeft, delay) {
     if (retriesLeft > 0) {
@@ -98,7 +98,7 @@ function startStreaming(retries = 3, delay = 3000) {
         startStreaming(retriesLeft - 1, delay)
       }, delay)
     } else {
-      console.error('[stream] Maximum reconnection attempts reached.')
+      // console.error('[stream] Maximum reconnection attempts reached.')
     }
   }
 }

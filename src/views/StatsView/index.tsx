@@ -580,7 +580,6 @@ const StatsView = () => {
     if (active && payload && payload.length) {
       console.log(data);
       return (
-        // eslint-disable-next-line tailwindcss/no-custom-classname
         <div className="custom-tooltip min-w-[118px] rounded-lg bg-[#050506] p-[10px]">
           <p className=" text-sm font-medium text-white">{payload[0]?.payload?.name}</p>
           {payload.map((item: any, index: number) => {
@@ -605,8 +604,12 @@ const StatsView = () => {
       <Heading as="h3" marginY={'20px'} fontSize={'24px'} fontWeight={600}>
         Stats
       </Heading>
-      
-      <Grid templateColumns={{ base: "repeat(4, 1fr)", md: "repeat(4, 1fr)", xl: "repeat(5, 1fr)" }} gap={6} marginBottom={'20px'}>
+
+      <Grid
+        templateColumns={{ base: 'repeat(4, 1fr)', md: 'repeat(4, 1fr)', xl: 'repeat(5, 1fr)' }}
+        gap={6}
+        marginBottom={'20px'}
+      >
         <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
@@ -711,7 +714,7 @@ const StatsView = () => {
               -$91.8K
             </Box>
           </Box>
-        </GridItem >
+        </GridItem>
         <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
@@ -747,7 +750,7 @@ const StatsView = () => {
             </Box>
           </Box>
         </GridItem>
-        <GridItem colSpan={{ base: 4,xl: 1 }}>
+        <GridItem colSpan={{ base: 4, xl: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}

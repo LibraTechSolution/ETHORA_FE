@@ -35,6 +35,7 @@ import { Address } from 'viem';
 import { useAccount } from 'wagmi';
 import useTradeStore from '@/store/useTradeStore';
 import { addComma } from '@/utils/number';
+import TradeViewHeader from './components/TradeViewHeader';
 
 const TradingViewChart = dynamic(
   () => import('@/components/TradingView/TradingView').then((mod) => mod.TradingViewChart),
@@ -230,13 +231,17 @@ const TradeView = () => {
             <Box>
               <p className="text-xs font-normal text-[#9E9E9F]">Payout</p>
               <Box>
-                <span className="mr-1 text-base font-normal text-[#fff]">8.00 USDC</span>
+                <span className="mr-1 text-base font-normal text-[#fff]">
+                  {addComma((+tradeNumber * 160) / 100, 2)} USDC
+                </span>
                 <span className="text-xs font-normal text-[#6D6D70]">60%</span>
               </Box>
             </Box>
             <Box>
               <p className="text-right text-xs font-normal text-[#9E9E9F]">Profit</p>
-              <span className="text-base font-normal text-[#1ED768]">0 USDC</span>
+              <span className="text-base font-normal text-[#1ED768]">
+                {addComma((+tradeNumber * 60) / 100, 2)} USDC
+              </span>
             </Box>
           </Flex>
           <Box>
@@ -462,7 +467,10 @@ const TradeView = () => {
         </Box>
       </GridItem>
       <GridItem colSpan={18}>
-        <TradingViewChart />
+        <>
+          <TradeViewHeader />
+          <TradingViewChart />
+        </>
 
         <Box marginTop="12px">
           <Tabs>
