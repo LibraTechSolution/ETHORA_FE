@@ -75,7 +75,7 @@ export const HeaderLanding = () => {
         ) : (
           <>
             <Center>
-              <Link href="trade" className={currentRoute === '/' ? activeStyle : nonActiveStyle}>
+              <Link href="trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
                 Trade
               </Link>
             </Center>

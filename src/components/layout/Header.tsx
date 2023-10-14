@@ -57,7 +57,7 @@ export const Header = () => {
             </Link>
           </Center>
           <Center>
-            <Link href="trade" className={currentRoute === '/trade' ? activeStyle : nonActiveStyle}>
+            <Link href="trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
               Trade
             </Link>
           </Center>
