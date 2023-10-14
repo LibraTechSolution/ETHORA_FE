@@ -1,8 +1,13 @@
 'use client';
+import { getStats } from '@/services/stats';
+import { IStatsParams, IvolumeStats } from '@/types/stats.type';
 import { addComma } from '@/utils/number';
 import { Box, Button, Grid, GridItem, Heading, Text } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
+import { notification } from 'antd';
 import { maxBy, minBy, sortBy } from 'lodash';
 import { Download } from 'lucide-react';
+import { use, useEffect, useState } from 'react';
 import {
   ComposedChart,
   Bar,
@@ -495,7 +500,85 @@ const data2 = {
   ],
 };
 
+const CustomTooltip = (data: any) => {
+  const { active, payload } = data;
+  if (active && payload && payload.length) {
+    // console.log(data);
+    return (
+      // eslint-disable-next-line tailwindcss/no-custom-classname
+      <div className="custom-tooltip min-w-[118px] rounded-lg bg-[#050506] p-[10px]">
+        <p className=" text-sm font-medium text-white">{payload[0]?.payload?.name}</p>
+        {payload.map((item: any, index: number) => {
+          // console.log(item.color);
+
+          return (
+            // eslint-disable-next-line tailwindcss/no-custom-classname
+            <p className={`flex items-center text-sm`} key={index} style={{ color: item.color }}>
+              {`${item.name}: ${item.payload[item.dataKey] ? addComma(item.payload[item.dataKey]) : 0}`}
+            </p>
+          );
+        })}
+      </div>
+    );
+  }
+
+  return null;
+};
+
+// const defaultParams: companyDataParams = {
+//   limit: 10,
+//   page: 1,
+//   scope: 1,
+// };
+
 const StatsView = () => {
+  const [filter, setFilter] = useState<IStatsParams | undefined>({
+    network: 421613,
+    start: 1691853873,
+    end: 1697124273,
+  });
+
+  const [dataVolume, setDataVolume] = useState<IvolumeStats[]>();
+  const [totalVolume, setTotalVolume] = useState<number | string>();
+
+  const { data: dataStats } = useQuery({
+    queryKey: ['getStats', filter],
+    queryFn: () => getStats(filter as IStatsParams),
+    onError: (error: any) => {
+      notification.error({ message: error.message });
+    },
+    enabled: !!filter,
+    cacheTime: 0,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (!dataStats) return;
+    const getDataVolume = dataStats.volumeStats;
+
+    // DataVolume
+    const formatDataVolume = getDataVolume.map((item: IvolumeStats) => {
+      return {
+        ...item,
+        VolumeUSDC: +item.VolumeUSDC / 1e6,
+        amount: +item.amount / 1e6,
+      };
+    });
+
+    const sum = formatDataVolume.reduce((acc, obj) => {
+      return acc + +obj.amount;
+    }, 0);
+
+    console.log('formatDataVolume', formatDataVolume);
+    console.log('sum', sum);
+    setTotalVolume(sum);
+    setDataVolume(formatDataVolume);
+    // End - DataVolume
+  }, [dataStats]);
+
+  console.log('dataStats', dataStats);
+
   // let ret = null;
   let currentPnlCumulative = 0;
   let currentProfitCumulative = 0;
@@ -527,7 +610,7 @@ const StatsView = () => {
         })
       : null;
 
-  console.log('dataMap', dataMap);
+  // console.log('dataMap', dataMap);
   //   if (dataMap) {
   //     // console.log(data,'data')
   //     const maxProfit = maxBy(dataMap, (item) => item.profit).profit;
@@ -575,30 +658,6 @@ const StatsView = () => {
   //   return [ret];
   // }
 
-  const CustomTooltip = (data: any) => {
-    const { active, payload } = data;
-    if (active && payload && payload.length) {
-      console.log(data);
-      return (
-        <div className="custom-tooltip min-w-[118px] rounded-lg bg-[#050506] p-[10px]">
-          <p className=" text-sm font-medium text-white">{payload[0]?.payload?.name}</p>
-          {payload.map((item: any, index: number) => {
-            console.log(item.color);
-
-            return (
-              // eslint-disable-next-line tailwindcss/no-custom-classname
-              <p className={`flex items-center text-sm`} key={index} style={{ color: item.color }}>
-                {`${item.name}: ${item.payload[item.dataKey] ? addComma(item.payload[item.dataKey]) : 0}`}
-              </p>
-            );
-          })}
-        </div>
-      );
-    }
-
-    return null;
-  };
-
   return (
     <Box marginX={'-60px'}>
       <Heading as="h3" marginY={'20px'} fontSize={'24px'} fontWeight={600}>
@@ -624,13 +683,13 @@ const StatsView = () => {
                 Total Volume
               </Text>
               <Box>
-                <LineChart width={70} height={22} data={data}>
-                  <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
+                <LineChart data={dataVolume} width={70} height={22}>
+                  <Line type="monotone" dataKey="amount" stroke="#1ED768" strokeWidth={2} dot={false} />
                 </LineChart>
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              $6,893,187
+              ${addComma(totalVolume as string, 2)}
             </Text>
             <Box
               as="span"
