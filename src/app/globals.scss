@@ -134,11 +134,11 @@
     background-color: transparent;
     border-color: #d9d9d9;
     &::after {
-      background-color: #6052FB;
+      background-color: #6052fb;
     }
   }
   .ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
-    border-color: #6052FB;    
+    border-color: #6052fb;
   }
 }
 .customProgress {
@@ -147,5 +147,112 @@
   }
   .ant-progress-bg {
     background-color: #6052fb;
+  }
+}
+
+// customRangePicker
+.customRangePicker {
+  &.ant-picker-dropdown {
+    color: #ffffff;
+    .ant-picker-header-view,
+    .ant-picker-header {
+      border-color: #38383a;
+      button {
+        color: #ffffff;
+      }
+    }
+    .ant-picker-panel-container {
+      background-color: #252528;
+      .ant-picker-presets ul {
+        border-color: #38383a;
+      }
+      @media (max-width: 768px) {
+        // width: 100%;
+        .ant-picker-panel-layout {
+          flex-direction: column;
+        }
+        .ant-picker-presets {
+          max-width: none;
+          ul {
+            height:auto;
+            border: none;
+          }
+        }
+        // .ant-picker-panels {
+        //   width: 100%;
+        // }
+      }
+    }
+    .ant-picker-cell {
+      color: #6d6d70;
+    }
+    .ant-picker-content th,
+    .ant-picker-cell-in-view {
+      color: #ffffff;
+    }
+    .ant-picker-datetime-panel .ant-picker-time-panel {
+      display: none;
+    }
+    .ant-btn.ant-btn-sm {
+      background-color: #6052fb;
+      border: none;
+      color: #ffffff;
+    }
+    // .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
+    // .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+    // .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+    //   background-color: #6052fb;
+    // }
+    .ant-picker-cell-in-view.ant-picker-cell-in-range::before,
+    .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before,
+    .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before {
+      background-color: #9b95f8;
+    }
+    // .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before,
+    // :where(.css-dev-only-do-not-override-pr0fja).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before
+    // .ant-picker-cell-in-view.ant-picker-cell-in-range::before {
+
+    // }
+    // .ant-picker-cell-in-view.ant-picker-cell-in-range-hover {
+    //   background-color: red;
+    // }
+
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover::before,
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start::before,
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end::before,
+    .ant-picker-cell-in-view.ant-picker-cell-range-start.ant-picker-cell-range-hover::before,
+    .ant-picker-cell-in-view.ant-picker-cell-range-end.ant-picker-cell-range-hover::before,
+    .ant-picker-cell-in-view.ant-picker-cell-range-start:not(
+        .ant-picker-cell-range-start-single
+      ).ant-picker-cell-range-hover-start::before,
+    .ant-picker-cell-in-view.ant-picker-cell-range-end:not(
+        .ant-picker-cell-range-end-single
+      ).ant-picker-cell-range-hover-end::before {
+      background: #bcb9ea;
+    }
+    .ant-picker-date-panel
+      .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start
+      .ant-picker-cell-inner::after,
+    .ant-picker-date-panel
+      .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end
+      .ant-picker-cell-inner::after {
+      background: #bcb9ea;
+    }
+    .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+      border-color: #6052fb;
+    }
+    .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
+    .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+    .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+      background-color: #6052fb;
+    }
+    .ant-picker-panel {
+      border-color: #38383a;
+    }
+    .ant-picker-range-arrow::before {
+      background: #252528;
+    }
+    // .ant-picker-panel>:not(.ant-picker-date-panel) :where(.css-dev-only-do-not-override-pr0fja).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start::before,
+    // .ant-picker-panel>:not(.ant-picker-date-panel) :where(.css-dev-only-do-not-override-pr0fja).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end::before
   }
 }

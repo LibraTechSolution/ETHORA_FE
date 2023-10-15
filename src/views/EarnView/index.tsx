@@ -41,8 +41,8 @@ const EarnView = () => {
         </Text>
       </Box>
 
-      <Grid templateColumns={{ md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={'20px'}>
-        <GridItem w="100%">
+      <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
+        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
           <CardEarn>
             <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
               ETR
@@ -141,7 +141,7 @@ const EarnView = () => {
             </Box>
           </CardEarn>
         </GridItem>
-        <GridItem w="100%">
+        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
           <CardEarn>
             <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
               Total Rewards
@@ -204,8 +204,92 @@ const EarnView = () => {
             </Box>
           </CardEarn>
         </GridItem>
+      </Grid>
+
+      <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
         <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
           <CardEarn>
+            <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
+              Escrowed ETR
+            </Heading>
+            <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                  Price
+                </Text>
+                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+                  $0.0597
+                </Text>
+              </Box>
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                  Wallet
+                </Text>
+                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+                  0.00 esETR (0.00 USDC)
+                </Text>
+              </Box>
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                  Staked
+                </Text>
+                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+                  0.00 esETR (0.00 USDC)
+                </Text>
+              </Box>
+              <hr className="border-[#242428]" />
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                  APR
+                </Text>
+                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+                  9.89%
+                </Text>
+              </Box>
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                  Multiplier Points APR
+                </Text>
+                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+                  100.00%
+                </Text>
+              </Box>
+              <hr className="border-[#242428]" />
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                  Total Staked
+                </Text>
+                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+                  20,390,672.54 ETR ($1,219,133.02)
+                </Text>
+              </Box>
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+                  Total Supply
+                </Text>
+                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+                  4,765,877.50 esETR (284,945.90 USDC)v
+                </Text>
+              </Box>
+              <hr className="border-[#242428]" />
+              <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
+                <CustomConnectButton>
+                  <Flex gap={'8px'} justifyContent={'flex-end'}>
+                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                      Unstake
+                    </Button>
+                    <Button colorScheme="primary" fontSize={'16px'} size="md">
+                      Stake
+                    </Button>
+                  </Flex>
+                </CustomConnectButton>
+              </Box>
+            </Box>
+          </CardEarn>
+        </GridItem>
+
+        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
+        <CardEarn>
             <Heading
               as="h5"
               fontSize={'20px'}
@@ -307,196 +391,6 @@ const EarnView = () => {
                       With draw Funds
                     </Button>
                     <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenAddFundModal(true)}>
-                      Add Funds
-                    </Button>
-                  </Flex>
-                </CustomConnectButton>
-              </Box>
-            </Box>
-          </CardEarn>
-        </GridItem>
-      </Grid>
-
-      <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
-        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
-          <CardEarn>
-            <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
-              Escrowed ETR
-            </Heading>
-            <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Price
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  $0.0597
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Wallet
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  0.00 esETR (0.00 USDC)
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Staked
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  0.00 esETR (0.00 USDC)
-                </Text>
-              </Box>
-              <hr className="border-[#242428]" />
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  APR
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  9.89%
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Multiplier Points APR
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  100.00%
-                </Text>
-              </Box>
-              <hr className="border-[#242428]" />
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Total Staked
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  20,390,672.54 ETR ($1,219,133.02)
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Total Supply
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  4,765,877.50 esETR (284,945.90 USDC)v
-                </Text>
-              </Box>
-              <hr className="border-[#242428]" />
-              <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
-                <CustomConnectButton>
-                  <Flex gap={'8px'} justifyContent={'flex-end'}>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
-                      Unstake
-                    </Button>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
-                      Stake
-                    </Button>
-                  </Flex>
-                </CustomConnectButton>
-              </Box>
-            </Box>
-          </CardEarn>
-        </GridItem>
-
-        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
-          <CardEarn>
-            <Heading
-              as="h5"
-              fontSize={'20px'}
-              fontWeight={600}
-              marginBottom={'20px'}
-              display={'flex'}
-              flexDirection={'column'}
-            >
-              ARB Vault (aELP Token)
-              <Text as="span" textColor={'#6D6D70'} fontWeight={400} fontSize={'14px'}>
-                Max Capacity : 10,000,000.00 USDC
-              </Text>
-            </Heading>
-            <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Exchange Rate
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  1.00 aELP = 0.92 ARB
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Wallet
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  0.00 aELP (0.00 ARB)
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Staked
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  0.00 aELP (0.00 ARB)
-                </Text>
-              </Box>
-              <hr className="border-[#242428]" />
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  APR
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  9.89%
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Rewards
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  $0.00
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Lockup Period
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  1 day
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Withdrawable Amount
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  0.00 aELP
-                </Text>
-              </Box>
-              <hr className="border-[#242428]" />
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Total Staked
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  616,914.13 aELP (569,204.80 ARB)
-                </Text>
-              </Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
-                  Total Supply
-                </Text>
-                <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-                  616,924.42 aELP (569,214.30 ARB)
-                </Text>
-              </Box>
-              <hr className="border-[#242428]" />
-              <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
-                <CustomConnectButton>
-                  <Flex gap={'8px'} justifyContent={'flex-end'}>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
-                      Withdraw Funds
-                    </Button>
-                    <Button colorScheme="primary" fontSize={'16px'} size="md">
                       Add Funds
                     </Button>
                   </Flex>

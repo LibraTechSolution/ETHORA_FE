@@ -121,11 +121,13 @@ const ProfileView = () => {
 
   return (
     <Flex
+      marginX={'-20px'}
       gap={10}
       direction={'column'}
       bgImage="url('/images/profile/bg-item.png')"
       bgRepeat="no-repeat"
       bgPosition="top -87px left 45px"
+      padding={'20px'}
     >
       <Flex
         direction={'column'}
@@ -222,7 +224,7 @@ const ProfileView = () => {
             </Text>
             <Text fontSize={'2xl'}>
               {dataRank?.userOptionDatas && dataRank?.userOptionDatas.length
-                ? (+winnerCounter(dataRank?.userOptionDatas) / +dataRank?.userOptionDatas.length) * 100
+                ? ((+winnerCounter(dataRank?.userOptionDatas) / +dataRank?.userOptionDatas.length) * 100).toFixed(2)
                 : '00.0'}
               %
             </Text>

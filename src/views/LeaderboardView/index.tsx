@@ -1,5 +1,18 @@
 'use client';
-import { Box, Button, Center, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Stack,
+  Text,
+  useMediaQuery,
+} from '@chakra-ui/react';
 import { Select } from 'antd';
 import Image from 'next/image';
 import { ArrowForwardIcon, CalendarIcon } from '@chakra-ui/icons';
@@ -20,6 +33,7 @@ export enum TableTabType {
 
 const LeaderboardView = () => {
   const { Option } = Select;
+  const [isMobile] = useMediaQuery('(max-width: 768px)');
   const [defaultTabs, setDefaultTabs] = useState<TableTabType>(TableTabType.Winners);
   const [mounted, SetMounted] = useState<boolean>(false);
 
@@ -41,7 +55,12 @@ const LeaderboardView = () => {
       bgRepeat="no-repeat"
       bgPosition="top -50px left -188px"
     >
-      <Box width={'234px'} background={'rgba(28, 28, 30,.5)'} padding={'20px 0'}>
+      <Box
+        width={'234px'}
+        background={'rgba(28, 28, 30,.5)'}
+        padding={'20px 0'}
+        display={{ base: 'none', lg: 'block' }}
+      >
         <Flex alignItems={'center'} padding={'0 8px 0 20px'} justifyContent={'space-between'} marginBottom={'20px'}>
           <Box display={'flex'} alignItems={'center'}>
             <CalendaDayIcon fill="#9E9E9F" />
@@ -66,7 +85,7 @@ const LeaderboardView = () => {
         </Flex>
       </Box>
 
-      <Box flex={1} paddingX={'80px'}>
+      <Box flex={1} paddingX={{ base: '12px', lg: '80px' }}>
         <Box
           maxWidth={'450px'}
           marginX={'auto'}
@@ -79,18 +98,39 @@ const LeaderboardView = () => {
           <Image alt="avatar" src="/images/icons/thunder.svg" width={24} height={24} className="mr-2" /> The competition
           ends on MM/DD/YYYY - hh:mm UTC
         </Box>
-        <Heading
-          as="h3"
-          textAlign={'center'}
-          fontSize={'24px'}
-          lineHeight={'36px'}
-          fontWeight={'400'}
-          marginBottom={'28px'}
-        >
-          Leaderboard
-        </Heading>
+        <Stack direction="row" spacing={4} align="center" display={{ base: 'flex', lg: 'none' }} justifyContent={'center'} marginBottom={'20px'}>
+          <Button colorScheme="primary" variant="solid" size={'sm'}>
+            Button
+          </Button>
+          <Button colorScheme="primary" variant="ghost" size={'sm'}>
+            Button
+          </Button>
+        </Stack>
+        <Flex justifyContent={'center'} alignItems={'center'} marginBottom={'28px'}>
+          <Heading as="h3" textAlign={'center'} fontSize={'24px'} lineHeight={'36px'} fontWeight={'400'}>
+            Leaderboard
+          </Heading>
+          {mounted && isMobile && (
+            // eslint-disable-next-line tailwindcss/no-custom-classname
+            <Select defaultValue="china" style={{ width: 120 }} onChange={handleChange} className="customSelect ml-3">
+              <Option value="china" label="China">
+                <div className="flex items-center">
+                  <Image
+                    src="/images/networks/base.png"
+                    width={14}
+                    height={14}
+                    alt="Avata"
+                    className="mr-3 h-[14px] w-[14px]"
+                  />
+                  <span className="flex-1 text-left">Base</span>
+                </div>
+              </Option>
+            </Select>
+          )}
+        </Flex>
         <Box display={'flex'} alignItems={'center'} justifyContent={'center'} marginBottom={'28px'}>
-          {mounted && (
+          {mounted && !isMobile && (
+            // eslint-disable-next-line tailwindcss/no-custom-classname
             <Select defaultValue="china" style={{ width: 120 }} onChange={handleChange} className="customSelect">
               <Option value="china" label="China">
                 <div className="flex items-center">
@@ -130,7 +170,7 @@ const LeaderboardView = () => {
           <Center
             textAlign={'center'}
             padding={3}
-            borderRight={'1px solid #242428'}
+            borderRight={{ base: 'none', lg: '1px solid #242428' }}
             flexShrink={1}
             flexGrow={1}
             flexBasis={'200px'}
@@ -160,7 +200,7 @@ const LeaderboardView = () => {
           <Center
             textAlign={'center'}
             padding={3}
-            borderRight={'1px solid #242428'}
+            borderRight={{ base: 'none', lg: '1px solid #242428' }}
             flexShrink={1}
             flexGrow={1}
             flexBasis={'200px'}
@@ -227,7 +267,7 @@ const LeaderboardView = () => {
             </Flex>
             <Box>
               <Menu>
-                <MenuButton as={Button} rightIcon={<CalendarIcon />} backgroundColor={'#252528'} color={"#7A72F6"}>
+                <MenuButton as={Button} rightIcon={<CalendarIcon />} backgroundColor={'#252528'} color={'#7A72F6'}>
                   Actions
                 </MenuButton>
                 <MenuList
