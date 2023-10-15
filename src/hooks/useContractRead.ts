@@ -36,7 +36,6 @@ export const useIsApprovedForAll = (contractAddress: Address | undefined, operat
 
 export const useBalanceOf = (contractAddress: Address | undefined) => {
   const { address } = useActiveWeb3React();
-  console.log(address)
 
   const { data } = useContractReadCustom({
     address: contractAddress,
