@@ -1,5 +1,8 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import ItemCardTab from './ItemCardTab';
+import { useQuery } from '@tanstack/react-query';
+import { getDashboardOverview } from '@/services/dashboard';
+import { notification } from 'antd';
 
 const dataTrading = [
   {
@@ -36,6 +39,20 @@ const dataTrading = [
   },
 ];
 const TradingTab = () => {
+  const networkID = 421613;
+  const { data: dataDashboardOverviews } = useQuery({
+    queryKey: ['getDashboardOverview', networkID],
+    queryFn: () => getDashboardOverview({ network: networkID }),
+    onError: (error: any) => {
+      notification.error({ message: error.message });
+    },
+    // enabled: !!networkID,
+    cacheTime: 0,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
+
+  console.log('dataDashboardOverviews', dataDashboardOverviews);
   return (
     <Box
       boxShadow="1px 0.5px 0px 0px #38383A inset"

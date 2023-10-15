@@ -2,12 +2,14 @@
 import { getStats } from '@/services/stats';
 import { IStatsParams, IvolumeStats } from '@/types/stats.type';
 import { addComma } from '@/utils/number';
-import { Box, Button, Grid, GridItem, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Grid, GridItem, Heading, Text, useMediaQuery } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import { notification } from 'antd';
+import { DatePicker, TimeRangePickerProps, notification } from 'antd';
 import { maxBy, minBy, sortBy } from 'lodash';
 import { Download } from 'lucide-react';
 import { use, useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import {
   ComposedChart,
   Bar,
@@ -22,6 +24,7 @@ import {
   Area,
   LineChart,
 } from 'recharts';
+import DateRangeStyle from './style';
 
 const data = [
   {
@@ -500,6 +503,135 @@ const data2 = {
   ],
 };
 
+const data3 = [
+  {
+    name: 'Page A',
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    name: 'Page B',
+    uv: -3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: 'Page C',
+    uv: -2000,
+    pv: -9800,
+    amt: 2290,
+  },
+  {
+    name: 'Page D',
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: 'Page E',
+    uv: -1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: 'Page F',
+    uv: 2390,
+    pv: -3800,
+    amt: 2500,
+  },
+  {
+    name: 'Page G',
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+  {
+    name: 'Page A',
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    name: 'Page B',
+    uv: -3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: 'Page C',
+    uv: -2000,
+    pv: -9800,
+    amt: 2290,
+  },
+  {
+    name: 'Page D',
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: 'Page E',
+    uv: -1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: 'Page F',
+    uv: 2390,
+    pv: -3800,
+    amt: 2500,
+  },
+  {
+    name: 'Page G',
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+  {
+    name: 'Page A',
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    name: 'Page B',
+    uv: -3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: 'Page C',
+    uv: -2000,
+    pv: -9800,
+    amt: 2290,
+  },
+  {
+    name: 'Page D',
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: 'Page E',
+    uv: -1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: 'Page F',
+    uv: 2390,
+    pv: -3800,
+    amt: 2500,
+  },
+  {
+    name: 'Page G',
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
+
 const CustomTooltip = (data: any) => {
   const { active, payload } = data;
   if (active && payload && payload.length) {
@@ -531,7 +663,15 @@ const CustomTooltip = (data: any) => {
 //   scope: 1,
 // };
 
+const rangePresets: TimeRangePickerProps['presets'] = [
+  { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
+  { label: 'Last 60 Days', value: [dayjs().add(-60, 'd'), dayjs()] },
+  { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] },
+];
+
 const StatsView = () => {
+  const [isMobile] = useMediaQuery('(max-width: 768px)');
+  const { RangePicker } = DatePicker;
   const [filter, setFilter] = useState<IStatsParams | undefined>({
     network: 421613,
     start: 1691853873,
@@ -658,18 +798,45 @@ const StatsView = () => {
   //   return [ret];
   // }
 
+  const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
+    if (dates) {
+      console.log('From: ', dates[0], ', to: ', dates[1]);
+      console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+    } else {
+      console.log('Clear');
+    }
+  };
+
   return (
-    <Box marginX={'-60px'}>
-      <Heading as="h3" marginY={'20px'} fontSize={'24px'} fontWeight={600}>
-        Stats
-      </Heading>
+    <Box marginX={{ base: '0', lg: '-60px' }}>
+      <Box
+        display={'flex'}
+        alignItems={{ base: 'flex-start', md: 'center' }}
+        justifyContent={'space-between'}
+        flexDirection={{ base: 'column', md: 'row' }}
+        marginY={'20px'}
+      >
+        <Heading as="h3" fontSize={'24px'} fontWeight={600}>
+          Stats
+        </Heading>
+        <DateRangeStyle>
+          <RangePicker
+            presets={rangePresets}
+            showTime={isMobile ? true : false}
+            format="YYYY/MM/DD"
+            onChange={onRangeChange}
+            popupClassName="customRangePicker"
+            size="large"
+          />
+        </DateRangeStyle>
+      </Box>
 
       <Grid
         templateColumns={{ base: 'repeat(4, 1fr)', md: 'repeat(4, 1fr)', xl: 'repeat(5, 1fr)' }}
         gap={6}
         marginBottom={'20px'}
       >
-        <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
+        <GridItem colSpan={{ base: 4, md: 2, xl: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -704,7 +871,7 @@ const StatsView = () => {
             </Box>
           </Box>
         </GridItem>
-        <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
+        <GridItem colSpan={{ base: 4, md: 2, xl: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -739,7 +906,7 @@ const StatsView = () => {
             </Box>
           </Box>
         </GridItem>
-        <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
+        <GridItem colSpan={{ base: 4, md: 2, xl: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -774,7 +941,7 @@ const StatsView = () => {
             </Box>
           </Box>
         </GridItem>
-        <GridItem colSpan={{ base: 2, md: 2, xl: 1 }}>
+        <GridItem colSpan={{ base: 4, md: 2, xl: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
             boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
@@ -909,7 +1076,15 @@ const StatsView = () => {
                 <Tooltip />
                 <Legend />
                 <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#FFCE57" barSize={16} />
-                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#FE1A67" connectNulls yAxisId="right" />
+                <Line
+                  type="monotone"
+                  dataKey="amt"
+                  name="amt Name"
+                  stroke="#FE1A67"
+                  connectNulls
+                  yAxisId="right"
+                  dot={false}
+                />
               </ComposedChart>
             </ResponsiveContainer>
           </Box>
@@ -977,13 +1152,97 @@ const StatsView = () => {
                 <Tooltip />
                 <Legend />
                 <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#8042FF" barSize={16} />
-                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#FE1A67" connectNulls yAxisId="right" />
+                <Line
+                  type="monotone"
+                  dataKey="amt"
+                  name="amt Name"
+                  stroke="#FE1A67"
+                  connectNulls
+                  yAxisId="right"
+                  dot={false}
+                />
               </ComposedChart>
             </ResponsiveContainer>
           </Box>
         </GridItem>
-      </Grid>
-      <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
+
+        <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
+          <Box
+            backgroundColor={'rgba(28, 28, 30, 0.50)'}
+            boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+            backdropFilter={'blur(7px)'}
+            borderRadius={'20px'}
+            border={'1px solid #242428'}
+          >
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
+              <Text>Burned ETR</Text>
+              <Button
+                leftIcon={<Download size={14} />}
+                colorScheme="primary"
+                variant="outline"
+                size={'xs'}
+                background={'#050506'}
+              >
+                Download CSV
+              </Button>
+            </Box>
+            <ResponsiveContainer width="99%" height="100%" aspect={2}>
+              <ComposedChart
+                // width={500}
+                // height={300}
+                data={data}
+                // margin={{
+                //   top: 5,
+                //   right: 10,
+                //   left: 10,
+                //   bottom: 5,
+                // }}
+                barGap={0}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
+                <Tooltip content={CustomTooltip} />
+                <XAxis
+                  dataKey="name"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  tickLine={false}
+                />
+                {/* <YAxis /> */}
+                <YAxis
+                  yAxisId="left"
+                  orientation="left"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#FFCE57" barSize={16} />
+                <Line
+                  type="monotone"
+                  dataKey="amt"
+                  name="amt Name"
+                  stroke="#FE1A67"
+                  connectNulls
+                  yAxisId="right"
+                  dot={false}
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </Box>
+        </GridItem>
+
         <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
@@ -1044,11 +1303,20 @@ const StatsView = () => {
                 <Tooltip />
                 <Legend />
                 {/* <Bar yAxisId="left" dataKey="pv" fill="#8042FF" barSize={16} /> */}
-                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#DD6FB5" connectNulls yAxisId="left" />
+                <Line
+                  type="monotone"
+                  dataKey="amt"
+                  name="amt Name"
+                  stroke="#DD6FB5"
+                  connectNulls
+                  yAxisId="left"
+                  dot={false}
+                />
               </ComposedChart>
             </ResponsiveContainer>
           </Box>
         </GridItem>
+
         <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
@@ -1058,7 +1326,7 @@ const StatsView = () => {
             border={'1px solid #242428'}
           >
             <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
-              <Text>USD/ELP rate</Text>
+              <Text>ELP Pool</Text>
               <Button
                 leftIcon={<Download size={14} />}
                 colorScheme="primary"
@@ -1109,13 +1377,20 @@ const StatsView = () => {
                 <Tooltip />
                 <Legend />
                 {/* <Bar yAxisId="left" dataKey="pv" fill="#8042FF" barSize={16} /> */}
-                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#7A72F6" connectNulls yAxisId="left" />
+                <Line
+                  type="monotone"
+                  dataKey="amt"
+                  name="amt Name"
+                  stroke="#7A72F6"
+                  connectNulls
+                  yAxisId="left"
+                  dot={false}
+                />
               </ComposedChart>
             </ResponsiveContainer>
           </Box>
         </GridItem>
-      </Grid>
-      <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
+
         <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
@@ -1180,7 +1455,15 @@ const StatsView = () => {
                 <Legend />
                 <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#FFCE57" barSize={16} />
                 <Bar yAxisId="left" dataKey="uv" name="uv Name" fill="#8042FF" barSize={16} />
-                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#4CC0C0" connectNulls yAxisId="right" />
+                <Line
+                  type="monotone"
+                  dataKey="amt"
+                  name="amt Name"
+                  stroke="#4CC0C0"
+                  connectNulls
+                  yAxisId="right"
+                  dot={false}
+                />
               </ComposedChart>
             </ResponsiveContainer>
           </Box>
@@ -1207,9 +1490,9 @@ const StatsView = () => {
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
-                // width={500}
-                // height={300}
-                data={data}
+                width={500}
+                height={300}
+                data={data3 as any[]}
                 // margin={{
                 //   top: 5,
                 //   right: 10,
@@ -1220,14 +1503,7 @@ const StatsView = () => {
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
-                <XAxis
-                  dataKey="name"
-                  stroke="#6D6D70"
-                  style={{
-                    fontSize: '12px',
-                  }}
-                  tickLine={false}
-                />
+                <XAxis dataKey="name" />
                 {/* <YAxis /> */}
                 <YAxis
                   yAxisId="left"
@@ -1247,14 +1523,24 @@ const StatsView = () => {
                 />
                 <Tooltip />
                 <Legend />
-                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#DEDCFD" barSize={16} />
-                <Line type="monotone" dataKey="amt" name="amt Name" stroke="#4CC0C0" connectNulls yAxisId="right" />
+                <Line
+                  type="monotone"
+                  dataKey="pv"
+                  name="amt Name"
+                  stroke="#4CC0C0"
+                  connectNulls
+                  yAxisId="right"
+                  dot={false}
+                />
+                <Bar yAxisId="left" dataKey="uv" stackId="stack" barSize={16} fill="white">
+                  {data3.map((entry, index) => {
+                    return <Cell key={`cell-${index}`} fill={`${entry.uv > 0 ? '#82ca9d' : '#F03D3E'}`} />;
+                  })}
+                </Bar>
               </ComposedChart>
             </ResponsiveContainer>
           </Box>
         </GridItem>
-      </Grid>
-      <Grid templateColumns="repeat(2, 1fr)" gap={6} marginBottom={'20px'}>
         <GridItem colSpan={{ base: 2, md: 2, lg: 1 }}>
           <Box
             backgroundColor={'rgba(28, 28, 30, 0.50)'}
@@ -1275,7 +1561,7 @@ const StatsView = () => {
                 Download CSV
               </Button>
             </Box>
-            <ResponsiveContainer width="100%" height="100%" aspect={2}>
+            <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 width={500}
                 height={300}

@@ -2,7 +2,25 @@
 
 import Link from 'next/link';
 
-import { Button, Center, Flex, Icon, Menu, MenuButton, MenuItem, MenuList, useDisclosure } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  useDisclosure,
+  useMediaQuery,
+} from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import { useEffect } from 'react';
@@ -13,7 +31,9 @@ import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { AccountModal } from '../AccountModal';
 
 export const Header = () => {
+  const [isMobile] = useMediaQuery('(max-width: 992px)');
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenDraw, onOpen: onOpenDraw, onClose: onCloseDraw } = useDisclosure();
   const { address } = useAccount();
   const { listWallets, setUser, setToken } = useUserStore();
   const currentRoute = usePathname();
@@ -38,106 +58,114 @@ export const Header = () => {
       <Flex
         as="header"
         role="menu"
-        // px={{ base: 2.5, md: 10 }}
-        // pt={{ base: 2.5, md: 5 }}
         padding={'8px 20px 8px 20px'}
         justifyContent="space-between"
         alignItems="center"
         fontSize={14}
         zIndex={11}
-        // position={'sticky'}
+        // position={'fixed'}
+        width={'100%'}
+        // backgroundColor={scrolled ? '#0f0f14eb' : 'transparent'}
         top={0}
-        borderBottom={'1px solid #242428'}
-        // backgroundColor={'rgba(28, 28, 30)'}
       >
-        <Flex gap={3} alignItems="center">
-          <Center>
-            <Link href="/" className="mr-2">
-              <Image alt="ethora" src="/images/icons/Ethora.svg" w="full" h="full" />
-            </Link>
-          </Center>
-          <Center>
-            <Link href="trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
-              Trade
-            </Link>
-          </Center>
-          <Center>
-            <Link href="faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
-              Faucet
-            </Link>
-          </Center>
-          <Center>
-            <Link href="profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
-              Leaderboard
-            </Link>
-          </Center>
-          <Center>
-            <Menu>
-              {({ isOpen }) => (
-                <>
-                  <MenuButton className="text-[#6D6D70]">
-                    More {isOpen ? <TriangleUpIcon w="20px" h="12px" /> : <TriangleDownIcon w="20px" h="12px" />}
-                  </MenuButton>
-                  <MenuList minWidth="107px" background="#252528" border="none" className="w-[107px]">
-                    <MenuItem background="transparent">
-                      <Link
-                        href="earn"
-                        className={`w-full text-center ${currentRoute === '/earn' ? 'text-[#fff]' : ''}`}
-                      >
-                        Earn
-                      </Link>
-                    </MenuItem>
-                    <MenuItem background="transparent">
-                      <Link
-                        href="docs"
-                        className={`w-full text-center ${currentRoute === '/docs' ? 'text-[#fff]' : ''}`}
-                      >
-                        Docs
-                      </Link>
-                    </MenuItem>
-                    <MenuItem background="transparent">
-                      <Link
-                        href="stats"
-                        className={`w-full text-center ${currentRoute === '/stats' ? 'text-[#fff]' : ''}`}
-                      >
-                        Stats
-                      </Link>
-                    </MenuItem>
-                    <MenuItem background="transparent">
-                      <Link
-                        href="profile"
-                        className={`w-full text-center ${currentRoute === '/profile' ? 'text-[#fff]' : ''}`}
-                      >
-                        Profile
-                      </Link>
-                    </MenuItem>
-                    <MenuItem background="transparent">
-                      <Link href="https://twitter.com/home?lang=vi" target="_blank" className="w-full text-center">
-                        Twitter
-                      </Link>
-                    </MenuItem>
-                    <MenuItem background="transparent">
-                      <Link href="https://github.com" target="_blank" className="w-full text-center">
-                        Github
-                      </Link>
-                    </MenuItem>
-                    <MenuItem background="transparent">
-                      <Link href="https://web.telegram.org/" target="_blank" className="w-full text-center">
-                        Telegram
-                      </Link>
-                    </MenuItem>
-                    <MenuItem background="transparent">
-                      <Link href="https://discord.com/" target="_blank" className="w-full text-center">
-                        Discord
-                      </Link>
-                    </MenuItem>
-                  </MenuList>
-                </>
-              )}
-            </Menu>
-          </Center>
+        <Flex
+          gap={3}
+          alignItems="center"
+          width={isMobile ? '30px' : '100%'}
+          justifyContent={isMobile ? 'space-between' : 'start'}
+        >
+          {!isMobile && (
+            <Center>
+              <Link href="/" className="mr-2">
+                <Image alt="ethora" src="/images/icons/Ethora.svg" w="full" h="full" />
+              </Link>
+            </Center>
+          )}
+          {isMobile ? (
+            <Box onClick={onOpenDraw}>
+              <Image alt="ethora" src="/images/icons/li_menu.svg" w="24px" h="24px" />
+            </Box>
+          ) : (
+            <>
+              <Center>
+                <Link href="trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
+                  Trade
+                </Link>
+              </Center>
+              <Center>
+                <Link href="profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
+                  Leaderboard
+                </Link>
+              </Center>
+              <Center>
+                <Menu>
+                  {({ isOpen }) => (
+                    <>
+                      <MenuButton className="text-[#6D6D70]">
+                        More {isOpen ? <TriangleUpIcon w="20px" h="12px" /> : <TriangleDownIcon w="20px" h="12px" />}
+                      </MenuButton>
+                      <MenuList minWidth="107px" background="#252528" border="none" className="w-[107px]">
+                        <MenuItem background="transparent">
+                          <Link
+                            href="earn"
+                            className={`w-full text-center ${currentRoute === '/earn' ? 'text-[#fff]' : ''}`}
+                          >
+                            Earn
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link
+                            href="docs"
+                            className={`w-full text-center ${currentRoute === '/docs' ? 'text-[#fff]' : ''}`}
+                          >
+                            Docs
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link
+                            href="stats"
+                            className={`w-full text-center ${currentRoute === '/stats' ? 'text-[#fff]' : ''}`}
+                          >
+                            Stats
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link
+                            href="profile"
+                            className={`w-full text-center ${currentRoute === '/profile' ? 'text-[#fff]' : ''}`}
+                          >
+                            Profile
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link href="https://twitter.com/home?lang=vi" target="_blank" className="w-full text-center">
+                            Twitter
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link href="https://github.com" target="_blank" className="w-full text-center">
+                            Github
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link href="https://web.telegram.org/" target="_blank" className="w-full text-center">
+                            Telegram
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link href="https://discord.com/" target="_blank" className="w-full text-center">
+                            Discord
+                          </Link>
+                        </MenuItem>
+                      </MenuList>
+                    </>
+                  )}
+                </Menu>
+              </Center>
+            </>
+          )}
         </Flex>
-        <Flex gap={3}>
+        <Flex gap={3} width={'100%'} justifyContent={'flex-end'}>
           <Center>
             <ConnectButton.Custom>
               {({
@@ -222,9 +250,10 @@ export const Header = () => {
                             bgColor="#252528"
                             textColor="#ffffff"
                             rightIcon={<TriangleDownIcon w="20px" h="12px" />}
-                            width="200px"
+                            width={`${!isMobile && '200px'}`}
                             _hover={{ bg: '#252528' }}
                             rounded="10px"
+                            size={`${isMobile ? 'sm' : 'md'}`}
                           >
                             <Flex>
                               <Center>
@@ -248,7 +277,7 @@ export const Header = () => {
                                     )}
                                   </div>
                                 )}
-                                {chain.name}
+                                {!isMobile && chain.name}
                               </Center>
                             </Flex>
                           </Button>
@@ -277,6 +306,7 @@ export const Header = () => {
                             _hover={{ borderColor: '#7A72F6', textColor: '#7A72F6' }}
                             _active={{ borderColor: '#342BC3', textColor: '#342BC3' }}
                             rounded="10px"
+                            size={`${isMobile ? 'sm' : 'md'}`}
                             onClick={onOpen}
                           >
                             {/* {account.displayName} */}
@@ -297,14 +327,115 @@ export const Header = () => {
               variant="outline"
               _hover={{ bg: 'transparent' }}
               padding="10px"
+              size={`${isMobile ? 'sm' : 'md'}`}
             >
               <Image alt="setting" src="/images/icons/settings.svg" w="18px" h="18px" />
             </Button>
           </Center>
           <Center>
-            <Image alt="avatar" src="/images/icons/avatar.svg" w="40px" h="40px" />
+            <Image
+              alt="avatar"
+              src="/images/icons/avatar.svg"
+              w={isMobile ? '32px' : '40px'}
+              h={isMobile ? '32px' : '40px'}
+            />
           </Center>
         </Flex>
+        <Drawer isOpen={isOpenDraw} placement="left" onClose={onCloseDraw}>
+          <DrawerOverlay />
+          <DrawerContent backgroundColor={'#1a1a22'}>
+            <DrawerHeader>
+              <DrawerCloseButton color={'white'} />
+            </DrawerHeader>
+
+            <DrawerBody>
+              <Center justifyContent={'flex-start'}>
+                <Link href="trade" className={currentRoute === '/' ? activeStyle : nonActiveStyle}>
+                  Trade
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="Earn" className={currentRoute === '/Earn' ? activeStyle : nonActiveStyle}>
+                  Earn
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
+                  Leaderboard
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
+                  Token sale
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link
+                  href="practice-trading"
+                  className={currentRoute === '/practice-trading' ? activeStyle : nonActiveStyle}
+                >
+                  Practice Trading
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link
+                  href="earn"
+                  className={`w-full text-left ${currentRoute === '/earn' ? 'text-[#fff]' : nonActiveStyle}`}
+                >
+                  Earn
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link
+                  href="docs"
+                  className={`w-full text-left ${currentRoute === '/docs' ? 'text-[#fff]' : nonActiveStyle}`}
+                >
+                  Docs
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link
+                  href="stats"
+                  className={`w-full text-left ${currentRoute === '/stats' ? 'text-[#fff]' : nonActiveStyle}`}
+                >
+                  Stats
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link
+                  href="profile"
+                  className={`w-full text-left ${currentRoute === '/profile' ? 'text-[#fff]' : nonActiveStyle}`}
+                >
+                  Profile
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link
+                  href="https://twitter.com/home?lang=vi"
+                  target="_blank"
+                  className={`w-full text-left ${nonActiveStyle}`}
+                >
+                  Twitter
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="https://github.com" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
+                  Github
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="https://web.telegram.org/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
+                  Telegram
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="https://discord.com/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
+                  Discord
+                </Link>
+              </Center>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
       </Flex>
       <AccountModal isOpen={isOpen} onClose={onClose} />
     </>
