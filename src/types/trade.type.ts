@@ -14,3 +14,7 @@ export enum PairType {
   CRYPTO = 'crypto',
   FOREX = 'forex',
 }
+
+export interface Changed24h {
+  [key: string]: string
+}

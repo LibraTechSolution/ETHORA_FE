@@ -115,7 +115,7 @@ const listPairData: PairData[] = [
     type: PairType.FOREX,
   },
   {
-    pair: 'XAU-USD',
+    pair: 'XAU/USD',
     isFavorite: false,
     changed24h: 1815.35,
     changed24hPercent: 0.4,

@@ -1,4 +1,5 @@
 import { listPairs } from '@/components/TradingView/TradingView';
+import { getChanged24h } from '@/services/trade';
 import usePairStore from '@/store/usePairStore';
 import useTradeStore from '@/store/useTradeStore';
 import { PairData, PairType } from '@/types/trade.type';
@@ -28,6 +29,7 @@ import {
   Progress,
   Table,
 } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import { SearchIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -41,6 +43,10 @@ const TradeViewHeader = () => {
   const params = useParams();
   const [search, setSearch] = useState<string>('');
   const [isShow, setIsShow] = useState<boolean>(false);
+  const { data: listChanged24h } = useQuery({
+    queryKey: ['getChanged24h'],
+    queryFn: () => getChanged24h(),
+  });
   const currentPair = useMemo<string>(() => {
     let tempCurrentPair = params?.pair as string;
     if (!tempCurrentPair || !listPairs.includes(tempCurrentPair.replace('-', '/').toLocaleUpperCase())) {
@@ -48,16 +54,34 @@ const TradeViewHeader = () => {
     }
     return tempCurrentPair;
   }, [params.pair]);
+
   const listPairShow = useMemo<PairData[]>(() => {
-    if (!search) return listPairData;
     const tempList = [];
+    const tempChanged24h = listChanged24h?.data?.data;
+
     for (let i = 0; i < listPairData.length; i++) {
+      const changed24hPair = tempChanged24h && tempChanged24h[listPairData[i].pair.replace('/', '')];
+      if (changed24hPair) {
+        listPairData[i].changed24hPercent = +changed24hPair;
+      } else {
+        listPairData[i].changed24hPercent = -2;
+      }
       if (listPairData[i].pair.replace('/', '-').includes(search.toUpperCase().replace('/', '-'))) {
         tempList.push(listPairData[i]);
       }
     }
     return tempList;
-  }, [listPairData, search]);
+  }, [listPairData, search, listChanged24h]);
+
+  const isEmptyFavorite = useMemo<boolean>(() => {
+    return !listPairData.some((item: PairData) => item.isFavorite);
+  }, [listPairData]);
+
+  const currentChangedPercent = useMemo<number>(() => {
+    return listChanged24h && listChanged24h?.data?.data[currentPair.replace('-', '').toUpperCase()]
+      ? +listChanged24h?.data?.data[currentPair.replace('-', '').toUpperCase()]
+      : -2;
+  }, [currentPair, listChanged24h]);
 
   const handleFavorite = (pair: string) => {
     const tempList = _.cloneDeep(listPairData);
@@ -76,7 +100,6 @@ const TradeViewHeader = () => {
   };
 
   const handleOutSideClick = (e: Event) => {
-    console.log(e.target);
     if (!pairRef.current?.contains(e.target as Node)) {
       setIsShow(false);
     }
@@ -92,10 +115,10 @@ const TradeViewHeader = () => {
 
   return (
     <Flex alignItems="center" justifyContent="space-between">
-      <Flex>
+      <Flex justifyContent={{ base: 'space-between', xl: 'normal' }} width={{ base: '100%', xl: 'auto' }}>
         <Center cursor="pointer" position={'relative'} zIndex={1} ref={pairRef}>
           <Center onClick={() => setIsShow(!isShow)}>
-            <Image alt="bitcoin" src="/images/icons/bitcoin.png" w="32px" h="32px" />
+            <Image alt="bitcoin" src={`/images/icons/${currentPair.toLowerCase()}.png`} w="32px" h="32px" />
             <span className="px-3 text-xl font-semibold text-[#fff]">
               {currentPair && currentPair.replace('-', '/').toLocaleUpperCase()}
             </span>
@@ -108,7 +131,7 @@ const TradeViewHeader = () => {
             bgColor={'rgb(28, 28, 30)'}
             rounded={'20px'}
             padding={'20px'}
-            w="1028px"
+            w={{ base: 'calc(100vw - 20px)', xl: '1028px' }}
             display={isShow ? 'block' : 'none'}
           >
             <InputGroup size="md" marginBottom={'8px'}>
@@ -231,7 +254,7 @@ const TradeViewHeader = () => {
                                         <Box display="flex" alignItems={'center'}>
                                           <Image
                                             alt=""
-                                            src="/images/icons/bitcoin.png"
+                                            src={`/images/icons/${item.pair.replace('/', '-').toLowerCase()}.png`}
                                             w="20px"
                                             h="20px"
                                             marginLeft={'12px'}
@@ -259,8 +282,13 @@ const TradeViewHeader = () => {
                                     paddingY="8px"
                                   >
                                     <p className="pb-1">{item.changed24h}</p>
-                                    <p className="flex items-center text-[#F03D3E]">
-                                      <TriangleDownIcon /> <span className="pl-2">{item.changed24hPercent}%</span>
+                                    <p
+                                      className={`flex items-center ${
+                                        item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'
+                                      }`}
+                                    >
+                                      {item.changed24hPercent > 0 ? <TriangleUpIcon /> : <TriangleDownIcon />}{' '}
+                                      <span className="pl-2">{item.changed24hPercent}%</span>
                                     </p>
                                   </Td>
                                   <Td
@@ -292,6 +320,23 @@ const TradeViewHeader = () => {
                                   </Td>
                                 </Tr>
                               ),
+                          )}
+                          {isEmptyFavorite && (
+                            <Tr>
+                              <Td
+                                colSpan={6}
+                                borderColor={'#38383A'}
+                                fontWeight={'400'}
+                                fontSize={'14px'}
+                                textColor={'#fff'}
+                                paddingY="8px"
+                              >
+                                <Flex direction={'column'} alignItems={'center'} paddingY="60px">
+                                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
+                                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+                                </Flex>
+                              </Td>
+                            </Tr>
                           )}
                         </Tbody>
                       </Table>
@@ -359,7 +404,7 @@ const TradeViewHeader = () => {
                                     <Box display="flex" alignItems={'center'}>
                                       <Image
                                         alt=""
-                                        src="/images/icons/bitcoin.png"
+                                        src={`/images/icons/${item.pair.replace('/', '-').toLowerCase()}.png`}
                                         w="20px"
                                         h="20px"
                                         marginLeft={'12px'}
@@ -387,8 +432,13 @@ const TradeViewHeader = () => {
                                 paddingY="8px"
                               >
                                 <p className="pb-1">{item.changed24h}</p>
-                                <p className="flex items-center text-[#F03D3E]">
-                                  <TriangleDownIcon /> <span className="pl-2">{item.changed24hPercent}%</span>
+                                <p
+                                  className={`flex items-center ${
+                                    item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'
+                                  }`}
+                                >
+                                  {item.changed24hPercent > 0 ? <TriangleUpIcon /> : <TriangleDownIcon />}{' '}
+                                  <span className="pl-2">{item.changed24hPercent}%</span>
                                 </p>
                               </Td>
                               <Td
@@ -491,7 +541,7 @@ const TradeViewHeader = () => {
                                         <Box display="flex" alignItems={'center'}>
                                           <Image
                                             alt=""
-                                            src="/images/icons/bitcoin.png"
+                                            src={`/images/icons/${item.pair.replace('/', '-').toLowerCase()}.png`}
                                             w="20px"
                                             h="20px"
                                             marginLeft={'12px'}
@@ -519,8 +569,13 @@ const TradeViewHeader = () => {
                                     paddingY="8px"
                                   >
                                     <p className="pb-1">{item.changed24h}</p>
-                                    <p className="flex items-center text-[#F03D3E]">
-                                      <TriangleDownIcon /> <span className="pl-2">{item.changed24hPercent}%</span>
+                                    <p
+                                      className={`flex items-center ${
+                                        item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'
+                                      }`}
+                                    >
+                                      {item.changed24hPercent > 0 ? <TriangleUpIcon /> : <TriangleDownIcon />}{' '}
+                                      <span className="pl-2">{item.changed24hPercent}%</span>
                                     </p>
                                   </Td>
                                   <Td
@@ -624,7 +679,7 @@ const TradeViewHeader = () => {
                                         <Box display="flex" alignItems={'center'}>
                                           <Image
                                             alt=""
-                                            src="/images/icons/bitcoin.png"
+                                            src={`/images/icons/${item.pair.replace('/', '-').toLowerCase()}.png`}
                                             w="20px"
                                             h="20px"
                                             marginLeft={'12px'}
@@ -652,8 +707,13 @@ const TradeViewHeader = () => {
                                     paddingY="8px"
                                   >
                                     <p className="pb-1">{item.changed24h}</p>
-                                    <p className="flex items-center text-[#F03D3E]">
-                                      <TriangleDownIcon /> <span className="pl-2">{item.changed24hPercent}%</span>
+                                    <p
+                                      className={`flex items-center ${
+                                        item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'
+                                      }`}
+                                    >
+                                      {item.changed24hPercent > 0 ? <TriangleUpIcon /> : <TriangleDownIcon />}{' '}
+                                      <span className="pl-2">{item.changed24hPercent}%</span>
                                     </p>
                                   </Td>
                                   <Td
@@ -707,26 +767,40 @@ const TradeViewHeader = () => {
             </Box>
           </Box>
         </Center>
-        <Center paddingX={10}>
-          <p className="text-2xl font-normal text-[#fff]">{addComma(price, 2)}</p>
+        <Center paddingX={10} display={{ base: 'none', xl: 'flex' }}>
+          <p className="text-2xl font-normal text-[#fff]">{addComma(price.toFixed(2), 2)}</p>
         </Center>
         <Center>
-          <Box borderRight="1px solid #38383A" paddingRight="20px">
-            <p className="pb-2 text-xs font-normal text-[#9E9E9F]">24h Change</p>
-            <span className="h-6 rounded border border-[#1ED768] px-[6px] text-sm font-normal text-[#1ED768]">
-              <TriangleUpIcon color={'#1ED768'} marginRight="4px" />
-              20%
+          <Box
+            borderRight={{ base: 'none', xl: '1px solid #38383A' }}
+            paddingRight={{ base: '0', xl: '20px' }}
+            display={{ base: 'flex', xl: 'block' }}
+            alignItems={{ base: 'center', xl: '' }}
+          >
+            <p className="mr-3 block text-sm font-semibold text-[#fff] xl:hidden">{addComma(price.toFixed(2), 2)}</p>
+            <p className="hidden pb-2 text-xs font-normal text-[#9E9E9F] xl:block ">24h Change</p>
+            <span
+              className={`h-6 rounded border ${
+                currentChangedPercent >= 0 ? 'border-[#1ED768] text-[#1ED768]' : 'border-[#F03D3E] text-[#F03D3E]'
+              }  px-[6px] text-sm font-normal  `}
+            >
+              {currentChangedPercent >= 0 ? (
+                <TriangleUpIcon marginRight="4px" />
+              ) : (
+                <TriangleDownIcon marginRight="4px" />
+              )}
+              {currentChangedPercent}%
             </span>
           </Box>
-          <Box borderRight="1px solid #38383A" paddingX="20px">
+          <Box borderRight="1px solid #38383A" paddingX="20px" display={{ base: 'none', xl: 'block' }}>
             <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Max Trade Size</p>
             <p className="text-sm font-normal leading-6 text-[#fff]">100 USDC</p>
           </Box>
-          <Box borderRight="1px solid #38383A" paddingX="20px">
+          <Box borderRight="1px solid #38383A" paddingX="20px" display={{ base: 'none', xl: 'block' }}>
             <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Payout</p>
             <p className="text-sm font-normal leading-6 text-[#fff]">6%</p>
           </Box>
-          <Box paddingLeft="20px">
+          <Box paddingLeft="20px" display={{ base: 'none', xl: 'block' }}>
             <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Max OI: 1,000 USDC</p>
             <p className="flex h-6 items-center text-sm font-normal text-[#fff]">
               <Progress value={20} size="xs" colorScheme="purple" bgColor="#303035" rounded="2xl" h="2" w="168px" />
@@ -735,7 +809,7 @@ const TradeViewHeader = () => {
           </Box>
         </Center>
       </Flex>
-      <Box>
+      <Box display={{ base: 'none', xl: 'block' }}>
         <Image alt="bitcoin" src="/images/icons/apps.svg" w="20x" h="20x" />
       </Box>
     </Flex>

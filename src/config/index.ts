@@ -10,7 +10,8 @@ export const appConfig = {
   faucetSC: process.env.NEXT_PUBLIC_FAUCET_SC,
   arbiscan: process.env.NEXT_PUBLIC_ARBISCAN,
   usdcAddress: process.env.NEXT_PUBLIC_USDC_ADD,
-  registerSC: process.env.NEXT_PUBLIC_REGISTER_SC
+  registerSC: process.env.NEXT_PUBLIC_REGISTER_SC,
+  referralSC: process.env.NEXT_PUBLIC_REFERRAL_SC
 };
 
 export const targetChainId = appConfig.chainId;

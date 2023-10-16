@@ -34,7 +34,7 @@ const datafeed = {
         .json()
         .then((symbolInfo) => {
           console.log('symbolInfo', symbolInfo)
-          onSymbolResolvedCallback(symbolInfo)
+          onSymbolResolvedCallback({...symbolInfo, pricescale: 100})
         })
         .catch((error) => {
           console.log('[resolveSymbol]: Cannot resolve symbol', symbolName)
