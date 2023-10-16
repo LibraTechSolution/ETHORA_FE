@@ -29,6 +29,7 @@ import { Image } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { AccountModal } from '../AccountModal';
+import { appConfig } from '@/config';
 
 export const Header = () => {
   const [isMobile] = useMediaQuery('(max-width: 992px)');
@@ -92,6 +93,13 @@ export const Header = () => {
                   Trade
                 </Link>
               </Center>
+              {appConfig.includeTestnet && (
+                <Center>
+                  <Link href="faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
+                    Faucet
+                  </Link>
+                </Center>
+              )}
               <Center>
                 <Link href="profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
                   Leaderboard
@@ -350,10 +358,17 @@ export const Header = () => {
 
             <DrawerBody>
               <Center justifyContent={'flex-start'}>
-                <Link href="trade" className={currentRoute === '/' ? activeStyle : nonActiveStyle}>
+                <Link href="trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
                   Trade
                 </Link>
               </Center>
+              {appConfig.includeTestnet && (
+                <Center justifyContent={'flex-start'}>
+                  <Link href="faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
+                    Faucet
+                  </Link>
+                </Center>
+              )}
               <Center justifyContent={'flex-start'}>
                 <Link href="Earn" className={currentRoute === '/Earn' ? activeStyle : nonActiveStyle}>
                   Earn

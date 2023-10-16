@@ -108,17 +108,17 @@ const items: MenuProps['items'] = [
 export const listPairs = [
   'EUR/USD',
   'GBP/USD',
-  'AUD/USD',
-  'USD/JPY',
-  'EUR/JPY',
-  'GBP/JPY',
-  'NZD/USD',
-  'USD/CHE',
-  'USD/CAD',
   'BTC/USD',
   'ETH/USD',
-  'ETH/BTC',
   'LINK/USD',
+  'TON/USD',
+  'ARB/USD',
+  'XRP/USD',
+  'SOL/USD',
+  'BNB/USD',
+  'BOGE/USD',
+  'XAU/USD',
+  'XAG/USD',
 ];
 
 export const TradingViewChart = () => {
@@ -179,13 +179,17 @@ export const TradingViewChart = () => {
       fullscreen: false,
       autosize: true,
       load_last_chart: true,
-      disabled_features: [
-        'header_compare',
-        'header_symbol_search',
-        'header_widget',
-        'go_to_date',
-        'display_market_status',
-      ],
+      disabled_features:
+        window.innerWidth < 600
+          ? [
+              'header_compare',
+              'header_symbol_search',
+              'header_widget',
+              'go_to_date',
+              'display_market_status',
+              'left_toolbar',
+            ]
+          : ['header_compare', 'header_symbol_search', 'header_widget', 'go_to_date', 'display_market_status'],
     };
     widgetRef.current = new widget(widgetOptions);
 
@@ -230,7 +234,12 @@ export const TradingViewChart = () => {
 
   return (
     <div>
-      <Flex flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+      <Flex
+        display={{ base: 'block', xl: 'flex' }}
+        flexDirection={'row'}
+        alignItems={'center'}
+        justifyContent={'space-between'}
+      >
         <Box>
           <span className="px-1 text-xs font-normal text-white">Time</span>
           {listResolutions.map((item, index) => (
