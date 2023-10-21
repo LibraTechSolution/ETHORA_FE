@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 export const addComma = (number: string | number, numberDecimal?: number) => {
   if (!number) return '0';
   const value = number.toString();
@@ -10,3 +12,7 @@ export const addComma = (number: string | number, numberDecimal?: number) => {
   }
   return interger + (decimal ? '.' + decimal : '');
 };
+
+// export function formatBigNumberToFloatNumber(bignumber: BigNumber, decimals = 18) {
+//   return parseFloat(formatEther;
+// }

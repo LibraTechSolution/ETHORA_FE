@@ -1,3 +1,4 @@
+'use client'
 import BigNumber from 'bignumber.js';
 import { isNil } from 'lodash';
 import { FC, PropsWithChildren } from 'react';
