@@ -1,3 +1,5 @@
+import { appConfig } from '@/config';
+import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
 import {
   Button,
   Modal,
@@ -7,6 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  useDisclosure,
   Text,
   FormControl,
   FormLabel,
@@ -15,79 +18,58 @@ import {
   Checkbox,
   InputGroup,
   InputRightElement,
+  Box,
   Flex,
 } from '@chakra-ui/react';
+import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
+import { formatEther, formatUnits, parseUnits } from 'viem';
 import * as Yup from 'yup';
 import { EarnContext } from '..';
-import useActiveWeb3React from '@/hooks/useActiveWeb3React';
-import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
-import { appConfig } from '@/config';
-import VETR_ABI from '@/config/abi/VETR_ABI';
-import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
 import { useContractRead } from 'wagmi';
-import FBLP_ABI from '@/config/abi/FBLP_ABI';
-import VBLP_ABI from '@/config/abi/VBLP_ABI';
+import SETR_ABI from '@/config/abi/SETR_ABI';
+import useActiveWeb3React from '@/hooks/useActiveWeb3React';
 import { addComma } from '@/utils/number';
 
 const validationSchema = Yup.object({
   amount: Yup.string().required(),
-  rememberMe: Yup.boolean().equals([true]),
 });
 
-const WithdrawFundsModal = ({
-  isOpen,
-  exchangeRate,
-  onDismiss,
-}: {
-  isOpen: boolean;
-  exchangeRate: string;
-  onDismiss: () => void;
-}) => {
+const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { onFetchData } = useContext(EarnContext);
-  const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
+  const [loadingUnStake, setLoadingUnStake] = useState<boolean>(false);
   const { address } = useActiveWeb3React();
+
+  const { data: dataDepositBalances } = useContractRead({
+    address: appConfig.SETR_SC as `0x${string}`,
+    abi: SETR_ABI,
+    functionName: 'depositBalances',
+    args: [address as `0x${string}`, appConfig.ESETR_SC as `0x${string}`],
+  });
+
+  console.log('dataDepositBalances', dataDepositBalances);
 
   const formik = useFormik({
     initialValues: {
       amount: '',
-      rememberMe: false,
     },
-    onSubmit: (values) => {
-      console.log('onSubmit');
-      onWithdrawfund(values.amount);
+    onSubmit: async (values) => {
+      onUnStake(values.amount);
     },
     validationSchema: validationSchema,
   });
 
-  const { data: pairAmounts_vBLP_ } = useContractRead({
-    address: appConfig.VBLP_SC as `0x${string}`,
-    abi: VBLP_ABI,
-    functionName: 'pairAmounts',
-    args: [address as `0x${string}`],
-    enabled: !!address,
-  });
+  const onUnStake = async (amount: string) => {
+    const amoutBigint = BigInt(+amount * 10 ** 18);
 
-  const { data: depositBalances_BLP_fBLP_ } = useContractRead({
-    address: appConfig.FBLP_SC as `0x${string}`,
-    abi: FBLP_ABI,
-    functionName: 'depositBalances',
-    args: [address as `0x${string}`, appConfig.BLP_SC as `0x${string}`],
-    enabled: !!(address && appConfig.BLP_SC),
-  });
-
-  const maxAmount =
-    +(depositBalances_BLP_fBLP_ as bigint)?.toString() / 10 ** 6 - +(pairAmounts_vBLP_ as bigint)?.toString() / 10 ** 6;
-
-  const onWithdrawfund = async (amount: string) => {
-    const amoutBigint = BigInt(+amount * 10 ** 6);
     try {
-      setLoadingWithdraw(true);
+      setLoadingUnStake(true);
+      console.log('amount', amoutBigint);
       const configUnStake = await prepareWriteContract({
         address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
         abi: RewardRouterV2_ABI,
-        functionName: 'unstakeAndRedeemBlp',
+        functionName: 'unstakeEsBfr',
         args: [amoutBigint],
       });
 
@@ -95,11 +77,11 @@ const WithdrawFundsModal = ({
       const data = await waitForTransaction({
         hash,
       });
-      setLoadingWithdraw(false);
+      setLoadingUnStake(false);
       onFetchData();
       onDismiss();
     } catch (error) {
-      setLoadingWithdraw(false);
+      setLoadingUnStake(false);
       console.log(error);
     }
   };
@@ -123,26 +105,30 @@ const WithdrawFundsModal = ({
           fontWeight={400}
           fontSize={'14px'}
         >
-          <ModalHeader>Sell ELP</ModalHeader>
+          <ModalHeader>Unstake esETR</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form>
               <VStack spacing={4} align="flex-start">
                 <FormControl>
-                  <FormLabel htmlFor="pay" fontWeight={400} fontSize={'14px'}>
+                  <FormLabel htmlFor="amount" fontWeight={400} fontSize={'14px'}>
                     <Flex display={'flex'} justifyContent={'space-between'} width={'100%'}>
                       <Text as="span" fontSize={'12px'} color="#9E9E9F">
-                        Pay
+                        UnStake
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {maxAmount !== undefined ? addComma(maxAmount, 2) : '---'} ELP
+                        Max:{' '}
+                        {dataDepositBalances !== undefined
+                          ? addComma(formatUnits(dataDepositBalances as bigint, 18), 2)
+                          : '---'}{' '}
+                        esETR
                       </Text>
                     </Flex>
                   </FormLabel>
                   <InputGroup>
                     <Input
                       id="amount"
-                      // name="pay"
+                      // name="amount"
                       placeholder="Enter amount"
                       paddingRight={'125px'}
                       fontSize={'14px'}
@@ -159,8 +145,8 @@ const WithdrawFundsModal = ({
                         color="#ffffff"
                         fontWeight={400}
                         onClick={() => {
-                          if (maxAmount) {
-                            formik.setFieldValue('amount', maxAmount?.toString());
+                          if (dataDepositBalances !== undefined) {
+                            formik.setFieldValue('amount', formatEther(BigInt(dataDepositBalances)));
                           }
                         }}
                       >
@@ -168,40 +154,23 @@ const WithdrawFundsModal = ({
                       </Button>
                       |
                       <Text marginLeft={'4px'} fontSize={'14px'} fontWeight={400}>
-                        ELP
+                        USDC
                       </Text>
                     </InputRightElement>
                   </InputGroup>
                 </FormControl>
-                <Flex display={'flex'} flexDirection={'column'} alignItems={'flex-end'} width={'100%'}>
-                  <Text as="span" fontSize={'12px'} color="#9E9E9F">
-                    Receive
-                  </Text>{' '}
-                  <Text as="span" fontSize={'14px'} color={'#1ED768'}>
-                    {addComma(+formik.values.amount / +exchangeRate, 2)}
-                    {''} ELP
-                  </Text>
-                </Flex>
-                <Checkbox
-                  id="rememberMe"
-                  // name="rememberMe"
-                  {...formik.getFieldProps('rememberMe')}
-                  colorScheme="primary"
-                  fontWeight={400}
-                  fontSize={'14px'}
-                >
-                  <Text as="span" fontSize={'14px'}>
-                    {' '}
-                    I have read how the USDC vault works and am aware of risk associated with being a liquidity provider
-                  </Text>
-                </Checkbox>
               </VStack>
             </form>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="primary" onClick={() => formik.handleSubmit()} width={'100%'} isDisabled={loadingWithdraw || !formik.values.rememberMe}>
-              Withdraw Funds
+            <Button
+              colorScheme="primary"
+              onClick={() => formik.handleSubmit()}
+              width={'100%'}
+              isLoading={loadingUnStake}
+            >
+              Unstake
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -209,4 +178,4 @@ const WithdrawFundsModal = ({
     </>
   );
 };
-export default WithdrawFundsModal;
+export default UnStakeModaEsETR;

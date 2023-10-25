@@ -56,6 +56,8 @@ const USDCVaultItem = ({
   const totalSupply_USD = +(balanceOf_BLP_USDC as bigint)?.toString() / 10 ** 6;
   const totalSupply = +(balanceOf_BLP_USDC as bigint)?.toString() / (price * 10 ** 6);
 
+  console.log('exchangeRate', exchangeRate, typeof exchangeRate);
+
   return (
     <>
       <Heading
@@ -153,7 +155,7 @@ const USDCVaultItem = ({
           <CustomConnectButton>
             <Flex gap={'8px'} justifyContent={'flex-end'}>
               <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenWithdrawFundModal(true)}>
-                With draw Funds
+                Withdraw Funds
               </Button>
               <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenAddFundModal(true)}>
                 Add Funds
@@ -162,8 +164,16 @@ const USDCVaultItem = ({
           </CustomConnectButton>
         </Box>
       </Box>
-      <AddFundsModal isOpen={openAddFundModal} onDismiss={() => setOpenAddFundModal(false)} />
-      <WithdrawFundsModal isOpen={openWithdrawFundModal} onDismiss={() => setOpenWithdrawFundModal(false)} />
+      <AddFundsModal
+        isOpen={openAddFundModal}
+        onDismiss={() => setOpenAddFundModal(false)}
+        exchangeRate={exchangeRate.toString()}
+      />
+      <WithdrawFundsModal
+        isOpen={openWithdrawFundModal}
+        onDismiss={() => setOpenWithdrawFundModal(false)}
+        exchangeRate={exchangeRate.toString()}
+      />
     </>
   );
 };

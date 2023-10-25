@@ -2,6 +2,9 @@ import CustomConnectButton from '@/components/CustomConnectButton';
 import { addComma } from '@/utils/number';
 import { Heading, Box, Text, Flex, Button } from '@chakra-ui/react';
 import { formatUnits } from 'viem';
+import UnStakeModaEsETR from './UnStakeModaEsETR';
+import StakeModalEsETR from './StakeModalEsETR';
+import { useState } from 'react';
 
 const EsETR = ({
   price,
@@ -30,6 +33,9 @@ const EsETR = ({
   balanceOf_fsBLP_esETR: bigint;
   balanceOf_sETR_esETR: bigint;
 }) => {
+  const [openStakeModal, setOpenStakeModal] = useState<boolean>(false);
+  const [openUnStakeModal, setOpenUnStakeModal] = useState<boolean>(false);
+
   const esETR_APR =
     (100 * 31536000 * +(tokensPerInterval_sETR as bigint)?.toString()) / +(totalSupply_sETR as bigint)?.toString();
   const USDC_APR =
@@ -38,9 +44,17 @@ const EsETR = ({
   const boosted_APR =
     (+(depositBalances_bnETR as bigint)?.toString() * USDC_APR) / +(depositBalances_sbETR as bigint)?.toString();
 
+  // console.log('totalSupply_sETR - balanceOf_sETR_ETR', totalSupply_sETR, balanceOf_sETR_ETR);
   const total_APR = isNaN(boosted_APR) ? esETR_APR + USDC_APR : esETR_APR + USDC_APR + boosted_APR;
-  const totalStaked = formatUnits(totalSupply_sETR - balanceOf_sETR_ETR, 18);
-  const totalSupply = formatUnits(balanceOf_fsBLP_esETR + balanceOf_sETR_esETR, 18);
+  const totalStaked =
+    totalSupply_sETR !== undefined && balanceOf_sETR_ETR !== undefined
+      ? formatUnits((totalSupply_sETR - balanceOf_sETR_ETR) as bigint, 18)
+      : undefined;
+  const totalSupply =
+    balanceOf_fsBLP_esETR !== undefined && balanceOf_sETR_esETR !== undefined
+      ? formatUnits((balanceOf_fsBLP_esETR + balanceOf_sETR_esETR) as bigint, 18)
+      : undefined;
+
   return (
     <>
       <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
@@ -120,16 +134,18 @@ const EsETR = ({
         <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
           <CustomConnectButton>
             <Flex gap={'8px'} justifyContent={'flex-end'}>
-              <Button colorScheme="primary" fontSize={'16px'} size="md">
+              <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenUnStakeModal(true)}>
                 Unstake
               </Button>
-              <Button colorScheme="primary" fontSize={'16px'} size="md">
+              <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenStakeModal(true)}>
                 Stake
               </Button>
             </Flex>
           </CustomConnectButton>
         </Box>
       </Box>
+      {openStakeModal && <StakeModalEsETR isOpen={openStakeModal} onDismiss={() => setOpenStakeModal(false)} />}
+      {openUnStakeModal && <UnStakeModaEsETR isOpen={openUnStakeModal} onDismiss={() => setOpenUnStakeModal(false)} />}
     </>
   );
 };

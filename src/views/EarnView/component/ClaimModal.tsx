@@ -19,9 +19,13 @@ import {
   Box,
   Flex,
 } from '@chakra-ui/react';
+import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
 import { useFormik } from 'formik';
-import { useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
+import { EarnContext } from '..';
+import { appConfig } from '@/config';
+import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
 
 // const validationSchema = Yup.object({
 //   pay: Yup.string().required(),
@@ -29,19 +33,54 @@ import * as Yup from 'yup';
 // });
 
 const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
-  // const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onFetchData } = useContext(EarnContext);
+  const [loadingClaim, setLoadingClaim] = useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: {
-      pay: '',
-      rememberMe: false,
+      claimETR: false,
+      claimEsETR: false,
+      claimUsdc: true,
     },
     onSubmit: (values) => {
       console.log('onSubmit');
-      alert(JSON.stringify(values, null, 2));
+      onClaim(values);
     },
     // validationSchema: validationSchema,
   });
+
+  const onClaim = async (data: any) => {
+    const { claimETR, claimEsETR, claimUsdc } = data;
+    console.log(claimETR, claimEsETR, claimUsdc);
+    // handleRewards(
+    //     bool _shouldClaimBfr,
+    //     bool _shouldStakeBfr,
+    //     bool _shouldClaimEsBfr,
+    //     bool _shouldStakeEsBfr,
+    //     bool _shouldStakeMultiplierPoints,
+    //     bool _shouldClaimUsdc
+    // )
+    try {
+      const configStake = await prepareWriteContract({
+        address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
+        abi: RewardRouterV2_ABI,
+        functionName: 'handleRewards',
+        args: [claimETR, false, claimEsETR, false, false, claimUsdc],
+      });
+
+      const { hash } = await writeContract(configStake);
+      const data = await waitForTransaction({
+        hash,
+      });
+      console.log('dataStake', data);
+      setLoadingClaim(false);
+      onFetchData();
+      onDismiss();
+    } catch (error) {
+      setLoadingClaim(false);
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     console.log('formik', formik.errors);
@@ -68,9 +107,9 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
             <form>
               <VStack spacing={4} align="flex-start">
                 <Checkbox
-                  id="etr"
+                  id="claimETR"
                   // name="rememberMe"
-                  {...formik.getFieldProps('rememberMe')}
+                  {...formik.getFieldProps('claimETR')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
@@ -80,9 +119,9 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
                   </Text>
                 </Checkbox>
                 <Checkbox
-                  id="esetr"
+                  id="claimEsETR"
                   // name="rememberMe"
-                  {...formik.getFieldProps('esetr')}
+                  {...formik.getFieldProps('claimEsETR')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
@@ -92,9 +131,9 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
                   </Text>
                 </Checkbox>
                 <Checkbox
-                  id="usdc"
+                  id="claimUsdc"
                   // name="rememberMe"
-                  {...formik.getFieldProps('usdc')}
+                  {...formik.getFieldProps('claimUsdc')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
@@ -110,7 +149,7 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="primary" onClick={() => formik.handleSubmit()} width={'100%'}>
+            <Button colorScheme="primary" onClick={() => formik.handleSubmit()} width={'100%'} isLoading={loadingClaim}>
               Claim
             </Button>
           </ModalFooter>

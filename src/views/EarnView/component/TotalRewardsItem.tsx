@@ -92,9 +92,9 @@ const TotalRewardsItem = ({
         <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
           <CustomConnectButton>
             <Flex gap={'8px'} justifyContent={'flex-end'}>
-              <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
+              {/* <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
                 Claim ARB
-              </Button>
+              </Button> */}
               <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
                 Claim
               </Button>

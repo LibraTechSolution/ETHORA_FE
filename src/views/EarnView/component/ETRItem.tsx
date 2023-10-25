@@ -4,10 +4,11 @@ import { appConfig } from '@/config';
 import { useBalanceOf } from '@/hooks/useContractRead';
 import { addComma } from '@/utils/number';
 import { Flex, Heading, Text, Box, Button, Tooltip } from '@chakra-ui/react';
-import { formatUnits } from 'viem';
-import StakeModal from './StakeModal';
-import UnStakeModal from './UnStakeModal';
+import { formatEther, formatUnits } from 'viem';
 import { useState } from 'react';
+import StakeModalETR from './StakeModalETR';
+import UnStakeModaETR from './UnStakeModaETR';
+import BigNumber from 'bignumber.js';
 
 const ETRItem = ({
   price,
@@ -58,6 +59,14 @@ const ETRItem = ({
   const Total_APR = isNaN(boosted_APR) ? esETR_APR + USDC_APR : esETR_APR + USDC_APR + boosted_APR;
 
   const totalSupply = formatUnits((totalSupply_ETR - balanceOf_addressDead_ETR) as bigint, 18);
+
+  // console.log(formatEther(BigInt(depositBalances_ETR)));
+  // console.log(new BigNumber(formatEther(BigInt(depositBalances_ETR))).toFixed(18));
+  // console.log(new BigNumber(formatEther(BigInt(depositBalances_ETR))).multipliedBy(price).toFixed(18));
+  // console.log(BigNumber(depositBalances_ETR.toString()).multipliedBy(price));
+  // console.log(+BigNumber(depositBalances_ETR.toString()).multipliedBy(price));
+  // console.log(+formatUnits(depositBalances_ETR as bigint, 18) * price);
+  // console.log(new BigNumber(formatEther(depositBalances_ETR)).multipliedBy(price).toString());
 
   return (
     <>
@@ -170,8 +179,8 @@ const ETRItem = ({
           </CustomConnectButton>
         </Box>
       </Box>
-      <StakeModal isOpen={openStakeModal} onDismiss={() => setOpenStakeModal(false)} />
-      <UnStakeModal isOpen={openUnStakeModal} onDismiss={() => setOpenUnStakeModal(false)} />
+      {openStakeModal && <StakeModalETR isOpen={openStakeModal} onDismiss={() => setOpenStakeModal(false)} />}
+      {openUnStakeModal && <UnStakeModaETR isOpen={openUnStakeModal} onDismiss={() => setOpenUnStakeModal(false)} />}
     </>
   );
 };

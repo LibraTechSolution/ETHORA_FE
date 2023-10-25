@@ -4,8 +4,8 @@ import { Flex, Heading, Text, Box, GridItem, Grid, Button } from '@chakra-ui/rea
 import { ArrowRight } from 'lucide-react';
 import CardEarn from './component/CardEarn';
 import CustomConnectButton from '@/components/CustomConnectButton';
-import { useState } from 'react';
-import DepositModal from './component/DepositModal';
+import { createContext, useState } from 'react';
+import DepositModal from './component/DepositModalETRVault';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import ETRItem from './component/ETRItem';
 import ETR_ABI from '@/config/abi/ETR_ABI';
@@ -28,6 +28,15 @@ import FBLP_ABI from '@/config/abi/FBLP_ABI';
 import ETRVault from './component/ETRVault';
 import ELPVault from './component/ELPVault';
 
+interface createContextType {
+  onFetchData: () => void;
+}
+
+export const EarnContext = createContext<createContextType>({
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onFetchData: () => {},
+});
+
 const EarnView = () => {
   const isMounted = useIsMounted();
   const { address } = useActiveWeb3React();
@@ -39,7 +48,7 @@ const EarnView = () => {
     abi: ETR_ABI,
   };
 
-  const { data: data_ETR_SC } = useContractReads({
+  const { data: data_ETR_SC, refetch: refetchETR_SC } = useContractReads({
     contracts: [
       {
         ...ETR_SC,
@@ -70,7 +79,7 @@ const EarnView = () => {
     abi: SETR_ABI,
   };
 
-  const { data: data_sETR_SC } = useContractReads({
+  const { data: data_sETR_SC, refetch: refetchSETR_SC } = useContractReads({
     contracts: [
       {
         ...sETR_SC,
@@ -107,7 +116,7 @@ const EarnView = () => {
     abi: SBFETR_ABI,
   };
 
-  const { data: data_sbfETR_SC } = useContractReads({
+  const { data: data_sbfETR_SC, refetch: refetchSBFETR_SC } = useContractReads({
     contracts: [
       {
         ...sbfETR_SC,
@@ -139,7 +148,8 @@ const EarnView = () => {
     address: appConfig.FBLP_SC as `0x${string}`,
     abi: FBLP_ABI,
   };
-  const { data: data_FBLP_SC } = useContractReads({
+
+  const { data: data_FBLP_SC, refetch: refetchFBLP_SC } = useContractReads({
     contracts: [
       {
         ...FBLP_SC,
@@ -162,7 +172,8 @@ const EarnView = () => {
     address: appConfig.VETR_SC as `0x${string}`,
     abi: VETR_ABI,
   };
-  const { data: data_VETR_SC } = useContractReads({
+
+  const { data: data_VETR_SC, refetch: refetchVETR_SC } = useContractReads({
     contracts: [
       {
         ...VETR_SC,
@@ -191,7 +202,8 @@ const EarnView = () => {
     address: appConfig.VBLP_SC as `0x${string}`,
     abi: VBLP_ABI,
   };
-  const { data: data_VBLP_SC } = useContractReads({
+
+  const { data: data_VBLP_SC, refetch: refetchVBLP_SC } = useContractReads({
     contracts: [
       {
         ...VBLP_SC,
@@ -220,7 +232,8 @@ const EarnView = () => {
     address: appConfig.FSBLP_SC as `0x${string}`,
     abi: FSBLP_ABI,
   };
-  const { data: data_FSBLP_SC } = useContractReads({
+
+  const { data: data_FSBLP_SC, refetch: refetchFSBLP_SC } = useContractReads({
     contracts: [
       {
         ...FSBLP_SC,
@@ -243,18 +256,19 @@ const EarnView = () => {
     address: appConfig.SBETR_SC as `0x${string}`,
     abi: SBETR_ABI,
   };
-  const { data: data_SBETR_SC } = useContractReads({
+
+  const { data: data_SBETR_SC, refetch: refetchSBETR_SC } = useContractReads({
     contracts: [
       {
         ...SBETR_SC,
         functionName: 'claimable',
         args: [address as `0x${string}`],
       },
-      {
-        ...SBETR_SC,
-        functionName: 'depositBalances',
-        args: [address as `0x${string}`, appConfig.ESETR_SC as `0x${string}`],
-      },
+      // {
+      //   ...SBETR_SC,
+      //   functionName: 'depositBalances',
+      //   args: [address as `0x${string}`, appConfig.ESETR_SC as `0x${string}`],
+      // },
     ],
   });
 
@@ -262,7 +276,8 @@ const EarnView = () => {
     address: appConfig.ESETR_SC as `0x${string}`,
     abi: ESETR_ABI,
   };
-  const { data: data_ESETR_SC } = useContractReads({
+
+  const { data: data_ESETR_SC, refetch: refetchESETR_SC } = useContractReads({
     contracts: [
       {
         ...ESETR_SC,
@@ -286,7 +301,8 @@ const EarnView = () => {
     address: appConfig.BLP_SC as `0x${string}`,
     abi: BLP_ABI,
   };
-  const { data: data_BLP_SC } = useContractReads({
+
+  const { data: data_BLP_SC, refetch: refetchBLP_SC } = useContractReads({
     contracts: [
       {
         ...BLP_SC,
@@ -317,7 +333,8 @@ const EarnView = () => {
     address: appConfig.USDC_SC as `0x${string}`,
     abi: USDC_ABI,
   };
-  const { data: data_USDC_SC } = useContractReads({
+
+  const { data: data_USDC_SC, refetch: refetchUSDC_SC } = useContractReads({
     contracts: [
       {
         ...USDC_SC,
@@ -358,13 +375,12 @@ const EarnView = () => {
   const claimedAmounts_vBLP = data_VBLP_SC && data_VBLP_SC[2].result;
   const getVestedAmount_vBLP = data_VBLP_SC && data_VBLP_SC[3].result;
 
-
   const claimable_fsBLP = data_FSBLP_SC && data_FSBLP_SC[0].result;
   const stakedAmounts_fsBLP = data_FSBLP_SC && data_FSBLP_SC[1].result;
   const tokensPerInterval_fsBLP = data_FSBLP_SC && data_FSBLP_SC[2].result;
 
   const claimable_sbETR = data_SBETR_SC && data_SBETR_SC[0].result;
-  const depositBalances_sbBFR = data_SBETR_SC && data_SBETR_SC[1].result;
+  // const depositBalances_sbBFR = data_SBETR_SC && data_SBETR_SC[1].result;
 
   const balanceOf_esETR = data_ESETR_SC && data_ESETR_SC[0].result;
   const balanceOf_fsBLP_esETR = data_ESETR_SC && data_ESETR_SC[1].result;
@@ -378,155 +394,179 @@ const EarnView = () => {
   const getUnlockedLiquidity_BLP = data_BLP_SC && data_BLP_SC[3].result;
   const balanceOf_fBLP_BLP = data_BLP_SC && data_BLP_SC[4].result;
 
+  // console.log('totalSupply_sETR', totalSupply_sETR);
+  const onFetch = () => {
+    console.log('onFetch');
+    refetchETR_SC();
+    refetchSETR_SC();
+    refetchSBFETR_SC();
+    refetchFBLP_SC();
+    refetchVETR_SC();
+    refetchVBLP_SC();
+    refetchFSBLP_SC();
+    refetchSBETR_SC();
+    refetchESETR_SC();
+    refetchBLP_SC();
+    refetchUSDC_SC();
+  };
+
+  // console.log('depositBalances_ETR', depositBalances_ETR)
+
   return (
-    <Flex flexWrap={'wrap'} flexDirection={'column'} gap={'20px'} paddingY={'20px'}>
-      <Box>
-        <Heading as="h3" fontSize="24px" fontWeight={400} marginBottom={'12px'}>
-          Earn
-        </Heading>
-        <Text className="flex w-full items-center">
-          Stake ETR and ELP to earn rewards.{' '}
-          <Link
-            href="https://coinbase.com/faucets/base-ethereum-goerli-faucet"
-            target="_blank"
-            className="group ml-1 flex text-center align-middle text-[#6052FB]"
-          >
-            <span className="pr-[10px] group-hover:underline">Learn more</span>
-            <ArrowRight className="text-white" />
-          </Link>
-        </Text>
-      </Box>
+    <EarnContext.Provider
+      value={{
+        onFetchData: () => onFetch(),
+      }}
+    >
+      <Flex flexWrap={'wrap'} flexDirection={'column'} gap={'20px'} paddingY={'20px'}>
+        <Box>
+          <Heading as="h3" fontSize="24px" fontWeight={400} marginBottom={'12px'}>
+            Earn
+          </Heading>
+          <Text className="flex w-full items-center">
+            Stake ETR and ELP to earn rewards.{' '}
+            <Link
+              href="https://coinbase.com/faucets/base-ethereum-goerli-faucet"
+              target="_blank"
+              className="group ml-1 flex text-center align-middle text-[#6052FB]"
+            >
+              <span className="pr-[10px] group-hover:underline">Learn more</span>
+              <ArrowRight className="text-white" />
+            </Link>
+          </Text>
+        </Box>
 
-      <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
-        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
-          <CardEarn>
-            {isMounted && (
-              <ETRItem
-                price={price}
-                totalStaked_ETR={totalStaked_ETR as bigint}
-                totalSupply_ETR={totalSupply_ETR as bigint}
-                balanceOf_addressDead_ETR={balanceOf_addressDead_ETR as bigint}
+        <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
+          <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
+            <CardEarn>
+              {isMounted && (
+                <ETRItem
+                  price={price}
+                  totalStaked_ETR={totalStaked_ETR as bigint}
+                  totalSupply_ETR={totalSupply_ETR as bigint}
+                  balanceOf_addressDead_ETR={balanceOf_addressDead_ETR as bigint}
+                  depositBalances_ETR={depositBalances_ETR as bigint}
+                  tokensPerInterval_sETR={tokensPerInterval_sETR as bigint}
+                  totalSupply_sETR={totalSupply_sETR as bigint}
+                  claimables_ETR={claimables_ETR as bigint}
+                  tokensPerInterval_sbfETR={tokensPerInterval_sbfETR as bigint}
+                  totalSupply_sbfETR={totalSupply_sbfETR as bigint}
+                  depositBalances_bnETR={depositBalances_bnETR as bigint}
+                  depositBalances_sbETR={depositBalances_sbETR as bigint}
+                  claimable_sbfETR={claimable_sbfETR as bigint}
+                />
+              )}
+            </CardEarn>
+          </GridItem>
+          <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
+            <CardEarn>
+              {isMounted && (
+                <TotalRewardsItem
+                  claimable_sbfETR={claimable_sbfETR as bigint}
+                  claimable_fBLP={claimable_fBLP as bigint}
+                  claimable_vETR={claimable_vETR as bigint}
+                  claimable_vBLP={claimable_vBLP as bigint}
+                  claimables_ETR={claimables_ETR as bigint}
+                  claimable_fsBLP={claimable_fsBLP as bigint}
+                  claimable_sbETR={claimable_sbETR as bigint}
+                  depositBalances_bnETR={depositBalances_bnETR as bigint}
+                />
+              )}
+            </CardEarn>
+          </GridItem>
+        </Grid>
+
+        <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
+          <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
+            <CardEarn>
+              {isMounted && (
+                <EsETR
+                  price={price}
+                  balanceOf_esETR={balanceOf_esETR as bigint}
+                  depositBalances_esETR={depositBalances_esETR as bigint}
+                  tokensPerInterval_sETR={tokensPerInterval_sETR as bigint}
+                  totalSupply_sETR={totalSupply_sETR as bigint}
+                  tokensPerInterval_sbfETR={tokensPerInterval_sbfETR as bigint}
+                  totalSupply_sbfETR={totalSupply_sbfETR as bigint}
+                  depositBalances_bnETR={depositBalances_bnETR as bigint}
+                  depositBalances_sbETR={depositBalances_sbETR as bigint}
+                  balanceOf_sETR_ETR={balanceOf_sETR_ETR as bigint}
+                  balanceOf_fsBLP_esETR={balanceOf_fsBLP_esETR as bigint}
+                  balanceOf_sETR_esETR={balanceOf_sETR_esETR as bigint}
+                />
+              )}
+            </CardEarn>
+          </GridItem>
+
+          <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
+            <CardEarn>
+              {isMounted && (
+                <USDCVaultItem
+                  price={price}
+                  totalTokenXBalance_BLP={totalTokenXBalance_BLP as bigint}
+                  totalSupply_BLP={totalSupply_BLP as bigint}
+                  stakedAmounts_fsBLP={stakedAmounts_fsBLP as bigint}
+                  tokensPerInterval_fBLP={tokensPerInterval_fBLP as bigint}
+                  balanceOf_BLP_USDC={balanceOf_BLP_USDC as bigint}
+                  tokensPerInterval_fsBLP={tokensPerInterval_fsBLP as bigint}
+                  claimable_fBLP={claimable_fBLP as bigint}
+                  claimable_fsBLP={claimable_fsBLP as bigint}
+                  lockupPeriod_BLP={lockupPeriod_BLP as number}
+                  getUnlockedLiquidity_BLP={getUnlockedLiquidity_BLP as bigint}
+                  balanceOf_fBLP_BLP={balanceOf_fBLP_BLP as bigint}
+                />
+              )}
+            </CardEarn>
+          </GridItem>
+        </Grid>
+
+        <Box marginTop={'20px'}>
+          <Heading as="h3" fontSize="24px" fontWeight={400} marginBottom={'12px'}>
+            Vest
+          </Heading>
+          <Text className="flex w-full items-center">
+            Convert esETR tokens to ETR tokens.
+            <Link
+              href="https://coinbase.com/faucets/base-ethereum-goerli-faucet"
+              target="_blank"
+              className="group ml-1 flex text-center align-middle text-[#6052FB]"
+            >
+              <span className="pr-[10px] group-hover:underline">Learn more</span>
+              <ArrowRight className="text-white" />
+            </Link>
+          </Text>
+        </Box>
+
+        <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
+          <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
+            <CardEarn>
+              <ETRVault
                 depositBalances_ETR={depositBalances_ETR as bigint}
-                tokensPerInterval_sETR={tokensPerInterval_sETR as bigint}
-                totalSupply_sETR={totalSupply_sETR as bigint}
-                claimables_ETR={claimables_ETR as bigint}
-                tokensPerInterval_sbfETR={tokensPerInterval_sbfETR as bigint}
-                totalSupply_sbfETR={totalSupply_sbfETR as bigint}
-                depositBalances_bnETR={depositBalances_bnETR as bigint}
-                depositBalances_sbETR={depositBalances_sbETR as bigint}
-                claimable_sbfETR={claimable_sbfETR as bigint}
-              />
-            )}
-          </CardEarn>
-        </GridItem>
-        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
-          <CardEarn>
-            {isMounted && (
-              <TotalRewardsItem
-                claimable_sbfETR={claimable_sbfETR as bigint}
-                claimable_fBLP={claimable_fBLP as bigint}
-                claimable_vETR={claimable_vETR as bigint}
-                claimable_vBLP={claimable_vBLP as bigint}
-                claimables_ETR={claimables_ETR as bigint}
-                claimable_fsBLP={claimable_fsBLP as bigint}
-                claimable_sbETR={claimable_sbETR as bigint}
-                depositBalances_bnETR={depositBalances_bnETR as bigint}
-              />
-            )}
-          </CardEarn>
-        </GridItem>
-      </Grid>
-
-      <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
-        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
-          <CardEarn>
-            {isMounted && (
-              <EsETR
-                price={price}
-                balanceOf_esETR={balanceOf_esETR as bigint}
                 depositBalances_esETR={depositBalances_esETR as bigint}
-                tokensPerInterval_sETR={tokensPerInterval_sETR as bigint}
-                totalSupply_sETR={totalSupply_sETR as bigint}
-                tokensPerInterval_sbfETR={tokensPerInterval_sbfETR as bigint}
-                totalSupply_sbfETR={totalSupply_sbfETR as bigint}
                 depositBalances_bnETR={depositBalances_bnETR as bigint}
+                pairAmounts_vETR={pairAmounts_vETR as bigint}
                 depositBalances_sbETR={depositBalances_sbETR as bigint}
-                balanceOf_sETR_ETR={balanceOf_sETR_ETR as bigint}
-                balanceOf_fsBLP_esETR={balanceOf_fsBLP_esETR as bigint}
-                balanceOf_sETR_esETR={balanceOf_sETR_esETR as bigint}
+                claimedAmounts_vETR={claimedAmounts_vETR as bigint}
+                claimable_vETR={claimable_vETR as bigint}
+                getVestedAmount_vETR={getVestedAmount_vETR as bigint}
               />
-            )}
-          </CardEarn>
-        </GridItem>
+            </CardEarn>
+          </GridItem>
 
-        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
-          <CardEarn>
-            {isMounted && (
-              <USDCVaultItem
-                price={price}
-                totalTokenXBalance_BLP={totalTokenXBalance_BLP as bigint}
-                totalSupply_BLP={totalSupply_BLP as bigint}
-                stakedAmounts_fsBLP={stakedAmounts_fsBLP as bigint}
-                tokensPerInterval_fBLP={tokensPerInterval_fBLP as bigint}
-                balanceOf_BLP_USDC={balanceOf_BLP_USDC as bigint}
-                tokensPerInterval_fsBLP={tokensPerInterval_fsBLP as bigint}
-                claimable_fBLP={claimable_fBLP as bigint}
-                claimable_fsBLP={claimable_fsBLP as bigint}
-                lockupPeriod_BLP={lockupPeriod_BLP as number}
-                getUnlockedLiquidity_BLP={getUnlockedLiquidity_BLP as bigint}
-                balanceOf_fBLP_BLP={balanceOf_fBLP_BLP as bigint}
+          <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
+            <CardEarn>
+              <ELPVault
+                depositBalances_fBLP={depositBalances_fBLP as bigint}
+                pairAmounts_vBLP={pairAmounts_vBLP as bigint}
+                claimedAmounts_vBLP={claimedAmounts_vBLP as bigint}
+                claimable_vBLP={claimable_vBLP as bigint}
+                getVestedAmount_vBLP={getVestedAmount_vBLP as bigint}
               />
-            )}
-          </CardEarn>
-        </GridItem>
-      </Grid>
-
-      <Box marginTop={'20px'}>
-        <Heading as="h3" fontSize="24px" fontWeight={400} marginBottom={'12px'}>
-          Vest
-        </Heading>
-        <Text className="flex w-full items-center">
-          Convert esETR tokens to ETR tokens.
-          <Link
-            href="https://coinbase.com/faucets/base-ethereum-goerli-faucet"
-            target="_blank"
-            className="group ml-1 flex text-center align-middle text-[#6052FB]"
-          >
-            <span className="pr-[10px] group-hover:underline">Learn more</span>
-            <ArrowRight className="text-white" />
-          </Link>
-        </Text>
-      </Box>
-
-      <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
-        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
-          <CardEarn>
-            <ETRVault
-              depositBalances_ETR={depositBalances_ETR as bigint}
-              depositBalances_sbBFR={depositBalances_sbBFR as bigint}
-              depositBalances_bnETR={depositBalances_bnETR as bigint}
-              pairAmounts_vETR={pairAmounts_vETR as bigint}
-              depositBalances_sbETR={depositBalances_sbETR as bigint}
-              claimedAmounts_vETR={claimedAmounts_vETR as bigint}
-              claimable_vETR={claimable_vETR as bigint}
-              getVestedAmount_vETR={getVestedAmount_vETR as bigint}
-            />
-          </CardEarn>
-        </GridItem>
-
-        <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
-          <CardEarn>
-            <ELPVault
-              depositBalances_fBLP={depositBalances_fBLP as bigint}
-              pairAmounts_vBLP={pairAmounts_vBLP as bigint}
-              claimedAmounts_vBLP = {claimedAmounts_vBLP as bigint}
-              claimable_vBLP = {claimable_vBLP as bigint}
-              getVestedAmount_vBLP = {getVestedAmount_vBLP as bigint}
-            />
-          </CardEarn>
-        </GridItem>
-      </Grid>
-    </Flex>
+            </CardEarn>
+          </GridItem>
+        </Grid>
+      </Flex>
+    </EarnContext.Provider>
   );
 };
 export default EarnView;
