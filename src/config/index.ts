@@ -11,7 +11,9 @@ export const appConfig = {
   arbiscan: process.env.NEXT_PUBLIC_ARBISCAN,
   usdcAddress: process.env.NEXT_PUBLIC_USDC_ADD,
   registerSC: process.env.NEXT_PUBLIC_REGISTER_SC,
-  referralSC: process.env.NEXT_PUBLIC_REFERRAL_SC
+  referralSC: process.env.NEXT_PUBLIC_REFERRAL_SC,
+  bufferRouterSC: process.env.NEXT_PUBLIC_BUFFER_ROUTER_SC,
+  bufferBOSC: process.env.NEXT_PUBLIC_BUFFER_BO_SC
 };
 
 export const targetChainId = appConfig.chainId;

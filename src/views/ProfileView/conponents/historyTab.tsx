@@ -2,10 +2,11 @@
 import { getTradingHistory } from '@/services/profile';
 import { ITradingHistoryData, ITradingHistoryParams } from '@/types/profile';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { addComma } from '@/utils/number';
+import { useNetwork } from 'wagmi';
 
 type TradingHistoryTable = {
   id: string;
@@ -23,7 +24,7 @@ type TradingHistoryTable = {
 const defaultParams: ITradingHistoryParams = {
   limit: 1,
   page: 1,
-  chain: '8453',
+  network: '8453',
 };
 
 const columns: ColumnsType<TradingHistoryTable> = [
@@ -78,7 +79,14 @@ const columns: ColumnsType<TradingHistoryTable> = [
 ];
 
 const HistoryTab = () => {
+  const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingHistoryParams>(defaultParams);
+
+  useEffect(() => {
+    if (chain) {
+      setFilter({ ...defaultParams, network: chain.id.toString() });
+    }
+  }, [chain]);
 
   const transformDataTradingHistory = (data: ITradingHistoryData[]): any =>
     data?.map((item: ITradingHistoryData) => {

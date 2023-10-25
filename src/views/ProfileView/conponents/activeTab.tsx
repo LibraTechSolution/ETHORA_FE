@@ -24,7 +24,7 @@ type TradingActiveTable = {
 const defaultParams: ITradingActiveParams = {
   limit: 1,
   page: 1,
-  chain: '8453',
+  network: '8453',
 };
 
 const columns: ColumnsType<TradingActiveTable> = [

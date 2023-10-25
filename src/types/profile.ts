@@ -11,7 +11,7 @@ export enum TRADE_STATE {
 export interface ITradingHistoryParams {
   page: number;
   limit: number;
-  chain: string;
+  network: string;
 }
 
 export interface ITradingHistoryData {
@@ -34,7 +34,7 @@ export interface ITradingHistoryData {
   limitOrderExpirationDate: string;
   chain: number;
   expiryPrice: number;
-  payout:string;
+  payout: string;
   closeDate: string;
   limitOrderDuration: number;
   lockedAmount: string;
@@ -57,7 +57,7 @@ export interface TradingHistoryDataResponse extends IPaginationResponse {
 export interface ITradingActiveParams {
   page: number;
   limit: number;
-  chain: string;
+  network: string;
 }
 
 export interface ITradingActiveData {

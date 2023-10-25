@@ -16,6 +16,11 @@ import {
 import dynamic from 'next/dynamic';
 import TradeViewHeader from './components/TradeViewHeader';
 import TradeControl from './components/TradeControl';
+import ActiveTab from '../ProfileView/conponents/activeTab';
+import HistoryTab from '../ProfileView/conponents/historyTab';
+import HistoryTable from './components/HistoryTable';
+import TradeTable from './components/TradeTable';
+import CancelTable from './components/CancelTable';
 
 const TradingViewChart = dynamic(
   () => import('@/components/TradingView/TradingView').then((mod) => mod.TradingViewChart),
@@ -31,11 +36,12 @@ const TradeView = () => {
       bg="rgba(28, 28, 30, 0.50)"
       display={{ base: 'block', xl: 'grid' }}
       marginX={{ base: '-12px', lg: '-80px' }}
+      paddingRight={{ base: '0px', lg: '26px' }}
     >
-      <GridItem display={{ base: 'none', xl: 'block' }} colSpan={{ base: 24, xl: 6 }}>
+      <GridItem display={{ base: 'none', xl: 'block' }} colSpan={{ base: 24, xl: 5 }}>
         <TradeControl />
       </GridItem>
-      <GridItem colSpan={{ base: 24, xl: 18 }}>
+      <GridItem colSpan={{ base: 24, xl: 19 }}>
         <>
           <TradeViewHeader />
           <TradingViewChart />
@@ -117,10 +123,7 @@ const TradeView = () => {
 
             <TabPanels>
               <TabPanel padding="0">
-                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
-                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
-                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
-                </Flex>
+                <TradeTable />
               </TabPanel>
               <TabPanel padding="0">
                 <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
@@ -129,16 +132,10 @@ const TradeView = () => {
                 </Flex>
               </TabPanel>
               <TabPanel padding="0">
-                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
-                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
-                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
-                </Flex>
+                <HistoryTable />
               </TabPanel>
               <TabPanel padding="0">
-                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
-                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
-                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
-                </Flex>
+                <CancelTable />
               </TabPanel>
               <TabPanel padding="0">
                 <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">

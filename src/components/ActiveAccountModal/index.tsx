@@ -41,7 +41,7 @@ const types = {
 export const ActiveAccountModal = () => {
   const { address, isDisconnected } = useAccount();
   const toast = useToast();
-  const { listWallets, setUserAndTokens, user, togleAccount } = useUserStore();
+  const { listWallets, setUserAndTokens, user, toggleRegisteredAccount } = useUserStore();
   const { isOpen, onClose } = useModalStore();
   const [nonce, setNonce] = useState<string>('');
   const msg = 'test ';
@@ -55,40 +55,6 @@ export const ActiveAccountModal = () => {
 
   const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
   const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
-
-  // const { signTypedData, data: msgTypedData } = useSignTypedData({
-  //   domain,
-  //   message: {
-  //     oneCT: user?.oneCT ? user.oneCT : '0x0',
-  //     user: user?.address ? user.address : '0x0',
-  //     nonce: oneCTNonce,
-  //   },
-  //   primaryType: 'RegisterAccount',
-  //   types,
-  //   onError(error) {
-  //     let msgContent = '';
-  //     if (error instanceof BaseError) {
-  //       if (error.shortMessage.includes('User rejected the request.')) {
-  //         msgContent = 'User rejected the request!';
-  //       } else if (error.shortMessage.includes('the balance of the account')) {
-  //         msgContent = 'Your account balance is insufficient for gas * gas price + value!';
-  //       } else {
-  //         msgContent = 'Something went wrong. Please try again later.';
-  //       }
-  //     }
-  //     toast({
-  //       position: 'top',
-  //       render: ({ onClose }) => (
-  //         <ToastLayout
-  //           title="Register account Unsuccessfully"
-  //           content={msgContent}
-  //           status={Status.ERROR}
-  //           close={onClose}
-  //         />
-  //       ),
-  //     });
-  //   },
-  // });
 
   const isCreated = useMemo(() => {
     if (listWallets && address && listWallets[address.toLocaleLowerCase()]) {
@@ -138,12 +104,6 @@ export const ActiveAccountModal = () => {
       console.log(error);
     }
   }, [address, listWallets]);
-
-  // useEffect(() => {
-  //   if (msgTypedData) {
-  //     registerAcc();
-  //   }
-  // }, [msgTypedData, registerAcc]);
 
   useEffect(() => {
     if (isOpen) {
@@ -196,7 +156,7 @@ export const ActiveAccountModal = () => {
     if (!chain || !signature) return;
     try {
       await register(signature, chain.id, true);
-      togleAccount(true);
+      toggleRegisteredAccount(true);
       toast({
         position: 'top',
         render: ({ onClose }) => (

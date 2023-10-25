@@ -10,3 +10,10 @@ export const addComma = (number: string | number, numberDecimal?: number) => {
   }
   return interger + (decimal ? '.' + decimal : '');
 };
+
+export const addZeroBefore = (number: number) => {
+  if (number < 10) {
+    return '0' + number;
+  }
+  return number;
+};
