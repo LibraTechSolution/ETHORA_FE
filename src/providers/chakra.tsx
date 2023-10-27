@@ -30,6 +30,15 @@ const poppins = Poppins({
 const colorBlack = 'black';
 
 const customTheme = extendTheme({
+  breakpoints: {
+    base: '0em', // 0px
+    sm: '30em', // ~480px. em is a relative unit and is dependant on the font-size.
+    md: '48em', // ~768px
+    lg: '62em', // ~992px
+    xl: '80em', // ~1280px
+    '2xl': '96em', // ~1536px
+    '3xl': '105rem', // ~1680px
+  },
   textStyles: {
     shadowBlack: {
       textShadow: `2px 0 ${colorBlack}, -2px 0 ${colorBlack}, 0 2px ${colorBlack}, 0 -2px ${colorBlack}, 1px 1px ${colorBlack}, -1px -1px ${colorBlack}, 1px -1px ${colorBlack}, -1px 1px ${colorBlack}`,

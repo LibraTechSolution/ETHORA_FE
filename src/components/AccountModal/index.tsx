@@ -46,7 +46,7 @@ const types = {
 export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
   const { address, isDisconnected } = useAccount();
   const toast = useToast();
-  const { user, togleAccount } = useUserStore();
+  const { user, toggleRegisteredAccount } = useUserStore();
   const { onOpen } = useModalStore();
   const { chain } = useNetwork();
   const [isLoadingDeactive, setIsLoadingDeactive] = useState<boolean>(false);
@@ -98,7 +98,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
     }
     try {
       await register(signature, chain.id, false);
-      togleAccount(false);
+      toggleRegisteredAccount(false);
       toast({
         position: 'top',
         render: ({ onClose }) => (
@@ -197,11 +197,9 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
         functionName: 'accountMapping',
         args: [user?.address as `0x${string}`],
       });
-      console.log(data);
       signTypedDataV4(data[1]);
     } catch (error) {
       setIsLoadingDeactive(false);
-      console.log(error);
     }
     // refetch();
   };

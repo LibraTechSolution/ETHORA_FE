@@ -12,7 +12,6 @@ export const getTradingHistory = async (params?: ITradingHistoryParams): Promise
       'Cache-Control': 'no-cache',
     },
   });
-  console.log(response)
   return response.data.data.docs as ITradingHistoryData[];
 };
 
@@ -26,8 +25,6 @@ export const getTradingActive = async (params?: ITradingActiveParams): Promise<I
       'Cache-Control': 'no-cache',
     },
   });
-  console.log(response)
-  console.log(response.data)
 
   return response.data.data.docs as ITradingActiveData[];
 };
@@ -42,7 +39,6 @@ export const getTradingLimitOrder = async (params?: ITradingLimitOrderParams): P
       'Cache-Control': 'no-cache',
     },
   });
-  console.log(response)
   return response.data.data.docs as ITradingLimitOrderData[];
 };
 

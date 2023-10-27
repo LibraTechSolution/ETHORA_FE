@@ -1,4 +1,9 @@
 {
+  "rules": {
+    "no-loss-of-precision": "off",
+    "@typescript-eslint/no-loss-of-precision": "off",
+    "tailwindcss/no-custom-classname": "off"
+  },
   "extends": [
     "next/core-web-vitals",
     "prettier",

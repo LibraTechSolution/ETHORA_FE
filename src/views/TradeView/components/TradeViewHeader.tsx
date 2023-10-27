@@ -1,4 +1,5 @@
-import { listPairs } from '@/components/TradingView/TradingView';
+'use client';
+
 import { getChanged24h } from '@/services/trade';
 import usePairStore from '@/store/usePairStore';
 import useTradeStore from '@/store/useTradeStore';
@@ -47,13 +48,14 @@ const TradeViewHeader = () => {
     queryKey: ['getChanged24h'],
     queryFn: () => getChanged24h(),
   });
-  const currentPair = useMemo<string>(() => {
-    let tempCurrentPair = params?.pair as string;
-    if (!tempCurrentPair || !listPairs.includes(tempCurrentPair.replace('-', '/').toLocaleUpperCase())) {
-      tempCurrentPair = '';
-    }
-    return tempCurrentPair;
-  }, [params.pair]);
+  const currentPair = useMemo<PairData | null>(() => {
+    if (!params?.pair) return null;
+    return (
+      listPairData.find(
+        (item: PairData) => item.pair.replace('/', '-').toLowerCase() === (params?.pair as string).toLowerCase(),
+      ) ?? null
+    );
+  }, [listPairData, params?.pair]);
 
   const listPairShow = useMemo<PairData[]>(() => {
     const tempList = [];
@@ -78,8 +80,10 @@ const TradeViewHeader = () => {
   }, [listPairData]);
 
   const currentChangedPercent = useMemo<number>(() => {
-    return listChanged24h && listChanged24h?.data?.data[currentPair.replace('-', '').toUpperCase()]
-      ? +listChanged24h?.data?.data[currentPair.replace('-', '').toUpperCase()]
+    return currentPair?.pair &&
+      listChanged24h &&
+      listChanged24h?.data?.data[currentPair?.pair.replace('/', '').toUpperCase()]
+      ? +listChanged24h?.data?.data[currentPair?.pair.replace('/', '').toUpperCase()]
       : -2;
   }, [currentPair, listChanged24h]);
 
@@ -118,9 +122,16 @@ const TradeViewHeader = () => {
       <Flex justifyContent={{ base: 'space-between', xl: 'normal' }} width={{ base: '100%', xl: 'auto' }}>
         <Center cursor="pointer" position={'relative'} zIndex={1} ref={pairRef}>
           <Center onClick={() => setIsShow(!isShow)}>
-            <Image alt="bitcoin" src={`/images/icons/${currentPair.toLowerCase()}.png`} w="32px" h="32px" />
+            {currentPair?.pair && (
+              <Image
+                alt="bitcoin"
+                src={`/images/icons/${currentPair?.pair.replace('/', '-').toLowerCase()}.png`}
+                w="32px"
+                h="32px"
+              />
+            )}
             <span className="px-3 text-xl font-semibold text-[#fff]">
-              {currentPair && currentPair.replace('-', '/').toLocaleUpperCase()}
+              {currentPair && currentPair.pair.toLocaleUpperCase()}
             </span>
             {isShow ? <TriangleUpIcon color="#6052FB" /> : <TriangleDownIcon color="#6052FB" />}
           </Center>
@@ -794,11 +805,11 @@ const TradeViewHeader = () => {
           </Box>
           <Box borderRight="1px solid #38383A" paddingX="20px" display={{ base: 'none', xl: 'block' }}>
             <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Max Trade Size</p>
-            <p className="text-sm font-normal leading-6 text-[#fff]">100 USDC</p>
+            <p className="text-sm font-normal leading-6 text-[#fff]">{currentPair?.maxTradeSize} USDC</p>
           </Box>
           <Box borderRight="1px solid #38383A" paddingX="20px" display={{ base: 'none', xl: 'block' }}>
             <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Payout</p>
-            <p className="text-sm font-normal leading-6 text-[#fff]">6%</p>
+            <p className="text-sm font-normal leading-6 text-[#fff]">{currentPair?.payout}%</p>
           </Box>
           <Box paddingLeft="20px" display={{ base: 'none', xl: 'block' }}>
             <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Max OI: 1,000 USDC</p>

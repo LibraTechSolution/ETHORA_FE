@@ -89,19 +89,19 @@ export const Header = () => {
           ) : (
             <>
               <Center>
-                <Link href="trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
+                <Link href="/trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
                   Trade
                 </Link>
               </Center>
               {appConfig.includeTestnet && (
                 <Center>
-                  <Link href="faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
+                  <Link href="/faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
                     Faucet
                   </Link>
                 </Center>
               )}
               <Center>
-                <Link href="profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
+                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                   Leaderboard
                 </Link>
               </Center>
@@ -115,7 +115,7 @@ export const Header = () => {
                       <MenuList minWidth="107px" background="#252528" border="none" className="w-[107px]">
                         <MenuItem background="transparent">
                           <Link
-                            href="earn"
+                            href="/earn"
                             className={`w-full text-center ${currentRoute === '/earn' ? 'text-[#fff]' : ''}`}
                           >
                             Earn
@@ -123,7 +123,7 @@ export const Header = () => {
                         </MenuItem>
                         <MenuItem background="transparent">
                           <Link
-                            href="docs"
+                            href="/docs"
                             className={`w-full text-center ${currentRoute === '/docs' ? 'text-[#fff]' : ''}`}
                           >
                             Docs
@@ -131,7 +131,7 @@ export const Header = () => {
                         </MenuItem>
                         <MenuItem background="transparent">
                           <Link
-                            href="stats"
+                            href="/stats"
                             className={`w-full text-center ${currentRoute === '/stats' ? 'text-[#fff]' : ''}`}
                           >
                             Stats
@@ -139,7 +139,7 @@ export const Header = () => {
                         </MenuItem>
                         <MenuItem background="transparent">
                           <Link
-                            href="profile"
+                            href="/profile"
                             className={`w-full text-center ${currentRoute === '/profile' ? 'text-[#fff]' : ''}`}
                           >
                             Profile
@@ -358,35 +358,35 @@ export const Header = () => {
 
             <DrawerBody>
               <Center justifyContent={'flex-start'}>
-                <Link href="trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
+                <Link href="/trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
                   Trade
                 </Link>
               </Center>
               {appConfig.includeTestnet && (
                 <Center justifyContent={'flex-start'}>
-                  <Link href="faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
+                  <Link href="/faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
                     Faucet
                   </Link>
                 </Center>
               )}
               <Center justifyContent={'flex-start'}>
-                <Link href="Earn" className={currentRoute === '/Earn' ? activeStyle : nonActiveStyle}>
+                <Link href="/Earn" className={currentRoute === '/Earn' ? activeStyle : nonActiveStyle}>
                   Earn
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
-                <Link href="profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
+                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                   Leaderboard
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
-                <Link href="sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
+                <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
                   Token sale
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
                 <Link
-                  href="practice-trading"
+                  href="/practice-trading"
                   className={currentRoute === '/practice-trading' ? activeStyle : nonActiveStyle}
                 >
                   Practice Trading
@@ -394,7 +394,7 @@ export const Header = () => {
               </Center>
               <Center justifyContent={'flex-start'}>
                 <Link
-                  href="earn"
+                  href="/earn"
                   className={`w-full text-left ${currentRoute === '/earn' ? 'text-[#fff]' : nonActiveStyle}`}
                 >
                   Earn
@@ -402,7 +402,7 @@ export const Header = () => {
               </Center>
               <Center justifyContent={'flex-start'}>
                 <Link
-                  href="docs"
+                  href="/docs"
                   className={`w-full text-left ${currentRoute === '/docs' ? 'text-[#fff]' : nonActiveStyle}`}
                 >
                   Docs
@@ -410,7 +410,7 @@ export const Header = () => {
               </Center>
               <Center justifyContent={'flex-start'}>
                 <Link
-                  href="stats"
+                  href="/stats"
                   className={`w-full text-left ${currentRoute === '/stats' ? 'text-[#fff]' : nonActiveStyle}`}
                 >
                   Stats
@@ -418,7 +418,7 @@ export const Header = () => {
               </Center>
               <Center justifyContent={'flex-start'}>
                 <Link
-                  href="profile"
+                  href="/profile"
                   className={`w-full text-left ${currentRoute === '/profile' ? 'text-[#fff]' : nonActiveStyle}`}
                 >
                   Profile

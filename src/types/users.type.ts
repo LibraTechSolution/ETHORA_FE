@@ -3,6 +3,7 @@ export interface IUser {
   banned: boolean;
   faucet: boolean;
   isRegistered: boolean;
+  isApproved: boolean;
   nonce: string;
   oneCT: `0x${string}`;
   _id: string;

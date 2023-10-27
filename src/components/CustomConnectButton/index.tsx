@@ -38,6 +38,23 @@ const CustomConnectButton = ({ children, isFullWidth }: { children: React.ReactN
                 );
               }
 
+              if (chain.unsupported) {
+                return (
+                  <Button
+                    onClick={openChainModal}
+                    bgColor="#ff494a"
+                    textColor="#ffffff"
+                    fontSize={'16px'}
+                    size="md"
+                    width={`${isFullWidth ? '100%' : 'auto'} `}
+                    marginTop={'20px'}
+                    _hover={{ bgColor: '#ff494a' }}
+                  >
+                    Wrong network
+                  </Button>
+                );
+              }
+
               // if (chain.unsupported) {
               //   return (
               //     <button onClick={openChainModal} type="button">

@@ -28,21 +28,27 @@ import { Status } from '@/types/faucet.type';
 import { BaseError } from 'viem';
 import { useAccount, useContractRead } from 'wagmi';
 import { copyText } from '@/utils/copyText';
+import { useSearchParams } from 'next/navigation';
 export enum ReferralTabType {
   Tab1 = 'Tab1',
   Tab2 = 'Tab2',
 }
 const ReferralView = () => {
   const [defaultTabs, setDefaultTabs] = useState<ReferralTabType>(ReferralTabType.Tab1);
+  const params = useSearchParams();
   const [userRefCode, setUserRefCode] = useState<string>('');
-  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [traderRefCode, setTraderRefCode] = useState<string>('');
+  const [errorMsgUserRefCode, setErrorMsgUserRefCode] = useState<string>('');
+  const [errorMsgTraderRefCode, setErrorMsgTraderRefCode] = useState<string>('');
   const toast = useToast();
   const { address } = useAccount();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isCreated, setIsCreated] = useState<boolean>(false);
+  const [isLoadingUserRef, setIsLoadingUserRef] = useState<boolean>(false);
+  const [isLoadingTraderRef, setIsLoadingTraderRef] = useState<boolean>(false);
+  const [isCreatedUserRefCode, setIsCreatedUserRefCode] = useState<boolean>(false);
+  const [isCreatedTraderRefCode, setIsCreatedTraderRefCode] = useState<boolean>(false);
 
   const getUserRefCode = useCallback(async () => {
-    setIsLoading(true);
+    setIsLoadingUserRef(true);
     try {
       const data = await readContract({
         address: appConfig.referralSC as Address,
@@ -50,36 +56,117 @@ const ReferralView = () => {
         functionName: 'userCode',
         args: [address as Address],
       });
-      console.log('data', data);
-      setIsCreated(!!data);
+      setIsCreatedUserRefCode(!!data);
       setUserRefCode(data ? data : '');
-      setIsLoading(false);
+      setIsLoadingUserRef(false);
     } catch (error) {
       setUserRefCode('');
-      setIsLoading(false);
+      setIsLoadingUserRef(false);
     }
   }, [address]);
+
+  const getTraderRefCode = useCallback(async () => {
+    setIsLoadingTraderRef(true);
+    try {
+      const data = await readContract({
+        address: appConfig.referralSC as Address,
+        abi: referralABI,
+        functionName: 'traderReferralCodes',
+        args: [address as Address],
+      });
+      const tempCode = params.get('code') ?? '';
+      setTraderRefCode(tempCode ? tempCode : data ? data : '');
+      setIsCreatedTraderRefCode(!!data);
+      setIsLoadingTraderRef(false);
+    } catch (error) {
+      setTraderRefCode('');
+      setIsLoadingTraderRef(false);
+    }
+  }, [address, params]);
 
   useEffect(() => {
     if (!address) {
       setUserRefCode('');
+      setTraderRefCode('');
+      setErrorMsgTraderRefCode('');
+      setErrorMsgUserRefCode('');
       return;
     }
     getUserRefCode();
-  }, [address, getUserRefCode]);
+    getTraderRefCode();
+  }, [address, getTraderRefCode, getUserRefCode]);
 
   const handleUserRefCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (isCreated) return;
-    setErrorMsg('');
+    if (isCreatedUserRefCode) return;
+    setErrorMsgUserRefCode('');
     setUserRefCode(e.target.value.trim());
   };
 
-  const createCode = async () => {
-    setIsLoading(true);
-    if (!userRefCode) {
-      setErrorMsg('Referral code cannot be empty');
+  const handleTraderRefCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setErrorMsgTraderRefCode('');
+    setTraderRefCode(e.target.value.trim());
+  };
+
+  const addCode = async () => {
+    if (!traderRefCode) {
+      setErrorMsgTraderRefCode('Referral code cannot be empty');
       return;
     }
+    setIsLoadingTraderRef(true);
+    try {
+      await writeContract({
+        address: appConfig.referralSC as Address,
+        abi: referralABI,
+        functionName: 'setTraderReferralCodeByUser',
+        args: [traderRefCode],
+      });
+
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Add Referral Code successfully" status={Status.SUCCESSS} close={onClose} />
+        ),
+      });
+      setIsCreatedTraderRefCode(true);
+      setIsLoadingTraderRef(false);
+    } catch (error) {
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        setIsLoadingUserRef(false);
+        if (error.shortMessage.includes('User rejected the request.')) {
+          toast({
+            position: 'top',
+            render: ({ onClose }) => (
+              <ToastLayout
+                title="Add Referral Code Unsuccessfully"
+                content={'User rejected the request!'}
+                status={Status.ERROR}
+                close={onClose}
+              />
+            ),
+          });
+          return;
+        }
+        if (error.shortMessage.includes('code not exist')) {
+          msgContent = 'This code does not exists. Please enter a different code.';
+        } else if (error.shortMessage.includes('traded')) {
+          msgContent = 'Please enter a valid referral code.';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+
+      setIsLoadingTraderRef(false);
+      setErrorMsgTraderRefCode(msgContent);
+    }
+  };
+
+  const createCode = async () => {
+    if (!userRefCode) {
+      setErrorMsgUserRefCode('Referral code cannot be empty');
+      return;
+    }
+    setIsLoadingUserRef(true);
     try {
       await writeContract({
         address: appConfig.referralSC as Address,
@@ -88,7 +175,7 @@ const ReferralView = () => {
         args: [userRefCode],
       });
 
-      setIsCreated(true);
+      setIsCreatedUserRefCode(true);
 
       toast({
         position: 'top',
@@ -96,13 +183,12 @@ const ReferralView = () => {
           <ToastLayout title="Activate Referral Code successfully" status={Status.SUCCESSS} close={onClose} />
         ),
       });
-      setIsLoading(false);
+      setIsLoadingUserRef(false);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error instanceof BaseError && error.shortMessage);
       let msgContent = '';
       if (error instanceof BaseError) {
-        setIsLoading(false);
+        setIsLoadingUserRef(false);
         if (error.shortMessage.includes('User rejected the request.')) {
           toast({
             position: 'top',
@@ -124,8 +210,8 @@ const ReferralView = () => {
         }
       }
 
-      setIsLoading(false);
-      setErrorMsg(msgContent);
+      setIsLoadingUserRef(false);
+      setErrorMsgUserRefCode(msgContent);
     }
   };
 
@@ -259,7 +345,15 @@ const ReferralView = () => {
               Referral code
             </Box>
             <InputGroup>
-              <Input placeholder="Enter amount" />
+              <Input
+                placeholder="Enter code"
+                value={traderRefCode}
+                onChange={handleTraderRefCodeChange}
+                bg={'transparent'}
+                _hover={{ borderColor: '#6052FB' }}
+                _focusVisible={{ borderColor: '#6052FB', borderWidth: '2px' }}
+                border={errorMsgTraderRefCode ? '1px solid #F03D3E' : '1px solid #38383A'}
+              />
               <InputRightElement>
                 <Tooltip
                   hasArrow
@@ -274,9 +368,18 @@ const ReferralView = () => {
                 </Tooltip>
               </InputRightElement>
             </InputGroup>
+            <p className="mt-1 text-xs font-normal text-[#F03D3E]">{errorMsgTraderRefCode}</p>
             <CustomConnectButton isFullWidth={true}>
-              <Button colorScheme="primary" fontSize={'16px'} size="md" width={'100%'} marginTop={'20px'}>
-                Activate Referral Code
+              <Button
+                colorScheme="primary"
+                fontSize={'16px'}
+                size="md"
+                width={'100%'}
+                marginTop={'20px'}
+                onClick={addCode}
+                isLoading={isLoadingTraderRef}
+              >
+                {isCreatedTraderRefCode ? 'Change referral code' : 'Activate Referral Code'}
               </Button>
             </CustomConnectButton>
           </Box>
@@ -299,14 +402,14 @@ const ReferralView = () => {
             </Box>
             <InputGroup>
               <Input
-                placeholder=" Enter your code"
+                placeholder="Enter your code"
                 value={userRefCode}
                 onChange={handleUserRefCodeChange}
-                bg={isCreated ? '#3D3D40' : 'transparent'}
-                pointerEvents={isCreated ? 'none' : 'initial'}
+                bg={isCreatedUserRefCode ? '#3D3D40' : 'transparent'}
+                pointerEvents={isCreatedUserRefCode ? 'none' : 'initial'}
                 _hover={{ borderColor: '#6052FB' }}
                 _focusVisible={{ borderColor: '#6052FB', borderWidth: '2px' }}
-                border={isCreated ? 'none' : errorMsg ? '1px solid #F03D3E' : '1px solid #38383A'}
+                border={isCreatedUserRefCode ? 'none' : errorMsgUserRefCode ? '1px solid #F03D3E' : '1px solid #38383A'}
               />
               <InputRightElement>
                 <Tooltip
@@ -322,8 +425,8 @@ const ReferralView = () => {
                 </Tooltip>
               </InputRightElement>
             </InputGroup>
-            <p className="mt-1 text-xs font-normal text-[#F03D3E]">{errorMsg}</p>
-            {!isLoading && isCreated ? (
+            <p className="mt-1 text-xs font-normal text-[#F03D3E]">{errorMsgUserRefCode}</p>
+            {!isLoadingUserRef && isCreatedUserRefCode ? (
               <Grid templateColumns="repeat(2, 1fr)" gap={2} marginTop={'20px'}>
                 <Button
                   fontSize={'16px'}
@@ -358,7 +461,7 @@ const ReferralView = () => {
                   width={'100%'}
                   marginTop={'20px'}
                   onClick={createCode}
-                  isLoading={isLoading}
+                  isLoading={isLoadingUserRef}
                 >
                   Create
                 </Button>
