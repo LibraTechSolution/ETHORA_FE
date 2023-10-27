@@ -77,7 +77,7 @@ const TradeControl = () => {
   const toast = useToast();
   const { address } = useAccount();
   const { onOpen } = useModalStore();
-  const balance = useBalanceOf(appConfig.usdcAddress as Address);
+  const balance = useBalanceOf(appConfig.USDC_SC as Address);
   const [tradeSize, setTradeSize] = useState<string>('0');
   const [tradeSizeError, setTradeSizeError] = useState<string>('');
   const [limitOrderPrice, setLimitOrderPrice] = useState<string>('0');
@@ -251,7 +251,7 @@ const TradeControl = () => {
     try {
       setIsLoadingApprove(true);
       const nonce = await readContract({
-        address: appConfig.usdcAddress as Address,
+        address: appConfig.USDC_SC as Address,
         abi: usdcABI,
         functionName: 'nonces',
         args: [address as Address],
