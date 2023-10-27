@@ -1,5 +1,5 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
@@ -30,6 +30,7 @@ const LimitOrdersTable = () => {
   const toast = useToast();
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (chain) {
@@ -140,7 +141,7 @@ const LimitOrdersTable = () => {
   const handleCancelTrade = async (item: ITradingData) => {
     try {
       await cancelTrade(item._id);
-      refetch();
+      queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
       toast({
         position: 'top',
         render: ({ onClose }) => <ToastLayout title="Cancel Successfully" status={Status.SUCCESSS} close={onClose} />,
@@ -157,7 +158,6 @@ const LimitOrdersTable = () => {
     data: tradingData,
     isLoading,
     isError,
-    refetch,
   } = useQuery({
     queryKey: ['getLimitOrders'],
     queryFn: () => getLimitOrders(filter),
