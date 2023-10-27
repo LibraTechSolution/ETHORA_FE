@@ -27,11 +27,11 @@ const TotalRewardsItem = ({
   const [openClaimModal, setOpenClaimModal] = useState<boolean>(false);
   const [openCompoundRewardsModal, setOpenCompoundRewardsModal] = useState<boolean>(false);
 
-  const USDC = (+(claimable_sbfETR as bigint)?.toString() + +(claimable_fBLP as bigint)?.toString()) / 10 ** 6;
-  const ETR = (+(claimable_vETR as bigint)?.toString() + +(claimable_vBLP as bigint)?.toString()) / 10 ** 18;
-  const esETR = (+(claimables_ETR as bigint)?.toString() + +(claimable_fsBLP as bigint)?.toString()) / 10 ** 18;
-  const multiplierPoints = +(claimable_sbETR as bigint)?.toString() / 10 ** 18;
-  const stakedMultiplierPoints = +(depositBalances_bnETR as bigint)?.toString() / 10 ** 18;
+  const USDC = (Number(claimable_sbfETR) + Number(claimable_fBLP)) / 10 ** 6;
+  const ETR = (Number(claimable_vETR) + Number(claimable_vBLP)) / 10 ** 18;
+  const esETR = (Number(claimables_ETR) + Number(claimable_fsBLP)) / 10 ** 18;
+  const multiplierPoints = Number(claimable_sbETR) / 10 ** 18;
+  const stakedMultiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
 
   return (
     <>
@@ -92,9 +92,9 @@ const TotalRewardsItem = ({
         <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
           <CustomConnectButton>
             <Flex gap={'8px'} justifyContent={'flex-end'}>
-              <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
+              {/* <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
                 Claim ARB
-              </Button>
+              </Button> */}
               <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
                 Claim
               </Button>
