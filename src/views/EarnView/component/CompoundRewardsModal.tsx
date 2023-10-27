@@ -1,3 +1,5 @@
+import { appConfig } from '@/config';
+import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
 import {
   Button,
   Modal,
@@ -19,9 +21,11 @@ import {
   Box,
   Flex,
 } from '@chakra-ui/react';
+import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
 import { useFormik } from 'formik';
-import { useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
+import { EarnContext } from '..';
 
 // const validationSchema = Yup.object({
 //   pay: Yup.string().required(),
@@ -29,19 +33,62 @@ import * as Yup from 'yup';
 // });
 
 const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
-  // const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onFetchData } = useContext(EarnContext);
+  const [claimETRValue, setClaimETRValue] = useState<boolean>(false);
+  const [claimEsETRValue, setClaimEsETRValue] = useState<boolean>(false);
+  const [loadinCompound, setLoadingCompound] = useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: {
-      pay: '',
-      rememberMe: false,
+      stakeMultiplier: true,
+      claimETR: false,
+      stakeETR: false,
+      claimEsETR: false,
+      stakeEsETR: false,
+      clainUSDC: true,
     },
     onSubmit: (values) => {
       console.log('onSubmit');
-      alert(JSON.stringify(values, null, 2));
+      onCompoundReward(values);
     },
     // validationSchema: validationSchema,
   });
+
+  const onCompoundReward = async (data: any) => {
+    const { claimETR, stakeETR, claimEsETR, stakeEsETR } = data;
+    // const { isOpen, onOpen, onClose } = useDisclosure();
+    // handleRewards(
+    //     bool _shouldClaimBfr,
+    //     bool _shouldStakeBfr,
+    //     bool _shouldClaimEsBfr,
+    //     bool _shouldStakeEsBfr,
+    //     bool _shouldStakeMultiplierPoints,
+    //     bool _shouldClaimUsdc
+    // )
+    try {
+      setLoadingCompound(true);
+      const configStake = await prepareWriteContract({
+        address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
+        abi: RewardRouterV2_ABI,
+        functionName: 'handleRewards',
+        args: [claimETR, stakeETR, claimEsETR, stakeEsETR, true, true],
+      });
+
+      const { hash } = await writeContract(configStake);
+      const data = await waitForTransaction({
+        hash,
+      });
+      console.log('dataStake', data);
+      setLoadingCompound(false);
+      setClaimETRValue(false);
+      setClaimEsETRValue(false);
+      onFetchData();
+      onDismiss();
+    } catch (error) {
+      setLoadingCompound(false);
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     console.log('formik', formik.errors);
@@ -70,7 +117,7 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                 <Checkbox
                   id="stakeMultiplier"
                   // name="rememberMe"
-                  {...formik.getFieldProps('rememberMe')}
+                  {...formik.getFieldProps('stakeMultiplier')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
@@ -84,12 +131,15 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                 <Checkbox
                   id="claimETR"
                   // name="rememberMe"
-                  {...formik.getFieldProps('rememberMe')}
+                  {...formik.getFieldProps('claimETR')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
-                  disabled
-                  defaultChecked
+                  onChange={(e) => {
+                    setClaimETRValue(!claimETRValue);
+                    formik.setFieldValue('claimETR', !claimETRValue);
+                  }}
+                  isChecked={claimETRValue}
                 >
                   <Text as="span" fontSize={'14px'}>
                     Claim ETR Rewards
@@ -98,10 +148,18 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                 <Checkbox
                   id="stakeETR"
                   // name="rememberMe"
-                  {...formik.getFieldProps('esetr')}
+                  {...formik.getFieldProps('stakeETR')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
+                  onChange={(e) => {
+                    console.log(e.target.checked);
+                    if (e.target.checked) {
+                      setClaimETRValue(true);
+                      formik.setFieldValue('claimETR', true);
+                    }
+                    formik.setFieldValue('stakeETR', !formik.values.stakeETR);
+                  }}
                 >
                   <Text as="span" fontSize={'14px'}>
                     Stake ETR Rewards
@@ -110,12 +168,15 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                 <Checkbox
                   id="claimEsETR"
                   // name="rememberMe"
-                  {...formik.getFieldProps('rememberMe')}
+                  {...formik.getFieldProps('claimEsETR')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
-                  disabled
-                  defaultChecked
+                  onChange={(e) => {
+                    setClaimEsETRValue(!claimEsETRValue);
+                    formik.setFieldValue('claimEsETR', !claimEsETRValue);
+                  }}
+                  isChecked={claimEsETRValue}
                 >
                   <Text as="span" fontSize={'14px'}>
                     Claim esETR Rewards
@@ -124,10 +185,17 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                 <Checkbox
                   id="stakeEsETR"
                   // name="rememberMe"
-                  {...formik.getFieldProps('usdc')}
+                  {...formik.getFieldProps('stakeEsETR')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setClaimEsETRValue(true);
+                      formik.setFieldValue('claimEsETR', true);
+                    }
+                    formik.setFieldValue('stakeEsETR', !formik.values.stakeEsETR);
+                  }}
                 >
                   <Text as="span" fontSize={'14px'}>
                     Stake esETR Rewards
@@ -136,7 +204,7 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                 <Checkbox
                   id="clainUSDC"
                   // name="rememberMe"
-                  {...formik.getFieldProps('rememberMe')}
+                  {...formik.getFieldProps('clainUSDC')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
@@ -152,7 +220,12 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="primary" onClick={() => formik.handleSubmit()} width={'100%'}>
+            <Button
+              colorScheme="primary"
+              onClick={() => formik.handleSubmit()}
+              width={'100%'}
+              isLoading={loadinCompound}
+            >
               Claim
             </Button>
           </ModalFooter>

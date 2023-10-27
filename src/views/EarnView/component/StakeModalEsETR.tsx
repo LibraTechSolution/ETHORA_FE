@@ -1,3 +1,8 @@
+import { appConfig } from '@/config';
+import ETR_ABI from '@/config/abi/ETR_ABI';
+import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
+import { useAllowance, useBalanceOf } from '@/hooks/useContractRead';
+import { addComma } from '@/utils/number';
 import {
   Button,
   Modal,
@@ -19,70 +24,47 @@ import {
   Box,
   Flex,
 } from '@chakra-ui/react';
+import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
+import BigNumber from 'bignumber.js';
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import { useAccount, useContractRead } from 'wagmi';
+import { formatUnits, parseUnits } from 'viem';
+import { useAccount, useContractRead, useContractWrite } from 'wagmi';
 import * as Yup from 'yup';
 import { EarnContext } from '..';
-import { appConfig } from '@/config';
 import ESETR_ABI from '@/config/abi/ESETR_ABI';
-import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
-import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
-import BigNumber from 'bignumber.js';
-import { useBalanceOf } from '@/hooks/useContractRead';
-import VETR_ABI from '@/config/abi/VETR_ABI';
-import USDC_ABI from '@/config/abi/USDC_ABI';
-import { addComma } from '@/utils/number';
-import { formatUnits } from 'viem';
 
-// const validationSchema = Yup.object({
-//   amount: Yup.string().required(),
-//   rememberMe: Yup.boolean().equals([true]),
-// });
-
-const AddFundsModal = ({
-  isOpen,
-  exchangeRate,
-  onDismiss,
-}: {
-  isOpen: boolean;
-  exchangeRate: string;
-  onDismiss: () => void;
-}) => {
-  // const { isOpen, onOpen, onClose } = useDisclosure();
+const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { address } = useAccount();
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [loadingApproved, setLoadingApproved] = useState<boolean>(false);
-  const [loadingDeposit, setLoadingDeposit] = useState<boolean>(false);
+  const [loadingStake, setLoadingStake] = useState<boolean>(false);
   const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
   const { onFetchData } = useContext(EarnContext);
 
   const { data: getAllowance } = useContractRead({
-    address: appConfig.USDC_SC as `0x${string}`,
-    abi: USDC_ABI,
+    address: appConfig.ESETR_SC as `0x${string}`,
+    abi: ESETR_ABI,
     functionName: 'allowance',
-    args: [address as `0x${string}`, appConfig.BLP_SC as `0x${string}`],
-    enabled: !!(address && appConfig.USDC_SC),
+    args: [address as `0x${string}`, appConfig.SETR_SC as `0x${string}`],
+    enabled: !!(address && appConfig.SETR_SC),
   });
 
-  const balance = useBalanceOf(appConfig.USDC_SC as `0x${string}`);
+  const balance = useBalanceOf(appConfig.ESETR_SC as `0x${string}`);
 
   const validationSchema = Yup.object({
     amount: Yup.string()
       .required('The number is required!')
       .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
-      .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(balance as bigint, 6)),
-      rememberMe: Yup.boolean().equals([true]),
+      .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(balance as bigint, 18)),
   });
 
   const formik = useFormik({
     initialValues: {
       amount: '',
-      rememberMe: false,
     },
-    onSubmit: (values) => {
-      console.log('onSubmit');
-      onAddFund(values.amount);
+    onSubmit: async (values) => {
+      onStake(values.amount);
     },
     validationSchema: validationSchema,
   });
@@ -93,10 +75,10 @@ const AddFundsModal = ({
       setLoadingApproved(true);
 
       const config = await prepareWriteContract({
-        address: appConfig.USDC_SC as `0x${string}`,
-        abi: USDC_ABI,
+        address: appConfig.ESETR_SC as `0x${string}`,
+        abi: ESETR_ABI,
         functionName: 'approve',
-        args: [appConfig.BLP_SC as `0x${string}`, BigInt(2 ** 256 / 1.1)],
+        args: [appConfig.SETR_SC as `0x${string}`, BigInt(2 ** 256 / 1.1)],
       });
 
       const { hash } = await writeContract(config);
@@ -114,15 +96,16 @@ const AddFundsModal = ({
     // }
   };
 
-  const onAddFund = async (amount: string) => {
-    const amoutBigint = BigInt(+amount * 10 ** 6);
+  const onStake = async (amount: string) => {
+    const amoutBigint = BigInt(+amount * 10 ** 18);
+
     try {
-      setLoadingDeposit(true);
+      setLoadingStake(true);
       const configStake = await prepareWriteContract({
         address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
         abi: RewardRouterV2_ABI,
-        functionName: 'mintAndStakeBlp',
-        args: [amoutBigint, BigInt(0)],
+        functionName: 'stakeEsBfr',
+        args: [amoutBigint],
       });
 
       const { hash } = await writeContract(configStake);
@@ -130,11 +113,11 @@ const AddFundsModal = ({
         hash,
       });
       console.log('dataStake', data);
-      setLoadingDeposit(false);
+      setLoadingStake(false);
       onFetchData();
       onDismiss();
     } catch (error) {
-      setLoadingDeposit(false);
+      setLoadingStake(false);
       console.log(error);
     }
   };
@@ -144,10 +127,9 @@ const AddFundsModal = ({
   }, [formik.errors]);
 
   useEffect(() => {
-    console.log('getAllowance', getAllowance);
     setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)));
   }, [getAllowance]);
-  
+
   return (
     <>
       {/* <Button onClick={onOpen}>Open Modal</Button> */}
@@ -163,26 +145,25 @@ const AddFundsModal = ({
           fontWeight={400}
           fontSize={'14px'}
         >
-          <ModalHeader>Buy ELP</ModalHeader>
+          <ModalHeader>Stake esETR</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form>
               <VStack spacing={4} align="flex-start">
                 <FormControl>
-                  <FormLabel htmlFor="pay" fontWeight={400} fontSize={'14px'}>
+                  <FormLabel htmlFor="amount" fontWeight={400} fontSize={'14px'}>
                     <Flex display={'flex'} justifyContent={'space-between'} width={'100%'}>
                       <Text as="span" fontSize={'12px'} color="#9E9E9F">
-                        Pay
+                        Stake
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Balance: {balance !== undefined ? addComma(formatUnits(balance as bigint, 6), 2) : '---'} USDC
+                        Max: {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '---'} esETR
                       </Text>
                     </Flex>
                   </FormLabel>
                   <InputGroup>
                     <Input
                       id="amount"
-                      // name="pay"
                       placeholder="Enter amount"
                       paddingRight={'125px'}
                       fontSize={'14px'}
@@ -208,7 +189,7 @@ const AddFundsModal = ({
                         fontWeight={400}
                         onClick={() => {
                           if (balance) {
-                            formik.setFieldValue('amount', Number(balance) / 10 ** 6);
+                            formik.setFieldValue('amount', Number(balance) / 10 ** 18);
                           }
                         }}
                       >
@@ -226,27 +207,6 @@ const AddFundsModal = ({
                     </Text>
                   )}
                 </FormControl>
-                <Flex display={'flex'} flexDirection={'column'} alignItems={'flex-end'} width={'100%'}>
-                  <Text as="span" fontSize={'12px'} color="#9E9E9F">
-                    Receive
-                  </Text>{' '}
-                  <Text as="span" fontSize={'14px'} color={'#1ED768'}>
-                    {addComma(+formik.values.amount / +exchangeRate, 2)} ELP
-                  </Text>
-                </Flex>
-                <Checkbox
-                  id="rememberMe"
-                  // name="rememberMe"
-                  {...formik.getFieldProps('rememberMe')}
-                  colorScheme="primary"
-                  fontWeight={400}
-                  fontSize={'14px'}
-                >
-                  <Text as="span" fontSize={'14px'}>
-                    {' '}
-                    I have read how the USDC vault works and am aware of risk associated with being a liquidity provider
-                  </Text>
-                </Checkbox>
               </VStack>
             </form>
           </ModalBody>
@@ -255,9 +215,9 @@ const AddFundsModal = ({
             <Button
               colorScheme="primary"
               mr={3}
-              onClick={() => onApprove()}
+              onClick={onApprove}
               width={'100%'}
-              isDisabled={(isApproved && !loadingApproved) || !formik.values.rememberMe}
+              isDisabled={isApproved && !loadingApproved}
               isLoading={loadingApproved}
             >
               Approve
@@ -266,10 +226,10 @@ const AddFundsModal = ({
               colorScheme="primary"
               onClick={() => formik.handleSubmit()}
               width={'100%'}
-              isDisabled={!isApproved || !formik.values.rememberMe}
-              isLoading={loadingDeposit}
+              isDisabled={!isApproved}
+              isLoading={loadingStake}
             >
-              Add Funds
+              Stake
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -277,4 +237,4 @@ const AddFundsModal = ({
     </>
   );
 };
-export default AddFundsModal;
+export default StakeModalEsETR;

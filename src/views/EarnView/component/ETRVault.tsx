@@ -1,12 +1,18 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
-import { Heading, Box, Text, Flex, Button } from '@chakra-ui/react';
-import DepositModal from './DepositModal';
-import { useState } from 'react';
+import { Heading, Box, Text, Flex, Button, Tooltip, Spacer } from '@chakra-ui/react';
+import DepositModal from './DepositModalETRVault';
+import { useContext, useState } from 'react';
 import { addComma } from '@/utils/number';
+import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
+import { appConfig } from '@/config';
+import VBLP_ABI from '@/config/abi/VBLP_ABI';
+import useActiveWeb3React from '@/hooks/useActiveWeb3React';
+import { EarnContext } from '..';
+import VETR_ABI from '@/config/abi/VETR_ABI';
 
 const ETRVault = ({
   depositBalances_ETR,
-  depositBalances_sbBFR,
+  depositBalances_esETR,
   depositBalances_bnETR,
   pairAmounts_vETR,
   depositBalances_sbETR,
@@ -15,7 +21,7 @@ const ETRVault = ({
   getVestedAmount_vETR,
 }: {
   depositBalances_ETR: bigint;
-  depositBalances_sbBFR: bigint;
+  depositBalances_esETR: bigint;
   depositBalances_bnETR: bigint;
   pairAmounts_vETR: bigint;
   depositBalances_sbETR: bigint;
@@ -24,20 +30,44 @@ const ETRVault = ({
   getVestedAmount_vETR: bigint;
 }) => {
   const [openDepositModal, setOpenDepositModal] = useState<boolean>(false);
+  const { onFetchData } = useContext(EarnContext);
+  const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
 
-  const stakedTokensETR = +(depositBalances_ETR as bigint)?.toString() / 10 ** 18;
-  const stakedTokens_esETR = +(depositBalances_sbBFR as bigint)?.toString() / 10 ** 18;
-  const multiplierPoints = +(depositBalances_bnETR as bigint)?.toString() / 10 ** 18;
+  const stakedTokensETR = Number(depositBalances_ETR) / 10 ** 18;
+  const stakedTokens_esETR = Number(depositBalances_esETR) / 10 ** 18;
+  const multiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
 
   const stakedTokens = stakedTokensETR + stakedTokens_esETR + multiplierPoints;
 
-  const pairAmounts = +(pairAmounts_vETR as bigint)?.toString() / 10 ** 18;
-  const depositBalances =
-    (+(depositBalances_bnETR as bigint)?.toString() + +(depositBalances_sbETR as bigint)?.toString()) / 10 ** 18;
+  const pairAmounts = Number(pairAmounts_vETR) / 10 ** 18;
+  const depositBalances = (Number(depositBalances_bnETR) + Number(depositBalances_sbETR)) / 10 ** 18;
 
-  const claimed = (+(claimedAmounts_vETR as bigint)?.toString() + +(claimable_vETR as bigint)?.toString()) / 10 ** 18;
-  const vested = +(getVestedAmount_vETR as bigint)?.toString() / 10 ** 18;
-  const claimable = +(claimable_vETR as bigint)?.toString() / 10 ** 18;
+  const claimed = (Number(claimedAmounts_vETR) + Number(claimable_vETR)) / 10 ** 18;
+  const vested = Number(getVestedAmount_vETR) / 10 ** 18;
+  const claimable = Number(claimable_vETR) / 10 ** 18;
+
+  const onWithdraw = async () => {
+    try {
+      setLoadingWithdraw(true);
+      const configUnStake = await prepareWriteContract({
+        address: appConfig.VETR_SC as `0x${string}`,
+        abi: VETR_ABI,
+        functionName: 'withdraw',
+        // args:[]
+      });
+
+      const { hash } = await writeContract(configUnStake);
+      const data = await waitForTransaction({
+        hash,
+      });
+      setLoadingWithdraw(false);
+      onFetchData();
+    } catch (error) {
+      setLoadingWithdraw(false);
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
@@ -49,7 +79,40 @@ const ETRVault = ({
             Staked Tokens
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '---'}
+            <Tooltip
+              hasArrow
+              label={
+                <Box w="100%" p={4} color="white">
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      ETR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(stakedTokensETR, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      esETR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(stakedTokens_esETR, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Multiplier Points
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(multiplierPoints, 2)}%</Box>
+                  </Flex>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="215px"
+            >
+              <Text as="u">{stakedTokens !== undefined ? addComma(stakedTokens, 2) : '---'}</Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -66,8 +129,26 @@ const ETRVault = ({
             Vesting Status
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {claimed !== undefined ? addComma(claimed, 2) : '---'} /{' '}
-            {vested !== undefined ? addComma(vested, 2) : '---'}
+            <Tooltip
+              hasArrow
+              label={
+                <Box>
+                  <Text fontSize={'12px'} marginBottom={'16px'}>
+                    {addComma(claimed, 2)} esETR tokens have been converted to ETR from the {addComma(vested, 2)} esETR
+                    deposited for vesting.
+                  </Text>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="288px"
+            >
+              <Text as="u">
+                {claimed !== undefined ? addComma(claimed, 2) : '---'} /{' '}
+                {vested !== undefined ? addComma(vested, 2) : '---'}
+              </Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -75,14 +156,36 @@ const ETRVault = ({
             Claimable
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {claimable !== undefined ? addComma(claimable, 2) : '---'} ETR
+            <Tooltip
+              hasArrow
+              label={
+                <Box>
+                  <Text fontSize={'12px'} marginBottom={'16px'}>
+                    {addComma(claimable, 2)} ETR tokens can be claimed, use the options under the Total Rewards section
+                    to claim them.
+                  </Text>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="288px"
+            >
+              <Text as="u">{claimable !== undefined ? addComma(claimable, 2) : '---'} ETR</Text>
+            </Tooltip>
           </Text>
         </Box>
         <hr className="border-[#242428]" />
         <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
           <CustomConnectButton>
             <Flex gap={'8px'} justifyContent={'flex-end'}>
-              <Button colorScheme="primary" fontSize={'16px'} size="md">
+              <Button
+                colorScheme="primary"
+                fontSize={'16px'}
+                size="md"
+                onClick={onWithdraw}
+                isLoading={loadingWithdraw}
+              >
                 Withdraw
               </Button>
               <Button
@@ -99,7 +202,7 @@ const ETRVault = ({
           </CustomConnectButton>
         </Box>
       </Box>
-      <DepositModal isOpen={openDepositModal} onDismiss={() => setOpenDepositModal(false)} />
+      {openDepositModal && <DepositModal isOpen={openDepositModal} onDismiss={() => setOpenDepositModal(false)} />}
     </>
   );
 };
