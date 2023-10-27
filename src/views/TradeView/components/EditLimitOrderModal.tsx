@@ -58,14 +58,13 @@ const EditLimitOrderModal = (props: PropsType) => {
   const [expiryTimeError, setExpiryTimeError] = useState<string>('');
 
   useEffect(() => {
-    console.log(item);
     if (item) {
       const periodToMin = item.period / 60;
       const expiryTimeToMin = item.limitOrderDuration / 60;
       setTime(periodToMin + timeType);
       setTimeNumber(periodToMin.toString());
       setExpiryTimeNumber(expiryTimeToMin.toString());
-      setLimitOrderPrice(item.strike.toString());
+      setLimitOrderPrice(divide(item.strike, 8).toString());
       setIsAbove(item.isAbove);
     }
   }, [item, timeType]);
@@ -76,7 +75,6 @@ const EditLimitOrderModal = (props: PropsType) => {
     if (!numberRegex.test(numberValue)) {
       numberValue = type === TimeType.TIME ? timeNumber.toString() : expiryTimeNumber.toString();
     }
-    console.log(numberValue);
     if (type === TimeType.TIME) {
       setTimeError('');
       setTimeNumber(numberValue);
@@ -100,7 +98,6 @@ const EditLimitOrderModal = (props: PropsType) => {
 
   const handleOnChangeNumber = (e: ChangeEvent<HTMLInputElement>) => {
     setLimitOrderPriceError('');
-    console.log(e.target.value);
     const numberRegex = /^[0-9]*([.])?([0-9]{1,8})?$/;
     let numberValue = e.target.value;
     if (!numberRegex.test(numberValue)) {
@@ -142,7 +139,7 @@ const EditLimitOrderModal = (props: PropsType) => {
       const data: EditTradeReq = {
         network: item?.network,
         _id: item?._id,
-        strike: +limitOrderPrice,
+        strike: +limitOrderPrice * 100000000,
         period: convertToTimeStamp(time),
         slippage: item?.slippage,
         isAbove: isAbove,

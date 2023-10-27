@@ -24,7 +24,7 @@ export function closeTrade(_id: string) {
 }
 
 export const getTrades = async (params?: ITradingParams): Promise<IPaginationResponse<ITradingData>> => {
-  const response = await axiosInstance.get('/trades/user/actives', {
+  const response = await axiosInstance.get('/trades/user/active', {
     params: deleteKeyNil({
       ...params,
     }),
@@ -37,9 +37,23 @@ export const getTrades = async (params?: ITradingParams): Promise<IPaginationRes
   return response.data.data as IPaginationResponse<ITradingData>;
 }
 
-export function getLimitOrders(network: number) {
-  return axiosInstance.get<IResponData<IPaginationResponse<ITradingData>>>(`/trades/user/limit-orders?page=1&limit=30&sortBy=createdAt&network=${network}`);
+export const getLimitOrders = async (params?: ITradingParams): Promise<IPaginationResponse<ITradingData>> => {
+  const response = await axiosInstance.get('/trades/user/limit-orders', {
+    params: deleteKeyNil({
+      ...params,
+    }),
+    headers: {
+      Expires: '-1',
+      'Cache-Control': 'no-cache',
+    },
+  });
+
+  return response.data.data as IPaginationResponse<ITradingData>;
 }
+
+// export function getLimitOrders(network: number) {
+//   return axiosInstance.get<IResponData<IPaginationResponse<ITradingData>>>(`/trades/user/limit-orders?page=1&limit=30&sortBy=createdAt&network=${network}`);
+// }
 
 export const getTradeHistory = async (params?: ITradingParams): Promise<IPaginationResponse<ITradingData>> => {
   const response = await axiosInstance.get('/trades/user/history', {
@@ -57,6 +71,34 @@ export const getTradeHistory = async (params?: ITradingParams): Promise<IPaginat
 
 export const getTradeCancel = async (params?: ITradingParams): Promise<IPaginationResponse<ITradingData>> => {
   const response = await axiosInstance.get('/trades/user/cancelled', {
+    params: deleteKeyNil({
+      ...params,
+    }),
+    headers: {
+      Expires: '-1',
+      'Cache-Control': 'no-cache',
+    },
+  });
+
+  return response.data.data as IPaginationResponse<ITradingData>;
+}
+
+export const getPlatformsTrades = async (params?: ITradingParams): Promise<IPaginationResponse<ITradingData>> => {
+  const response = await axiosInstance.get('/trades/all_active', {
+    params: deleteKeyNil({
+      ...params,
+    }),
+    headers: {
+      Expires: '-1',
+      'Cache-Control': 'no-cache',
+    },
+  });
+
+  return response.data.data as IPaginationResponse<ITradingData>;
+}
+
+export const getPlatformHistory = async (params?: ITradingParams): Promise<IPaginationResponse<ITradingData>> => {
+  const response = await axiosInstance.get('/trades/all_history', {
     params: deleteKeyNil({
       ...params,
     }),

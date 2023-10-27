@@ -16,11 +16,12 @@ import {
 import dynamic from 'next/dynamic';
 import TradeViewHeader from './components/TradeViewHeader';
 import TradeControl from './components/TradeControl';
-import ActiveTab from '../ProfileView/conponents/activeTab';
-import HistoryTab from '../ProfileView/conponents/historyTab';
 import HistoryTable from './components/HistoryTable';
 import TradeTable from './components/TradeTable';
 import CancelTable from './components/CancelTable';
+import LimitOrdersTable from './components/LimitOrdersTable';
+import PlatformTradesTable from './components/PlatformTradesTable';
+import PlatformHistoryTable from './components/PlatformHistoryTable';
 
 const TradingViewChart = dynamic(
   () => import('@/components/TradingView/TradingView').then((mod) => mod.TradingViewChart),
@@ -51,7 +52,7 @@ const TradeView = () => {
         </Box>
         <Box marginTop="12px" display={{ base: 'none', xl: 'block' }}>
           <Tabs>
-            <TabList borderBottom="1px solid #3d3d40" bg="#0c0c10" roundedTop="10px">
+            <TabList borderBottom="1px solid #1C1C1E" bg="#0c0c10" roundedTop="10px">
               <Tab
                 color="#6D6D70"
                 fontSize={'sm'}
@@ -121,15 +122,12 @@ const TradeView = () => {
             </TabList>
             <TabIndicator mt="-1.5px" height="2px" bg="#6052FB" borderRadius="1px" />
 
-            <TabPanels>
+            <TabPanels paddingTop={2} className="tradingTableTab">
               <TabPanel padding="0">
                 <TradeTable />
               </TabPanel>
               <TabPanel padding="0">
-                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
-                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
-                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
-                </Flex>
+                <LimitOrdersTable />
               </TabPanel>
               <TabPanel padding="0">
                 <HistoryTable />
@@ -138,16 +136,10 @@ const TradeView = () => {
                 <CancelTable />
               </TabPanel>
               <TabPanel padding="0">
-                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
-                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
-                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
-                </Flex>
+                <PlatformTradesTable />
               </TabPanel>
               <TabPanel padding="0">
-                <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
-                  <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
-                  <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
-                </Flex>
+                <PlatformHistoryTable />
               </TabPanel>
             </TabPanels>
           </Tabs>

@@ -5,13 +5,14 @@ import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { addComma } from '@/utils/number';
 import { useNetwork } from 'wagmi';
-import { getTradeHistory } from '@/services/trade';
+import { getPlatformHistory } from '@/services/trade';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import { Flex, Image } from '@chakra-ui/react';
 import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { convertDurationToHourMinutesSeconds } from '@/utils/time';
+import { formatAddress } from '@/utils/address';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -19,7 +20,7 @@ const defaultParams: ITradingParams = {
   network: '421613',
 };
 
-const HistoryTable = () => {
+const PlatformHistoryTable = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
 
@@ -119,17 +120,23 @@ const HistoryTable = () => {
       title: 'Status',
       render: (value: ITradingData) => 'TODO',
     },
+    {
+      title: 'User',
+      dataIndex: 'userAddress',
+      key: 'userAddress',
+      render: (value) => <span>{formatAddress(value)}</span>,
+    },
   ];
 
   const { data: tradingData, isLoading } = useQuery({
-    queryKey: ['getTradingHistory', filter],
-    queryFn: () => getTradeHistory(filter),
+    queryKey: ['getPlatformHistory', filter],
+    queryFn: () => getPlatformHistory(filter),
     onError: (error: any) => {
       // notification.error({ message: error.message });
       console.log(error);
     },
     cacheTime: 0,
-    refetchInterval: false,
+    refetchInterval: 10000,
     refetchOnWindowFocus: false,
   });
 
@@ -157,4 +164,4 @@ const HistoryTable = () => {
     />
   );
 };
-export default HistoryTable;
+export default PlatformHistoryTable;

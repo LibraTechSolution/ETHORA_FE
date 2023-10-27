@@ -13,7 +13,8 @@ export const appConfig = {
   registerSC: process.env.NEXT_PUBLIC_REGISTER_SC,
   referralSC: process.env.NEXT_PUBLIC_REFERRAL_SC,
   bufferRouterSC: process.env.NEXT_PUBLIC_BUFFER_ROUTER_SC,
-  bufferBOSC: process.env.NEXT_PUBLIC_BUFFER_BO_SC
+  bufferBOSC: process.env.NEXT_PUBLIC_BUFFER_BO_SC,
+  optionsConfigSC: process.env.NEXT_PUBLIC_OPTIONS_CONFIG_SC
 };
 
 export const targetChainId = appConfig.chainId;

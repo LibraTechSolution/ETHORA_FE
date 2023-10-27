@@ -41,3 +41,10 @@ export interface ILeaderBoardParams {
   type: string,
   offset: number
 }
+
+export interface ILeaderBoardOffset {
+  dailyOffset: number,
+  weeklyOffset: number,
+  dailyId: number,
+  weeklyId: number
+}

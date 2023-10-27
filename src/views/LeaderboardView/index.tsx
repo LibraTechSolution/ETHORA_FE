@@ -17,12 +17,8 @@ import { Select } from 'antd';
 import Image from 'next/image';
 import { ArrowForwardIcon, CalendarIcon } from '@chakra-ui/icons';
 import { useEffect, useState } from 'react';
-import TableLosers from './conponent/tableLosers';
-import TableWinners from './conponent/tableWinners';
-import { CalendaDayIcon } from 'public/images/icons/calendaDayIcon';
-import { CalendaWeekIcon } from 'public/images/icons/calendaWeekIcon';
-import { getLeaderboards } from '@/services/leaderboard';
-import { useNetwork } from 'wagmi';
+import { getLeaderboardOffset, getLeaderboards } from '@/services/leaderboard';
+import { useAccount, useNetwork } from 'wagmi';
 import { ILeaderBoardParams } from '@/types/leaderboard.type';
 import { useQuery } from '@tanstack/react-query';
 import { addComma } from '@/utils/number';
@@ -30,6 +26,8 @@ import { divide } from '@/utils/operationBigNumber';
 import CountDown from '../TradeView/components/CountDown';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
+import TableLeaderBoard from './conponent/tableLeaderBoard';
+import CustomConnectButton from '@/components/CustomConnectButton';
 dayjs.extend(utc);
 // import { Flex } from "@chakra-ui/react";
 
@@ -39,6 +37,7 @@ dayjs.extend(utc);
 export enum TableTabType {
   Winners = 'Winners',
   Losers = 'Losers',
+  Rate = 'Rate',
 }
 
 const defaultParams: ILeaderBoardParams = {
@@ -49,19 +48,44 @@ const defaultParams: ILeaderBoardParams = {
 
 const LeaderboardView = () => {
   const { Option } = Select;
-  const [isMobile] = useMediaQuery('(max-width: 768px)');
+  const { isConnected } = useAccount();
   const [defaultTabs, setDefaultTabs] = useState<TableTabType>(TableTabType.Winners);
-  const [mounted, SetMounted] = useState<boolean>(false);
+  const [mounted, setMounted] = useState<boolean>(false);
   const [isDaily, setIsDaily] = useState<boolean>(true);
 
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ILeaderBoardParams>(defaultParams);
+  const [listOffet, setListOffset] = useState<Array<string | number>>([]);
+  const [selectedOffset, setSelectedOffset] = useState<number>();
+
+  const { data: leaderBoardOffset, isSuccess } = useQuery({
+    queryKey: ['getLeaderBoardOffset'],
+    queryFn: () => getLeaderboardOffset(chain?.id ?? 5),
+    onError: (error: any) => {
+      // notification.error({ message: error.message });
+      console.log(error);
+    },
+    enabled: isConnected,
+    cacheTime: 0,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
-    if (chain) {
-      setFilter({ ...defaultParams, network: chain.id, type: isDaily ? 'daily' : 'weekly' });
+    console.log(leaderBoardOffset);
+    if (leaderBoardOffset && chain) {
+      const offset = isDaily ? leaderBoardOffset?.data?.data?.dailyOffset : leaderBoardOffset?.data?.data?.weeklyOffset;
+      setFilter({ offset, network: chain.id, type: isDaily ? 'daily' : 'weekly' });
+      const tempList = new Array(offset).fill('');
+      setListOffset(tempList);
+      setSelectedOffset(offset);
     }
-  }, [chain, isDaily]);
+  }, [chain, isDaily, leaderBoardOffset]);
+
+  const selecOffet = (offset: number) => {
+    setFilter({ ...filter, offset });
+    setSelectedOffset(offset);
+  };
 
   const {
     data: leaderBoardData,
@@ -74,6 +98,7 @@ const LeaderboardView = () => {
       // notification.error({ message: error.message });
       console.log(error);
     },
+    enabled: isSuccess,
     cacheTime: 0,
     refetchInterval: false,
     refetchOnWindowFocus: false,
@@ -84,8 +109,8 @@ const LeaderboardView = () => {
   };
 
   useEffect(() => {
-    SetMounted(true);
-  }, []);
+    setMounted(isConnected);
+  }, [isConnected]);
 
   return (
     <Flex
@@ -201,7 +226,9 @@ const LeaderboardView = () => {
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
                 Reward pool
               </Text>
-              <Text fontSize={'2xl'}>{addComma(divide(leaderBoardData?.summary.totalRewardPool ?? 0, 6), 0)} USDC</Text>
+              <Text fontSize={'2xl'}>
+                {addComma(divide(leaderBoardData?.summary?.totalRewardPool ?? 0, 6), 0)} USDC
+              </Text>
             </Flex>
           </Center>
           <Center
@@ -218,7 +245,7 @@ const LeaderboardView = () => {
               </Text>
               <Text fontSize={'2xl'}>
                 <CountDown
-                  endTime={dayjs(leaderBoardData?.summary.endDate)
+                  endTime={dayjs(leaderBoardData?.summary?.endDate)
                     .utc()
                     .unix()}
                   period={0}
@@ -239,7 +266,7 @@ const LeaderboardView = () => {
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
                 Participants
               </Text>
-              <Text fontSize={'2xl'}>{leaderBoardData?.summary.totalUserTrades}</Text>
+              <Text fontSize={'2xl'}>{leaderBoardData?.summary?.totalUserTrades}</Text>
             </Flex>
           </Center>
           <Center
@@ -254,7 +281,7 @@ const LeaderboardView = () => {
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
                 No. of trades
               </Text>
-              <Text fontSize={'2xl'}>{addComma(leaderBoardData?.summary.totalTrades ?? 0, 0)}</Text>
+              <Text fontSize={'2xl'}>{addComma(leaderBoardData?.summary?.totalTrades ?? 0, 0)}</Text>
             </Flex>
           </Center>
           <Center textAlign={'center'} padding={3} flexShrink={1} flexGrow={1} flexBasis={'200px'}>
@@ -262,7 +289,7 @@ const LeaderboardView = () => {
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
                 Volume
               </Text>
-              <Text fontSize={'2xl'}>{addComma(divide(leaderBoardData?.summary.totalVolume ?? 0, 6), 0)} USDC</Text>
+              <Text fontSize={'2xl'}>{addComma(divide(leaderBoardData?.summary?.totalVolume ?? 0, 6), 0)} USDC</Text>
             </Flex>
           </Center>
         </Flex>
@@ -309,30 +336,73 @@ const LeaderboardView = () => {
               >
                 Losers (by PnL)
               </Box>
+              {!isDaily && (
+                <Box
+                  className="mr-2"
+                  role="presentation"
+                  onClick={() => {
+                    setDefaultTabs(TableTabType.Rate);
+                  }}
+                  borderBottom={'2px solid'}
+                  borderColor={defaultTabs === TableTabType.Rate ? '#6052FB' : 'transparent'}
+                  pointerEvents={defaultTabs === TableTabType.Rate ? 'none' : 'auto'}
+                  cursor={defaultTabs === TableTabType.Rate ? 'default' : 'pointer'}
+                  color={defaultTabs === TableTabType.Rate ? '#6052FB' : '#9E9E9F'}
+                  padding={'20px 0'}
+                >
+                  Winners (by Win rate)
+                </Box>
+              )}
             </Flex>
             <Box>
               <Menu>
-                <MenuButton as={Button} rightIcon={<CalendarIcon />} backgroundColor={'#252528'} color={'#7A72F6'}>
-                  Actions
+                <MenuButton
+                  as={Button}
+                  rightIcon={<CalendarIcon />}
+                  border={'1px solid #1E3EF0'}
+                  backgroundColor={'transparent'}
+                  color={'#1E3EF0'}
+                  w={'100px'}
+                  _hover={{ bgColor: 'transparent', border: '1px solid #1E3EF0' }}
+                  _active={{ bgColor: 'transparent', border: '1px solid #1E3EF0' }}
+                >
+                  #{selectedOffset}
                 </MenuButton>
                 <MenuList
                   backgroundColor={'#252528'}
                   boxShadow={'0px 3px 20px 0px rgba(0, 0, 0, 0.65)'}
                   border={'none'}
+                  h="200px"
+                  overflow="auto"
                 >
-                  <MenuItem backgroundColor={'#252528'}>Download</MenuItem>
-                  <MenuItem backgroundColor={'#252528'}>Create a Copy</MenuItem>
-                  <MenuItem backgroundColor={'#252528'}>Mark as Draft</MenuItem>
-                  <MenuItem backgroundColor={'#252528'}>Delete</MenuItem>
-                  <MenuItem backgroundColor={'#252528'}>Attend a Workshop</MenuItem>
+                  {listOffet.map((item: string | number, index: number) => (
+                    <MenuItem
+                      key={`${index}-offset`}
+                      backgroundColor={'#252528'}
+                      onClick={() => selecOffet(listOffet.length - index)}
+                    >
+                      #{listOffet.length - index}
+                    </MenuItem>
+                  ))}
                 </MenuList>
               </Menu>
             </Box>
           </Box>
-
-          {leaderBoardData?.winners && mounted && (
-            <TableLosers
-              data={defaultTabs === TableTabType.Winners ? leaderBoardData?.winners : leaderBoardData?.losers}
+          <Center>
+            <CustomConnectButton>
+              <></>
+            </CustomConnectButton>
+          </Center>
+          {mounted && (
+            <TableLeaderBoard
+              data={
+                defaultTabs === TableTabType.Winners
+                  ? leaderBoardData?.winners
+                  : defaultTabs === TableTabType.Losers
+                  ? leaderBoardData?.losers
+                  : leaderBoardData?.winnersWinrate
+              }
+              isWinnderByRate={defaultTabs === TableTabType.Rate}
               loading={isLoading}
             />
           )}

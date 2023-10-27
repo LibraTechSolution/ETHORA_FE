@@ -197,11 +197,9 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
         functionName: 'accountMapping',
         args: [user?.address as `0x${string}`],
       });
-      console.log(data);
       signTypedDataV4(data[1]);
     } catch (error) {
       setIsLoadingDeactive(false);
-      console.log(error);
     }
     // refetch();
   };

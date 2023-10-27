@@ -85,7 +85,7 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center>
-              <Link href="profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
+              <Link href="leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                 Leaderboard
               </Link>
             </Center>
@@ -189,7 +189,7 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link href="profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
+              <Link href="leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                 Leaderboard
               </Link>
             </Center>

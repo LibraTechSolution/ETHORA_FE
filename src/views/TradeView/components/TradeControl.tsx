@@ -30,7 +30,7 @@ import {
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Radio, RadioChangeEvent } from 'antd';
 import BigNumber from 'bignumber.js';
-import { ChangeEvent, useMemo, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { Address, BaseError } from 'viem';
 import { useAccount, useNetwork } from 'wagmi';
 import useTradeStore from '@/store/useTradeStore';
@@ -52,6 +52,7 @@ import Link from 'next/link';
 import { useQueryClient } from '@tanstack/react-query';
 import TraderTab from './TraderTab';
 import LimitOrderTab from './LimitOrderTab';
+import referralABI from '@/config/abi/referralABI';
 dayjs.extend(utc);
 
 const approveParamType = [
@@ -98,7 +99,11 @@ const TradeControl = () => {
 
   const currentPair = useMemo<PairData | null>(() => {
     if (!params?.pair) return null;
-    return listPairData.find((item: PairData) => item.pair.replace('/', '-').toLowerCase() === params?.pair) ?? null;
+    return (
+      listPairData.find(
+        (item: PairData) => item.pair.replace('/', '-').toLowerCase() === (params?.pair as string).toLowerCase(),
+      ) ?? null
+    );
   }, [listPairData, params?.pair]);
 
   const isRegisterd = useMemo(() => {
@@ -140,13 +145,11 @@ const TradeControl = () => {
     if (inputName === InputName.LIMIT_ORDER_PRICE) {
       setLimitOrderPriceError('');
     }
-    console.log(e.target.value);
     const numberRegex = /^[0-9]*([.])?([0-9]{1,8})?$/;
     let numberValue = e.target.value;
     if (!numberRegex.test(numberValue)) {
       numberValue = inputName === InputName.TRADE_SIZE ? tradeSize.toString() : limitOrderPrice.toString();
     }
-    console.log(numberValue);
     if (inputName === InputName.TRADE_SIZE) {
       if (currentPair?.maxTradeSize && +numberValue > currentPair?.maxTradeSize) {
         numberValue = currentPair?.maxTradeSize.toString();
@@ -164,7 +167,6 @@ const TradeControl = () => {
     if (!numberRegex.test(numberValue)) {
       numberValue = timeNumber.toString();
     }
-    console.log(numberValue);
     setTimeNumber(numberValue);
     setTime(numberValue + timeType);
   };
@@ -176,8 +178,8 @@ const TradeControl = () => {
   const handleApprove = async (permit: IPermit) => {
     try {
       const res = await approveToken(permit, chain?.id as number);
-      console.log(res);
       toggleApprovedAccount(true);
+      setIsLoadingApprove(false);
     } catch (error) {
       setIsLoadingApprove(false);
       toast({
@@ -213,7 +215,6 @@ const TradeControl = () => {
         primaryType: 'Permit',
       });
 
-      console.log('signature', getSVR(signature));
       const permit = {
         ...getSVR(signature),
         deadline,
@@ -221,7 +222,6 @@ const TradeControl = () => {
       handleApprove(permit);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error.shortMessage);
       setIsLoadingApprove(false);
       let msgContent = '';
       if (error instanceof BaseError) {
@@ -279,7 +279,6 @@ const TradeControl = () => {
   };
 
   const handleCreateTrade = async (isAbove: boolean) => {
-    console.log(dayjs().utc().format());
     let hasError = false;
     if (tradeType === TradeType.LIMIT) {
       if (!limitOrderPrice || +limitOrderPrice < 0.00000001) {
@@ -308,7 +307,12 @@ const TradeControl = () => {
     if (hasError) return;
 
     try {
-      console.log(currentPair);
+      const code = await readContract({
+        address: appConfig.referralSC as Address,
+        abi: referralABI,
+        functionName: 'traderReferralCodes',
+        args: [address as Address],
+      });
       const currentDate = dayjs().utc().format();
       const data = {
         network: chain?.id ?? 5,
@@ -323,13 +327,20 @@ const TradeControl = () => {
         limitOrderDuration: 18000,
         token: TRADE_TOKEN.USDC,
         pair: currentPair?.pair ? currentPair?.pair.replace('/', '-').toLowerCase() : '',
+        referralCode: code ?? '',
       };
       const res = await createTrade(data);
 
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
-      console.log(res);
-    } catch (error) {}
+    } catch (error) {
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Create trade Unsuccessfully" status={Status.ERROR} close={onClose} />
+        ),
+      });
+    }
   };
 
   return (

@@ -1,21 +1,18 @@
 'use client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { Box, Button, Flex, Image, useToast } from '@chakra-ui/react';
+import { Flex, Image } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
 import { useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
-import { closeTrade, getTrades } from '@/services/trade';
+import { getPlatformsTrades } from '@/services/trade';
 import useTradeStore from '@/store/useTradeStore';
 import { divide } from '@/utils/operationBigNumber';
 import dayjs from 'dayjs';
 import CountDown from './CountDown';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import { useEarlyPnl } from './TradeBox';
-import { ToastLayout } from '@/components/ToastLayout';
-import { Status } from '@/types/faucet.type';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -23,27 +20,10 @@ const defaultParams: ITradingParams = {
   network: '421613',
 };
 
-const PnLCell = ({ trade }: { trade: ITradingData }) => {
-  const { pnl: earlyPnl } = useEarlyPnl({
-    trade,
-  });
-  const { earlycloseAmount, probability } = earlyPnl;
-  return (
-    <Box>
-      <p className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
-        {(+earlycloseAmount).toFixed(2)}
-      </p>
-      <p className="text-[ #9E9E9F] text-xs font-normal">{probability.toFixed(2)}%</p>
-    </Box>
-  );
-};
-
-const TradeTable = () => {
+const PlatformTradesTable = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { price } = useTradeStore();
-  const queryClient = useQueryClient();
-  const toast = useToast();
 
   useEffect(() => {
     if (chain) {
@@ -118,73 +98,22 @@ const TradeTable = () => {
       key: 'tradeSize',
       render: (value) => <span>{addComma(divide(value, 6), 2)}</span>,
     },
-    {
-      title: 'PnL | Probability',
-      dataIndex: 'probability',
-      render: (value: string, record: ITradingData) => <PnLCell trade={record} />,
-    },
-    {
-      title: 'Action',
-      dataIndex: 'action',
-      key: 'action',
-      width: '150px',
-      render: (_, record) => (
-        <Flex>
-          <Button
-            colorScheme="blackAlpha"
-            size={'sm'}
-            onClick={() => {
-              console.log('recordView', record);
-            }}
-            marginRight={'12px'}
-          >
-            View
-          </Button>
-          <Button
-            colorScheme="blackAlpha"
-            size={'sm'}
-            onClick={() => {
-              handleCancelTrade(record);
-            }}
-          >
-            Close
-          </Button>
-        </Flex>
-      ),
-    },
   ];
-
-  const handleCancelTrade = async (item: ITradingData) => {
-    try {
-      await closeTrade(item._id);
-      queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
-      toast({
-        position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Close Successfully" status={Status.SUCCESSS} close={onClose} />,
-      });
-    } catch (error) {
-      console.log(error);
-      toast({
-        position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,
-      });
-    }
-  };
 
   const {
     data: tradingData,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['getActiveTrades', filter],
-    queryFn: () => getTrades(filter),
+    queryKey: ['getPlatformTrades', filter],
+    queryFn: () => getPlatformsTrades(filter),
     onError: (error: any) => {
       console.log(error);
     },
     // select: transformData,
     // enabled: !!networkID,
     cacheTime: 0,
-    refetchInterval: false,
+    refetchInterval: 10000,
     refetchOnWindowFocus: false,
   });
 
@@ -212,4 +141,4 @@ const TradeTable = () => {
     />
   );
 };
-export default TradeTable;
+export default PlatformTradesTable;

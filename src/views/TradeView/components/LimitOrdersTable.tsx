@@ -1,21 +1,21 @@
 'use client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { Box, Button, Flex, Image, useToast } from '@chakra-ui/react';
+import { Button, Flex, Image, useToast } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
 import { useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
-import { closeTrade, getTrades } from '@/services/trade';
+import { cancelTrade, getLimitOrders } from '@/services/trade';
 import useTradeStore from '@/store/useTradeStore';
 import { divide } from '@/utils/operationBigNumber';
 import dayjs from 'dayjs';
 import CountDown from './CountDown';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import { useEarlyPnl } from './TradeBox';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
+import EditLimitOrderModal from './EditLimitOrderModal';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -23,27 +23,13 @@ const defaultParams: ITradingParams = {
   network: '421613',
 };
 
-const PnLCell = ({ trade }: { trade: ITradingData }) => {
-  const { pnl: earlyPnl } = useEarlyPnl({
-    trade,
-  });
-  const { earlycloseAmount, probability } = earlyPnl;
-  return (
-    <Box>
-      <p className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
-        {(+earlycloseAmount).toFixed(2)}
-      </p>
-      <p className="text-[ #9E9E9F] text-xs font-normal">{probability.toFixed(2)}%</p>
-    </Box>
-  );
-};
-
-const TradeTable = () => {
+const LimitOrdersTable = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { price } = useTradeStore();
-  const queryClient = useQueryClient();
   const toast = useToast();
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
 
   useEffect(() => {
     if (chain) {
@@ -87,10 +73,16 @@ const TradeTable = () => {
       render: () => <span>{addComma(price, 2)}</span>,
     },
     {
-      title: 'Open Time',
-      dataIndex: 'openDate',
-      key: 'openDate',
-      render: (value) => (
+      title: 'Time Left',
+      dataIndex: 'limitOrderExpirationDate',
+      key: 'limitOrderExpirationDate',
+      render: (value: string) => <CountDown endTime={dayjs(value).unix()} period={0} hideBar={true} />,
+    },
+    {
+      title: 'Order Expiry',
+      dataIndex: 'limitOrderExpirationDate',
+      key: 'limitOrderExpirationDate',
+      render: (value: string) => (
         <div>
           <p>{dayjs(value).format('HH:mm:ss')}</p>
           <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
@@ -98,30 +90,10 @@ const TradeTable = () => {
       ),
     },
     {
-      title: 'Time Left',
-      render: (value: ITradingData) => (
-        <CountDown endTime={dayjs(value.openDate).utc().unix() + value.period} period={value.period} hideBar={true} />
-      ),
-    },
-    {
-      title: 'Close Time',
-      render: (value: ITradingData) => (
-        <div>
-          <p>{dayjs(value.openDate).add(value.period, 'second').format('HH:mm:ss')}</p>
-          <p className="text-[#9E9E9F]">{dayjs(value.openDate).add(value.period, 'second').format('MM/DD/YYYY')}</p>
-        </div>
-      ),
-    },
-    {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)}</span>,
-    },
-    {
-      title: 'PnL | Probability',
-      dataIndex: 'probability',
-      render: (value: string, record: ITradingData) => <PnLCell trade={record} />,
+      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
     },
     {
       title: 'Action',
@@ -144,6 +116,17 @@ const TradeTable = () => {
             colorScheme="blackAlpha"
             size={'sm'}
             onClick={() => {
+              setSelectedItem(record);
+              setIsOpenModal(true);
+            }}
+            marginRight={'12px'}
+          >
+            Edit
+          </Button>
+          <Button
+            colorScheme="blackAlpha"
+            size={'sm'}
+            onClick={() => {
               handleCancelTrade(record);
             }}
           >
@@ -156,17 +139,16 @@ const TradeTable = () => {
 
   const handleCancelTrade = async (item: ITradingData) => {
     try {
-      await closeTrade(item._id);
-      queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
+      await cancelTrade(item._id);
+      refetch();
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Close Successfully" status={Status.SUCCESSS} close={onClose} />,
+        render: ({ onClose }) => <ToastLayout title="Cancel Successfully" status={Status.SUCCESSS} close={onClose} />,
       });
     } catch (error) {
-      console.log(error);
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,
+        render: ({ onClose }) => <ToastLayout title="Cancel Unsuccessfully" status={Status.ERROR} close={onClose} />,
       });
     }
   };
@@ -175,9 +157,10 @@ const TradeTable = () => {
     data: tradingData,
     isLoading,
     isError,
+    refetch,
   } = useQuery({
-    queryKey: ['getActiveTrades', filter],
-    queryFn: () => getTrades(filter),
+    queryKey: ['getLimitOrders'],
+    queryFn: () => getLimitOrders(filter),
     onError: (error: any) => {
       console.log(error);
     },
@@ -193,23 +176,35 @@ const TradeTable = () => {
   };
 
   return (
-    <Table
-      columns={columns}
-      dataSource={tradingData?.docs}
-      pagination={{
-        pageSize: tradingData?.meta.limit,
-        current: tradingData?.meta.page,
-        total: tradingData?.meta.totalDocs,
-        hideOnSinglePage: true,
-        showTotal: (total: number, range: [number, number]) => `Results: ${range[0]} - ${range[1]}  of ${total}`,
-      }}
-      // scroll={{ y: 300 }}
-      scroll={{ x: 'max-content' }}
-      loading={isLoading}
-      className="customTable"
-      rowKey={(record) => record._id}
-      onChange={handleChangePage}
-    />
+    <>
+      <Table
+        columns={columns}
+        dataSource={tradingData?.docs}
+        pagination={{
+          pageSize: tradingData?.meta.limit,
+          current: tradingData?.meta.page,
+          total: tradingData?.meta.totalDocs,
+          hideOnSinglePage: true,
+          showTotal: (total: number, range: [number, number]) => `Results: ${range[0]} - ${range[1]}  of ${total}`,
+        }}
+        // scroll={{ y: 300 }}
+        scroll={{ x: 'max-content' }}
+        loading={isLoading}
+        className="customTable"
+        rowKey={(record) => record._id}
+        onChange={handleChangePage}
+      />
+      {isOpenModal && (
+        <EditLimitOrderModal
+          item={selectedItem}
+          isOpen={isOpenModal}
+          onClose={() => {
+            setSelectedItem(null);
+            setIsOpenModal(false);
+          }}
+        />
+      )}
+    </>
   );
 };
-export default TradeTable;
+export default LimitOrdersTable;

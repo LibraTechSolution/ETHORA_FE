@@ -48,7 +48,7 @@ const useUserStore = create<UserState>()(
         currentWallet: user ? user?.address : state.currentWallet
       })),
       toggleRegisteredAccount: (isRegistered) => set((state) => {
-        const tempUser = state.user as IUser;
+        const tempUser = { ...state.user } as IUser;
         tempUser.isRegistered = isRegistered
         return {
           listWallets: {
@@ -62,7 +62,7 @@ const useUserStore = create<UserState>()(
         }
       }),
       toggleApprovedAccount: (isApproved) => set((state) => {
-        const tempUser = state.user as IUser;
+        const tempUser = { ...state.user } as IUser;
         tempUser.isApproved = isApproved
         return {
           listWallets: {

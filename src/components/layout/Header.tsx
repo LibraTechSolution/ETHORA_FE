@@ -101,7 +101,7 @@ export const Header = () => {
                 </Center>
               )}
               <Center>
-                <Link href="/profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
+                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                   Leaderboard
                 </Link>
               </Center>
@@ -375,7 +375,7 @@ export const Header = () => {
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
-                <Link href="/profile" className={currentRoute === '/profile' ? activeStyle : nonActiveStyle}>
+                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                   Leaderboard
                 </Link>
               </Center>

@@ -63,7 +63,7 @@ const LimitOrderBox = (props: PropsType) => {
   return (
     <>
       <Box bg="#0c0c10" padding="20px" marginBottom={2} rounded={'10px'}>
-        <Flex alignItems="center" justifyContent="space-between">
+        <Flex alignItems="center" justifyContent="space-between" display={{ base: 'flex', xl: 'block', '3xl': 'flex' }}>
           <Center>
             <Image alt="" src={`/images/icons/${item.pair}.png`} w="20px" h="20px" />
             <p className="px-2 text-sm font-normal text-[#fff]">{item.pair && item.pair.toUpperCase()}</p>
@@ -111,7 +111,9 @@ const LimitOrderBox = (props: PropsType) => {
                 borderRadius={'4px'}
                 fontSize={'12px'}
               >
-                <span className="pr-1 text-sm font-normal text-[#FFFFFF]">{addComma(item.strike.toFixed(2), 2)}</span>
+                <span className="pr-1 text-sm font-normal text-[#FFFFFF]">
+                  {addComma(divide(item.strike.toFixed(2), 8), 2)}
+                </span>
               </Tooltip>
 
               <span className="text-xs font-normal text-[#6D6D70]">±{item.slippage}%</span>

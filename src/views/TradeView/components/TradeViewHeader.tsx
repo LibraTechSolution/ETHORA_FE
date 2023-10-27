@@ -50,7 +50,11 @@ const TradeViewHeader = () => {
   });
   const currentPair = useMemo<PairData | null>(() => {
     if (!params?.pair) return null;
-    return listPairData.find((item: PairData) => item.pair.replace('/', '-').toLowerCase() === params?.pair) ?? null;
+    return (
+      listPairData.find(
+        (item: PairData) => item.pair.replace('/', '-').toLowerCase() === (params?.pair as string).toLowerCase(),
+      ) ?? null
+    );
   }, [listPairData, params?.pair]);
 
   const listPairShow = useMemo<PairData[]>(() => {

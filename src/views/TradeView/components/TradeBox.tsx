@@ -11,8 +11,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { getProbability } from '@/utils/helper';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { divide, subtract, multiply, gte } from '@/utils/operationBigNumber';
+import { Address, useContractRead } from 'wagmi';
+import { appConfig } from '@/config';
+import optionsConfigABI from '@/config/abi/optionsConfigABI';
+import BigNumber from 'bignumber.js';
 
 interface PropsType {
   item: ITradingData;
@@ -20,7 +24,16 @@ interface PropsType {
 
 export const useEarlyPnl = ({ trade, lockedAmmount }: { trade: ITradingData; lockedAmmount?: string }) => {
   const { price } = useTradeStore();
-  let probability = useMemo(() => getProbability(trade, +price, 1384), [trade, price]);
+  const { data: iv } = useContractRead({
+    address: appConfig.optionsConfigSC as Address,
+    abi: optionsConfigABI,
+    functionName: 'iv',
+  });
+
+  let probability = useMemo(
+    () => getProbability(trade, +price, new BigNumber(iv?.toString() ?? '0').toNumber()),
+    [trade, price, iv],
+  );
   if (!probability) probability = 0;
   return {
     pnl: calculatePnlForProbability({
@@ -163,11 +176,11 @@ const TradeBox = (props: PropsType) => {
         </GridItem>
       </Grid>
       <Button
-        bg={+earlycloseAmount < 0 ? '#F03D3E' : 'text-[#1ED768]'}
+        bg={+earlycloseAmount < 0 ? '#F03D3E' : '#1ED768'}
         color="#fff"
         w="full"
-        _hover={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : 'text-[#1ED768]', textColor: '#fff' }}
-        _active={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : 'text-[#1ED768]', textColor: '#fff' }}
+        _hover={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
+        _active={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
         rounded="md"
         onClick={handleCancelTrade}
       >
