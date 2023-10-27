@@ -32,14 +32,12 @@ import SETR_ABI from '@/config/abi/SETR_ABI';
 import useActiveWeb3React from '@/hooks/useActiveWeb3React';
 import { addComma } from '@/utils/number';
 
-const validationSchema = Yup.object({
-  amount: Yup.string().required(),
-});
-
 const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { onFetchData } = useContext(EarnContext);
   const [loadingUnStake, setLoadingUnStake] = useState<boolean>(false);
   const { address } = useActiveWeb3React();
+
+  const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
 
   const { data: dataDepositBalances } = useContractRead({
     address: appConfig.SETR_SC as `0x${string}`,
@@ -48,7 +46,16 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
     args: [address as `0x${string}`, appConfig.ESETR_SC as `0x${string}`],
   });
 
-  console.log('dataDepositBalances', dataDepositBalances);
+  const validationSchema = Yup.object({
+    amount: Yup.string()
+      .required('The number is required!')
+      .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
+      .test(
+        'Greater amount?',
+        'Not enough funds!',
+        (value) => +value < +formatUnits(dataDepositBalances as bigint, 18),
+      ),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -134,6 +141,14 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                       fontSize={'14px'}
                       border={'1px solid #6D6D70'}
                       {...formik.getFieldProps('amount')}
+                      onChange={(e) => {
+                        if (validNumber.test(e.target.value)) {
+                          formik.handleChange(e);
+                        } else {
+                          console.log('field value change');
+                          return;
+                        }
+                      }}
                     />
                     <InputRightElement width={'125px'}>
                       <Button
@@ -158,6 +173,11 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                       </Text>
                     </InputRightElement>
                   </InputGroup>
+                  {formik.errors.amount && formik.touched.amount && (
+                    <Text color="red" marginTop={'4px'}>
+                      {formik.errors.amount}
+                    </Text>
+                  )}
                 </FormControl>
               </VStack>
             </form>

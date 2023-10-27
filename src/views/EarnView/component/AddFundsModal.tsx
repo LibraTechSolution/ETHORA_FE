@@ -35,10 +35,10 @@ import USDC_ABI from '@/config/abi/USDC_ABI';
 import { addComma } from '@/utils/number';
 import { formatUnits } from 'viem';
 
-const validationSchema = Yup.object({
-  amount: Yup.string().required(),
-  rememberMe: Yup.boolean().equals([true]),
-});
+// const validationSchema = Yup.object({
+//   amount: Yup.string().required(),
+//   rememberMe: Yup.boolean().equals([true]),
+// });
 
 const AddFundsModal = ({
   isOpen,
@@ -54,7 +54,7 @@ const AddFundsModal = ({
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [loadingApproved, setLoadingApproved] = useState<boolean>(false);
   const [loadingDeposit, setLoadingDeposit] = useState<boolean>(false);
-
+  const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
   const { onFetchData } = useContext(EarnContext);
 
   const { data: getAllowance } = useContractRead({
@@ -66,6 +66,14 @@ const AddFundsModal = ({
   });
 
   const balance = useBalanceOf(appConfig.USDC_SC as `0x${string}`);
+
+  const validationSchema = Yup.object({
+    amount: Yup.string()
+      .required('The number is required!')
+      .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
+      .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(balance as bigint, 6)),
+      rememberMe: Yup.boolean().equals([true]),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -139,7 +147,7 @@ const AddFundsModal = ({
     console.log('getAllowance', getAllowance);
     setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)));
   }, [getAllowance]);
-  console.log(isApproved, loadingApproved, !formik.values.rememberMe);
+  
   return (
     <>
       {/* <Button onClick={onOpen}>Open Modal</Button> */}
@@ -180,6 +188,14 @@ const AddFundsModal = ({
                       fontSize={'14px'}
                       border={'1px solid #6D6D70'}
                       {...formik.getFieldProps('amount')}
+                      onChange={(e) => {
+                        if (validNumber.test(e.target.value)) {
+                          formik.handleChange(e);
+                        } else {
+                          console.log('field value change');
+                          return;
+                        }
+                      }}
                     />
                     <InputRightElement width={'125px'}>
                       <Button
@@ -192,7 +208,7 @@ const AddFundsModal = ({
                         fontWeight={400}
                         onClick={() => {
                           if (balance) {
-                            formik.setFieldValue('amount', +(balance as bigint)?.toString() / 10 ** 6);
+                            formik.setFieldValue('amount', Number(balance) / 10 ** 6);
                           }
                         }}
                       >
@@ -204,6 +220,11 @@ const AddFundsModal = ({
                       </Text>
                     </InputRightElement>
                   </InputGroup>
+                  {formik.errors.amount && formik.touched.amount && (
+                    <Text color="red" marginTop={'4px'}>
+                      {formik.errors.amount}
+                    </Text>
+                  )}
                 </FormControl>
                 <Flex display={'flex'} flexDirection={'column'} alignItems={'flex-end'} width={'100%'}>
                   <Text as="span" fontSize={'12px'} color="#9E9E9F">

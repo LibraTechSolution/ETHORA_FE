@@ -1,5 +1,5 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
-import { Heading, Box, Text, Flex, Button } from '@chakra-ui/react';
+import { Heading, Box, Text, Flex, Button, Tooltip, Spacer } from '@chakra-ui/react';
 import DepositModal from './DepositModalETRVault';
 import { useContext, useState } from 'react';
 import { addComma } from '@/utils/number';
@@ -33,20 +33,18 @@ const ETRVault = ({
   const { onFetchData } = useContext(EarnContext);
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
 
-  const stakedTokensETR = +(depositBalances_ETR as bigint)?.toString() / 10 ** 18;
-  const stakedTokens_esETR = +(depositBalances_esETR as bigint)?.toString() / 10 ** 18;
-  const multiplierPoints = +(depositBalances_bnETR as bigint)?.toString() / 10 ** 18;
+  const stakedTokensETR = Number(depositBalances_ETR) / 10 ** 18;
+  const stakedTokens_esETR = Number(depositBalances_esETR) / 10 ** 18;
+  const multiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
 
-  console.log(stakedTokensETR, stakedTokens_esETR, multiplierPoints);
   const stakedTokens = stakedTokensETR + stakedTokens_esETR + multiplierPoints;
 
-  const pairAmounts = +(pairAmounts_vETR as bigint)?.toString() / 10 ** 18;
-  const depositBalances =
-    (+(depositBalances_bnETR as bigint)?.toString() + +(depositBalances_sbETR as bigint)?.toString()) / 10 ** 18;
+  const pairAmounts = Number(pairAmounts_vETR) / 10 ** 18;
+  const depositBalances = (Number(depositBalances_bnETR) + Number(depositBalances_sbETR)) / 10 ** 18;
 
-  const claimed = (+(claimedAmounts_vETR as bigint)?.toString() + +(claimable_vETR as bigint)?.toString()) / 10 ** 18;
-  const vested = +(getVestedAmount_vETR as bigint)?.toString() / 10 ** 18;
-  const claimable = +(claimable_vETR as bigint)?.toString() / 10 ** 18;
+  const claimed = (Number(claimedAmounts_vETR) + Number(claimable_vETR)) / 10 ** 18;
+  const vested = Number(getVestedAmount_vETR) / 10 ** 18;
+  const claimable = Number(claimable_vETR) / 10 ** 18;
 
   const onWithdraw = async () => {
     try {
@@ -81,7 +79,40 @@ const ETRVault = ({
             Staked Tokens
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '---'}
+            <Tooltip
+              hasArrow
+              label={
+                <Box w="100%" p={4} color="white">
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      ETR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(stakedTokensETR, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      esETR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(stakedTokens_esETR, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Multiplier Points
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(multiplierPoints, 2)}%</Box>
+                  </Flex>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="215px"
+            >
+              <Text as="u">{stakedTokens !== undefined ? addComma(stakedTokens, 2) : '---'}</Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -98,8 +129,26 @@ const ETRVault = ({
             Vesting Status
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {claimed !== undefined ? addComma(claimed, 2) : '---'} /{' '}
-            {vested !== undefined ? addComma(vested, 2) : '---'}
+            <Tooltip
+              hasArrow
+              label={
+                <Box>
+                  <Text fontSize={'12px'} marginBottom={'16px'}>
+                    {addComma(claimed, 2)} esETR tokens have been converted to ETR from the {addComma(vested, 2)} esETR
+                    deposited for vesting.
+                  </Text>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="288px"
+            >
+              <Text as="u">
+                {claimed !== undefined ? addComma(claimed, 2) : '---'} /{' '}
+                {vested !== undefined ? addComma(vested, 2) : '---'}
+              </Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -107,7 +156,23 @@ const ETRVault = ({
             Claimable
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {claimable !== undefined ? addComma(claimable, 2) : '---'} ETR
+            <Tooltip
+              hasArrow
+              label={
+                <Box>
+                  <Text fontSize={'12px'} marginBottom={'16px'}>
+                    {addComma(claimable, 2)} ETR tokens can be claimed, use the options under the Total Rewards section
+                    to claim them.
+                  </Text>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="288px"
+            >
+              <Text as="u">{claimable !== undefined ? addComma(claimable, 2) : '---'} ETR</Text>
+            </Tooltip>
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -137,7 +202,7 @@ const ETRVault = ({
           </CustomConnectButton>
         </Box>
       </Box>
-      <DepositModal isOpen={openDepositModal} onDismiss={() => setOpenDepositModal(false)} />
+      {openDepositModal && <DepositModal isOpen={openDepositModal} onDismiss={() => setOpenDepositModal(false)} />}
     </>
   );
 };

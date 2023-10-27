@@ -34,16 +34,12 @@ import * as Yup from 'yup';
 import { EarnContext } from '..';
 import ESETR_ABI from '@/config/abi/ESETR_ABI';
 
-const validationSchema = Yup.object({
-  amount: Yup.string().required(),
-});
-
 const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { address } = useAccount();
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [loadingApproved, setLoadingApproved] = useState<boolean>(false);
   const [loadingStake, setLoadingStake] = useState<boolean>(false);
-
+  const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
   const { onFetchData } = useContext(EarnContext);
 
   const { data: getAllowance } = useContractRead({
@@ -55,6 +51,13 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
   });
 
   const balance = useBalanceOf(appConfig.ESETR_SC as `0x${string}`);
+
+  const validationSchema = Yup.object({
+    amount: Yup.string()
+      .required('The number is required!')
+      .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
+      .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(balance as bigint, 18)),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -84,18 +87,18 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
       });
       console.log('data-hash', data);
       setLoadingApproved(false);
-      setIsApproved(true)
+      setIsApproved(true);
     } catch (error) {
       console.log(error);
       setLoadingApproved(false);
-      setIsApproved(false)
+      setIsApproved(false);
     }
     // }
   };
 
   const onStake = async (amount: string) => {
     const amoutBigint = BigInt(+amount * 10 ** 18);
-    
+
     try {
       setLoadingStake(true);
       const configStake = await prepareWriteContract({
@@ -124,10 +127,6 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
   }, [formik.errors]);
 
   useEffect(() => {
-    // console.log(getAllowance)
-    // console.log(getAllowance !== undefined)
-    // console.log(BigNumber(getAllowance?.toString()))
-    // console.log(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)))
     setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)));
   }, [getAllowance]);
 
@@ -159,7 +158,7 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
                         Max: {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '---'} esETR
-                      </Text> 
+                      </Text>
                     </Flex>
                   </FormLabel>
                   <InputGroup>
@@ -170,6 +169,14 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                       fontSize={'14px'}
                       border={'1px solid #6D6D70'}
                       {...formik.getFieldProps('amount')}
+                      onChange={(e) => {
+                        if (validNumber.test(e.target.value)) {
+                          formik.handleChange(e);
+                        } else {
+                          console.log('field value change');
+                          return;
+                        }
+                      }}
                     />
                     <InputRightElement width={'125px'}>
                       <Button
@@ -182,7 +189,7 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                         fontWeight={400}
                         onClick={() => {
                           if (balance) {
-                            formik.setFieldValue('amount', +(balance as bigint)?.toString() / 10 ** 18);
+                            formik.setFieldValue('amount', Number(balance) / 10 ** 18);
                           }
                         }}
                       >
@@ -194,6 +201,11 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                       </Text>
                     </InputRightElement>
                   </InputGroup>
+                  {formik.errors.amount && formik.touched.amount && (
+                    <Text color="red" marginTop={'4px'}>
+                      {formik.errors.amount}
+                    </Text>
+                  )}
                 </FormControl>
               </VStack>
             </form>

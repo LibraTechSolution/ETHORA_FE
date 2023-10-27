@@ -1,6 +1,6 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
 import { addComma } from '@/utils/number';
-import { Heading, Box, Text, Flex, Button } from '@chakra-ui/react';
+import { Heading, Box, Text, Flex, Button, Tooltip, Spacer } from '@chakra-ui/react';
 import { formatUnits } from 'viem';
 import UnStakeModaEsETR from './UnStakeModaEsETR';
 import StakeModalEsETR from './StakeModalEsETR';
@@ -36,13 +36,10 @@ const EsETR = ({
   const [openStakeModal, setOpenStakeModal] = useState<boolean>(false);
   const [openUnStakeModal, setOpenUnStakeModal] = useState<boolean>(false);
 
-  const esETR_APR =
-    (100 * 31536000 * +(tokensPerInterval_sETR as bigint)?.toString()) / +(totalSupply_sETR as bigint)?.toString();
+  const esETR_APR = (100 * 31536000 * Number(tokensPerInterval_sETR)) / Number(totalSupply_sETR);
   const USDC_APR =
-    (100 * 31536000 * +(tokensPerInterval_sbfETR as bigint)?.toString() * 10 ** 12) /
-    (+(totalSupply_sbfETR as bigint)?.toString() * price);
-  const boosted_APR =
-    (+(depositBalances_bnETR as bigint)?.toString() * USDC_APR) / +(depositBalances_sbETR as bigint)?.toString();
+    (100 * 31536000 * Number(tokensPerInterval_sbfETR) * 10 ** 12) / (Number(totalSupply_sbfETR) * price);
+  const boosted_APR = (Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR);
 
   // console.log('totalSupply_sETR - balanceOf_sETR_ETR', totalSupply_sETR, balanceOf_sETR_ETR);
   const total_APR = isNaN(boosted_APR) ? esETR_APR + USDC_APR : esETR_APR + USDC_APR + boosted_APR;
@@ -98,7 +95,33 @@ const EsETR = ({
             APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {total_APR !== undefined ? addComma(total_APR, 2) : '---'}%
+            <Tooltip
+              hasArrow
+              label={
+                <Box w="100%" p={4} color="white">
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Escrowed ETR APR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(esETR_APR, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Base USDC APR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(USDC_APR, 2)}%</Box>
+                  </Flex>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="215px"
+            >
+              <Text as="u">{total_APR !== undefined ? addComma(total_APR, 2) : '---'}%</Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -106,7 +129,16 @@ const EsETR = ({
             Multiplier Points APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            100.00%
+            <Tooltip
+              hasArrow
+              label={<Text fontSize={'12px'}>Boost your rewards with Multiplier Points.</Text>}
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="215px"
+            >
+              <Text as="u">100.00%</Text>
+            </Tooltip>
           </Text>
         </Box>
         <hr className="border-[#242428]" />

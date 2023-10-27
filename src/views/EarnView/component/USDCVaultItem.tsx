@@ -1,5 +1,5 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
-import { Heading, Text, Box, Flex, Button } from '@chakra-ui/react';
+import { Heading, Text, Box, Flex, Button, Tooltip, Spacer } from '@chakra-ui/react';
 import AddFundsModal from './AddFundsModal';
 import WithdrawFundsModal from './WithdrawFundsModal';
 import { useState } from 'react';
@@ -38,23 +38,22 @@ const USDCVaultItem = ({
 
   // const exchangeRate = totalTokenXBalance_BLP / totalSupply_BLP;
   const exchangeRate = BigNumber(totalTokenXBalance_BLP?.toString()).dividedBy(totalSupply_BLP?.toString());
-  const wallet = +stakedAmounts_fsBLP?.toString() / 10 ** 6;
-  const USDC_APR =
-    (100 * 31536000 * +(tokensPerInterval_fBLP as bigint)?.toString()) / +(balanceOf_BLP_USDC as bigint)?.toString();
+  const wallet = Number(stakedAmounts_fsBLP) / 10 ** 6;
+  const USDC_APR = (100 * 31536000 * Number(tokensPerInterval_fBLP)) / Number(balanceOf_BLP_USDC);
   const esETR_APR =
-    (100 * 31536000 * +(tokensPerInterval_fsBLP as bigint)?.toString() * price) /
-    (+(balanceOf_BLP_USDC as bigint)?.toString() * 10 ** 12);
+    (100 * 31536000 * Number(tokensPerInterval_fsBLP) * price) / (Number(balanceOf_BLP_USDC) * 10 ** 12);
 
   const Total_APR = USDC_APR + esETR_APR;
 
-  const USDC_Rewards = +(claimable_fBLP as bigint)?.toString() / 10 ** 6;
-  const esETR_USD_Rewards = +(claimable_fsBLP as bigint)?.toString() / 10 ** 18;
-  const rewards = USDC_Rewards + esETR_USD_Rewards;
-  const withdrawableAmount = +(getUnlockedLiquidity_BLP as bigint)?.toString() / 10 ** 6;
-  const totalStaked = +(balanceOf_fBLP_BLP as bigint)?.toString() / 10 ** 6;
-  const totalStaked_USD = (+(balanceOf_fBLP_BLP as bigint)?.toString() * price) / 10 ** 6;
-  const totalSupply_USD = +(balanceOf_BLP_USDC as bigint)?.toString() / 10 ** 6;
-  const totalSupply = +(balanceOf_BLP_USDC as bigint)?.toString() / (price * 10 ** 6);
+  const USDC_Rewards = Number(claimable_fBLP) / 10 ** 6;
+  const esETR_Rewards = Number(claimable_fsBLP) / 10 ** 18;
+  const esETR_USD_Rewards = (Number(claimable_fsBLP) * price) / 10 ** 18;
+  const rewards = USDC_Rewards + esETR_Rewards;
+  const withdrawableAmount = Number(getUnlockedLiquidity_BLP) / 10 ** 6;
+  const totalStaked = Number(balanceOf_fBLP_BLP) / 10 ** 6;
+  const totalStaked_USD = (Number(balanceOf_fBLP_BLP) * price) / 10 ** 6;
+  const totalSupply_USD = Number(balanceOf_BLP_USDC) / 10 ** 6;
+  const totalSupply = Number(balanceOf_BLP_USDC) / (price * 10 ** 6);
 
   console.log('exchangeRate', exchangeRate, typeof exchangeRate);
 
@@ -79,7 +78,21 @@ const USDCVaultItem = ({
             Exchange Rate
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            1.00 ELP = {!!exchangeRate ? exchangeRate?.toString() : 0} USDC
+            <Tooltip
+              hasArrow
+              label={
+                <Text fontSize={'12px'}>
+                  Exchange rate is used to mint and redeem ELP tokens and is calculated as (the total worth of assets in
+                  the pool, including profits and losses of all previous trades) / (ELP supply)
+                </Text>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="288px"
+            >
+              <Text as="u">1.00 ELP = {!!exchangeRate ? exchangeRate?.toString() : 0} USDC</Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -104,7 +117,36 @@ const USDCVaultItem = ({
             APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {Total_APR !== undefined && addComma(Total_APR, 2)}%
+            <Tooltip
+              hasArrow
+              label={
+                <Box w="100%" p={4} color="white">
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Escrowed ETR APR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(esETR_APR, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      USDC APR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(USDC_APR, 2)}%</Box>
+                  </Flex>
+                  <Text fontSize={'12px'} color={'#9E9E9F'}>
+                    APRs are updated weekly on Wednesday and will depend on the fees collected for the week.
+                  </Text>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="450px"
+            >
+              <Text as="u">{Total_APR !== undefined && addComma(Total_APR, 2)}%</Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -112,7 +154,33 @@ const USDCVaultItem = ({
             Rewards
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            ${rewards !== undefined ? addComma(rewards, 2) : '---'}
+            <Tooltip
+              hasArrow
+              label={
+                <Box w="100%" p={4} color="white">
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      USDC
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(USDC_Rewards, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Escrowed ETR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{`${addComma(esETR_Rewards, 2)}($${addComma(esETR_USD_Rewards, 2)})`}</Box>
+                  </Flex>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="215px"
+            >
+              <Text as="u">${rewards !== undefined ? addComma(rewards, 2) : '---'}</Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -164,16 +232,21 @@ const USDCVaultItem = ({
           </CustomConnectButton>
         </Box>
       </Box>
-      <AddFundsModal
-        isOpen={openAddFundModal}
-        onDismiss={() => setOpenAddFundModal(false)}
-        exchangeRate={exchangeRate.toString()}
-      />
-      <WithdrawFundsModal
-        isOpen={openWithdrawFundModal}
-        onDismiss={() => setOpenWithdrawFundModal(false)}
-        exchangeRate={exchangeRate.toString()}
-      />
+      {openAddFundModal && (
+        <AddFundsModal
+          isOpen={openAddFundModal}
+          onDismiss={() => setOpenAddFundModal(false)}
+          exchangeRate={exchangeRate.toString()}
+        />
+      )}
+
+      {openWithdrawFundModal && (
+        <WithdrawFundsModal
+          isOpen={openWithdrawFundModal}
+          onDismiss={() => setOpenWithdrawFundModal(false)}
+          exchangeRate={exchangeRate.toString()}
+        />
+      )}
     </>
   );
 };

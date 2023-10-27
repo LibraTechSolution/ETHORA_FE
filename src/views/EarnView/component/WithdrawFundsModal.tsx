@@ -26,15 +26,16 @@ import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/
 import { appConfig } from '@/config';
 import VETR_ABI from '@/config/abi/VETR_ABI';
 import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
-import { useContractRead } from 'wagmi';
+import { useContractRead, useContractReads } from 'wagmi';
 import FBLP_ABI from '@/config/abi/FBLP_ABI';
 import VBLP_ABI from '@/config/abi/VBLP_ABI';
 import { addComma } from '@/utils/number';
+import BLP_ABI from '@/config/abi/BLP_ABI';
 
-const validationSchema = Yup.object({
-  amount: Yup.string().required(),
-  rememberMe: Yup.boolean().equals([true]),
-});
+// const validationSchema = Yup.object({
+//   amount: Yup.string().required(),
+//   rememberMe: Yup.boolean().equals([true]),
+// });
 
 const WithdrawFundsModal = ({
   isOpen,
@@ -48,6 +49,15 @@ const WithdrawFundsModal = ({
   const { onFetchData } = useContext(EarnContext);
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
   const { address } = useActiveWeb3React();
+  const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
+
+  const validationSchema = Yup.object({
+    amount: Yup.string()
+      .required('The number is required!')
+      .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0),
+    // .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(dataDepositBalances as bigint, 18)),
+    rememberMe: Yup.boolean().equals([true]),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -61,7 +71,7 @@ const WithdrawFundsModal = ({
     validationSchema: validationSchema,
   });
 
-  const { data: pairAmounts_vBLP_ } = useContractRead({
+  const { data: pairAmounts_vBLP } = useContractRead({
     address: appConfig.VBLP_SC as `0x${string}`,
     abi: VBLP_ABI,
     functionName: 'pairAmounts',
@@ -69,7 +79,7 @@ const WithdrawFundsModal = ({
     enabled: !!address,
   });
 
-  const { data: depositBalances_BLP_fBLP_ } = useContractRead({
+  const { data: depositBalances_BLP_fBLP } = useContractRead({
     address: appConfig.FBLP_SC as `0x${string}`,
     abi: FBLP_ABI,
     functionName: 'depositBalances',
@@ -77,8 +87,47 @@ const WithdrawFundsModal = ({
     enabled: !!(address && appConfig.BLP_SC),
   });
 
-  const maxAmount =
-    +(depositBalances_BLP_fBLP_ as bigint)?.toString() / 10 ** 6 - +(pairAmounts_vBLP_ as bigint)?.toString() / 10 ** 6;
+  const BLP_SC = {
+    address: appConfig.BLP_SC as `0x${string}`,
+    abi: BLP_ABI,
+  };
+
+  const { data: data_BLP_SC } = useContractReads({
+    contracts: [
+      {
+        ...BLP_SC,
+        functionName: 'totalSupply',
+      },
+      {
+        ...BLP_SC,
+        functionName: 'availableBalance',
+      },
+      {
+        ...BLP_SC,
+        functionName: 'totalTokenXBalance',
+      },
+      {
+        ...BLP_SC,
+        functionName: 'getUnlockedLiquidity',
+        args: [address as `0x${string}`],
+      },
+    ],
+  });
+
+  const totalSupply_BLP = data_BLP_SC && data_BLP_SC[0].result;
+  const availableBalance_BLP = data_BLP_SC && data_BLP_SC[1].result;
+  const totalTokenXBalance_BLP = data_BLP_SC && data_BLP_SC[2].result;
+  const getUnlockedLiquidity_BLP = data_BLP_SC && data_BLP_SC[3].result;
+
+  const LA = Number(depositBalances_BLP_fBLP) / 10 ** 6 - Number(pairAmounts_vBLP) / 10 ** 6;
+  const KW =
+    (totalSupply_BLP as bigint) > 0
+      ? (Number(availableBalance_BLP) * Number(totalSupply_BLP)) / (Number(totalTokenXBalance_BLP) * 10 ** 6)
+      : Number(availableBalance_BLP) / 10 ** 6;
+  const unlockedLiquidity = Number(getUnlockedLiquidity_BLP) / 10 ** 6;
+
+  const getMax = Math.min(LA, KW, unlockedLiquidity)
+
 
   const onWithdrawfund = async (amount: string) => {
     const amoutBigint = BigInt(+amount * 10 ** 6);
@@ -135,7 +184,7 @@ const WithdrawFundsModal = ({
                         Pay
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {maxAmount !== undefined ? addComma(maxAmount, 2) : '---'} ELP
+                        Max: {getMax !== undefined ? addComma(getMax, 2) : '---'} ELP
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -148,6 +197,14 @@ const WithdrawFundsModal = ({
                       fontSize={'14px'}
                       border={'1px solid #6D6D70'}
                       {...formik.getFieldProps('amount')}
+                      onChange={(e) => {
+                        if (validNumber.test(e.target.value)) {
+                          formik.handleChange(e);
+                        } else {
+                          console.log('field value change');
+                          return;
+                        }
+                      }}
                     />
                     <InputRightElement width={'125px'}>
                       <Button
@@ -159,8 +216,8 @@ const WithdrawFundsModal = ({
                         color="#ffffff"
                         fontWeight={400}
                         onClick={() => {
-                          if (maxAmount) {
-                            formik.setFieldValue('amount', maxAmount?.toString());
+                          if (getMax) {
+                            formik.setFieldValue('amount', getMax);
                           }
                         }}
                       >
@@ -172,6 +229,11 @@ const WithdrawFundsModal = ({
                       </Text>
                     </InputRightElement>
                   </InputGroup>
+                  {formik.errors.amount && formik.touched.amount && (
+                    <Text color="red" marginTop={'4px'}>
+                      {formik.errors.amount}
+                    </Text>
+                  )}
                 </FormControl>
                 <Flex display={'flex'} flexDirection={'column'} alignItems={'flex-end'} width={'100%'}>
                   <Text as="span" fontSize={'12px'} color="#9E9E9F">
@@ -200,7 +262,12 @@ const WithdrawFundsModal = ({
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="primary" onClick={() => formik.handleSubmit()} width={'100%'} isDisabled={loadingWithdraw || !formik.values.rememberMe}>
+            <Button
+              colorScheme="primary"
+              onClick={() => formik.handleSubmit()}
+              width={'100%'}
+              isDisabled={loadingWithdraw || !formik.values.rememberMe}
+            >
               Withdraw Funds
             </Button>
           </ModalFooter>

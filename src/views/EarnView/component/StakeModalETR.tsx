@@ -23,6 +23,7 @@ import {
   InputRightElement,
   Box,
   Flex,
+  Tooltip,
 } from '@chakra-ui/react';
 import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
 import BigNumber from 'bignumber.js';
@@ -41,10 +42,6 @@ import {
 import * as Yup from 'yup';
 import { EarnContext } from '..';
 
-const validationSchema = Yup.object({
-  amount: Yup.string().required(),
-});
-
 const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { address } = useAccount();
   const [isApproved, setIsApproved] = useState<boolean>(false);
@@ -52,6 +49,8 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
   const [loadingStake, setLoadingStake] = useState<boolean>(false);
 
   const { onFetchData } = useContext(EarnContext);
+
+  const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
 
   const { data: getAllowance } = useContractRead({
     address: appConfig.ETR_SC as `0x${string}`,
@@ -62,6 +61,13 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
   });
 
   const balance = useBalanceOf(appConfig.ETR_SC as `0x${string}`);
+
+  const validationSchema = Yup.object({
+    amount: Yup.string()
+      .required('The number is required!')
+      .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
+      .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(balance as bigint, 18)),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -136,7 +142,7 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
       if (error instanceof TransactionExecutionError) {
         errString = error.shortMessage;
       }
-      console.log('errString',errString)
+      console.log('errString', errString);
     }
   };
 
@@ -147,7 +153,6 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
   useEffect(() => {
     setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)));
   }, [getAllowance]);
-
   return (
     <>
       {/* <Button onClick={onOpen}>Open Modal</Button> */}
@@ -175,7 +180,18 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
                         Stake
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '---'} ETR
+                        Max:{' '}
+                        <Tooltip
+                          hasArrow
+                          label={`${addComma(formatUnits(balance as bigint, 18), 6)} ETR`}
+                          color="white"
+                          placement="top"
+                          bg="black"
+                        >
+                          <span>
+                            {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '---'} ETR
+                          </span>
+                        </Tooltip>
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -187,6 +203,14 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
                       fontSize={'14px'}
                       border={'1px solid #6D6D70'}
                       {...formik.getFieldProps('amount')}
+                      onChange={(e) => {
+                        if (validNumber.test(e.target.value)) {
+                          formik.handleChange(e);
+                        } else {
+                          console.log('field value change');
+                          return;
+                        }
+                      }}
                     />
                     <InputRightElement width={'125px'}>
                       <Button
@@ -199,7 +223,7 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
                         fontWeight={400}
                         onClick={() => {
                           if (balance) {
-                            formik.setFieldValue('amount', +(balance as bigint)?.toString() / 10 ** 18);
+                            formik.setFieldValue('amount', Number(balance) / 10 ** 18);
                           }
                         }}
                       >
@@ -211,6 +235,11 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
                       </Text>
                     </InputRightElement>
                   </InputGroup>
+                  {formik.errors.amount && formik.touched.amount && (
+                    <Text color="red" marginTop={'4px'}>
+                      {formik.errors.amount}
+                    </Text>
+                  )}
                 </FormControl>
               </VStack>
             </form>

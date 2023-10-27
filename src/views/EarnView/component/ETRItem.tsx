@@ -3,7 +3,7 @@ import CustomConnectButton from '@/components/CustomConnectButton';
 import { appConfig } from '@/config';
 import { useBalanceOf } from '@/hooks/useContractRead';
 import { addComma } from '@/utils/number';
-import { Flex, Heading, Text, Box, Button, Tooltip } from '@chakra-ui/react';
+import { Flex, Heading, Text, Box, Button, Tooltip, Spacer } from '@chakra-ui/react';
 import { formatEther, formatUnits } from 'viem';
 import { useState } from 'react';
 import StakeModalETR from './StakeModalETR';
@@ -43,19 +43,16 @@ const ETRItem = ({
   const [openStakeModal, setOpenStakeModal] = useState<boolean>(false);
   const [openUnStakeModal, setOpenUnStakeModal] = useState<boolean>(false);
 
-  const USDC_Rewards = +(claimable_sbfETR as bigint)?.toString() / 10 ** 6;
-  const esETR_Rewards = +(claimables_ETR as bigint)?.toString() / 10 ** 18;
-  const esETR_USD_Rewards = (+(claimables_ETR as bigint)?.toString() * price) / 10 ** 18;
+  const USDC_Rewards = Number(claimable_sbfETR) / 10 ** 6;
+  const esETR_Rewards = Number(claimables_ETR) / 10 ** 18;
+  const esETR_USD_Rewards = (Number(claimables_ETR) * price) / 10 ** 18;
   const rewards = USDC_Rewards + esETR_USD_Rewards;
 
-  const esETR_APR =
-    (100 * 31536000 * +(tokensPerInterval_sETR as bigint)?.toString()) / +(totalSupply_sETR as bigint)?.toString();
+  const esETR_APR = (100 * 31536000 * Number(tokensPerInterval_sETR)) / Number(totalSupply_sETR);
   const USDC_APR =
-    (100 * 31536000 * +(tokensPerInterval_sbfETR as bigint)?.toString() * 10 ** 12) /
-    (+(totalSupply_sbfETR as bigint)?.toString() * price);
-  const boosted_APR =
-    (+(depositBalances_bnETR as bigint)?.toString() * USDC_APR) / +(depositBalances_sbETR as bigint)?.toString();
-
+    (100 * 31536000 * Number(tokensPerInterval_sbfETR) * 10 ** 12) / (Number(totalSupply_sbfETR) * price);
+  const boosted_APR = (Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR);
+  const boosted_Percentage = ((Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR)) * 100;
   const Total_APR = isNaN(boosted_APR) ? esETR_APR + USDC_APR : esETR_APR + USDC_APR + boosted_APR;
 
   const totalSupply = formatUnits((totalSupply_ETR - balanceOf_addressDead_ETR) as bigint, 18);
@@ -112,7 +109,51 @@ const ETRItem = ({
             APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {Total_APR !== undefined ? addComma(Total_APR, 2) : '---'}%
+            <Tooltip
+              hasArrow
+              label={
+                <Box w="100%" p={4} color="white">
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Boosted APR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(boosted_APR, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Escrowed ETR APR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(esETR_APR, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Base USDC APR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(USDC_APR, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Total APR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(Total_APR, 2)}%</Box>
+                  </Flex>
+                  <Text fontSize={'12px'} color={'#9E9E9F'}>
+                    The Boosted APR is from your staked Multiplier Points. APRs are updated weekly on Wednesday and will
+                    depend on the collected for the week
+                  </Text>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="450px"
+            >
+              <Text as="u"> {Total_APR !== undefined ? addComma(Total_APR, 2) : '---'}%</Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -120,7 +161,33 @@ const ETRItem = ({
             Rewards
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            ${rewards !== undefined ? addComma(rewards, 2) : '---'}
+            <Tooltip
+              hasArrow
+              label={
+                <Box w="100%" p={4} color="white">
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      USDC
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{addComma(USDC_Rewards, 2)}%</Box>
+                  </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Escrowed ETR
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{`${addComma(esETR_Rewards, 2)}($${addComma(esETR_USD_Rewards, 2)})`}</Box>
+                  </Flex>
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="215px"
+            >
+              <Text as="u"> ${rewards !== undefined ? addComma(rewards, 2) : '---'}</Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -128,7 +195,16 @@ const ETRItem = ({
             Multiplier Points APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            100.00%
+            <Tooltip
+              hasArrow
+              label={<Text fontSize={'12px'}>Boost your rewards with Multiplier Points.</Text>}
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="215px"
+            >
+              <Text as="u">100.00%</Text>
+            </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -136,7 +212,7 @@ const ETRItem = ({
             Boost Percentage
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            0.00%
+             
           </Text>
         </Box>
         <hr className="border-[#242428]" />
