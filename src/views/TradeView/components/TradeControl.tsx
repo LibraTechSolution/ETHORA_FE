@@ -85,7 +85,7 @@ const TradeControl = () => {
   const [timeError, setTimeError] = useState<string>('');
   const [tradeType, setTradeType] = useState<string>('market');
   const { price } = useTradeStore();
-  const { listWallets, user, toggleApprovedAccount } = useUserStore();
+  const { user, toggleApprovedAccount } = useUserStore();
   const listTimes = ['3m', '5m', '15m', '1h'];
   const [time, setTime] = useState<string>('15m');
   const [timeType, setTimeType] = useState<string>('m');
@@ -330,6 +330,28 @@ const TradeControl = () => {
         referralCode: code ?? '',
       };
       const res = await createTrade(data);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Trade order placed"
+            content={`${data.pair} to go ${isAbove ? 'Upper' : 'Lower'}`}
+            status={Status.SUCCESSS}
+            close={onClose}
+          >
+            <p className="font-semibold text-[#fff]">
+              {data.isLimitOrder ? 'Limit Order placed' : 'Trade order placed'}
+            </p>
+            <p className="text-[#9E9E9F]">
+              <span className="text-[#fff]">{data.pair.toUpperCase()}</span> to go{' '}
+              <span className="text-[#fff]">{isAbove ? 'Upper' : 'Lower'}</span>
+            </p>
+            <p className="text-[#9E9E9F]">
+              Total amount: <span className="text-[#fff]">{tradeSize}</span> USDC
+            </p>
+          </ToastLayout>
+        ),
+      });
 
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });

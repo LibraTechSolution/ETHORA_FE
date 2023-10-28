@@ -17,6 +17,7 @@ import { useEarlyPnl } from './TradeBox';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import useUserStore from '@/store/useUserStore';
+import useListShowLinesStore from '@/store/useListShowLinesStore';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -47,12 +48,17 @@ const TradeTable = () => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { tokens, user } = useUserStore();
+  const { setListLines, listLines } = useListShowLinesStore();
 
   useEffect(() => {
     if (chain) {
       setFilter({ ...defaultParams, network: chain.id.toString() });
     }
   }, [chain]);
+
+  const showAndHideLine = (item: ITradingData) => {
+    setListLines(item);
+  };
 
   const columns: ColumnsType<ITradingData> = [
     {
@@ -137,11 +143,11 @@ const TradeTable = () => {
             colorScheme="blackAlpha"
             size={'sm'}
             onClick={() => {
-              console.log('recordView', record);
+              showAndHideLine(record);
             }}
             marginRight={'12px'}
           >
-            View
+            {listLines.some((item) => item._id === record._id) ? 'Hide' : 'View'}
           </Button>
           <Button
             colorScheme="blackAlpha"

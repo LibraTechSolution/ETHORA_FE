@@ -53,7 +53,7 @@ const LimitOrderBox = (props: PropsType) => {
 
   const timeOutCallBack = () => {
     // console.log('end');
-    // queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
+    queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
   };
 
   const handleOpenEditModal = () => {

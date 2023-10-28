@@ -17,6 +17,7 @@ import { Address, useContractRead } from 'wagmi';
 import { appConfig } from '@/config';
 import optionsConfigABI from '@/config/abi/optionsConfigABI';
 import BigNumber from 'bignumber.js';
+import useListShowLinesStore from '@/store/useListShowLinesStore';
 
 interface PropsType {
   item: ITradingData;
@@ -78,26 +79,28 @@ const TradeBox = (props: PropsType) => {
     trade: item,
   });
   const { earlycloseAmount, isWin, probability } = earlyPnl;
+  const { setListLines } = useListShowLinesStore();
 
-  const handleCancelTrade = async () => {
+  const handleCloseTrade = async () => {
     try {
       await closeTrade(item._id);
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Cancel Successfully" status={Status.SUCCESSS} close={onClose} />,
+        render: ({ onClose }) => <ToastLayout title="Close Successfully" status={Status.SUCCESSS} close={onClose} />,
       });
     } catch (error) {
       console.log(error);
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Cancel Unsuccessfully" status={Status.ERROR} close={onClose} />,
+        render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,
       });
     }
   };
 
   const timeOutCallBack = () => {
     queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
+    setListLines(item);
   };
 
   return (
@@ -182,7 +185,7 @@ const TradeBox = (props: PropsType) => {
         _hover={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
         _active={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
         rounded="md"
-        onClick={handleCancelTrade}
+        onClick={handleCloseTrade}
       >
         Close at {(+earlycloseAmount).toFixed(2)}
       </Button>

@@ -2,6 +2,7 @@
 
 import { ToastLayout } from '@/components/ToastLayout';
 import { editLimitOrder } from '@/services/trade';
+import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { Status } from '@/types/faucet.type';
 import { ITradingData, EditTradeReq } from '@/types/trade.type';
 import { divide } from '@/utils/operationBigNumber';
@@ -56,6 +57,7 @@ const EditLimitOrderModal = (props: PropsType) => {
   const [limitOrderPriceError, setLimitOrderPriceError] = useState<string>('');
   const [timeError, setTimeError] = useState<string>('');
   const [expiryTimeError, setExpiryTimeError] = useState<string>('');
+  const { setListLines } = useListShowLinesStore();
 
   useEffect(() => {
     if (item) {
@@ -146,6 +148,14 @@ const EditLimitOrderModal = (props: PropsType) => {
         limitOrderDuration: convertToTimeStamp(expiryTimeNumber + expiryTimeType),
       };
       await editLimitOrder(data);
+      setListLines(
+        {
+          ...item,
+          strike: data.strike,
+          isAbove: data.isAbove,
+        },
+        true,
+      );
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       toast({
