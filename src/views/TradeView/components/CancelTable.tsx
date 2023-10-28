@@ -10,6 +10,7 @@ import { ITradingData, ITradingParams } from '@/types/trade.type';
 import { Flex, Image } from '@chakra-ui/react';
 import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
+import useUserStore from '@/store/useUserStore';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -20,6 +21,7 @@ const defaultParams: ITradingParams = {
 const CancelTable = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
+  const { tokens, user } = useUserStore();
 
   useEffect(() => {
     if (chain) {
@@ -81,13 +83,14 @@ const CancelTable = () => {
     },
   ];
 
-  const { data: tradingData, isLoading } = useQuery({
+  const { data: tradingData, isInitialLoading } = useQuery({
     queryKey: ['getTradeCancel', filter],
     queryFn: () => getTradeCancel(filter),
     onError: (error: any) => {
       // notification.error({ message: error.message });
       console.log(error);
     },
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
     cacheTime: 0,
     refetchInterval: false,
     refetchOnWindowFocus: false,
@@ -110,7 +113,7 @@ const CancelTable = () => {
       }}
       // scroll={{ y: 300 }}
       scroll={{ x: 'max-content' }}
-      loading={isLoading}
+      loading={isInitialLoading}
       className="customTable"
       rowKey={(record) => record._id}
       onChange={handleChangePage}

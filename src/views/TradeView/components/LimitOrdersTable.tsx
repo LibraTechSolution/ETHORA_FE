@@ -16,6 +16,7 @@ import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import EditLimitOrderModal from './EditLimitOrderModal';
+import useUserStore from '@/store/useUserStore';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -31,6 +32,7 @@ const LimitOrdersTable = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
   const queryClient = useQueryClient();
+  const { tokens, user } = useUserStore();
 
   useEffect(() => {
     if (chain) {
@@ -154,18 +156,14 @@ const LimitOrdersTable = () => {
     }
   };
 
-  const {
-    data: tradingData,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data: tradingData, isInitialLoading } = useQuery({
     queryKey: ['getLimitOrders'],
     queryFn: () => getLimitOrders(filter),
     onError: (error: any) => {
       console.log(error);
     },
     // select: transformData,
-    // enabled: !!networkID,
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
     cacheTime: 0,
     refetchInterval: false,
     refetchOnWindowFocus: false,
@@ -189,7 +187,7 @@ const LimitOrdersTable = () => {
         }}
         // scroll={{ y: 300 }}
         scroll={{ x: 'max-content' }}
-        loading={isLoading}
+        loading={isInitialLoading}
         className="customTable"
         rowKey={(record) => record._id}
         onChange={handleChangePage}

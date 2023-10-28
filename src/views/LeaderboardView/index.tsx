@@ -174,11 +174,11 @@ const LeaderboardView = () => {
             type="button"
             height={'50px'}
             _hover={{
-              border: 'none',
+              borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
               bgColor: 'transparent',
             }}
             _active={{
-              border: 'none',
+              borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
               bgColor: 'transparent',
             }}
           >
@@ -199,11 +199,11 @@ const LeaderboardView = () => {
             type="button"
             height={'50px'}
             _hover={{
-              border: 'none',
+              borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
               bgColor: 'transparent',
             }}
             _active={{
-              border: 'none',
+              borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
               bgColor: 'transparent',
             }}
           >
