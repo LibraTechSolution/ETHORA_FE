@@ -7,6 +7,7 @@ import { useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import LimitOrderBox from './LimitOrderBox';
 import EditLimitOrderModal from './EditLimitOrderModal';
+import useUserStore from '@/store/useUserStore';
 
 const defaultParams: ITradingParams = {
   limit: 30,
@@ -17,6 +18,7 @@ const defaultParams: ITradingParams = {
 const LimitOrderTab = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
+  const { tokens, user } = useUserStore();
 
   useEffect(() => {
     if (chain) {
@@ -28,15 +30,15 @@ const LimitOrderTab = () => {
   const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
   const {
     data: dataLimitOrders,
-    isLoading,
     isError,
+    isInitialLoading,
   } = useQuery({
     queryKey: ['getLimitOrders'],
     queryFn: () => getLimitOrders(filter),
     onError: (error: any) => {
       console.log(error);
     },
-    // enabled: !!networkID,
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
     cacheTime: 0,
     refetchInterval: false,
     refetchOnWindowFocus: false,
@@ -51,17 +53,18 @@ const LimitOrderTab = () => {
 
   return (
     <>
-      {!isLoading &&
+      {!isInitialLoading &&
         dataLimitOrders &&
         dataLimitOrders?.docs.map((item: ITradingData) => (
           <LimitOrderBox item={item} key={item._id} openEditModal={openEditModal} />
         ))}
-      {!isLoading && (isError || !dataLimitOrders || (dataLimitOrders && dataLimitOrders?.docs.length === 0)) && (
-        <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
-          <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
-          <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
-        </Flex>
-      )}
+      {!isInitialLoading &&
+        (isError || !dataLimitOrders || (dataLimitOrders && dataLimitOrders?.docs.length === 0)) && (
+          <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
+            <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
+            <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+          </Flex>
+        )}
       {isOpenModal && (
         <EditLimitOrderModal item={selectedItem} isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} />
       )}

@@ -13,6 +13,7 @@ import { divide } from '@/utils/operationBigNumber';
 import dayjs from 'dayjs';
 import CountDown from './CountDown';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
+import useUserStore from '@/store/useUserStore';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -24,6 +25,7 @@ const PlatformTradesTable = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { price } = useTradeStore();
+  const { tokens, user } = useUserStore();
 
   useEffect(() => {
     if (chain) {
@@ -102,7 +104,7 @@ const PlatformTradesTable = () => {
 
   const {
     data: tradingData,
-    isLoading,
+    isInitialLoading,
     isError,
   } = useQuery({
     queryKey: ['getPlatformTrades', filter],
@@ -111,7 +113,7 @@ const PlatformTradesTable = () => {
       console.log(error);
     },
     // select: transformData,
-    // enabled: !!networkID,
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
     cacheTime: 0,
     refetchInterval: 10000,
     refetchOnWindowFocus: false,
@@ -134,7 +136,7 @@ const PlatformTradesTable = () => {
       }}
       // scroll={{ y: 300 }}
       scroll={{ x: 'max-content' }}
-      loading={isLoading}
+      loading={isInitialLoading}
       className="customTable"
       rowKey={(record) => record._id}
       onChange={handleChangePage}

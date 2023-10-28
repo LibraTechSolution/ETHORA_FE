@@ -12,6 +12,7 @@ import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { convertDurationToHourMinutesSeconds } from '@/utils/time';
+import useUserStore from '@/store/useUserStore';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -22,6 +23,7 @@ const defaultParams: ITradingParams = {
 const HistoryTable = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
+  const { tokens, user } = useUserStore();
 
   useEffect(() => {
     if (chain) {
@@ -121,13 +123,14 @@ const HistoryTable = () => {
     },
   ];
 
-  const { data: tradingData, isLoading } = useQuery({
+  const { data: tradingData, isInitialLoading } = useQuery({
     queryKey: ['getTradingHistory', filter],
     queryFn: () => getTradeHistory(filter),
     onError: (error: any) => {
       // notification.error({ message: error.message });
       console.log(error);
     },
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
     cacheTime: 0,
     refetchInterval: false,
     refetchOnWindowFocus: false,
@@ -150,7 +153,7 @@ const HistoryTable = () => {
       }}
       // scroll={{ y: 300 }}
       scroll={{ x: 'max-content' }}
-      loading={isLoading}
+      loading={isInitialLoading}
       className="customTable"
       rowKey={(record) => record._id}
       onChange={handleChangePage}

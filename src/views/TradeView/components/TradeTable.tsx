@@ -16,6 +16,7 @@ import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { useEarlyPnl } from './TradeBox';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
+import useUserStore from '@/store/useUserStore';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -44,6 +45,7 @@ const TradeTable = () => {
   const { price } = useTradeStore();
   const queryClient = useQueryClient();
   const toast = useToast();
+  const { tokens, user } = useUserStore();
 
   useEffect(() => {
     if (chain) {
@@ -171,18 +173,14 @@ const TradeTable = () => {
     }
   };
 
-  const {
-    data: tradingData,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data: tradingData, isInitialLoading } = useQuery({
     queryKey: ['getActiveTrades', filter],
     queryFn: () => getTrades(filter),
     onError: (error: any) => {
       console.log(error);
     },
     // select: transformData,
-    // enabled: !!networkID,
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
     cacheTime: 0,
     refetchInterval: false,
     refetchOnWindowFocus: false,
@@ -205,7 +203,7 @@ const TradeTable = () => {
       }}
       // scroll={{ y: 300 }}
       scroll={{ x: 'max-content' }}
-      loading={isLoading}
+      loading={isInitialLoading}
       className="customTable"
       rowKey={(record) => record._id}
       onChange={handleChangePage}

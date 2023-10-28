@@ -13,6 +13,7 @@ import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { convertDurationToHourMinutesSeconds } from '@/utils/time';
 import { formatAddress } from '@/utils/address';
+import useUserStore from '@/store/useUserStore';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -23,6 +24,7 @@ const defaultParams: ITradingParams = {
 const PlatformHistoryTable = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
+  const { tokens, user } = useUserStore();
 
   useEffect(() => {
     if (chain) {
@@ -128,13 +130,14 @@ const PlatformHistoryTable = () => {
     },
   ];
 
-  const { data: tradingData, isLoading } = useQuery({
+  const { data: tradingData, isInitialLoading } = useQuery({
     queryKey: ['getPlatformHistory', filter],
     queryFn: () => getPlatformHistory(filter),
     onError: (error: any) => {
       // notification.error({ message: error.message });
       console.log(error);
     },
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
     cacheTime: 0,
     refetchInterval: 10000,
     refetchOnWindowFocus: false,
@@ -157,7 +160,7 @@ const PlatformHistoryTable = () => {
       }}
       // scroll={{ y: 300 }}
       scroll={{ x: 'max-content' }}
-      loading={isLoading}
+      loading={isInitialLoading}
       className="customTable"
       rowKey={(record) => record._id}
       onChange={handleChangePage}
