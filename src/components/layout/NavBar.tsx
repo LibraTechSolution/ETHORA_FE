@@ -31,38 +31,38 @@ const NavBar = () => {
       >
         <Box
           borderRight={'2px solid'}
-          borderColor={currentRoute === '/dashboard' ? '#6052FB' : 'transparent'}
+          borderColor={currentRoute === '/dashboard' ? '#1E3EF0' : 'transparent'}
           padding={'0px 20px'}
         >
-          <DashboardIcon fill={currentRoute === '/dashboard' ? '#6052FB' : '#9E9E9F'} />
+          <DashboardIcon fill={currentRoute === '/dashboard' ? '#1E3EF0' : '#9E9E9F'} />
         </Box>
         <Box
           borderRight={'2px solid'}
           padding={'0px 20px'}
-          borderColor={currentRoute === '/analytic' ? '#6052FB' : 'transparent'}
+          borderColor={currentRoute === '/analytic' ? '#1E3EF0' : 'transparent'}
         >
-          <AnalyticIcon fill={currentRoute === '/analytic' ? '#6052FB' : '#9E9E9F'} />
+          <AnalyticIcon fill={currentRoute === '/analytic' ? '#1E3EF0' : '#9E9E9F'} />
         </Box>
         <Box
           borderRight={'2px solid '}
           padding={'0px 20px'}
-          borderColor={currentRoute === '/chart' ? '#6052FB' : 'transparent'}
+          borderColor={currentRoute === '/chart' ? '#1E3EF0' : 'transparent'}
         >
-          <ChartIcon fill={currentRoute === '/chart' ? '#6052FB' : '#9E9E9F'} />
+          <ChartIcon fill={currentRoute === '/chart' ? '#1E3EF0' : '#9E9E9F'} />
         </Box>
         <Box
           borderRight={'2px solid '}
           padding={'0px 20px'}
-          borderColor={currentRoute === '/event' ? '#6052FB' : 'transparent'}
+          borderColor={currentRoute === '/event' ? '#1E3EF0' : 'transparent'}
         >
-          <EventIcon fill={currentRoute === '/event' ? '#6052FB' : '#9E9E9F'} />
+          <EventIcon fill={currentRoute === '/event' ? '#1E3EF0' : '#9E9E9F'} />
         </Box>
         <Box
           borderRight={'2px solid '}
           padding={'0px 20px'}
-          borderColor={currentRoute === '/shortcut' ? '#6052FB' : 'transparent'}
+          borderColor={currentRoute === '/shortcut' ? '#1E3EF0' : 'transparent'}
         >
-          <ShortcutIcon fill={currentRoute === '/shortcut' ? '#6052FB' : '#9E9E9F'} />
+          <ShortcutIcon fill={currentRoute === '/shortcut' ? '#1E3EF0' : '#9E9E9F'} />
         </Box>
       </Flex>
       <Box
@@ -81,40 +81,40 @@ const NavBar = () => {
           <Box
             borderTop={'2px solid'}
             padding={'12px 5px'}
-            borderColor={currentRoute === '/dashboard' ? '#6052FB' : 'transparent'}
+            borderColor={currentRoute === '/dashboard' ? '#1E3EF0' : 'transparent'}
           >
-            <DashboardIcon fill={currentRoute === '/dashboard' ? '#6052FB' : '#9E9E9F'} />
+            <DashboardIcon fill={currentRoute === '/dashboard' ? '#1E3EF0' : '#9E9E9F'} />
           </Box>
           <Box
             borderTop={'2px solid'}
             padding={'12px 5px'}
-            borderColor={currentRoute === '/analytic' ? '#6052FB' : 'transparent'}
+            borderColor={currentRoute === '/analytic' ? '#1E3EF0' : 'transparent'}
           >
-            <AnalyticIcon fill={currentRoute === '/analytic' ? '#6052FB' : '#9E9E9F'} />
-          </Box>
-
-          <Box
-            borderTop={'2px solid'}
-            padding={'12px 5px'}
-            borderColor={currentRoute === '/chart' ? '#6052FB' : 'transparent'}
-          >
-            <ChartIcon fill={currentRoute === '/chart' ? '#6052FB' : '#9E9E9F'} />
+            <AnalyticIcon fill={currentRoute === '/analytic' ? '#1E3EF0' : '#9E9E9F'} />
           </Box>
 
           <Box
             borderTop={'2px solid'}
             padding={'12px 5px'}
-            borderColor={currentRoute === '/event' ? '#6052FB' : 'transparent'}
+            borderColor={currentRoute === '/chart' ? '#1E3EF0' : 'transparent'}
           >
-            <EventIcon fill={currentRoute === '/event' ? '#6052FB' : '#9E9E9F'} />
+            <ChartIcon fill={currentRoute === '/chart' ? '#1E3EF0' : '#9E9E9F'} />
           </Box>
 
           <Box
             borderTop={'2px solid'}
             padding={'12px 5px'}
-            borderColor={currentRoute === '/shortcut' ? '#6052FB' : 'transparent'}
+            borderColor={currentRoute === '/event' ? '#1E3EF0' : 'transparent'}
           >
-            <ShortcutIcon fill={currentRoute === '/shortcut' ? '#6052FB' : '#9E9E9F'} />
+            <EventIcon fill={currentRoute === '/event' ? '#1E3EF0' : '#9E9E9F'} />
+          </Box>
+
+          <Box
+            borderTop={'2px solid'}
+            padding={'12px 5px'}
+            borderColor={currentRoute === '/shortcut' ? '#1E3EF0' : 'transparent'}
+          >
+            <ShortcutIcon fill={currentRoute === '/shortcut' ? '#1E3EF0' : '#9E9E9F'} />
           </Box>
         </Box>
       </Box>

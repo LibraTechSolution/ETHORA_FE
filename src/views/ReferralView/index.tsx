@@ -240,37 +240,37 @@ const ReferralView = () => {
     //       <Link
     //         as={NextLink}
     //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
     //       >
-    //         <LayoutGrid className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+    //         <LayoutGrid className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
     //       </Link>
     //       <Link
     //         as={NextLink}
     //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
     //       >
-    //         <BarChartBig className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+    //         <BarChartBig className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
     //       </Link>
     //       <Link
     //         as={NextLink}
     //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
     //       >
-    //         <TrendingUp className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+    //         <TrendingUp className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
     //       </Link>
     //       <Link
     //         as={NextLink}
     //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
     //       >
-    //         <Trophy className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+    //         <Trophy className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
     //       </Link>
     //       <Link
     //         as={NextLink}
     //         href="/"
-    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+    //         className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
     //       >
-    //         <Redo className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+    //         <Redo className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
     //       </Link>
     //     </Flex>
     //   </Box>
@@ -303,10 +303,10 @@ const ReferralView = () => {
                 setDefaultTabs(ReferralTabType.Tab1);
               }}
               borderBottom={'2px solid'}
-              borderColor={defaultTabs === ReferralTabType.Tab1 ? '#6052FB' : 'transparent'}
+              borderColor={defaultTabs === ReferralTabType.Tab1 ? '#1E3EF0' : 'transparent'}
               pointerEvents={defaultTabs === ReferralTabType.Tab1 ? 'none' : 'auto'}
               cursor={defaultTabs === ReferralTabType.Tab1 ? 'default' : 'pointer'}
-              color={defaultTabs === ReferralTabType.Tab1 ? '#6052FB' : '#9E9E9F'}
+              color={defaultTabs === ReferralTabType.Tab1 ? '#1E3EF0' : '#9E9E9F'}
               padding={'13px 0'}
             >
               Use a Referral
@@ -318,10 +318,10 @@ const ReferralView = () => {
                 setDefaultTabs(ReferralTabType.Tab2);
               }}
               borderBottom={'2px solid'}
-              borderColor={defaultTabs === ReferralTabType.Tab2 ? '#6052FB' : 'transparent'}
+              borderColor={defaultTabs === ReferralTabType.Tab2 ? '#1E3EF0' : 'transparent'}
               pointerEvents={defaultTabs === ReferralTabType.Tab2 ? 'none' : 'auto'}
               cursor={defaultTabs === ReferralTabType.Tab2 ? 'default' : 'pointer'}
-              color={defaultTabs === ReferralTabType.Tab2 ? '#6052FB' : '#9E9E9F'}
+              color={defaultTabs === ReferralTabType.Tab2 ? '#1E3EF0' : '#9E9E9F'}
               padding={'13px 0'}
             >
               Become a Referrer
@@ -350,8 +350,8 @@ const ReferralView = () => {
                 value={traderRefCode}
                 onChange={handleTraderRefCodeChange}
                 bg={'transparent'}
-                _hover={{ borderColor: '#6052FB' }}
-                _focusVisible={{ borderColor: '#6052FB', borderWidth: '2px' }}
+                _hover={{ borderColor: '#1E3EF0' }}
+                _focusVisible={{ borderColor: '#1E3EF0', borderWidth: '2px' }}
                 border={errorMsgTraderRefCode ? '1px solid #F03D3E' : '1px solid #38383A'}
               />
               <InputRightElement>
@@ -407,8 +407,8 @@ const ReferralView = () => {
                 onChange={handleUserRefCodeChange}
                 bg={isCreatedUserRefCode ? '#3D3D40' : 'transparent'}
                 pointerEvents={isCreatedUserRefCode ? 'none' : 'initial'}
-                _hover={{ borderColor: '#6052FB' }}
-                _focusVisible={{ borderColor: '#6052FB', borderWidth: '2px' }}
+                _hover={{ borderColor: '#1E3EF0' }}
+                _focusVisible={{ borderColor: '#1E3EF0', borderWidth: '2px' }}
                 border={isCreatedUserRefCode ? 'none' : errorMsgUserRefCode ? '1px solid #F03D3E' : '1px solid #38383A'}
               />
               <InputRightElement>
@@ -432,12 +432,12 @@ const ReferralView = () => {
                   fontSize={'16px'}
                   size="md"
                   width={'100%'}
-                  borderColor="#6052FB"
-                  textColor="#6052FB"
+                  borderColor="#1E3EF0"
+                  textColor="#1E3EF0"
                   paddingX="12px"
                   variant="outline"
-                  _hover={{ borderColor: '#7A72F6', textColor: '#7A72F6' }}
-                  _active={{ borderColor: '#342BC3', textColor: '#342BC3' }}
+                  _hover={{ borderColor: '#4B65F3', textColor: '#4B65F3' }}
+                  _active={{ borderColor: '#122590', textColor: '#122590' }}
                   onClick={() => handleCopy(`${window.location.origin}/referral?code=${userRefCode}`)}
                 >
                   Copy Your Referral Link

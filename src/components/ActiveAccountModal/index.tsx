@@ -312,10 +312,10 @@ export const ActiveAccountModal = () => {
               <Button
                 onClick={signMsg}
                 type="button"
-                bgColor="#6052FB"
+                bgColor="#1E3EF0"
                 textColor="#ffffff"
-                _hover={{ bgColor: '#7A72F6', textColor: '#ffffff' }}
-                _active={{ bgColor: '#342BC3', textColor: '#ffffff' }}
+                _hover={{ bgColor: '#4B65F3', textColor: '#ffffff' }}
+                _active={{ bgColor: '#122590', textColor: '#ffffff' }}
                 fontSize="16px"
                 paddingX="12px"
                 paddingY="15px"
@@ -358,10 +358,10 @@ export const ActiveAccountModal = () => {
               <Button
                 onClick={registerAccount}
                 type="button"
-                bgColor="#6052FB"
+                bgColor="#1E3EF0"
                 textColor="#ffffff"
-                _hover={{ bgColor: '#7A72F6', textColor: '#ffffff' }}
-                _active={{ bgColor: '#342BC3', textColor: '#ffffff' }}
+                _hover={{ bgColor: '#4B65F3', textColor: '#ffffff' }}
+                _active={{ bgColor: '#122590', textColor: '#ffffff' }}
                 fontSize="16px"
                 paddingX="12px"
                 paddingY="15px"

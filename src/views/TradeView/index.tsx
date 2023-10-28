@@ -57,7 +57,7 @@ const TradeView = () => {
                 color="#6D6D70"
                 fontSize={'sm'}
                 fontWeight={'medium'}
-                _selected={{ color: '#6052FB' }}
+                _selected={{ color: '#1E3EF0' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -68,7 +68,7 @@ const TradeView = () => {
                 color="#6D6D70"
                 fontSize={'sm'}
                 fontWeight={'medium'}
-                _selected={{ color: '#6052FB' }}
+                _selected={{ color: '#1E3EF0' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -79,7 +79,7 @@ const TradeView = () => {
                 color="#6D6D70"
                 fontSize={'sm'}
                 fontWeight={'medium'}
-                _selected={{ color: '#6052FB' }}
+                _selected={{ color: '#1E3EF0' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -90,7 +90,7 @@ const TradeView = () => {
                 color="#6D6D70"
                 fontSize={'sm'}
                 fontWeight={'medium'}
-                _selected={{ color: '#6052FB' }}
+                _selected={{ color: '#1E3EF0' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -101,7 +101,7 @@ const TradeView = () => {
                 color="#6D6D70"
                 fontSize={'sm'}
                 fontWeight={'medium'}
-                _selected={{ color: '#6052FB' }}
+                _selected={{ color: '#1E3EF0' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -112,7 +112,7 @@ const TradeView = () => {
                 color="#6D6D70"
                 fontSize={'sm'}
                 fontWeight={'medium'}
-                _selected={{ color: '#6052FB' }}
+                _selected={{ color: '#1E3EF0' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -120,7 +120,7 @@ const TradeView = () => {
                 Platform History
               </Tab>
             </TabList>
-            <TabIndicator mt="-1.5px" height="2px" bg="#6052FB" borderRadius="1px" />
+            <TabIndicator mt="-1.5px" height="2px" bg="#1E3EF0" borderRadius="1px" />
 
             <TabPanels paddingTop={2} className="tradingTableTab">
               <TabPanel padding="0">

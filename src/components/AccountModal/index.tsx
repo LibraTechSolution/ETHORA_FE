@@ -29,6 +29,7 @@ import useModalStore from '@/store/useModalStore';
 import registerABI from '@/config/abi/registerABI';
 import { Address, BaseError } from 'viem';
 import { register } from '@/services/auth';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ModalProp {
   isOpen: boolean;
@@ -50,6 +51,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
   const { onOpen } = useModalStore();
   const { chain } = useNetwork();
   const [isLoadingDeactive, setIsLoadingDeactive] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   const domain = {
     name: 'Validator',
@@ -132,6 +134,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
   const handleDisconnect = () => {
     disconnect();
     onClose();
+    queryClient.clear();
   };
 
   const handleCopy = () => {
@@ -222,14 +225,14 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
             <Center>
               <Image alt="avatar" src="/images/icons/avatar.svg" w="64px" h="64px" />
             </Center>
-            <Center color="#6052FB" paddingTop="27px" fontSize="20px" fontWeight="600">
+            <Center color="#1E3EF0" paddingTop="27px" fontSize="20px" fontWeight="600">
               {formatAddress(address?.toLocaleLowerCase(), 4, 9)}
             </Center>
           </Flex>
           <Grid templateColumns="repeat(3, 1fr)" paddingY="20px">
             <GridItem w="100%" paddingRight="2.5" cursor="pointer" onClick={handleCopy}>
               <Center>
-                <CopyIcon color="#6052FB" />
+                <CopyIcon color="#1E3EF0" />
               </Center>
               <Center color="#fff" fontWeight="600" paddingTop="8px">
                 Copy address
@@ -238,7 +241,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
             <GridItem w="100%" paddingX="2.5" borderX="1px solid #38383A" cursor="pointer">
               <Link href={`${appConfig.arbiscan}/address/${address}`} target="_blank">
                 <Center>
-                  <ExternalLink color="#6052FB" />
+                  <ExternalLink color="#1E3EF0" />
                 </Center>
                 <Center color="#fff" fontWeight="600" paddingTop="8px">
                   Visit wallet
@@ -247,7 +250,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
             </GridItem>
             <GridItem w="100%" paddingLeft="2.5" cursor="pointer" onClick={handleDisconnect}>
               <Center>
-                <LogOut color="#6052FB" />
+                <LogOut color="#1E3EF0" />
               </Center>
               <Center color="#fff" fontWeight="600" paddingTop="8px">
                 Disconnect
@@ -262,10 +265,10 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
               <Button
                 onClick={handleActiveModal}
                 type="button"
-                bgColor="#6052FB"
+                bgColor="#1E3EF0"
                 textColor="#ffffff"
-                _hover={{ bgColor: '#7A72F6', textColor: '#ffffff' }}
-                _active={{ bgColor: '#342BC3', textColor: '#ffffff' }}
+                _hover={{ bgColor: '#4B65F3', textColor: '#ffffff' }}
+                _active={{ bgColor: '#122590', textColor: '#ffffff' }}
                 fontSize="16px"
                 paddingX="12px"
                 paddingY="15px"
@@ -280,10 +283,10 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
                 <Button
                   onClick={handleDeactiveAcc}
                   type="button"
-                  bgColor="#6052FB"
+                  bgColor="#1E3EF0"
                   textColor="#ffffff"
-                  _hover={{ bgColor: '#7A72F6', textColor: '#ffffff' }}
-                  _active={{ bgColor: '#342BC3', textColor: '#ffffff' }}
+                  _hover={{ bgColor: '#4B65F3', textColor: '#ffffff' }}
+                  _active={{ bgColor: '#122590', textColor: '#ffffff' }}
                   fontSize="16px"
                   paddingX="12px"
                   paddingY="15px"
@@ -297,10 +300,10 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
                 <Button
                   onClick={() => console.log('====')}
                   type="button"
-                  textColor="#6052FB"
+                  textColor="#1E3EF0"
                   bgColor="transparent"
-                  _hover={{ textColor: '#7A72F6', bgColor: 'transparent' }}
-                  _active={{ textColor: '#342BC3', bgColor: 'transparent' }}
+                  _hover={{ textColor: '#4B65F3', bgColor: 'transparent' }}
+                  _active={{ textColor: '#122590', bgColor: 'transparent' }}
                   fontSize="16px"
                   paddingX="12px"
                   paddingY="15px"

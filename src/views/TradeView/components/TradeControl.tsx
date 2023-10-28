@@ -85,7 +85,7 @@ const TradeControl = () => {
   const [timeError, setTimeError] = useState<string>('');
   const [tradeType, setTradeType] = useState<string>('market');
   const { price } = useTradeStore();
-  const { listWallets, user, toggleApprovedAccount } = useUserStore();
+  const { user, toggleApprovedAccount } = useUserStore();
   const listTimes = ['3m', '5m', '15m', '1h'];
   const [time, setTime] = useState<string>('15m');
   const [timeType, setTimeType] = useState<string>('m');
@@ -330,6 +330,28 @@ const TradeControl = () => {
         referralCode: code ?? '',
       };
       const res = await createTrade(data);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Trade order placed"
+            content={`${data.pair} to go ${isAbove ? 'Upper' : 'Lower'}`}
+            status={Status.SUCCESSS}
+            close={onClose}
+          >
+            <p className="font-semibold text-[#fff]">
+              {data.isLimitOrder ? 'Limit Order placed' : 'Trade order placed'}
+            </p>
+            <p className="text-[#9E9E9F]">
+              <span className="text-[#fff]">{data.pair.toUpperCase()}</span> to go{' '}
+              <span className="text-[#fff]">{isAbove ? 'Upper' : 'Lower'}</span>
+            </p>
+            <p className="text-[#9E9E9F]">
+              Total amount: <span className="text-[#fff]">{tradeSize}</span> USDC
+            </p>
+          </ToastLayout>
+        ),
+      });
 
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
@@ -350,7 +372,7 @@ const TradeControl = () => {
         {listTimes.map((item) => (
           <Button
             key={item}
-            border={time === item ? '1px solid #6052FB' : ''}
+            border={time === item ? '1px solid #1E3EF0' : ''}
             bgColor="#0C0C10"
             rounded="10px"
             textColor={time === item ? '#fff' : '#6D6D70'}
@@ -359,11 +381,11 @@ const TradeControl = () => {
             width="48px"
             marginRight="4px"
             _hover={{
-              border: '1px solid #6052FB',
+              border: '1px solid #1E3EF0',
               textColor: '#fff',
             }}
             _active={{
-              border: '1px solid #6052FB',
+              border: '1px solid #1E3EF0',
               textColor: '#fff',
             }}
             onClick={() => {
@@ -425,8 +447,8 @@ const TradeControl = () => {
             type="text"
             rounded="10px"
             border={tradeSizeError ? '1px solid #F03D3E' : '1px solid #6D6D70'}
-            _hover={{ borderColor: '#6052FB' }}
-            _focusVisible={{ borderColor: '#6052FB', borderWidth: '2px' }}
+            _hover={{ borderColor: '#1E3EF0' }}
+            _focusVisible={{ borderColor: '#1E3EF0', borderWidth: '2px' }}
             value={tradeSize}
             onChange={(e) => handleOnChangeNumber(e, InputName.TRADE_SIZE)}
           />
@@ -538,12 +560,12 @@ const TradeControl = () => {
                   if (!connected) {
                     return (
                       <Button
-                        borderColor="#6052FB"
-                        bgColor="#6052FB"
+                        borderColor="#1E3EF0"
+                        bgColor="#1E3EF0"
                         textColor="#fff"
                         variant="outline"
-                        _hover={{ bgColor: '#7A72F6', borderColor: '#7A72F6' }}
-                        _active={{ bgColor: '#342BC3', borderColor: '#342BC3' }}
+                        _hover={{ bgColor: '#4B65F3', borderColor: '#4B65F3' }}
+                        _active={{ bgColor: '#122590', borderColor: '#122590' }}
                         width="full"
                         rounded="10px"
                         onClick={openConnectModal}
@@ -572,12 +594,12 @@ const TradeControl = () => {
                   if (!isRegisterd) {
                     return (
                       <Button
-                        borderColor="#6052FB"
-                        bgColor="#6052FB"
+                        borderColor="#1E3EF0"
+                        bgColor="#1E3EF0"
                         textColor="#fff"
                         variant="outline"
-                        _hover={{ bgColor: '#7A72F6', borderColor: '#7A72F6' }}
-                        _active={{ bgColor: '#342BC3', borderColor: '#342BC3' }}
+                        _hover={{ bgColor: '#4B65F3', borderColor: '#4B65F3' }}
+                        _active={{ bgColor: '#122590', borderColor: '#122590' }}
                         width="full"
                         rounded="10px"
                         onClick={onOpen}
@@ -590,12 +612,12 @@ const TradeControl = () => {
                   if (!isApproved) {
                     return (
                       <Button
-                        borderColor="#6052FB"
-                        bgColor="#6052FB"
+                        borderColor="#1E3EF0"
+                        bgColor="#1E3EF0"
                         textColor="#fff"
                         variant="outline"
-                        _hover={{ bgColor: '#7A72F6', borderColor: '#7A72F6' }}
-                        _active={{ bgColor: '#342BC3', borderColor: '#342BC3' }}
+                        _hover={{ bgColor: '#4B65F3', borderColor: '#4B65F3' }}
+                        _active={{ bgColor: '#122590', borderColor: '#122590' }}
                         width="full"
                         rounded="10px"
                         onClick={approve}
@@ -649,7 +671,7 @@ const TradeControl = () => {
               color="#6D6D70"
               fontSize={'sm'}
               fontWeight={'medium'}
-              _selected={{ color: '#6052FB' }}
+              _selected={{ color: '#1E3EF0' }}
               _active={{ bgColor: 'transparent' }}
               paddingX="12px"
               paddingY="8px"
@@ -660,7 +682,7 @@ const TradeControl = () => {
               color="#6D6D70"
               fontSize={'sm'}
               fontWeight={'medium'}
-              _selected={{ color: '#6052FB' }}
+              _selected={{ color: '#1E3EF0' }}
               _active={{ bgColor: 'transparent' }}
               paddingX="12px"
               paddingY="8px"
@@ -668,7 +690,7 @@ const TradeControl = () => {
               Limit Orders
             </Tab>
           </TabList>
-          <TabIndicator mt="-1.5px" height="2px" bg="#6052FB" borderRadius="1px" />
+          <TabIndicator mt="-1.5px" height="2px" bg="#1E3EF0" borderRadius="1px" />
 
           <TabPanels>
             <TabPanel padding="0" height={'600px'} overflow="auto">

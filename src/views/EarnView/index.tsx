@@ -428,7 +428,7 @@ const EarnView = () => {
             <Link
               href="https://coinbase.com/faucets/base-ethereum-goerli-faucet"
               target="_blank"
-              className="group ml-1 flex text-center align-middle text-[#6052FB]"
+              className="group ml-1 flex text-center align-middle text-[#1E3EF0]"
             >
               <span className="pr-[10px] group-hover:underline">Learn more</span>
               <ArrowRight className="text-white" />
@@ -529,7 +529,7 @@ const EarnView = () => {
             <Link
               href="https://coinbase.com/faucets/base-ethereum-goerli-faucet"
               target="_blank"
-              className="group ml-1 flex text-center align-middle text-[#6052FB]"
+              className="group ml-1 flex text-center align-middle text-[#1E3EF0]"
             >
               <span className="pr-[10px] group-hover:underline">Learn more</span>
               <ArrowRight className="text-white" />

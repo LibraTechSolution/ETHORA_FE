@@ -53,7 +53,7 @@ const LimitOrderBox = (props: PropsType) => {
 
   const timeOutCallBack = () => {
     // console.log('end');
-    // queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
+    queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
   };
 
   const handleOpenEditModal = () => {
@@ -172,11 +172,11 @@ const LimitOrderBox = (props: PropsType) => {
           </GridItem>
           <GridItem>
             <Button
-              borderColor="#6052FB"
-              textColor="#6052FB"
+              borderColor="#1E3EF0"
+              textColor="#1E3EF0"
               variant="outline"
-              _hover={{ borderColor: '#7A72F6', textColor: '#7A72F6' }}
-              _active={{ borderColor: '#342BC3', textColor: '#342BC3' }}
+              _hover={{ borderColor: '#4B65F3', textColor: '#4B65F3' }}
+              _active={{ borderColor: '#122590', textColor: '#122590' }}
               w="full"
               rounded="md"
               onClick={handleOpenEditModal}

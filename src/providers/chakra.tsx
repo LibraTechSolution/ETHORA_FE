@@ -55,7 +55,7 @@ const customTheme = extendTheme({
       100: '#DEDCFD',
       300: '#BDB9FB',
       400: '#9B95F8',
-      500: '#6052FB',
+      500: '#1E3EF0',
       600: '#9B95F8',
       700: '#7A72F6',
       900: '#594FF4',

@@ -3,14 +3,24 @@
 import {
   ChartingLibraryWidgetOptions,
   IChartingLibraryWidget,
+  IOrderLineAdapter,
   ResolutionString,
   widget,
 } from 'public/static/charting_library';
-import { cloneElement, useEffect, useMemo, useRef, useState } from 'react';
-import { Box, Button, Flex } from '@chakra-ui/react';
+import { cloneElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Box, Button, Flex, useToast } from '@chakra-ui/react';
 import datafeed from './datafeed';
 import { Dropdown, MenuProps } from 'antd';
 import { useParams } from 'next/navigation';
+import useListShowLinesStore from '@/store/useListShowLinesStore';
+import { EditTradeReq, ITradingData, State } from '@/types/trade.type';
+import { divide } from '@/utils/operationBigNumber';
+import { closeTrade, editLimitOrder } from '@/services/trade';
+import { Status } from '@/types/faucet.type';
+import { ToastLayout } from '../ToastLayout';
+import { useQueryClient } from '@tanstack/react-query';
+import EditLimitOrderModal from '@/views/TradeView/components/EditLimitOrderModal';
+import dayjs from 'dayjs';
 
 export const supported_resolutions = [
   // '1S' as ResolutionString,
@@ -126,6 +136,8 @@ export const TradingViewChart = () => {
   const widgetRef = useRef<IChartingLibraryWidget>();
   const [isChartReady, setIsChartReady] = useState<boolean>(false);
   const [resolution, setResolution] = useState<ResolutionString>('1' as ResolutionString);
+  const toast = useToast();
+  const queryClient = useQueryClient();
   const params = useParams();
   const currentPair = useMemo<string>(() => {
     let tempCurrentPair = params?.pair as string;
@@ -134,6 +146,139 @@ export const TradingViewChart = () => {
     }
     return tempCurrentPair;
   }, [params.pair]);
+  const listLinesRef = useRef<{ line: IOrderLineAdapter; tradeData: ITradingData }[]>([]);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
+  const { setListLines, listLines } = useListShowLinesStore();
+
+  const handleClose = useCallback(
+    async (item: ITradingData) => {
+      try {
+        await closeTrade(item._id);
+        queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
+        toast({
+          position: 'top',
+          render: ({ onClose }) => <ToastLayout title="Close Successfully" status={Status.SUCCESSS} close={onClose} />,
+        });
+        setListLines(item);
+      } catch (error) {
+        console.log(error);
+        toast({
+          position: 'top',
+          render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,
+        });
+      }
+    },
+    [queryClient, setListLines, toast],
+  );
+
+  const handleEditStrikePrice = async (item: ITradingData) => {
+    const tradeDataLine = listLinesRef.current.find((trade) => trade.tradeData._id === item._id);
+    tradeDataLine?.line.setText('Processing Edit');
+    console.log(tradeDataLine);
+    try {
+      if (!tradeDataLine) return;
+      const data: EditTradeReq = {
+        network: tradeDataLine?.tradeData?.network,
+        _id: tradeDataLine?.tradeData?._id,
+        strike: tradeDataLine?.line.getPrice() * 100000000,
+        period: tradeDataLine?.tradeData.period,
+        slippage: tradeDataLine?.tradeData?.slippage,
+        isAbove: tradeDataLine?.tradeData.isAbove,
+        limitOrderDuration: dayjs(item.limitOrderExpirationDate).utc().unix() - dayjs().utc().unix(),
+      };
+      console.log(data);
+      await editLimitOrder(data);
+      setListLines(
+        {
+          ...item,
+          strike: data.strike,
+        },
+        true,
+      );
+      queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
+      queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
+      toast({
+        position: 'top',
+        render: ({ onClose }) => <ToastLayout title="Edit successfully" status={Status.SUCCESSS} close={onClose} />,
+      });
+    } catch (error) {
+      toast({
+        position: 'top',
+        render: ({ onClose }) => <ToastLayout title="Edit Unsuccessfully" status={Status.ERROR} close={onClose} />,
+      });
+      tradeDataLine?.line.setText(divide(tradeDataLine.tradeData.strike, 8).toString());
+      tradeDataLine?.line.setPrice(+divide(tradeDataLine.tradeData.strike, 8));
+    }
+  };
+
+  const addLine = useCallback(
+    (item: ITradingData) => {
+      if (item.state === State.QUEUED) {
+        return widgetRef.current
+          ?.activeChart?.()
+          .createOrderLine()
+          .setText(`Limit | ${(+divide(item.strike, 8)).toFixed(2)} ${item.isAbove ? '▲' : '▼'}`)
+          .setTooltip('Drag to change strike')
+          .setQuantity('↕')
+          .setLineColor(item.isAbove ? '#1ED768' : '#F03D3E')
+          .setBodyBackgroundColor('rgb(48, 48, 68)')
+          .setQuantityBorderColor('rgb(48, 48, 68)')
+          .setQuantityBackgroundColor(item.isAbove ? '#1ED768' : '#F03D3E')
+          .setCancelButtonBorderColor('rgb(48, 48, 68)')
+          .setCancelButtonIconColor('rgb(255,255,255)')
+          .setCancelButtonBackgroundColor('rgb(48, 48, 68)')
+          .setBodyFont('semibold 17pt Arial')
+          .setQuantityFont('bold 17pt Arial')
+          .setBodyTextColor('rgb(195,194,212)')
+          .setCancelTooltip('Click to cancel this limit order')
+          .setBodyBorderColor('rgb(48, 48, 68)')
+          .setLineColor(item.isAbove ? '#1ED768' : '#F03D3E')
+          .onCancel('modify', function () {
+            console.log('===', item);
+            handleClose(item);
+          })
+          .onMove(function () {
+            handleEditStrikePrice(item);
+          })
+          .onModify('modify', function () {
+            console.log('modify');
+            setSelectedItem(item);
+            setIsOpenModal(true);
+          })
+          .setPrice(+divide(item.strike, 8)) as IOrderLineAdapter;
+      }
+      return widgetRef.current
+        ?.activeChart?.()
+        .createOrderLine()
+        .setText(`Trade | ${(+divide(item.strike, 8)).toFixed(2)}`)
+        .setTooltip(
+          `${dayjs(item.openDate).format('MM/DD/YYYY, HH:mm:ss')} - ${dayjs(item.openDate)
+            .add(item.period, 'second')
+            .format('MM/DD/YYYY, HH:mm:ss')}`,
+        )
+        .setQuantity(item.isAbove ? '▲' : '▼')
+        .setLineColor(item.isAbove ? '#1ED768' : '#F03D3E')
+        .setBodyBackgroundColor('rgb(48, 48, 68)')
+        .setQuantityBorderColor('rgb(48, 48, 68)')
+        .setQuantityBackgroundColor(item.isAbove ? '#1ED768' : '#F03D3E')
+        .setCancelButtonBorderColor('rgb(48, 48, 68)')
+        .setCancelButtonIconColor('rgb(255,255,255)')
+        .setCancelButtonBackgroundColor('rgb(48, 48, 68)')
+        .setBodyFont('semibold 17pt Arial')
+        .setQuantityFont('bold 17pt Arial')
+        .setBodyTextColor('rgb(195,194,212)')
+        .setCancelTooltip('Click to close this order')
+        .setBodyBorderColor('rgb(48, 48, 68)')
+        .setLineColor(item.isAbove ? '#1ED768' : '#F03D3E')
+        .onCancel('modify', function () {
+          console.log('===', item);
+          handleClose(item);
+        })
+        .setPrice(+divide(item.strike, 8)) as IOrderLineAdapter;
+    },
+    [handleClose],
+  );
 
   useEffect(() => {
     if (!currentPair) return;
@@ -198,19 +343,27 @@ export const TradingViewChart = () => {
     });
   }, [currentPair]);
 
-  const addLine = () => {
-    if (isChartReady) {
-      widgetRef.current
-        ?.activeChart?.()
-        .createOrderLine()
-        .setText('2222')
-        .setTooltip('eeee')
-        .setQuantity('▲')
-        .onCancel('modify', function () {
-          console.log('===');
-        })
-        .setPrice(175);
+  useEffect(() => {
+    console.log(listLines);
+    removeLine();
+    listLinesRef.current = [];
+    if (listLines.length === 0 || !isChartReady) return;
+    listLines.forEach((item) => {
+      listLinesRef.current?.push({ line: addLine(item), tradeData: item });
+    });
+    console.log(listLinesRef.current);
+    if (listLinesRef.current.length > 0) {
+      listLinesRef.current.forEach((item) => {
+        item.line.setPrice(+divide(item.tradeData.strike, 8));
+      });
     }
+  }, [addLine, isChartReady, listLines]);
+
+  const removeLine = () => {
+    if (listLinesRef.current.length === 0) return;
+    listLinesRef.current.forEach((item) => {
+      item.line.remove();
+    });
   };
 
   const handleIndicator = () => {
@@ -246,7 +399,7 @@ export const TradingViewChart = () => {
             <Button
               key={item.value}
               bgColor={'transparent'}
-              textColor={resolution === item.value ? '#6052FB' : '#fff'}
+              textColor={resolution === item.value ? '#1E3EF0' : '#fff'}
               fontWeight={resolution === item.value ? '600' : '400'}
               fontSize={12}
               _hover={{ bgColor: 'transparent', textColor: '#fff' }}
@@ -292,6 +445,19 @@ export const TradingViewChart = () => {
         </Box>
       </Flex>
       <div ref={chartContainerRef} id="chart-element" className="h-[655px]" />
+      {isOpenModal && (
+        <EditLimitOrderModal
+          item={selectedItem}
+          isOpen={isOpenModal}
+          onClose={() => {
+            setSelectedItem(null);
+            setIsOpenModal(false);
+          }}
+        />
+      )}
     </div>
   );
 };
+function convertToTimeStamp(time: any): number {
+  throw new Error('Function not implemented.');
+}

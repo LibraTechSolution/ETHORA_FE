@@ -10,10 +10,11 @@ interface ToastProp {
   content?: string;
   status: Status;
   close: () => void;
+  children?: React.ReactNode;
 }
 
 export const ToastLayout = (toastProp: ToastProp) => {
-  const { title, content, status, close } = toastProp;
+  const { title, content, status, children, close } = toastProp;
 
   const toastIcon = useMemo(() => {
     switch (status) {
@@ -42,14 +43,20 @@ export const ToastLayout = (toastProp: ToastProp) => {
       <Center>
         <Image alt="icon" src={toastIcon} width="20px" height="20px" />
       </Center>
-      <Flex flexDirection="column" ml="16px" width="340px" justifyContent="center">
-        <p className="text-[14px] font-medium text-white">{title}</p>
-        {content && (
-          <p className={`text-[14px] font-normal ${status === Status.SUCCESSS ? 'text-[#9E9E9F]' : 'text-white'}`}>
-            {content}
-          </p>
-        )}
-      </Flex>
+      {children ? (
+        <Flex flexDirection="column" ml="16px" width="340px" justifyContent="center">
+          {children}
+        </Flex>
+      ) : (
+        <Flex flexDirection="column" ml="16px" width="340px" justifyContent="center">
+          <p className="text-[14px] font-medium text-white">{title}</p>
+          {content && (
+            <p className={`text-[14px] font-normal ${status === Status.SUCCESSS ? 'text-[#9E9E9F]' : 'text-white'}`}>
+              {content}
+            </p>
+          )}
+        </Flex>
+      )}
       <Center>
         <Button
           onClick={close}
