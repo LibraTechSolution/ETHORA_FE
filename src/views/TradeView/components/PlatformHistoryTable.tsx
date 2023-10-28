@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { addComma } from '@/utils/number';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { getPlatformHistory } from '@/services/trade';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import { Flex, Image } from '@chakra-ui/react';
@@ -22,6 +22,7 @@ const defaultParams: ITradingParams = {
 };
 
 const PlatformHistoryTable = () => {
+  const { address } = useAccount();
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { tokens, user } = useUserStore();
@@ -137,7 +138,7 @@ const PlatformHistoryTable = () => {
       // notification.error({ message: error.message });
       console.log(error);
     },
-    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: 10000,
     refetchOnWindowFocus: false,

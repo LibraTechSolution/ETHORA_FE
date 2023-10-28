@@ -97,7 +97,7 @@ const TradeBox = (props: PropsType) => {
   };
 
   const timeOutCallBack = () => {
-    // queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
+    queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
   };
 
   return (
