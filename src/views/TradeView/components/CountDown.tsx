@@ -3,7 +3,7 @@
 import { useCountdown } from '@/hooks/useCountDown';
 import { addZeroBefore } from '@/utils/number';
 import { Center, Progress } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface PropType {
   endTime: number;
@@ -16,19 +16,25 @@ interface PropType {
 const CountDown = (props: PropType) => {
   const { endTime, period, timeOutCallBack, isLimitOrder, hideBar } = props;
   const { hours, minutes, seconds, countDown } = useCountdown(endTime);
+  const isFirstCallRef = useRef(true);
 
   useEffect(() => {
-    if (countDown === 0 && timeOutCallBack) {
+    if (countDown === 0 && timeOutCallBack && isFirstCallRef.current) {
       timeOutCallBack();
+      isFirstCallRef.current = false;
     }
   }, [countDown, timeOutCallBack]);
 
   return (
     <>
       <Center justifyContent={'start'} paddingTop={3} paddingBottom={2}>
-        <p className="mr-2 text-xs font-normal text-[#fff]">
-          {addZeroBefore(hours)}h {addZeroBefore(minutes)}m {addZeroBefore(seconds)}s
-        </p>
+        {countDown > 0 ? (
+          <p className="mr-2 text-xs font-normal text-[#fff]">
+            {addZeroBefore(hours)}h {addZeroBefore(minutes)}m {addZeroBefore(seconds)}s
+          </p>
+        ) : (
+          <p className="mr-2 text-xs font-normal text-[#fff]">Processing...</p>
+        )}
 
         {isLimitOrder && <span className="rounded bg-[#252528] px-2 text-[#9E9E9F]">Order expiry</span>}
       </Center>

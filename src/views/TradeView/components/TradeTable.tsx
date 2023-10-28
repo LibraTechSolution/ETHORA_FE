@@ -5,7 +5,7 @@ import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { Box, Button, Flex, Image, useToast } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import { closeTrade, getTrades } from '@/services/trade';
 import useTradeStore from '@/store/useTradeStore';
@@ -40,6 +40,7 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
 };
 
 const TradeTable = () => {
+  const { address } = useAccount();
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { price } = useTradeStore();
@@ -180,7 +181,7 @@ const TradeTable = () => {
       console.log(error);
     },
     // select: transformData,
-    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: false,
     refetchOnWindowFocus: false,

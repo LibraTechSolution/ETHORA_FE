@@ -3,7 +3,7 @@ import { Flex, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getLimitOrders } from '@/services/trade';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import LimitOrderBox from './LimitOrderBox';
 import EditLimitOrderModal from './EditLimitOrderModal';
@@ -16,6 +16,7 @@ const defaultParams: ITradingParams = {
 };
 
 const LimitOrderTab = () => {
+  const { address } = useAccount();
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { tokens, user } = useUserStore();
@@ -38,7 +39,7 @@ const LimitOrderTab = () => {
     onError: (error: any) => {
       console.log(error);
     },
-    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered,
+    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: false,
     refetchOnWindowFocus: false,
