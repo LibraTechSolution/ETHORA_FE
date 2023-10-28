@@ -12,7 +12,7 @@ import { Providers } from '@/providers';
 // });
 
 export const metadata = {
-  title: 'Base',
+  title: 'Ethora',
   description: '',
 };
 
