@@ -399,7 +399,7 @@ export const TradingViewChart = () => {
             <Button
               key={item.value}
               bgColor={'transparent'}
-              textColor={resolution === item.value ? '#6052FB' : '#fff'}
+              textColor={resolution === item.value ? '#1E3EF0' : '#fff'}
               fontWeight={resolution === item.value ? '600' : '400'}
               fontSize={12}
               _hover={{ bgColor: 'transparent', textColor: '#fff' }}

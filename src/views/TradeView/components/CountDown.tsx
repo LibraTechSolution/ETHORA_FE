@@ -42,7 +42,7 @@ const CountDown = (props: PropType) => {
         <Progress
           value={Math.floor((countDown / period) * 100)}
           size="xs"
-          colorScheme="purple"
+          colorScheme="primary"
           bgColor="#303035"
           rounded="2xl"
           h="2"

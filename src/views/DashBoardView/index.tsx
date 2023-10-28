@@ -52,7 +52,7 @@ const DashBoardView = () => {
                     width={14}
                     height={14}
                     alt="Avata"
-                    className="h-[14px] w-[14px] mr-3"
+                    className="mr-3 h-[14px] w-[14px]"
                   />
                   <span className="flex-1 text-left">Base</span>
                 </div>
@@ -69,10 +69,10 @@ const DashBoardView = () => {
                 setDefaultTabs(TradingTabType.Trading);
               }}
               borderBottom={'2px solid'}
-              borderColor={defaultTabs === TradingTabType.Trading ? '#6052FB' : 'transparent'}
+              borderColor={defaultTabs === TradingTabType.Trading ? '#1E3EF0' : 'transparent'}
               pointerEvents={defaultTabs === TradingTabType.Trading ? 'none' : 'auto'}
               cursor={defaultTabs === TradingTabType.Trading ? 'default' : 'pointer'}
-              color={defaultTabs === TradingTabType.Trading ? '#6052FB' : '#9E9E9F'}
+              color={defaultTabs === TradingTabType.Trading ? '#1E3EF0' : '#9E9E9F'}
             >
               Trading
             </Box>
@@ -83,10 +83,10 @@ const DashBoardView = () => {
                 setDefaultTabs(TradingTabType.Tokens);
               }}
               borderBottom={'2px solid'}
-              borderColor={defaultTabs === TradingTabType.Tokens ? '#6052FB' : 'transparent'}
+              borderColor={defaultTabs === TradingTabType.Tokens ? '#1E3EF0' : 'transparent'}
               pointerEvents={defaultTabs === TradingTabType.Tokens ? 'none' : 'auto'}
               cursor={defaultTabs === TradingTabType.Tokens ? 'default' : 'pointer'}
-              color={defaultTabs === TradingTabType.Tokens ? '#6052FB' : '#9E9E9F'}
+              color={defaultTabs === TradingTabType.Tokens ? '#1E3EF0' : '#9E9E9F'}
             >
               Tokens
             </Box>
@@ -97,10 +97,10 @@ const DashBoardView = () => {
                 setDefaultTabs(TradingTabType.Markets);
               }}
               borderBottom={'2px solid'}
-              borderColor={defaultTabs === TradingTabType.Markets ? '#6052FB' : 'transparent'}
+              borderColor={defaultTabs === TradingTabType.Markets ? '#1E3EF0' : 'transparent'}
               pointerEvents={defaultTabs === TradingTabType.Markets ? 'none' : 'auto'}
               cursor={defaultTabs === TradingTabType.Markets ? 'default' : 'pointer'}
-              color={defaultTabs === TradingTabType.Markets ? '#6052FB' : '#9E9E9F'}
+              color={defaultTabs === TradingTabType.Markets ? '#1E3EF0' : '#9E9E9F'}
             >
               HistoryTab
             </Box>

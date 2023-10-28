@@ -57,37 +57,37 @@ export default function SidebarLayout({
           <Link
             as={NextLink}
             href="/"
-            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
           >
-            <LayoutGrid className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+            <LayoutGrid className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
           </Link>
           <Link
             as={NextLink}
             href="/"
-            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
           >
-            <BarChartBig className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+            <BarChartBig className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
           </Link>
           <Link
             as={NextLink}
             href="/"
-            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
           >
-            <TrendingUp className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+            <TrendingUp className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
           </Link>
           <Link
             as={NextLink}
             href="/"
-            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
           >
-            <Trophy className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+            <Trophy className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
           </Link>
           <Link
             as={NextLink}
             href="/referral"
-            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#6052FB] hover:shadow-iconShadow"
+            className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
           >
-            <Redo className="text-[#9E9E9F] group-hover:text-[#6052FB]" strokeWidth={1} />
+            <Redo className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
           </Link>
         </Flex>
       </Box>

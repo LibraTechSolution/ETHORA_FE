@@ -28,7 +28,7 @@ export const HeaderLanding = () => {
   const [isMobile] = useMediaQuery('(max-width: 768px)');
   const currentRoute = usePathname();
   const linkStyle = 'rounded-[10px] px-3 py-2 ';
-  const activeStyle = linkStyle + ' bg-[#6052FB] text-[#fff]';
+  const activeStyle = linkStyle + ' bg-[#1E3EF0] text-[#fff]';
   const nonActiveStyle = linkStyle + ' text-[#6D6D70]';
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [scrolled, setScrolled] = useState(false);

@@ -1381,7 +1381,7 @@ const StatsView = () => {
                   type="monotone"
                   dataKey="amt"
                   name="amt Name"
-                  stroke="#7A72F6"
+                  stroke="#4B65F3"
                   connectNulls
                   yAxisId="left"
                   dot={false}

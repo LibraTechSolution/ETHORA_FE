@@ -313,10 +313,10 @@ const LeaderboardView = () => {
                   setDefaultTabs(TableTabType.Winners);
                 }}
                 borderBottom={'2px solid'}
-                borderColor={defaultTabs === TableTabType.Winners ? '#6052FB' : 'transparent'}
+                borderColor={defaultTabs === TableTabType.Winners ? '#1E3EF0' : 'transparent'}
                 pointerEvents={defaultTabs === TableTabType.Winners ? 'none' : 'auto'}
                 cursor={defaultTabs === TableTabType.Winners ? 'default' : 'pointer'}
-                color={defaultTabs === TableTabType.Winners ? '#6052FB' : '#9E9E9F'}
+                color={defaultTabs === TableTabType.Winners ? '#1E3EF0' : '#9E9E9F'}
                 padding={'20px 0'}
               >
                 Winners (by PnL)
@@ -328,10 +328,10 @@ const LeaderboardView = () => {
                   setDefaultTabs(TableTabType.Losers);
                 }}
                 borderBottom={'2px solid'}
-                borderColor={defaultTabs === TableTabType.Losers ? '#6052FB' : 'transparent'}
+                borderColor={defaultTabs === TableTabType.Losers ? '#1E3EF0' : 'transparent'}
                 pointerEvents={defaultTabs === TableTabType.Losers ? 'none' : 'auto'}
                 cursor={defaultTabs === TableTabType.Losers ? 'default' : 'pointer'}
-                color={defaultTabs === TableTabType.Losers ? '#6052FB' : '#9E9E9F'}
+                color={defaultTabs === TableTabType.Losers ? '#1E3EF0' : '#9E9E9F'}
                 padding={'20px 0'}
               >
                 Losers (by PnL)
@@ -344,10 +344,10 @@ const LeaderboardView = () => {
                     setDefaultTabs(TableTabType.Rate);
                   }}
                   borderBottom={'2px solid'}
-                  borderColor={defaultTabs === TableTabType.Rate ? '#6052FB' : 'transparent'}
+                  borderColor={defaultTabs === TableTabType.Rate ? '#1E3EF0' : 'transparent'}
                   pointerEvents={defaultTabs === TableTabType.Rate ? 'none' : 'auto'}
                   cursor={defaultTabs === TableTabType.Rate ? 'default' : 'pointer'}
-                  color={defaultTabs === TableTabType.Rate ? '#6052FB' : '#9E9E9F'}
+                  color={defaultTabs === TableTabType.Rate ? '#1E3EF0' : '#9E9E9F'}
                   padding={'20px 0'}
                 >
                   Winners (by Win rate)

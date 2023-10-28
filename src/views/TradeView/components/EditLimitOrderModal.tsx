@@ -202,7 +202,7 @@ const EditLimitOrderModal = (props: PropsType) => {
             {listTimes.map((item) => (
               <Button
                 key={item}
-                border={time === item ? '1px solid #6052FB' : ''}
+                border={time === item ? '1px solid #1E3EF0' : ''}
                 bgColor="#0C0C10"
                 rounded="10px"
                 textColor={time === item ? '#fff' : '#6D6D70'}
@@ -211,11 +211,11 @@ const EditLimitOrderModal = (props: PropsType) => {
                 width="48px"
                 marginRight="4px"
                 _hover={{
-                  border: '1px solid #6052FB',
+                  border: '1px solid #1E3EF0',
                   textColor: '#fff',
                 }}
                 _active={{
-                  border: '1px solid #6052FB',
+                  border: '1px solid #1E3EF0',
                   textColor: '#fff',
                 }}
                 onClick={() => {

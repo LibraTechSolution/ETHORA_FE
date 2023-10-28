@@ -150,7 +150,7 @@ const ProfileView = () => {
               isExternal
               fontSize={'20px'}
               fontWeight={600}
-              color={'#6052FB'}
+              color={'#1E3EF0'}
               display={'flex'}
               alignItems={'center'}
             >
@@ -176,10 +176,12 @@ const ProfileView = () => {
       >
         <GridItem textAlign={'center'} padding={3} borderRight={{ sm: '1px solid #242428' }}>
           <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
-            <Text fontSize={'sm'} marginBottom={'12px'}>Chain</Text>
+            <Text fontSize={'sm'} marginBottom={'12px'}>
+              Chain
+            </Text>
             <Box>
               {addrSSR && (
-                <Select defaultValue="china" style={{ width: 120 }} onChange={handleChange} className='customSelect'>
+                <Select defaultValue="china" style={{ width: 120 }} onChange={handleChange} className="customSelect">
                   <Option value="china" label="China">
                     <div className="flex items-center">
                       <Image
@@ -187,9 +189,9 @@ const ProfileView = () => {
                         width={14}
                         height={14}
                         alt="Avata"
-                        className="h-[14px] w-[14px] mr-3"
+                        className="mr-3 h-[14px] w-[14px]"
                       />
-                      <span className='flex-1 text-left'>Base</span>
+                      <span className="flex-1 text-left">Base</span>
                     </div>
                   </Option>
                 </Select>
@@ -266,7 +268,7 @@ const ProfileView = () => {
           h={'55px'}
           borderRadius={'100%'}
           overflow={'hidden'}
-          bg={'#6052FB'}
+          bg={'#1E3EF0'}
           marginX={{ base: 'auto', sm: 'initial' }}
         />
         <Box>
@@ -432,10 +434,10 @@ const ProfileView = () => {
                   setDefaultTabs(TradingTabType.ActiveTab);
                 }}
                 borderBottom={'2px solid'}
-                borderColor={defaultTabs === TradingTabType.ActiveTab ? '#6052FB' : 'transparent'}
+                borderColor={defaultTabs === TradingTabType.ActiveTab ? '#1E3EF0' : 'transparent'}
                 pointerEvents={defaultTabs === TradingTabType.ActiveTab ? 'none' : 'auto'}
                 cursor={defaultTabs === TradingTabType.ActiveTab ? 'default' : 'pointer'}
-                color={defaultTabs === TradingTabType.ActiveTab ? '#6052FB' : '#9E9E9F'}
+                color={defaultTabs === TradingTabType.ActiveTab ? '#1E3EF0' : '#9E9E9F'}
               >
                 Active
               </Box>
@@ -446,10 +448,10 @@ const ProfileView = () => {
                   setDefaultTabs(TradingTabType.LimitOrderTab);
                 }}
                 borderBottom={'2px solid'}
-                borderColor={defaultTabs === TradingTabType.LimitOrderTab ? '#6052FB' : 'transparent'}
+                borderColor={defaultTabs === TradingTabType.LimitOrderTab ? '#1E3EF0' : 'transparent'}
                 pointerEvents={defaultTabs === TradingTabType.LimitOrderTab ? 'none' : 'auto'}
                 cursor={defaultTabs === TradingTabType.LimitOrderTab ? 'default' : 'pointer'}
-                color={defaultTabs === TradingTabType.LimitOrderTab ? '#6052FB' : '#9E9E9F'}
+                color={defaultTabs === TradingTabType.LimitOrderTab ? '#1E3EF0' : '#9E9E9F'}
               >
                 Limit Order
               </Box>
@@ -460,10 +462,10 @@ const ProfileView = () => {
                   setDefaultTabs(TradingTabType.HistoryTab);
                 }}
                 borderBottom={'2px solid'}
-                borderColor={defaultTabs === TradingTabType.HistoryTab ? '#6052FB' : 'transparent'}
+                borderColor={defaultTabs === TradingTabType.HistoryTab ? '#1E3EF0' : 'transparent'}
                 pointerEvents={defaultTabs === TradingTabType.HistoryTab ? 'none' : 'auto'}
                 cursor={defaultTabs === TradingTabType.HistoryTab ? 'default' : 'pointer'}
-                color={defaultTabs === TradingTabType.HistoryTab ? '#6052FB' : '#9E9E9F'}
+                color={defaultTabs === TradingTabType.HistoryTab ? '#1E3EF0' : '#9E9E9F'}
               >
                 HistoryTab
               </Box>

@@ -133,7 +133,7 @@ const TradeViewHeader = () => {
             <span className="px-3 text-xl font-semibold text-[#fff]">
               {currentPair && currentPair.pair.toLocaleUpperCase()}
             </span>
-            {isShow ? <TriangleUpIcon color="#6052FB" /> : <TriangleDownIcon color="#6052FB" />}
+            {isShow ? <TriangleUpIcon color="#1E3EF0" /> : <TriangleDownIcon color="#1E3EF0" />}
           </Center>
           <Box
             position={'absolute'}
@@ -154,8 +154,8 @@ const TradeViewHeader = () => {
                 placeholder="Search"
                 border="1px solid #38383A"
                 rounded={'10px'}
-                _hover={{ borderColor: '#6052FB' }}
-                _focusVisible={{ borderColor: '#6052FB', borderWidth: '2px' }}
+                _hover={{ borderColor: '#1E3EF0' }}
+                _focusVisible={{ borderColor: '#1E3EF0', borderWidth: '2px' }}
                 value={search}
                 onChange={handleOnChange}
               />
@@ -168,7 +168,7 @@ const TradeViewHeader = () => {
                     color="#6D6D70"
                     fontSize={'sm'}
                     fontWeight={'medium'}
-                    _selected={{ color: '#6052FB' }}
+                    _selected={{ color: '#1E3EF0' }}
                     _active={{ bgColor: 'transparent' }}
                     paddingX="12px"
                     paddingY="8px"
@@ -179,7 +179,7 @@ const TradeViewHeader = () => {
                     color="#6D6D70"
                     fontSize={'sm'}
                     fontWeight={'medium'}
-                    _selected={{ color: '#6052FB' }}
+                    _selected={{ color: '#1E3EF0' }}
                     _active={{ bgColor: 'transparent' }}
                     paddingX="12px"
                     paddingY="8px"
@@ -190,7 +190,7 @@ const TradeViewHeader = () => {
                     color="#6D6D70"
                     fontSize={'sm'}
                     fontWeight={'medium'}
-                    _selected={{ color: '#6052FB' }}
+                    _selected={{ color: '#1E3EF0' }}
                     _active={{ bgColor: 'transparent' }}
                     paddingX="12px"
                     paddingY="8px"
@@ -201,7 +201,7 @@ const TradeViewHeader = () => {
                     color="#6D6D70"
                     fontSize={'sm'}
                     fontWeight={'medium'}
-                    _selected={{ color: '#6052FB' }}
+                    _selected={{ color: '#1E3EF0' }}
                     _active={{ bgColor: 'transparent' }}
                     paddingX="12px"
                     paddingY="8px"
@@ -209,7 +209,7 @@ const TradeViewHeader = () => {
                     Forex
                   </Tab>
                 </TabList>
-                <TabIndicator mt="-1.5px" height="2px" bg="#6052FB" borderRadius="1px" />
+                <TabIndicator mt="-1.5px" height="2px" bg="#1E3EF0" borderRadius="1px" />
 
                 <TabPanels marginTop={'20px'}>
                   <TabPanel padding="0">
@@ -814,7 +814,7 @@ const TradeViewHeader = () => {
           <Box paddingLeft="20px" display={{ base: 'none', xl: 'block' }}>
             <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Max OI: 1,000 USDC</p>
             <p className="flex h-6 items-center text-sm font-normal text-[#fff]">
-              <Progress value={20} size="xs" colorScheme="purple" bgColor="#303035" rounded="2xl" h="2" w="168px" />
+              <Progress value={20} size="xs" colorScheme="primary" bgColor="#303035" rounded="2xl" h="2" w="168px" />
               <span className="pl-3 text-sm font-normal text-[#fff]">20%</span>
             </p>
           </Box>
