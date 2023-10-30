@@ -6,7 +6,7 @@ import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { Box, Button, Flex, Image, useToast } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
-import { ITradingData, ITradingParams } from '@/types/trade.type';
+import { ITradingData, ITradingParams, State } from '@/types/trade.type';
 import { closeTrade, getTrades } from '@/services/trade';
 import useTradeStore from '@/store/useTradeStore';
 import { divide } from '@/utils/operationBigNumber';
@@ -18,6 +18,7 @@ import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import useUserStore from '@/store/useUserStore';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
+import { RotateCw } from 'lucide-react';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -40,11 +41,15 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
   );
 };
 
+export const ShowPrice = () => {
+  const { price } = useTradeStore();
+  return <span>{addComma(price, 2)}</span>;
+};
+
 const TradeTable = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
-  const { price } = useTradeStore();
   const queryClient = useQueryClient();
   const toast = useToast();
   const { tokens, user } = useUserStore();
@@ -58,6 +63,10 @@ const TradeTable = () => {
 
   const showAndHideLine = (item: ITradingData) => {
     setListLines(item);
+  };
+
+  const reloadData = () => {
+    queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
   };
 
   const columns: ColumnsType<ITradingData> = [
@@ -93,7 +102,7 @@ const TradeTable = () => {
       title: 'Current Price',
       dataIndex: 'currentPrice',
       key: 'currentPrice',
-      render: () => <span>{addComma(price, 2)}</span>,
+      render: () => <ShowPrice />,
     },
     {
       title: 'Open Time',
@@ -108,9 +117,15 @@ const TradeTable = () => {
     },
     {
       title: 'Time Left',
-      render: (value: ITradingData) => (
-        <CountDown endTime={dayjs(value.openDate).utc().unix() + value.period} period={value.period} hideBar={true} />
-      ),
+      render: (value: ITradingData) =>
+        value.state === State.OPENED ? (
+          <CountDown endTime={dayjs(value.openDate).utc().unix() + value.period} period={value.period} hideBar={true} />
+        ) : (
+          <span className="flex items-center text-xs font-normal text-[#9E9E9F]">
+            <span className="mr-1">Processing...</span>
+            <RotateCw color="#1E3EF0" cursor="pointer" onClick={reloadData} />
+          </span>
+        ),
     },
     {
       title: 'Close Time',

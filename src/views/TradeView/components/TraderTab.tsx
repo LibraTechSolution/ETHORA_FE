@@ -7,6 +7,7 @@ import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import TradeBox from './TradeBox';
 import useUserStore from '@/store/useUserStore';
+import React from 'react';
 
 const defaultParams: ITradingParams = {
   limit: 30,
@@ -60,4 +61,4 @@ const TraderTab = () => {
   );
 };
 
-export default TraderTab;
+export default React.memo(TraderTab);
