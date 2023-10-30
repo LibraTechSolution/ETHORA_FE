@@ -53,6 +53,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import TraderTab from './TraderTab';
 import LimitOrderTab from './LimitOrderTab';
 import referralABI from '@/config/abi/referralABI';
+import LeftTab from './LeftTab';
 dayjs.extend(utc);
 
 const approveParamType = [
@@ -78,6 +79,7 @@ const TradeControl = () => {
   const { address } = useAccount();
   const { onOpen } = useModalStore();
   const balance = useBalanceOf(appConfig.USDC_SC as Address);
+  // const balance = 1;
   const [tradeSize, setTradeSize] = useState<string>('0');
   const [tradeSizeError, setTradeSizeError] = useState<string>('');
   const [limitOrderPrice, setLimitOrderPrice] = useState<string>('0');
@@ -85,6 +87,7 @@ const TradeControl = () => {
   const [timeError, setTimeError] = useState<string>('');
   const [tradeType, setTradeType] = useState<string>('market');
   const { price } = useTradeStore();
+  // const price = 0;
   const { user, toggleApprovedAccount } = useUserStore();
   const listTimes = ['3m', '5m', '15m', '1h'];
   const [time, setTime] = useState<string>('15m');
@@ -366,7 +369,7 @@ const TradeControl = () => {
   };
 
   return (
-    <Box className="xl:pl-5">
+    <>
       <p className="mb-3 text-xs font-normal text-[#9E9E9F]">Time</p>
       <Box display={{ base: 'block', xl: 'flex' }}>
         {listTimes.map((item) => (
@@ -664,45 +667,7 @@ const TradeControl = () => {
           }}
         </ConnectButton.Custom>
       </Box>
-      <Box marginTop="12px">
-        <Tabs>
-          <TabList borderBottom="1px solid #3d3d40" bg="#0c0c10" roundedTop="10px">
-            <Tab
-              color="#6D6D70"
-              fontSize={'sm'}
-              fontWeight={'medium'}
-              _selected={{ color: '#1E3EF0' }}
-              _active={{ bgColor: 'transparent' }}
-              paddingX="12px"
-              paddingY="8px"
-            >
-              Trades
-            </Tab>
-            <Tab
-              color="#6D6D70"
-              fontSize={'sm'}
-              fontWeight={'medium'}
-              _selected={{ color: '#1E3EF0' }}
-              _active={{ bgColor: 'transparent' }}
-              paddingX="12px"
-              paddingY="8px"
-            >
-              Limit Orders
-            </Tab>
-          </TabList>
-          <TabIndicator mt="-1.5px" height="2px" bg="#1E3EF0" borderRadius="1px" />
-
-          <TabPanels>
-            <TabPanel padding="0" height={'600px'} overflow="auto">
-              <TraderTab />
-            </TabPanel>
-            <TabPanel padding="0" height={'600px'} overflow="auto">
-              <LimitOrderTab />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
-    </Box>
+    </>
   );
 };
 

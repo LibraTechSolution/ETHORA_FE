@@ -57,7 +57,12 @@ export const ActiveAccountModal = () => {
   const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
 
   const isCreated = useMemo(() => {
-    if (listWallets && address && listWallets[address.toLocaleLowerCase()]) {
+    if (
+      listWallets &&
+      address &&
+      listWallets[address.toLocaleLowerCase()] &&
+      listWallets[address.toLocaleLowerCase()].user
+    ) {
       return true;
     }
     return false;
@@ -95,7 +100,8 @@ export const ActiveAccountModal = () => {
   });
 
   const fetchNonce = useCallback(async () => {
-    if (!address || (listWallets && listWallets[address.toLowerCase()])) return;
+    if (!address || (listWallets && listWallets[address.toLowerCase()] && listWallets[address.toLowerCase()].user))
+      return;
     try {
       const nonceRes = await getNonce(address);
       const msgContent = msg + nonceRes.data.data.nonce;

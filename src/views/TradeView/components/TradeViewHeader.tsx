@@ -36,10 +36,10 @@ import { SearchIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { ShowPrice } from './TradeTable';
 
 const TradeViewHeader = () => {
   const pairRef = useRef<HTMLDivElement>(null);
-  const { price } = useTradeStore();
   const { listPairData, setListPairData } = usePairStore();
   const params = useParams();
   const [search, setSearch] = useState<string>('');
@@ -779,7 +779,9 @@ const TradeViewHeader = () => {
           </Box>
         </Center>
         <Center paddingX={10} display={{ base: 'none', xl: 'flex' }}>
-          <p className="text-2xl font-normal text-[#fff]">{addComma(price.toFixed(2), 2)}</p>
+          <p className="text-2xl font-normal text-[#fff]">
+            <ShowPrice />
+          </p>
         </Center>
         <Center>
           <Box
@@ -788,7 +790,9 @@ const TradeViewHeader = () => {
             display={{ base: 'flex', xl: 'block' }}
             alignItems={{ base: 'center', xl: '' }}
           >
-            <p className="mr-3 block text-sm font-semibold text-[#fff] xl:hidden">{addComma(price.toFixed(2), 2)}</p>
+            <p className="mr-3 block text-sm font-semibold text-[#fff] xl:hidden">
+              <ShowPrice />
+            </p>
             <p className="hidden pb-2 text-xs font-normal text-[#9E9E9F] xl:block ">24h Change</p>
             <span
               className={`h-6 rounded border ${

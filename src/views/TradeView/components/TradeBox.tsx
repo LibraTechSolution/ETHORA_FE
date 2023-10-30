@@ -5,7 +5,7 @@ import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { Flex, Center, GridItem, Button, Box, Grid, Image, useToast, Tooltip } from '@chakra-ui/react';
 import CountDown from './CountDown';
 import dayjs from 'dayjs';
-import { ITradingData } from '@/types/trade.type';
+import { ITradingData, State } from '@/types/trade.type';
 import { closeTrade } from '@/services/trade';
 import { useQueryClient } from '@tanstack/react-query';
 import { ToastLayout } from '@/components/ToastLayout';
@@ -18,9 +18,16 @@ import { appConfig } from '@/config';
 import optionsConfigABI from '@/config/abi/optionsConfigABI';
 import BigNumber from 'bignumber.js';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
+import { ShowPrice } from './TradeTable';
+import { RotateCw } from 'lucide-react';
 
 interface PropsType {
   item: ITradingData;
+}
+
+interface CloseBtnPropsType {
+  item: ITradingData;
+  handleCloseTrade: () => void;
 }
 
 export const useEarlyPnl = ({ trade, lockedAmmount }: { trade: ITradingData; lockedAmmount?: string }) => {
@@ -70,15 +77,51 @@ export const calculatePnlForProbability = ({
   return { earlycloseAmount, isWin, probability };
 };
 
+const ShowPnL = (props: PropsType) => {
+  const { item } = props;
+  const { pnl: earlyPnl } = useEarlyPnl({
+    trade: item,
+  });
+  const { earlycloseAmount, isWin, probability } = earlyPnl;
+  return (
+    <GridItem>
+      <p className="mb-2 text-xs font-normal text-[#9E9E9F]">PnL|Probability</p>
+      <p>
+        <span className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
+          {(+earlycloseAmount).toFixed(2)}
+        </span>
+        <span className="text-xs font-normal text-[#38383A]">{probability.toFixed(2)}%</span>
+      </p>
+    </GridItem>
+  );
+};
+
+const CloseButton = (props: CloseBtnPropsType) => {
+  const { item, handleCloseTrade } = props;
+  const { pnl: earlyPnl } = useEarlyPnl({
+    trade: item,
+  });
+  const { earlycloseAmount, isWin, probability } = earlyPnl;
+  return (
+    <Button
+      bg={+earlycloseAmount < 0 ? '#F03D3E' : '#1ED768'}
+      color="#fff"
+      w="full"
+      _hover={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
+      _active={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
+      rounded="md"
+      onClick={handleCloseTrade}
+    >
+      Close at {(+earlycloseAmount).toFixed(2)}
+    </Button>
+  );
+};
+
 const TradeBox = (props: PropsType) => {
   const { item } = props;
   const { price } = useTradeStore();
   const queryClient = useQueryClient();
   const toast = useToast();
-  const { pnl: earlyPnl } = useEarlyPnl({
-    trade: item,
-  });
-  const { earlycloseAmount, isWin, probability } = earlyPnl;
   const { setListLines } = useListShowLinesStore();
 
   const handleCloseTrade = async () => {
@@ -103,6 +146,10 @@ const TradeBox = (props: PropsType) => {
     setListLines(item);
   };
 
+  const reloadData = () => {
+    queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
+  };
+
   return (
     <Box bg="#0c0c10" padding="20px" marginBottom={2} rounded={'10px'}>
       <Flex alignItems="center" justifyContent="space-between" display={{ base: 'flex', xl: 'block', '2xl': 'flex' }}>
@@ -125,24 +172,23 @@ const TradeBox = (props: PropsType) => {
           <span className="rounded bg-[#252528] px-2 text-[#9E9E9F]">Market</span>
         </Center>
       </Flex>
-      <CountDown
-        endTime={dayjs(item.openDate).utc().unix() + item.period}
-        period={item.period}
-        timeOutCallBack={timeOutCallBack}
-      />
+      {item.state === State.OPENED ? (
+        <CountDown
+          endTime={dayjs(item.openDate).utc().unix() + item.period}
+          period={item.period}
+          timeOutCallBack={timeOutCallBack}
+        />
+      ) : (
+        <span className="flex items-center text-xs font-normal text-[#9E9E9F]">
+          <span className="mr-1">Processing...</span>
+          <RotateCw color="#1E3EF0" cursor="pointer" onClick={reloadData} />
+        </span>
+      )}
       <Box marginTop="2" marginBottom="3">
         <span className="rounded bg-[#252528] px-2 py-1 text-sm text-[#fff]">USDC</span>
       </Box>
       <Grid templateColumns="repeat(2, 1fr)" borderBottom="1px solid #242428" paddingBottom="3" marginBottom="3">
-        <GridItem>
-          <p className="mb-2 text-xs font-normal text-[#9E9E9F]">PnL|Probability</p>
-          <p>
-            <span className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
-              {(+earlycloseAmount).toFixed(2)}
-            </span>
-            <span className="text-xs font-normal text-[#38383A]">{probability.toFixed(2)}%</span>
-          </p>
-        </GridItem>
+        <ShowPnL item={item} />
         <GridItem>
           <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Current Price</p>
           <Tooltip
@@ -154,7 +200,9 @@ const TradeBox = (props: PropsType) => {
             borderRadius={'4px'}
             fontSize={'12px'}
           >
-            <p className="text-sm font-normal text-[#FFFFFF]">{addComma(price.toFixed(2), 2)}</p>
+            <p className="text-sm font-normal text-[#FFFFFF]">
+              <ShowPrice />
+            </p>
           </Tooltip>
         </GridItem>
       </Grid>
@@ -178,17 +226,7 @@ const TradeBox = (props: PropsType) => {
           <p className="text-sm font-normal text-[#FFFFFF]">{item.payout} USDC</p>
         </GridItem>
       </Grid>
-      <Button
-        bg={+earlycloseAmount < 0 ? '#F03D3E' : '#1ED768'}
-        color="#fff"
-        w="full"
-        _hover={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
-        _active={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
-        rounded="md"
-        onClick={handleCloseTrade}
-      >
-        Close at {(+earlycloseAmount).toFixed(2)}
-      </Button>
+      <CloseButton item={item} handleCloseTrade={handleCloseTrade} />
     </Box>
   );
 };

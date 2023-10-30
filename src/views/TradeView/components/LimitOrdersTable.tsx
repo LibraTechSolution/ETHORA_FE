@@ -8,7 +8,6 @@ import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import { cancelTrade, getLimitOrders } from '@/services/trade';
-import useTradeStore from '@/store/useTradeStore';
 import { divide } from '@/utils/operationBigNumber';
 import dayjs from 'dayjs';
 import CountDown from './CountDown';
@@ -18,6 +17,7 @@ import { Status } from '@/types/faucet.type';
 import EditLimitOrderModal from './EditLimitOrderModal';
 import useUserStore from '@/store/useUserStore';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
+import { ShowPrice } from './TradeTable';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -29,7 +29,6 @@ const LimitOrdersTable = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
-  const { price } = useTradeStore();
   const toast = useToast();
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
@@ -80,7 +79,7 @@ const LimitOrdersTable = () => {
       title: 'Current Price',
       dataIndex: 'currentPrice',
       key: 'currentPrice',
-      render: () => <span>{addComma(price, 2)}</span>,
+      render: () => <ShowPrice />,
     },
     {
       title: 'Time Left',

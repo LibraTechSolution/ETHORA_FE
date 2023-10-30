@@ -1,123 +1,106 @@
 'use client';
 
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Center, Flex, Link } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
-import { DashboardIcon } from 'public/images/icons/dashboardIcon';
-import { AnalyticIcon } from 'public/images/icons/analyticIcon';
-import { ChartIcon } from 'public/images/icons/chartIcon';
-import { EventIcon } from 'public/images/icons/eventIcon';
-import { ShortcutIcon } from 'public/images/icons/shortcutIcon';
+import { BarChartBig, LayoutGrid, Redo, TrendingUp, Trophy } from 'lucide-react';
+import NextLink from 'next/link';
 
 const NavBar = () => {
   const currentRoute = usePathname();
-
+  console.log(currentRoute);
   return (
-    <Box position={'relative'}>
+    <Box
+      zIndex={1}
+      width={{ base: '100%', lg: '70px' }}
+      background={{ base: '#050506', lg: 'rgba(28, 28, 30,.5)' }}
+      padding={{ base: '20px', lg: '20px 0' }}
+      position={{ base: 'fixed', lg: 'static' }}
+      bottom={{ base: '0px', lg: 'auto' }}
+      borderRadius={{ base: '20px 20px 0px 0px', lg: '0px' }}
+      boxShadow={{ base: '0px 4px 20px 0px rgba(0, 0, 0, 0.30)', lg: 'none' }}
+      backdropFilter={{ base: 'blur(7px)', lg: 'none' }}
+    >
       <Flex
-        w="full"
-        color="white"
-        direction={['row', 'row', 'column', 'column']}
-        fontSize={14}
-        fontStyle="italic"
-        width={'80px'}
-        minW={'80px'}
-        maxW={'80px'}
-        minH={['100', '100%', 'calc(100vh - 60px)', 'calc(100vh - 60px)']}
-        borderRight={'2px solid rgba(28, 28, 30, 0.8)'}
+        flexDirection={{ base: 'row', lg: 'column' }}
+        alignItems={'center'}
+        justifyContent={{ base: 'space-between', lg: 'center' }}
         gap={'20px'}
-        align={'center'}
-        paddingTop={'30px'}
-        display={['none', 'none', 'flex', 'flex']}
       >
-        <Box
-          borderRight={'2px solid'}
-          borderColor={currentRoute === '/dashboard' ? '#1E3EF0' : 'transparent'}
-          padding={'0px 20px'}
+        <Center
+          width={{ base: 'auto', lg: '100%' }}
+          borderRightWidth={{ base: '0', lg: '2px' }}
+          borderRight={{ base: 'none', lg: currentRoute === '/dashboard' ? '2px solid #1E3EF0' : 'none' }}
         >
-          <DashboardIcon fill={currentRoute === '/dashboard' ? '#1E3EF0' : '#9E9E9F'} />
-        </Box>
-        <Box
-          borderRight={'2px solid'}
-          padding={'0px 20px'}
-          borderColor={currentRoute === '/analytic' ? '#1E3EF0' : 'transparent'}
+          <Link
+            as={NextLink}
+            href="/dashboard"
+            className={`${
+              currentRoute === '/dashboard' ? 'border-[#1E3EF0]' : 'border-[#9E9E9F]'
+            } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+          >
+            <LayoutGrid
+              className={`${
+                currentRoute === '/dashboard' ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
+              } group-hover:text-[#1E3EF0]`}
+              strokeWidth={1}
+            />
+          </Link>
+        </Center>
+        <Center
+          width={{ base: 'auto', lg: '100%' }}
+          borderRightWidth={{ base: '0', lg: '2px' }}
+          borderRight={{ base: 'none', lg: currentRoute.includes('trade') ? '2px solid #1E3EF0' : 'none' }}
         >
-          <AnalyticIcon fill={currentRoute === '/analytic' ? '#1E3EF0' : '#9E9E9F'} />
-        </Box>
-        <Box
-          borderRight={'2px solid '}
-          padding={'0px 20px'}
-          borderColor={currentRoute === '/chart' ? '#1E3EF0' : 'transparent'}
+          <Link
+            as={NextLink}
+            href="/trade/BTC-USD"
+            className={`${
+              currentRoute.includes('trade') ? 'border-[#1E3EF0]' : 'border-[#9E9E9F]'
+            } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+          >
+            <BarChartBig
+              className={`${
+                currentRoute.includes('trade') ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
+              } group-hover:text-[#1E3EF0]`}
+              strokeWidth={1}
+            />
+          </Link>
+        </Center>
+        <Link
+          as={NextLink}
+          href="/"
+          className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
         >
-          <ChartIcon fill={currentRoute === '/chart' ? '#1E3EF0' : '#9E9E9F'} />
-        </Box>
-        <Box
-          borderRight={'2px solid '}
-          padding={'0px 20px'}
-          borderColor={currentRoute === '/event' ? '#1E3EF0' : 'transparent'}
+          <TrendingUp className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
+        </Link>
+        <Link
+          as={NextLink}
+          href="/"
+          className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
         >
-          <EventIcon fill={currentRoute === '/event' ? '#1E3EF0' : '#9E9E9F'} />
-        </Box>
-        <Box
-          borderRight={'2px solid '}
-          padding={'0px 20px'}
-          borderColor={currentRoute === '/shortcut' ? '#1E3EF0' : 'transparent'}
+          <Trophy className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
+        </Link>
+        <Center
+          width={{ base: 'auto', lg: '100%' }}
+          borderRightWidth={{ base: '0', lg: '2px' }}
+          borderRight={{ base: 'none', lg: currentRoute === '/referral' ? '2px solid #1E3EF0' : 'none' }}
         >
-          <ShortcutIcon fill={currentRoute === '/shortcut' ? '#1E3EF0' : '#9E9E9F'} />
-        </Box>
+          <Link
+            as={NextLink}
+            href="/referral"
+            className={`${
+              currentRoute === '/referral' ? 'border-[#1E3EF0]' : 'border-[#9E9E9F]'
+            } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+          >
+            <Redo
+              className={`${
+                currentRoute === '/referral' ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
+              } group-hover:text-[#1E3EF0]`}
+              strokeWidth={1}
+            />
+          </Link>
+        </Center>
       </Flex>
-      <Box
-        display={['block', 'block', 'none', 'none']}
-        boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
-        borderTopLeftRadius={'20px'}
-        borderTopRightRadius={'20px'}
-        background={'#050506'}
-        position={'fixed'}
-        width={'100%'}
-        bottom={'0'}
-        padding={'0px 15px 10px'}
-        zIndex={'999'}
-      >
-        <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-          <Box
-            borderTop={'2px solid'}
-            padding={'12px 5px'}
-            borderColor={currentRoute === '/dashboard' ? '#1E3EF0' : 'transparent'}
-          >
-            <DashboardIcon fill={currentRoute === '/dashboard' ? '#1E3EF0' : '#9E9E9F'} />
-          </Box>
-          <Box
-            borderTop={'2px solid'}
-            padding={'12px 5px'}
-            borderColor={currentRoute === '/analytic' ? '#1E3EF0' : 'transparent'}
-          >
-            <AnalyticIcon fill={currentRoute === '/analytic' ? '#1E3EF0' : '#9E9E9F'} />
-          </Box>
-
-          <Box
-            borderTop={'2px solid'}
-            padding={'12px 5px'}
-            borderColor={currentRoute === '/chart' ? '#1E3EF0' : 'transparent'}
-          >
-            <ChartIcon fill={currentRoute === '/chart' ? '#1E3EF0' : '#9E9E9F'} />
-          </Box>
-
-          <Box
-            borderTop={'2px solid'}
-            padding={'12px 5px'}
-            borderColor={currentRoute === '/event' ? '#1E3EF0' : 'transparent'}
-          >
-            <EventIcon fill={currentRoute === '/event' ? '#1E3EF0' : '#9E9E9F'} />
-          </Box>
-
-          <Box
-            borderTop={'2px solid'}
-            padding={'12px 5px'}
-            borderColor={currentRoute === '/shortcut' ? '#1E3EF0' : 'transparent'}
-          >
-            <ShortcutIcon fill={currentRoute === '/shortcut' ? '#1E3EF0' : '#9E9E9F'} />
-          </Box>
-        </Box>
-      </Box>
     </Box>
   );
 };

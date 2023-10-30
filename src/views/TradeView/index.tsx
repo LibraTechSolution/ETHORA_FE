@@ -22,6 +22,7 @@ import CancelTable from './components/CancelTable';
 import LimitOrdersTable from './components/LimitOrdersTable';
 import PlatformTradesTable from './components/PlatformTradesTable';
 import PlatformHistoryTable from './components/PlatformHistoryTable';
+import TradeLeftSide from './components/TradeLeftSide';
 
 const TradingViewChart = dynamic(
   () => import('@/components/TradingView/TradingView').then((mod) => mod.TradingViewChart),
@@ -40,7 +41,7 @@ const TradeView = () => {
       paddingRight={{ base: '0px', lg: '26px' }}
     >
       <GridItem display={{ base: 'none', xl: 'block' }} colSpan={{ base: 24, xl: 5 }}>
-        <TradeControl />
+        <TradeLeftSide />
       </GridItem>
       <GridItem colSpan={{ base: 24, xl: 19 }}>
         <>
@@ -48,7 +49,7 @@ const TradeView = () => {
           <TradingViewChart />
         </>
         <Box display={{ base: 'block', xl: 'none' }} marginTop={'12px'}>
-          <TradeControl />
+          <TradeLeftSide />
         </Box>
         <Box marginTop="12px" display={{ base: 'none', xl: 'block' }}>
           <Tabs>
