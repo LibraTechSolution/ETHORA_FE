@@ -180,7 +180,7 @@ const TradeBox = (props: PropsType) => {
         />
       ) : (
         <span className="flex items-center text-xs font-normal text-[#9E9E9F]">
-          <span className="mr-1">Processing...</span>
+          <span className="mr-1">{item.state === State.QUEUED ? 'In queued...' : 'Processing...'}</span>
           <RotateCw color="#1E3EF0" cursor="pointer" onClick={reloadData} />
         </span>
       )}

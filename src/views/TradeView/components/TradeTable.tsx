@@ -122,7 +122,7 @@ const TradeTable = () => {
           <CountDown endTime={dayjs(value.openDate).utc().unix() + value.period} period={value.period} hideBar={true} />
         ) : (
           <span className="flex items-center text-xs font-normal text-[#9E9E9F]">
-            <span className="mr-1">Processing...</span>
+            <span className="mr-1">{value.state === State.QUEUED ? 'In queued' : 'Processing...'}</span>
             <RotateCw color="#1E3EF0" cursor="pointer" onClick={reloadData} />
           </span>
         ),
@@ -204,7 +204,7 @@ const TradeTable = () => {
     // select: transformData,
     enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: false,
+    refetchInterval: 15000,
     refetchOnWindowFocus: false,
   });
 
