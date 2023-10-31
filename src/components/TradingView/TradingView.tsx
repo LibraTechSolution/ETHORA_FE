@@ -214,7 +214,7 @@ export const TradingViewChart = () => {
 
   const addLine = useCallback(
     (item: ITradingData) => {
-      if (item.state === State.QUEUED) {
+      if (item.isLimitOrder) {
         return widgetRef.current
           ?.activeChart?.()
           .createOrderLine()

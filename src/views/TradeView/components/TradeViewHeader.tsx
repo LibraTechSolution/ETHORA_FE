@@ -47,6 +47,8 @@ const TradeViewHeader = () => {
   const { data: listChanged24h } = useQuery({
     queryKey: ['getChanged24h'],
     queryFn: () => getChanged24h(),
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
   });
   const currentPair = useMemo<PairData | null>(() => {
     if (!params?.pair) return null;

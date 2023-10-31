@@ -127,7 +127,7 @@ const TradeControl = () => {
     name: 'USDC',
     version: '1',
     chainId: chain ? chain?.id : 5,
-    verifyingContract: appConfig.bufferRouterSC as Address,
+    verifyingContract: appConfig.USDC_SC as Address,
   };
 
   const handleMax = () => {
@@ -316,10 +316,11 @@ const TradeControl = () => {
         functionName: 'traderReferralCodes',
         args: [address as Address],
       });
+      console.log(price);
       const currentDate = dayjs().utc().format();
       const data = {
         network: chain?.id ?? 5,
-        strike: tradeType === TradeType.LIMIT ? +limitOrderPrice * 100000000 : +price * 100000000,
+        strike: tradeType === TradeType.LIMIT ? +limitOrderPrice * 100000000 : Math.round(+price * 100000000),
         strikeDate: currentDate,
         period: convertToTimeStamp(),
         targetContract: appConfig.bufferBOSC as string,
