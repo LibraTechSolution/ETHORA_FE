@@ -372,7 +372,7 @@ const TradeControl = () => {
   return (
     <>
       <p className="mb-3 text-xs font-normal text-[#9E9E9F]">Time</p>
-      <Box display={{ base: 'block', xl: 'flex' }}>
+      <Box display={{ base: 'flex', xl: 'block', '3xl': 'flex' }}>
         {listTimes.map((item) => (
           <Button
             key={item}
