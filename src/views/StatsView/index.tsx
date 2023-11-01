@@ -1,15 +1,26 @@
 'use client';
 import { getStats } from '@/services/stats';
-import { IStatsParams, IvolumeStats } from '@/types/stats.type';
+import {
+  IELPPoolStatsChart,
+  IFeeStats,
+  IFeeStatsChart,
+  IPoolStats,
+  IRateStatsChart,
+  IStatsParams,
+  IvolumeStats,
+  IvolumeStatsChart,
+} from '@/types/stats.type';
 import { addComma } from '@/utils/number';
 import { Box, Button, Grid, GridItem, Heading, Text, useMediaQuery } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { DatePicker, TimeRangePickerProps, notification } from 'antd';
 import { maxBy, minBy, sortBy } from 'lodash';
 import { Download } from 'lucide-react';
-import { use, useEffect, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import { CSVLink } from 'react-csv';
+
 import {
   ComposedChart,
   Bar,
@@ -25,6 +36,8 @@ import {
   LineChart,
 } from 'recharts';
 import DateRangeStyle from './style';
+import { DataTickDateFormater, DataTickFormater } from '@/utils/helper';
+import DownloadCSV from './DownloadCSV';
 
 const data = [
   {
@@ -635,18 +648,19 @@ const data3 = [
 const CustomTooltip = (data: any) => {
   const { active, payload } = data;
   if (active && payload && payload.length) {
-    // console.log(data);
     return (
       // eslint-disable-next-line tailwindcss/no-custom-classname
       <div className="custom-tooltip min-w-[118px] rounded-lg bg-[#050506] p-[10px]">
-        <p className=" text-sm font-medium text-white">{payload[0]?.payload?.name}</p>
+        <p className=" text-sm font-medium text-white">{DataTickDateFormater(payload[0]?.payload?.timestamp)}</p>
         {payload.map((item: any, index: number) => {
           // console.log(item.color);
 
           return (
             // eslint-disable-next-line tailwindcss/no-custom-classname
             <p className={`flex items-center text-sm`} key={index} style={{ color: item.color }}>
-              {`${item.name}: ${item.payload[item.dataKey] ? addComma(item.payload[item.dataKey]) : 0}`}
+              {`${item.name}: ${item.unit ? item.unit : ''}${
+                item.payload[item.dataKey] ? addComma(item.payload[item.dataKey], 2) : 0
+              }`}
             </p>
           );
         })}
@@ -668,18 +682,32 @@ const rangePresets: TimeRangePickerProps['presets'] = [
   { label: 'Last 60 Days', value: [dayjs().add(-60, 'd'), dayjs()] },
   { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] },
 ];
+const defaultDay = {
+  rangeDay: [dayjs().add(-30, 'd'), dayjs()],
+  rangeDayTimeStem: [dayjs().add(-30, 'd').unix(), dayjs().unix()],
+};
+
+console.log('defaultDay', defaultDay);
 
 const StatsView = () => {
   const [isMobile] = useMediaQuery('(max-width: 768px)');
   const { RangePicker } = DatePicker;
+  const [dateRange, setDateRange] = useState<Dayjs[]>(defaultDay.rangeDay);
   const [filter, setFilter] = useState<IStatsParams | undefined>({
     network: 421613,
-    start: 1691853873,
-    end: 1697124273,
+    start: defaultDay.rangeDayTimeStem[0],
+    end: defaultDay.rangeDayTimeStem[1],
   });
 
-  const [dataVolume, setDataVolume] = useState<IvolumeStats[]>();
-  const [totalVolume, setTotalVolume] = useState<number | string>();
+  const [dataVolume, setDataVolume] = useState<IvolumeStatsChart[]>([]);
+  const [dataFees, setDataFees] = useState<IFeeStatsChart[]>([]);
+  const [dataRate, setDataRate] = useState<IRateStatsChart[]>([]);
+  const [dataELPPool, setELPPool] = useState<IELPPoolStatsChart[]>([]);
+
+  const [dataPoolStats, setDataPoolStats] = useState<IPoolStats[]>([]);
+
+  // const [totalVolume, setTotalVolume] = useState<number | string>();
+  const inputElement = useRef();
 
   const { data: dataStats } = useQuery({
     queryKey: ['getStats', filter],
@@ -695,25 +723,44 @@ const StatsView = () => {
 
   useEffect(() => {
     if (!dataStats) return;
-    const getDataVolume = dataStats.volumeStats;
-
-    // DataVolume
-    const formatDataVolume = getDataVolume.map((item: IvolumeStats) => {
-      return {
-        ...item,
-        VolumeUSDC: +item.VolumeUSDC / 1e6,
-        amount: +item.amount / 1e6,
-      };
+    const dataVolumeStats = dataStats?.volumeStats?.map((item: IvolumeStats) => {
+      return { cumulative: item.cumulative, VolumeUSDC: item.VolumeUSDC, timestamp: item.timestamp };
     });
 
-    const sum = formatDataVolume.reduce((acc, obj) => {
-      return acc + +obj.amount;
-    }, 0);
+    const dataFeeStats = dataStats?.feeStats?.map((item: IFeeStats) => {
+      return { cumulative: item.cumulative, fee: item.fee, timestamp: item.timestamp };
+    });
 
-    console.log('formatDataVolume', formatDataVolume);
-    console.log('sum', sum);
-    setTotalVolume(sum);
-    setDataVolume(formatDataVolume);
+    const dataRateStats = dataStats?.poolStats?.data.map((item: IPoolStats) => {
+      return { rate: item.rate, timestamp: item.timestamp };
+    });
+
+    const dataELPPoolStats = dataStats?.poolStats?.data.map((item: IPoolStats) => {
+      return { timestamp: item.timestamp, glpSupply: item.glpSupply };
+    });
+    setDataVolume(dataVolumeStats);
+    setDataFees(dataFeeStats);
+    setDataRate(dataRateStats);
+    setELPPool(dataELPPoolStats);
+    // const getDataVolume = dataStats.volumeStats;
+
+    // DataVolume
+    // const formatDataVolume = getDataVolume.map((item: IvolumeStats) => {
+    //   return {
+    //     ...item,
+    //     VolumeUSDC: +item.VolumeUSDC / 1e6,
+    //     amount: +item.amount / 1e6,
+    //   };
+    // });
+
+    // const sum = formatDataVolume.reduce((acc, obj) => {
+    //   return acc + +obj.amount;
+    // }, 0);
+
+    // console.log('formatDataVolume', formatDataVolume);
+    // console.log('sum', sum);
+    // setTotalVolume(sum);
+    // setDataVolume(formatDataVolume);
     // End - DataVolume
   }, [dataStats]);
 
@@ -800,12 +847,42 @@ const StatsView = () => {
 
   const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
     if (dates) {
+      console.log(dates);
       console.log('From: ', dates[0], ', to: ', dates[1]);
       console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+      setDateRange(dates as Dayjs[]);
+      setFilter({
+        ...filter,
+        start: dates[0]?.unix() as number,
+        end: dates[1]?.unix() as number,
+      } as IStatsParams);
     } else {
       console.log('Clear');
     }
   };
+
+  // const exportCSV = () => {
+  //   const headers = [
+  //     { label: 'First Name', value: 'firstname' },
+  //     { label: 'Last Name', value: 'lastname' },
+  //     { label: 'Email', value: 'email' },
+  //   ];
+
+  //   const data = [
+  //     { firstname: 'Ahmed', lastname: 'Tomi', email: 'ah@smthing.co.com' },
+  //     { firstname: 'Raed', lastname: 'Labes', email: 'rl@smthing.co.com' },
+  //     { firstname: 'Yezzi', lastname: 'Min l3b', email: 'ymin@cocococo.com' },
+  //   ];
+
+  //   return <CSVLink data={data} headers={headers}></CSVLink>;
+  // };
+  // useEffect(() => {
+  //   console.log('dateRange',dateRange)
+  //   console.log('dateRange',dateRange[0].toString())
+  //   console.log('dateRange',dayjs(dateRange[0]).unix())
+
+  //   // setDateRange([dayjs().add(-30, 'd'), dayjs()])
+  // },[dateRange])
 
   return (
     <Box marginX={{ base: '0', lg: '-60px' }}>
@@ -825,12 +902,12 @@ const StatsView = () => {
             showTime={isMobile ? true : false}
             format="YYYY/MM/DD"
             onChange={onRangeChange}
+            value={dateRange as any}
             popupClassName="customRangePicker"
             size="large"
           />
         </DateRangeStyle>
       </Box>
-
       <Grid
         templateColumns={{ base: 'repeat(4, 1fr)', md: 'repeat(4, 1fr)', xl: 'repeat(5, 1fr)' }}
         gap={6}
@@ -851,23 +928,28 @@ const StatsView = () => {
               </Text>
               <Box>
                 <LineChart data={dataVolume} width={70} height={22}>
-                  <Line type="monotone" dataKey="amount" stroke="#1ED768" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="VolumeUSDC" stroke="#1ED768" strokeWidth={2} dot={false} />
                 </LineChart>
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              ${addComma(totalVolume as string, 2)}
+              ${addComma(dataStats?.overviewStats?.totalVolume as number, 2)}
             </Text>
             <Box
               as="span"
-              border={'1px solid #1ED768'}
+              border={`${
+                dataStats && +dataStats?.overviewStats?.totalVolumeDelta >= 0
+                  ? '1px solid #1ED768'
+                  : '1px solid #F03D3E'
+              }`}
               backgroundColor={'rgba(21, 189, 89, 0.10)'}
               borderRadius={'4px'}
               padding={'2px 6px'}
               fontSize={'14px'}
-              color={'#1ED768'}
+              color={`${dataStats && +dataStats?.overviewStats?.totalVolumeDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
-              +$19.6K
+              {dataStats && +dataStats?.overviewStats?.totalVolumeDelta > 0 ? '+' : ''}
+              {dataStats && addComma(dataStats?.overviewStats?.totalVolumeDelta,2)}
             </Box>
           </Box>
         </GridItem>
@@ -891,18 +973,21 @@ const StatsView = () => {
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              $896,412
+              ${addComma(dataStats?.overviewStats?.totalFees as number, 2)}
             </Text>
             <Box
               as="span"
-              border={'1px solid #1ED768'}
+              border={`${
+                dataStats && +dataStats?.overviewStats?.totalFeesDelta >= 0 ? '1px solid #1ED768' : '1px solid #F03D3E'
+              }`}
               backgroundColor={'rgba(21, 189, 89, 0.10)'}
               borderRadius={'4px'}
               padding={'2px 6px'}
               fontSize={'14px'}
-              color={'#1ED768'}
+              color={`${dataStats && +dataStats?.overviewStats?.totalFeesDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
-              +$2.58K
+              {dataStats && +dataStats?.overviewStats?.totalFeesDelta > 0 ? '+' : ''}
+              {dataStats && addComma(dataStats?.overviewStats?.totalFeesDelta,2)}
             </Box>
           </Box>
         </GridItem>
@@ -926,18 +1011,21 @@ const StatsView = () => {
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              $6,893,187
+              ${addComma(dataStats?.overviewStats?.totalPool as number, 2)}
             </Text>
             <Box
               as="span"
-              border={'1px solid #F03D3E'}
-              backgroundColor={'rgba(240, 61, 62, 0.10)'}
+              border={`${
+                dataStats && +dataStats?.overviewStats?.totalPoolDelta >= 0 ? '1px solid #1ED768' : '1px solid #F03D3E'
+              }`}
+              backgroundColor={'rgba(21, 189, 89, 0.10)'}
               borderRadius={'4px'}
               padding={'2px 6px'}
               fontSize={'14px'}
-              color={'#F03D3E'}
+              color={`${dataStats && +dataStats?.overviewStats?.totalPoolDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
-              -$91.8K
+              {dataStats && +dataStats?.overviewStats?.totalPoolDelta > 0 ? '+' : ''}
+              {dataStats && addComma(dataStats?.overviewStats?.totalPoolDelta,2)}
             </Box>
           </Box>
         </GridItem>
@@ -961,18 +1049,21 @@ const StatsView = () => {
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              630
+              ${addComma(dataStats?.overviewStats?.totalUsers as number, 2)}
             </Text>
             <Box
               as="span"
-              border={'1px solid #1ED768'}
+              border={`${
+                dataStats && +dataStats?.overviewStats?.totalUsersDelta >= 0 ? '1px solid #1ED768' : '1px solid #F03D3E'
+              }`}
               backgroundColor={'rgba(21, 189, 89, 0.10)'}
               borderRadius={'4px'}
               padding={'2px 6px'}
               fontSize={'14px'}
-              color={'#1ED768'}
+              color={`${dataStats && +dataStats?.overviewStats?.totalUsersDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
-              +1
+              {dataStats && +dataStats?.overviewStats?.totalUsersDelta > 0 ? '+' : ''}
+              {dataStats && addComma(dataStats?.overviewStats?.totalUsersDelta,2)}
             </Box>
           </Box>
         </GridItem>
@@ -996,18 +1087,21 @@ const StatsView = () => {
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              $813,360
+              ${addComma(dataStats?.overviewStats?.payout as number, 2)}
             </Text>
             <Box
               as="span"
-              border={'1px solid #1ED768'}
+              border={`${
+                dataStats && +dataStats?.overviewStats?.payoutDelta >= 0 ? '1px solid #1ED768' : '1px solid #F03D3E'
+              }`}
               backgroundColor={'rgba(21, 189, 89, 0.10)'}
               borderRadius={'4px'}
               padding={'2px 6px'}
               fontSize={'14px'}
-              color={'#1ED768'}
+              color={`${dataStats && +dataStats?.overviewStats?.payoutDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
-              +$5.07K
+              {dataStats && +dataStats?.overviewStats?.payoutDelta > 0 ? '+' : ''}
+              {dataStats && addComma(dataStats?.overviewStats?.payoutDelta,2)}
             </Box>
           </Box>
         </GridItem>
@@ -1023,21 +1117,30 @@ const StatsView = () => {
           >
             <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
               <Text>Volume</Text>
+
               <Button
                 leftIcon={<Download size={14} />}
                 colorScheme="primary"
                 variant="outline"
                 size={'xs'}
                 background={'#050506'}
+                // onClick={exportCSV}
               >
-                Download CSV
+                <DownloadCSV
+                  data={dataVolume}
+                  headers={[
+                    { label: 'Cumulative', key: 'cumulative' },
+                    { label: 'Volume USDC', key: 'VolumeUSDC' },
+                    { label: 'Timestamp', key: 'timestamp' },
+                  ]}
+                />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
-                data={data}
+                data={dataVolume}
                 // margin={{
                 //   top: 5,
                 //   right: 10,
@@ -1049,12 +1152,13 @@ const StatsView = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
-                  dataKey="name"
+                  dataKey="timestamp"
                   stroke="#6D6D70"
                   style={{
                     fontSize: '12px',
                   }}
                   tickLine={false}
+                  tickFormatter={DataTickDateFormater}
                 />
                 {/* <YAxis /> */}
                 <YAxis
@@ -1064,6 +1168,7 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 <YAxis
                   yAxisId="right"
@@ -1072,18 +1177,20 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 <Tooltip />
                 <Legend />
-                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#FFCE57" barSize={16} />
+                <Bar yAxisId="left" dataKey="VolumeUSDC" name="USDC Volume" fill="#FFCE57" barSize={16} unit="$" />
                 <Line
                   type="monotone"
-                  dataKey="amt"
-                  name="amt Name"
+                  dataKey="cumulative"
+                  name="Cumulative"
                   stroke="#FE1A67"
                   connectNulls
                   yAxisId="right"
                   dot={false}
+                  unit="$"
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -1106,14 +1213,21 @@ const StatsView = () => {
                 size={'xs'}
                 background={'#050506'}
               >
-                Download CSV
+                <DownloadCSV
+                  data={dataFees}
+                  headers={[
+                    { label: 'Cumulative', key: 'cumulative' },
+                    { label: 'Fees', key: 'fee' },
+                    { label: 'Timestamp', key: 'timestamp' },
+                  ]}
+                />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
-                data={data}
+                data={dataFees}
                 // margin={{
                 //   top: 5,
                 //   right: 10,
@@ -1125,12 +1239,13 @@ const StatsView = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
-                  dataKey="name"
+                  dataKey="timestamp"
                   stroke="#6D6D70"
                   style={{
                     fontSize: '12px',
                   }}
                   tickLine={false}
+                  tickFormatter={DataTickDateFormater}
                 />
                 {/* <YAxis /> */}
                 <YAxis
@@ -1140,6 +1255,7 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 <YAxis
                   yAxisId="right"
@@ -1148,18 +1264,20 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 <Tooltip />
                 <Legend />
-                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#8042FF" barSize={16} />
+                <Bar yAxisId="left" dataKey="fee" name="USDC Fees" fill="#8042FF" barSize={16} unit="$" />
                 <Line
                   type="monotone"
-                  dataKey="amt"
-                  name="amt Name"
+                  dataKey="cumulative"
+                  name="Cumulative"
                   stroke="#FE1A67"
                   connectNulls
                   yAxisId="right"
                   dot={false}
+                  unit="$"
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -1260,14 +1378,20 @@ const StatsView = () => {
                 size={'xs'}
                 background={'#050506'}
               >
-                Download CSV
+                <DownloadCSV
+                  data={dataRate}
+                  headers={[
+                    { label: 'Exchange Rate', key: 'rate' },
+                    { label: 'Timestamp', key: 'timestamp' },
+                  ]}
+                />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
-                data={data}
+                data={dataRate}
                 margin={{
                   right: 60,
                 }}
@@ -1276,12 +1400,13 @@ const StatsView = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
-                  dataKey="name"
+                  dataKey="timestamp"
                   stroke="#6D6D70"
                   style={{
                     fontSize: '12px',
                   }}
                   tickLine={false}
+                  tickFormatter={DataTickDateFormater}
                 />
                 {/* <YAxis /> */}
                 <YAxis
@@ -1291,6 +1416,7 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 {/* <YAxis
                   yAxisId="right"
@@ -1305,12 +1431,13 @@ const StatsView = () => {
                 {/* <Bar yAxisId="left" dataKey="pv" fill="#8042FF" barSize={16} /> */}
                 <Line
                   type="monotone"
-                  dataKey="amt"
-                  name="amt Name"
+                  dataKey="rate"
+                  name="Exchange Rate"
                   stroke="#DD6FB5"
                   connectNulls
                   yAxisId="left"
                   dot={false}
+                  unit="$"
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -1334,14 +1461,20 @@ const StatsView = () => {
                 size={'xs'}
                 background={'#050506'}
               >
-                Download CSV
+                <DownloadCSV
+                  data={dataELPPool}
+                  headers={[
+                    { label: 'Current USDC Balance', key: 'glpSupply' },
+                    { label: 'Timestamp', key: 'timestamp' },
+                  ]}
+                />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 // width={500}
                 // height={300}
-                data={data}
+                data={dataELPPool}
                 margin={{
                   right: 60,
                 }}
@@ -1350,12 +1483,13 @@ const StatsView = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
-                  dataKey="name"
+                  dataKey="timestamp"
                   stroke="#6D6D70"
                   style={{
                     fontSize: '12px',
                   }}
                   tickLine={false}
+                  tickFormatter={DataTickDateFormater}
                 />
                 {/* <YAxis /> */}
                 <YAxis
@@ -1365,6 +1499,7 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 {/* <YAxis
                   yAxisId="right"
@@ -1379,12 +1514,13 @@ const StatsView = () => {
                 {/* <Bar yAxisId="left" dataKey="pv" fill="#8042FF" barSize={16} /> */}
                 <Line
                   type="monotone"
-                  dataKey="amt"
-                  name="amt Name"
+                  dataKey="glpSupply"
+                  name="Current USDC Balance"
                   stroke="#4B65F3"
                   connectNulls
                   yAxisId="left"
                   dot={false}
+                  unit="$"
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -1477,7 +1613,7 @@ const StatsView = () => {
             border={'1px solid #242428'}
           >
             <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
-              <Text>USD/ELP rate</Text>
+              <Text>Traders Net PnL (USDC)</Text>
               <Button
                 leftIcon={<Download size={14} />}
                 colorScheme="primary"
@@ -1550,7 +1686,7 @@ const StatsView = () => {
             border={'1px solid #242428'}
           >
             <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} padding={'20px'}>
-              <Text>New vs. Existing Users</Text>
+              <Text>Traders Profit vs Loss (USDC)</Text>
               <Button
                 leftIcon={<Download size={14} />}
                 colorScheme="primary"

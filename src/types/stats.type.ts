@@ -46,22 +46,58 @@ export interface IuserStats {
 }
 
 export interface IvolumeStats {
-  VolumeUSDC: number | string;
-  amount: number | string;
-  timestamp: string;
+  cumulative: number;
+  amount: number;
+  VolumeUSDC: number;
+  all: number;
+  timestamp: string | number;
 }
-// export interface IpoolStats {
 
-// }
+export type IvolumeStatsChart = Omit<IvolumeStats, 'amount' | 'all'>;
+
+export interface IFeeStats {
+  timestamp: string | number;
+  all: number;
+  cumulative: number;
+  fee: number;
+}
+export type IFeeStatsChart = Omit<IFeeStats, 'all'>;
+
+export interface IPoolStats {
+  timestamp: number;
+  rate: number;
+  glpSupply: number;
+  cumulativeGlpSupply: number;
+  glpSupplyChange: number;
+  aumChange: number;
+}
+
+export type IRateStatsChart = Pick<IPoolStats, 'rate' | 'timestamp'>;
+export type IELPPoolStatsChart = Pick<IPoolStats, 'glpSupply' | 'timestamp'>;
+
+export interface IOverviewStats {
+  totalVolume: number;
+  totalVolumeDelta: number | string;
+  totalFees: number;
+  totalFeesDelta: number | string;
+  totalPool: number;
+  totalPoolDelta: number | string;
+  totalUsers: number;
+  totalUsersDelta: number | string;
+  payout: number;
+  payoutDelta: number | string;
+}
 
 export interface IDataStats {
   USDC24stats: IUSDC24stats[];
-  USDCstats: IUSDCstats;
-  dashboardStats: IdashboardStats[];
-  feeStats: IfeeStats[];
-  totalTraders: ItotalTraders[];
+  // USDCstats: IUSDCstats;
+  // dashboardStats: IdashboardStats[];
+  feeStats: IFeeStats[];
+  overviewStats: IOverviewStats;
+  poolStats: {
+    data: IPoolStats[];
+  };
   tradingStats: ItradingStats[];
-  userStats: IuserStats[];
   volumeStats: IvolumeStats[];
-  poolStats: any;
+  // userStats: IuserStats[];
 }

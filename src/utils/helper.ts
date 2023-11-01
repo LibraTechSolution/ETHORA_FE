@@ -12,18 +12,13 @@ export const getReceiptTxs = async (writeAsync: () => Promise<WriteContractResul
 
 export const getSVR = (sig: string) => {
   const sig0 = sig.substring(2);
-  const r = "0x" + sig0.substring(0, 64);
-  const s = "0x" + sig0.substring(64, 128);
+  const r = '0x' + sig0.substring(0, 64);
+  const s = '0x' + sig0.substring(64, 128);
   const v = parseInt(sig0.substring(128, 130), 16);
-  return { s, v, r }
-}
+  return { s, v, r };
+};
 
-export const getProbability = (
-  trade: ITradingData,
-  price: number,
-  IV: number,
-  expiryTs?: string
-) => {
+export const getProbability = (trade: ITradingData, price: number, IV: number, expiryTs?: string) => {
   const currentEpoch = dayjs().utc().unix();
   const expiryTime = getExpiry(trade, expiryTs);
 
@@ -35,22 +30,30 @@ export const getProbabilityByTime = (
   price: number,
   currentTime: number,
   expirationTime: number,
-  IV: number
+  IV: number,
 ) => {
   const probability =
-    BlackScholes(
-      true,
-      trade.isAbove,
-      price,
-      +trade.strike / 100000000,
-      expirationTime - currentTime,
-      0,
-      IV
-    ) * 100;
+    BlackScholes(true, trade.isAbove, price, +trade.strike / 100000000, expirationTime - currentTime, 0, IV) * 100;
 
   return probability;
 };
 
 export const getExpiry = (trade: ITradingData, deb?: string) => {
   return dayjs(trade.closeDate).utc().unix() || dayjs(trade.openDate).utc().unix() + trade.period;
+};
+
+export const DataTickFormater = (number: number) => {
+  if (number > 1000000000) {
+    return (number / 1000000000).toString() + 'B';
+  } else if (number > 1000000) {
+    return (number / 1000000).toString() + 'M';
+  } else if (number > 1000) {
+    return (number / 1000).toString() + 'K';
+  } else {
+    return number.toString();
+  }
+};
+
+export const DataTickDateFormater = (time: number| string) => {
+  return dayjs(+time * 1000).format('DD.MM')
 };
