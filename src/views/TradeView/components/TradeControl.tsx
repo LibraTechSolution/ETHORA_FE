@@ -54,6 +54,7 @@ import TraderTab from './TraderTab';
 import LimitOrderTab from './LimitOrderTab';
 import referralABI from '@/config/abi/referralABI';
 import LeftTab from './LeftTab';
+import useListShowLinesStore from '@/store/useListShowLinesStore';
 dayjs.extend(utc);
 
 const approveParamType = [
@@ -99,6 +100,14 @@ const TradeControl = () => {
   const { listPairData } = usePairStore();
   const [isShowWarning, setIsShowWarning] = useState<boolean>(false);
   const queryClient = useQueryClient();
+  const { resetListLine } = useListShowLinesStore();
+
+  useEffect(() => {
+    if (address) {
+      resetListLine();
+      queryClient.clear();
+    }
+  }, [address, queryClient, resetListLine]);
 
   const currentPair = useMemo<PairData | null>(() => {
     if (!params?.pair) return null;
@@ -281,6 +290,12 @@ const TradeControl = () => {
     }
   };
 
+  useEffect(() => {
+    if (tradeType === TradeType.LIMIT) {
+      setLimitOrderPrice(price.toFixed(2).toString());
+    }
+  }, [tradeType]);
+
   const handleCreateTrade = async (isAbove: boolean) => {
     let hasError = false;
     if (tradeType === TradeType.LIMIT) {
@@ -298,7 +313,7 @@ const TradeControl = () => {
       hasError = true;
     }
 
-    if (!balance || (balance && balance < +tradeType)) {
+    if (!balance || (balance && balance < +tradeSize)) {
       setIsShowWarning(true);
       hasError = true;
     }
@@ -515,7 +530,7 @@ const TradeControl = () => {
                 _focusVisible={{ border: 'none' }}
                 bg={'#38383A'}
                 rounded={'6px'}
-                w="167px"
+                w="110px"
                 h="26px"
               />
             </>
