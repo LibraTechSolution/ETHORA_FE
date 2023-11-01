@@ -20,7 +20,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import '@rainbow-me/rainbowkit/styles.css';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [...(process.env.NEXT_PUBLIC_INCLUDE_TESTNET === 'true' ? [arbitrumGoerli, goerli] : [arbitrum, mainnet])],
+  [...(process.env.NEXT_PUBLIC_INCLUDE_TESTNET === 'true' ? [arbitrumGoerli] : [arbitrum, mainnet])],
   [publicProvider()],
 );
 

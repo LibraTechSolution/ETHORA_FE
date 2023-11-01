@@ -781,7 +781,7 @@ const TradeViewHeader = () => {
           </Box>
         </Center>
         <Center paddingX={10} display={{ base: 'none', xl: 'flex' }}>
-          <p className="text-2xl font-normal text-[#fff]">
+          <p className="min-w-[120px] text-2xl font-normal text-[#fff]">
             <ShowPrice />
           </p>
         </Center>
