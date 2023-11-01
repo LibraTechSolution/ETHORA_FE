@@ -79,6 +79,16 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
     ],
   });
 
+//   function xSe(e, t, n, r, i) {
+//     let a = i;
+//     e && (a = e + i);
+//     let o = r
+//       , s = 0;
+//     return e && t && n && n > 0 && (o = t * a / n,
+//     (o > r) && (s = o - r)),
+//     (r >= s) ? r : s
+// }
+
   const getMaxVestableAmount_VBLP = data_VBLP_SC && data_VBLP_SC[0].result;
   const getVestedAmount_VBLP = data_VBLP_SC && data_VBLP_SC[1].result;
 

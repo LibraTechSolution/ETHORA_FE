@@ -86,6 +86,9 @@ dependencies:
   react:
     specifier: 18.2.0
     version: 18.2.0
+  react-csv:
+    specifier: ^2.2.2
+    version: 2.2.2
   react-device-detect:
     specifier: ^2.2.3
     version: 2.2.3(react-dom@18.2.0)(react@18.2.0)
@@ -154,6 +157,9 @@ devDependencies:
   '@types/react':
     specifier: 18.2.14
     version: 18.2.14
+  '@types/react-csv':
+    specifier: ^1.1.7
+    version: 1.1.7
   '@types/react-dom':
     specifier: 18.2.6
     version: 18.2.6
@@ -5274,6 +5280,12 @@ packages:
 
   /@types/prop-types@15.7.7:
     resolution: {integrity: sha512-FbtmBWCcSa2J4zL781Zf1p5YUBXQomPEcep9QZCfRfQgTxz3pJWiDFLebohZ9fFntX5ibzOkSsrJ0TEew8cAog==}
+
+  /@types/react-csv@1.1.7:
+    resolution: {integrity: sha512-MOXBoBrLm3Bz0xxQ1I367PhioZRxjBwmMsSUgckPP04UJw6iHbije37Auct9v+EAHGih2v1eYxchCaoqgJ8idQ==}
+    dependencies:
+      '@types/react': 18.2.14
+    dev: true
 
   /@types/react-dom@18.2.6:
     resolution: {integrity: sha512-2et4PDvg6PVCyS7fuTc4gPoksV58bW0RwSxWKcPRcHZf0PRUGq03TKcD/rUHe3azfV6/5/biUBJw+HhCQjaP0A==}
@@ -11839,6 +11851,10 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.1
       react: 18.2.0
+    dev: false
+
+  /react-csv@2.2.2:
+    resolution: {integrity: sha512-RG5hOcZKZFigIGE8LxIEV/OgS1vigFQT4EkaHeKgyuCbUAu9Nbd/1RYq++bJcJJ9VOqO/n9TZRADsXNDR4VEpw==}
     dev: false
 
   /react-device-detect@2.2.3(react-dom@18.2.0)(react@18.2.0):
