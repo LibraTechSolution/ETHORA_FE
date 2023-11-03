@@ -14,12 +14,12 @@ import { getProbability } from '@/utils/helper';
 import { useMemo } from 'react';
 import { divide, subtract, multiply, gte } from '@/utils/operationBigNumber';
 import { Address, useContractRead } from 'wagmi';
-import { appConfig } from '@/config';
 import optionsConfigABI from '@/config/abi/optionsConfigABI';
 import BigNumber from 'bignumber.js';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { ShowPrice } from './TradeTable';
 import { RotateCw } from 'lucide-react';
+import { useGetTradeContract } from '@/hooks/useGetTradeContract';
 
 interface PropsType {
   item: ITradingData;
@@ -32,8 +32,9 @@ interface CloseBtnPropsType {
 
 export const useEarlyPnl = ({ trade, lockedAmmount }: { trade: ITradingData; lockedAmmount?: string }) => {
   const { price } = useTradeStore();
+  const { optionConfigSC } = useGetTradeContract();
   const { data: iv } = useContractRead({
-    address: appConfig.optionsConfigSC as Address,
+    address: optionConfigSC as Address,
     abi: optionsConfigABI,
     functionName: 'iv',
   });

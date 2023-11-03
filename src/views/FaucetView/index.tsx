@@ -81,7 +81,7 @@ export const FaucetView = () => {
           marginBottom="20px"
           bgColor="#1C1C1E80"
         >
-          <h1 className="pb-2 text-2xl font-[600] text-[#fff]">Claim tESTNET ETH</h1>
+          <h1 className="pb-2 text-2xl font-[600] text-[#fff]">Claim TESTNET ETH</h1>
           <p className="pb-5 text-[#D0D0D2]">You will need to claim testnet tokens to cover the gas fee.</p>
           <Box padding="20px" background="#050506" rounded="10px">
             <p className="mb-3 text-sm font-semibold text-[#D0D0D2]">Get Base Goerli ETH from these websites:</p>
@@ -127,7 +127,7 @@ export const FaucetView = () => {
           width="504px"
           bgColor="#1C1C1E80"
         >
-          <h1 className="mb-5 pb-2 text-center text-2xl font-[600] text-[#fff]">Claim tESTNET Tokens</h1>
+          <h1 className="mb-5 pb-2 text-center text-2xl font-[600] text-[#fff]">Claim TESTNET Tokens</h1>
           <Center>
             <ConnectButton.Custom>
               {({

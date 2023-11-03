@@ -9,16 +9,11 @@ import {
   Tooltip,
   InputRightElement,
   Button,
-  Link,
   useToast,
   Grid,
 } from '@chakra-ui/react';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { DashboardIcon } from 'public/images/icons/dashboardIcon';
-import NextLink from 'next/link';
-import { BarChartBig, LayoutGrid, Redo, TrendingUp, Trophy } from 'lucide-react';
+import { InfoIcon } from '@chakra-ui/icons';
 import CustomConnectButton from '@/components/CustomConnectButton';
 import { Address, readContract, writeContract } from '@wagmi/core';
 import { appConfig } from '@/config';
@@ -26,7 +21,7 @@ import referralABI from '@/config/abi/referralABI';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { BaseError } from 'viem';
-import { useAccount, useContractRead } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { copyText } from '@/utils/copyText';
 import { useSearchParams } from 'next/navigation';
 export enum ReferralTabType {
@@ -112,6 +107,10 @@ const ReferralView = () => {
       setErrorMsgTraderRefCode('Referral code cannot be empty');
       return;
     }
+    if (traderRefCode === userRefCode) {
+      setErrorMsgTraderRefCode('You cannot use your own referral code');
+      return;
+    }
     setIsLoadingTraderRef(true);
     try {
       await writeContract({
@@ -148,7 +147,7 @@ const ReferralView = () => {
           return;
         }
         if (error.shortMessage.includes('code not exist')) {
-          msgContent = 'This code does not exists. Please enter a different code.';
+          msgContent = 'Please enter a valid referral code.';
         } else if (error.shortMessage.includes('traded')) {
           msgContent = 'Please enter a valid referral code.';
         } else {
@@ -187,6 +186,7 @@ const ReferralView = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       let msgContent = '';
+      console.log(error.shortMessage);
       if (error instanceof BaseError) {
         setIsLoadingUserRef(false);
         if (error.shortMessage.includes('User rejected the request.')) {
@@ -306,7 +306,7 @@ const ReferralView = () => {
               borderColor={defaultTabs === ReferralTabType.Tab1 ? '#1E3EF0' : 'transparent'}
               pointerEvents={defaultTabs === ReferralTabType.Tab1 ? 'none' : 'auto'}
               cursor={defaultTabs === ReferralTabType.Tab1 ? 'default' : 'pointer'}
-              color={defaultTabs === ReferralTabType.Tab1 ? '#1E3EF0' : '#9E9E9F'}
+              color={defaultTabs === ReferralTabType.Tab1 ? '#1E3EF0' : '#6D6D70'}
               padding={'13px 0'}
             >
               Use a Referral
@@ -334,7 +334,7 @@ const ReferralView = () => {
             <Text fontSize={'24px'} fontWeight={600} marginBottom={'20px'}>
               Access Referral Prizes
             </Text>
-            <Text fontSize={'14px'} fontWeight={400} marginBottom={'20px'}>
+            <Text fontSize={'14px'} fontWeight={400} marginBottom={'20px'} color={'#D0D0D2'}>
               Enter the referral code you receive from your friend.
             </Text>
 
@@ -346,7 +346,7 @@ const ReferralView = () => {
             </Box>
             <InputGroup>
               <Input
-                placeholder="Enter code"
+                placeholder="Enter your code"
                 value={traderRefCode}
                 onChange={handleTraderRefCodeChange}
                 bg={'transparent'}
@@ -364,7 +364,7 @@ const ReferralView = () => {
                   borderRadius={'4px'}
                   fontSize={'12px'}
                 >
-                  <QuestionOutlineIcon />
+                  <InfoIcon color={'#1E3EF0'} />
                 </Tooltip>
               </InputRightElement>
             </InputGroup>
@@ -414,46 +414,46 @@ const ReferralView = () => {
               <InputRightElement>
                 <Tooltip
                   hasArrow
-                  label="Referral codes are case sensitive."
+                  label="Your code must be unique and cannot be edited later."
                   bg="#050506"
                   color={'white'}
                   placement="bottom-start"
                   borderRadius={'4px'}
                   fontSize={'12px'}
                 >
-                  <QuestionOutlineIcon />
+                  <InfoIcon />
                 </Tooltip>
               </InputRightElement>
             </InputGroup>
             <p className="mt-1 text-xs font-normal text-[#F03D3E]">{errorMsgUserRefCode}</p>
-            {!isLoadingUserRef && isCreatedUserRefCode ? (
-              <Grid templateColumns="repeat(2, 1fr)" gap={2} marginTop={'20px'}>
-                <Button
-                  fontSize={'16px'}
-                  size="md"
-                  width={'100%'}
-                  borderColor="#1E3EF0"
-                  textColor="#1E3EF0"
-                  paddingX="12px"
-                  variant="outline"
-                  _hover={{ borderColor: '#4B65F3', textColor: '#4B65F3' }}
-                  _active={{ borderColor: '#122590', textColor: '#122590' }}
-                  onClick={() => handleCopy(`${window.location.origin}/referral?code=${userRefCode}`)}
-                >
-                  Copy Your Referral Link
-                </Button>
-                <Button
-                  colorScheme="primary"
-                  fontSize={'16px'}
-                  size="md"
-                  width={'100%'}
-                  onClick={() => handleCopy(userRefCode)}
-                >
-                  Copy Your Referral Code
-                </Button>
-              </Grid>
-            ) : (
-              <CustomConnectButton isFullWidth={true}>
+            <CustomConnectButton isFullWidth={true}>
+              {!isLoadingUserRef && isCreatedUserRefCode ? (
+                <Grid templateColumns="repeat(2, 1fr)" gap={2} marginTop={'20px'}>
+                  <Button
+                    fontSize={'16px'}
+                    size="md"
+                    width={'100%'}
+                    borderColor="#1E3EF0"
+                    textColor="#1E3EF0"
+                    paddingX="12px"
+                    variant="outline"
+                    _hover={{ borderColor: '#4B65F3', textColor: '#4B65F3' }}
+                    _active={{ borderColor: '#122590', textColor: '#122590' }}
+                    onClick={() => handleCopy(`${window.location.origin}/referral?code=${userRefCode}`)}
+                  >
+                    Copy Your Referral Link
+                  </Button>
+                  <Button
+                    colorScheme="primary"
+                    fontSize={'16px'}
+                    size="md"
+                    width={'100%'}
+                    onClick={() => handleCopy(userRefCode)}
+                  >
+                    Copy Your Referral Code
+                  </Button>
+                </Grid>
+              ) : (
                 <Button
                   colorScheme="primary"
                   fontSize={'16px'}
@@ -465,8 +465,8 @@ const ReferralView = () => {
                 >
                   Create
                 </Button>
-              </CustomConnectButton>
-            )}
+              )}
+            </CustomConnectButton>
           </Box>
         )}
       </div>
