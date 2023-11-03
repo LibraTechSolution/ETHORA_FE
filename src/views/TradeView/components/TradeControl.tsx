@@ -18,19 +18,12 @@ import {
   InputGroup,
   InputRightElement,
   Select,
-  Tab,
-  TabIndicator,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Tooltip,
   useToast,
 } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Radio, RadioChangeEvent } from 'antd';
 import BigNumber from 'bignumber.js';
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Address, BaseError } from 'viem';
 import { useAccount, useNetwork } from 'wagmi';
 import useTradeStore from '@/store/useTradeStore';
@@ -50,11 +43,11 @@ import { PairData, TRADE_TOKEN } from '@/types/trade.type';
 import { createTrade } from '@/services/trade';
 import Link from 'next/link';
 import { useQueryClient } from '@tanstack/react-query';
-import TraderTab from './TraderTab';
-import LimitOrderTab from './LimitOrderTab';
 import referralABI from '@/config/abi/referralABI';
-import LeftTab from './LeftTab';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
+import { useGetTradeContract } from '@/hooks/useGetTradeContract';
+import bufferBOABI from '@/config/abi/bufferBOABI';
+import { divide, subtract } from '@/utils/operationBigNumber';
 dayjs.extend(utc);
 
 const approveParamType = [
@@ -100,6 +93,7 @@ const TradeControl = () => {
   const { listPairData } = usePairStore();
   const [isShowWarning, setIsShowWarning] = useState<boolean>(false);
   const queryClient = useQueryClient();
+  const { bufferBOSC, settlementFee } = useGetTradeContract();
   const { resetListLine } = useListShowLinesStore();
 
   useEffect(() => {
@@ -313,6 +307,11 @@ const TradeControl = () => {
       hasError = true;
     }
 
+    if (convertToTimeStamp() > 14400) {
+      setTimeError('Maximum duration is 4 hours');
+      hasError = true;
+    }
+
     if (!balance || (balance && balance < +tradeSize)) {
       setIsShowWarning(true);
       hasError = true;
@@ -325,12 +324,6 @@ const TradeControl = () => {
     if (hasError) return;
 
     try {
-      const code = await readContract({
-        address: appConfig.referralSC as Address,
-        abi: referralABI,
-        functionName: 'traderReferralCodes',
-        args: [address as Address],
-      });
       console.log(price);
       const currentDate = dayjs().utc().format();
       const data = {
@@ -338,7 +331,7 @@ const TradeControl = () => {
         strike: tradeType === TradeType.LIMIT ? +limitOrderPrice * 100000000 : Math.round(+price * 100000000),
         strikeDate: currentDate,
         period: convertToTimeStamp(),
-        targetContract: appConfig.bufferBOSC as string,
+        targetContract: bufferBOSC as string,
         tradeSize: (+tradeSize * 1000000).toString(),
         slippage: 0,
         isAbove,
@@ -346,7 +339,7 @@ const TradeControl = () => {
         limitOrderDuration: 18000,
         token: TRADE_TOKEN.USDC,
         pair: currentPair?.pair ? currentPair?.pair.replace('/', '-').toLowerCase() : '',
-        referralCode: code ?? '',
+        referralCode: referCode ?? '',
       };
       const res = await createTrade(data);
       toast({
@@ -383,6 +376,58 @@ const TradeControl = () => {
       });
     }
   };
+
+  const [referCode, setReferCode] = useState('');
+  const [pairPayout, setPairPayout] = useState(0);
+
+  const getPayout = useCallback(async () => {
+    try {
+      const payout = await readContract({
+        address: bufferBOSC as `0x${string}`,
+        abi: bufferBOABI,
+        functionName: 'evaluateParams',
+        args: [
+          {
+            strike: 0n,
+            amount: 0n,
+            period: 900n,
+            allowPartialFill: true,
+            totalFee: 10000000n,
+            user: address as `0x${string}`,
+            referralCode: referCode,
+            baseSettlementFeePercentage: BigInt(settlementFee),
+          },
+          0n,
+        ],
+      });
+      const pairPayout = Math.round(
+        100 * +divide(subtract(payout[0].toString(), payout[1].toString()), payout[1].toString()),
+      );
+      setPairPayout(pairPayout);
+      // setCurrentOI(+divide(currentOI.toString(), 6));
+    } catch (error) {}
+  }, [address, bufferBOSC, referCode, settlementFee]);
+
+  const getReferCode = useCallback(async () => {
+    try {
+      const code = await readContract({
+        address: appConfig.referralSC as Address,
+        abi: referralABI,
+        functionName: 'traderReferralCodes',
+        args: [address as Address],
+      });
+      setReferCode(code);
+    } catch (error) {}
+  }, [address]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getPayout();
+      getReferCode();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [getPayout, getReferCode]);
 
   return (
     <>
@@ -543,15 +588,15 @@ const TradeControl = () => {
           <p className="text-xs font-normal text-[#9E9E9F]">Payout</p>
           <Box>
             <span className="mr-1 text-base font-normal text-[#fff]">
-              {addComma((+tradeSize * (100 + (currentPair?.payout ?? 0))) / 100, 2)} USDC
+              {addComma((+tradeSize * (100 + (pairPayout ?? 0))) / 100, 2)} USDC
             </span>
-            <span className="text-xs font-normal text-[#6D6D70]">{currentPair?.payout}%</span>
+            <span className="text-xs font-normal text-[#6D6D70]">{pairPayout}%</span>
           </Box>
         </Box>
         <Box>
           <p className="text-right text-xs font-normal text-[#9E9E9F]">Profit</p>
           <span className="text-base font-normal text-[#1ED768]">
-            {addComma((+tradeSize * (currentPair?.payout ?? 0)) / 100, 2)} USDC
+            {addComma((+tradeSize * (pairPayout ?? 0)) / 100, 2)} USDC
           </span>
         </Box>
       </Flex>
