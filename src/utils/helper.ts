@@ -44,13 +44,13 @@ export const getExpiry = (trade: ITradingData, deb?: string) => {
 
 export const DataTickFormater = (number: number) => {
   if (number > 1000000000) {
-    return (number / 1000000000).toString() + 'B';
+    return (number / 1000000000).toFixed(2) + 'B';
   } else if (number > 1000000) {
-    return (number / 1000000).toString() + 'M';
+    return (number / 1000000).toFixed(2) + 'M';
   } else if (number > 1000) {
-    return (number / 1000).toString() + 'K';
+    return (number / 1000).toFixed(2) + 'K';
   } else {
-    return number.toString();
+    return number.toFixed(2);
   }
 };
 

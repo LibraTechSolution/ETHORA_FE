@@ -1,12 +1,17 @@
 'use client';
 import { getStats } from '@/services/stats';
 import {
+  IBurnStats,
   IELPPoolStatsChart,
   IFeeStats,
   IFeeStatsChart,
   IPoolStats,
   IRateStatsChart,
   IStatsParams,
+  ITradersNetPnLChart,
+  ITradersProfitChart,
+  ItradingData,
+  IuserStats,
   IvolumeStats,
   IvolumeStatsChart,
 } from '@/types/stats.type';
@@ -14,12 +19,10 @@ import { addComma } from '@/utils/number';
 import { Box, Button, Grid, GridItem, Heading, Text, useMediaQuery } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { DatePicker, TimeRangePickerProps, notification } from 'antd';
-import { maxBy, minBy, sortBy } from 'lodash';
 import { Download } from 'lucide-react';
-import { use, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
-import { CSVLink } from 'react-csv';
 
 import {
   ComposedChart,
@@ -39,7 +42,7 @@ import DateRangeStyle from './style';
 import { DataTickDateFormater, DataTickFormater } from '@/utils/helper';
 import DownloadCSV from './DownloadCSV';
 
-const data = [
+const dataLine = [
   {
     name: 'Page A',
     uv: 4000,
@@ -50,13 +53,13 @@ const data = [
     name: 'Page B',
     uv: 3000,
     pv: 1398,
-    amt: 5000,
+    amt: 2210,
   },
   {
     name: 'Page C',
     uv: 2000,
     pv: 9800,
-    amt: 4356,
+    amt: 2290,
   },
   {
     name: 'Page D',
@@ -84,583 +87,23 @@ const data = [
   },
 ];
 
-const data2 = {
-  tradingStats: [
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '112214095114',
-      timestamp: '1696779837',
-      lossCumulativeBFR: '86393871073',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '112214095114',
-      timestamp: '1696692914',
-      lossCumulativeBFR: '86393871073',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '112214095114',
-      timestamp: '1696606474',
-      lossCumulativeBFR: '86393871073',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '112214095114',
-      timestamp: '1696520946',
-      lossCumulativeBFR: '86393871073',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '112214095114',
-      timestamp: '1696424262',
-      lossCumulativeBFR: '86393871073',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '112214095114',
-      timestamp: '1696347467',
-      lossCumulativeBFR: '86393871073',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '112214095114',
-      timestamp: '1696261807',
-      lossCumulativeBFR: '86393871073',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '112214095114',
-      timestamp: '1696173898',
-      lossCumulativeBFR: '86393871073',
-    },
-    {
-      lossBFR: '9555876',
-      profitBFR: '3310513',
-      profitCumulativeBFR: '112214095114',
-      timestamp: '1696087596',
-      lossCumulativeBFR: '86393871073',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '9080185',
-      profitCumulativeBFR: '112210784601',
-      timestamp: '1696002583',
-      lossCumulativeBFR: '86384315197',
-    },
-    {
-      lossBFR: '4459995',
-      profitBFR: '5351994',
-      profitCumulativeBFR: '112201704416',
-      timestamp: '1695916442',
-      lossCumulativeBFR: '86384315197',
-    },
-    {
-      lossBFR: '6726969',
-      profitBFR: '0',
-      profitCumulativeBFR: '112196352422',
-      timestamp: '1695825200',
-      lossCumulativeBFR: '86379855202',
-    },
-    {
-      lossBFR: '15290564',
-      profitBFR: '43927228',
-      profitCumulativeBFR: '112196352422',
-      timestamp: '1695740337',
-      lossCumulativeBFR: '86373128233',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '112152425194',
-      timestamp: '1695654235',
-      lossCumulativeBFR: '86357837669',
-    },
-    {
-      lossBFR: '899137',
-      profitBFR: '1798274',
-      profitCumulativeBFR: '112152425194',
-      timestamp: '1695475052',
-      lossCumulativeBFR: '86357837669',
-    },
-    {
-      lossBFR: '1821318',
-      profitBFR: '0',
-      profitCumulativeBFR: '112150626920',
-      timestamp: '1695385059',
-      lossCumulativeBFR: '86356938532',
-    },
-    {
-      lossBFR: '11955222',
-      profitBFR: '9065237',
-      profitCumulativeBFR: '112150626920',
-      timestamp: '1695311872',
-      lossCumulativeBFR: '86355117214',
-    },
-    {
-      lossBFR: '411392131',
-      profitBFR: '536897799',
-      profitCumulativeBFR: '112141561683',
-      timestamp: '1695225180',
-      lossCumulativeBFR: '86343161992',
-    },
-    {
-      lossBFR: '3968184',
-      profitBFR: '1984092',
-      profitCumulativeBFR: '111604663884',
-      timestamp: '1695137268',
-      lossCumulativeBFR: '85931769861',
-    },
-    {
-      lossBFR: '16664201',
-      profitBFR: '14663295',
-      profitCumulativeBFR: '111602679792',
-      timestamp: '1695051228',
-      lossCumulativeBFR: '85927801677',
-    },
-    {
-      lossBFR: '1955714',
-      profitBFR: '3911428',
-      profitCumulativeBFR: '111588016497',
-      timestamp: '1694962423',
-      lossCumulativeBFR: '85911137476',
-    },
-    {
-      lossBFR: '27636763',
-      profitBFR: '24485115',
-      profitCumulativeBFR: '111584105069',
-      timestamp: '1694864805',
-      lossCumulativeBFR: '85909181762',
-    },
-    {
-      lossBFR: '9998035',
-      profitBFR: '9050671',
-      profitCumulativeBFR: '111559619954',
-      timestamp: '1694793434',
-      lossCumulativeBFR: '85881544999',
-    },
-    {
-      lossBFR: '84168822',
-      profitBFR: '45650236',
-      profitCumulativeBFR: '111550569283',
-      timestamp: '1694706712',
-      lossCumulativeBFR: '85871546964',
-    },
-    {
-      lossBFR: '190092500',
-      profitBFR: '109061113',
-      profitCumulativeBFR: '111504919047',
-      timestamp: '1694619266',
-      lossCumulativeBFR: '85787378142',
-    },
-    {
-      lossBFR: '10192627',
-      profitBFR: '186321228',
-      profitCumulativeBFR: '111395857934',
-      timestamp: '1694532437',
-      lossCumulativeBFR: '85597285642',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '111209536706',
-      timestamp: '1694446145',
-      lossCumulativeBFR: '85587093015',
-    },
-    {
-      lossBFR: '1771580565',
-      profitBFR: '1254916280',
-      profitCumulativeBFR: '111209536706',
-      timestamp: '1694358104',
-      lossCumulativeBFR: '85587093015',
-    },
-    {
-      lossBFR: '315054109',
-      profitBFR: '425440263',
-      profitCumulativeBFR: '109954620426',
-      timestamp: '1694274584',
-      lossCumulativeBFR: '83815512450',
-    },
-    {
-      lossBFR: '136886986',
-      profitBFR: '358678561',
-      profitCumulativeBFR: '109529180163',
-      timestamp: '1694187344',
-      lossCumulativeBFR: '83500458341',
-    },
-    {
-      lossBFR: '780347553',
-      profitBFR: '335133588',
-      profitCumulativeBFR: '109170501602',
-      timestamp: '1694100549',
-      lossCumulativeBFR: '83363571355',
-    },
-    {
-      lossBFR: '313525218',
-      profitBFR: '191621395',
-      profitCumulativeBFR: '108835368014',
-      timestamp: '1694012458',
-      lossCumulativeBFR: '82583223802',
-    },
-    {
-      lossBFR: '14881236',
-      profitBFR: '0',
-      profitCumulativeBFR: '108643746619',
-      timestamp: '1693928964',
-      lossCumulativeBFR: '82269698584',
-    },
-    {
-      lossBFR: '128630957',
-      profitBFR: '65028963',
-      profitCumulativeBFR: '108643746619',
-      timestamp: '1693843039',
-      lossCumulativeBFR: '82254817348',
-    },
-    {
-      lossBFR: '30068251',
-      profitBFR: '0',
-      profitCumulativeBFR: '108578717656',
-      timestamp: '1693751902',
-      lossCumulativeBFR: '82126186391',
-    },
-    {
-      lossBFR: '87656596',
-      profitBFR: '36183826',
-      profitCumulativeBFR: '108578717656',
-      timestamp: '1693669675',
-      lossCumulativeBFR: '82096118140',
-    },
-    {
-      lossBFR: '60544207',
-      profitBFR: '30577882',
-      profitCumulativeBFR: '108542533830',
-      timestamp: '1693583964',
-      lossCumulativeBFR: '82008461544',
-    },
-    {
-      lossBFR: '338117244',
-      profitBFR: '246970444',
-      profitCumulativeBFR: '108511955948',
-      timestamp: '1693497502',
-      lossCumulativeBFR: '81947917337',
-    },
-    {
-      lossBFR: '30577882',
-      profitBFR: '40158952',
-      profitCumulativeBFR: '108264985504',
-      timestamp: '1693410985',
-      lossCumulativeBFR: '81609800093',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '5389737',
-      profitCumulativeBFR: '108224826552',
-      timestamp: '1693320563',
-      lossCumulativeBFR: '81579222211',
-    },
-    {
-      lossBFR: '15288939',
-      profitBFR: '0',
-      profitCumulativeBFR: '108219436815',
-      timestamp: '1693237168',
-      lossCumulativeBFR: '81579222211',
-    },
-    {
-      lossBFR: '10192626',
-      profitBFR: '0',
-      profitCumulativeBFR: '108219436815',
-      timestamp: '1693150848',
-      lossCumulativeBFR: '81563933272',
-    },
-    {
-      lossBFR: '20385252',
-      profitBFR: '15288939',
-      profitCumulativeBFR: '108219436815',
-      timestamp: '1693062608',
-      lossCumulativeBFR: '81553740646',
-    },
-    {
-      lossBFR: '73081138',
-      profitBFR: '5096313',
-      profitCumulativeBFR: '108204147876',
-      timestamp: '1692978882',
-      lossCumulativeBFR: '81533355394',
-    },
-    {
-      lossBFR: '5096313',
-      profitBFR: '15288939',
-      profitCumulativeBFR: '108199051563',
-      timestamp: '1692891319',
-      lossCumulativeBFR: '81460274256',
-    },
-    {
-      lossBFR: '62378880',
-      profitBFR: '280399180',
-      profitCumulativeBFR: '108183762624',
-      timestamp: '1692799877',
-      lossCumulativeBFR: '81455177943',
-    },
-    {
-      lossBFR: '21404517',
-      profitBFR: '0',
-      profitCumulativeBFR: '107903363444',
-      timestamp: '1692701769',
-      lossCumulativeBFR: '81392799063',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '107903363444',
-      timestamp: '1692632847',
-      lossCumulativeBFR: '81371394546',
-    },
-    {
-      lossBFR: '761651802',
-      profitBFR: '64213552',
-      profitCumulativeBFR: '107903363444',
-      timestamp: '1692544023',
-      lossCumulativeBFR: '81371394546',
-    },
-    {
-      lossBFR: '288553281',
-      profitBFR: '104397214',
-      profitCumulativeBFR: '107839149892',
-      timestamp: '1692460510',
-      lossCumulativeBFR: '80609742744',
-    },
-    {
-      lossBFR: '1176278620',
-      profitBFR: '791627394',
-      profitCumulativeBFR: '107734752678',
-      timestamp: '1692360463',
-      lossCumulativeBFR: '80321189463',
-    },
-    {
-      lossBFR: '170436173',
-      profitBFR: '164610932',
-      profitCumulativeBFR: '106943125284',
-      timestamp: '1692287585',
-      lossCumulativeBFR: '79144910843',
-    },
-    {
-      lossBFR: '26630554',
-      profitBFR: '125170403',
-      profitCumulativeBFR: '106778514352',
-      timestamp: '1692201527',
-      lossCumulativeBFR: '78974474670',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '8252938',
-      profitCumulativeBFR: '106653343949',
-      timestamp: '1692108245',
-      lossCumulativeBFR: '78947844116',
-    },
-    {
-      lossBFR: '556313601',
-      profitBFR: '9784922',
-      profitCumulativeBFR: '106645091011',
-      timestamp: '1692027011',
-      lossCumulativeBFR: '78947844116',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '0',
-      profitCumulativeBFR: '106635306089',
-      timestamp: '1691938351',
-      lossCumulativeBFR: '78391530515',
-    },
-    {
-      lossBFR: '26099303',
-      profitBFR: '0',
-      profitCumulativeBFR: '106635306089',
-      timestamp: '1691855746',
-      lossCumulativeBFR: '78391530515',
-    },
-    {
-      lossBFR: '52507474',
-      profitBFR: '0',
-      profitCumulativeBFR: '106635306089',
-      timestamp: '1691766793',
-      lossCumulativeBFR: '78365431212',
-    },
-    {
-      lossBFR: '86853540',
-      profitBFR: '37805382',
-      profitCumulativeBFR: '106635306089',
-      timestamp: '1691675708',
-      lossCumulativeBFR: '78312923738',
-    },
-    {
-      lossBFR: '50963137',
-      profitBFR: '61155764',
-      profitCumulativeBFR: '106597500707',
-      timestamp: '1691582932',
-      lossCumulativeBFR: '78226070198',
-    },
-    {
-      lossBFR: '0',
-      profitBFR: '50963137',
-      profitCumulativeBFR: '106536344943',
-      timestamp: '1691510339',
-      lossCumulativeBFR: '78175107061',
-    },
-  ],
-};
-
-const data3 = [
-  {
-    name: 'Page A',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: 'Page B',
-    uv: -3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: 'Page C',
-    uv: -2000,
-    pv: -9800,
-    amt: 2290,
-  },
-  {
-    name: 'Page D',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: 'Page E',
-    uv: -1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: 'Page F',
-    uv: 2390,
-    pv: -3800,
-    amt: 2500,
-  },
-  {
-    name: 'Page G',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-  {
-    name: 'Page A',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: 'Page B',
-    uv: -3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: 'Page C',
-    uv: -2000,
-    pv: -9800,
-    amt: 2290,
-  },
-  {
-    name: 'Page D',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: 'Page E',
-    uv: -1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: 'Page F',
-    uv: 2390,
-    pv: -3800,
-    amt: 2500,
-  },
-  {
-    name: 'Page G',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-  {
-    name: 'Page A',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: 'Page B',
-    uv: -3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: 'Page C',
-    uv: -2000,
-    pv: -9800,
-    amt: 2290,
-  },
-  {
-    name: 'Page D',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: 'Page E',
-    uv: -1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: 'Page F',
-    uv: 2390,
-    pv: -3800,
-    amt: 2500,
-  },
-  {
-    name: 'Page G',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
-
 const CustomTooltip = (data: any) => {
   const { active, payload } = data;
   if (active && payload && payload.length) {
     return (
       // eslint-disable-next-line tailwindcss/no-custom-classname
       <div className="custom-tooltip min-w-[118px] rounded-lg bg-[#050506] p-[10px]">
-        <p className=" text-sm font-medium text-white">{DataTickDateFormater(payload[0]?.payload?.timestamp)}</p>
+        <p className=" text-sm font-medium text-white">
+          {DataTickDateFormater(payload[0]?.payload?.timestamp)}
+          {payload[0]?.payload?.total !== undefined && `, Total: ${payload[0]?.payload?.total}`}
+        </p>
         {payload.map((item: any, index: number) => {
-          // console.log(item.color);
-
           return (
             // eslint-disable-next-line tailwindcss/no-custom-classname
             <p className={`flex items-center text-sm`} key={index} style={{ color: item.color }}>
-              {`${item.name}: ${item.unit ? item.unit : ''}${
+              {`${item.name}: ${item.unit && item.unit === '$' ? item.unit : ''}${
                 item.payload[item.dataKey] ? addComma(item.payload[item.dataKey], 2) : 0
-              }`}
+              }${item.unit && item.unit !== '$' ? item.unit : ''}`}
             </p>
           );
         })}
@@ -671,11 +114,6 @@ const CustomTooltip = (data: any) => {
   return null;
 };
 
-// const defaultParams: companyDataParams = {
-//   limit: 10,
-//   page: 1,
-//   scope: 1,
-// };
 
 const rangePresets: TimeRangePickerProps['presets'] = [
   { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
@@ -686,8 +124,6 @@ const defaultDay = {
   rangeDay: [dayjs().add(-30, 'd'), dayjs()],
   rangeDayTimeStem: [dayjs().add(-30, 'd').unix(), dayjs().unix()],
 };
-
-console.log('defaultDay', defaultDay);
 
 const StatsView = () => {
   const [isMobile] = useMediaQuery('(max-width: 768px)');
@@ -703,11 +139,12 @@ const StatsView = () => {
   const [dataFees, setDataFees] = useState<IFeeStatsChart[]>([]);
   const [dataRate, setDataRate] = useState<IRateStatsChart[]>([]);
   const [dataELPPool, setELPPool] = useState<IELPPoolStatsChart[]>([]);
-
-  const [dataPoolStats, setDataPoolStats] = useState<IPoolStats[]>([]);
-
-  // const [totalVolume, setTotalVolume] = useState<number | string>();
-  const inputElement = useRef();
+  const [dataBurnStats, setBurnStats] = useState<IBurnStats[]>([]);
+  const [dataUserStats, setUserStats] = useState<IuserStats[]>([]);
+  const [dataTradersNetPnL, setTradersNetPnL] = useState<ITradersNetPnLChart[]>([]);
+  const [maxTradersNetPnL, setMaxTradersNetPnL] = useState<number>(0);
+  const [dataTradersProfit, setTradersProfit] = useState<ITradersProfitChart[]>([]);
+  const [maxTradersProfit, setMaxTradersProfit] = useState<number>(0);
 
   const { data: dataStats } = useQuery({
     queryKey: ['getStats', filter],
@@ -731,125 +168,56 @@ const StatsView = () => {
       return { cumulative: item.cumulative, fee: item.fee, timestamp: item.timestamp };
     });
 
-    const dataRateStats = dataStats?.poolStats?.data.map((item: IPoolStats) => {
+    const dataRateStats = dataStats?.poolStats?.data?.map((item: IPoolStats) => {
       return { rate: item.rate, timestamp: item.timestamp };
     });
 
-    const dataELPPoolStats = dataStats?.poolStats?.data.map((item: IPoolStats) => {
+    const dataELPPoolStats = dataStats?.poolStats?.data?.map((item: IPoolStats) => {
       return { timestamp: item.timestamp, glpSupply: item.glpSupply };
     });
+
+    const dataUserStats = dataStats?.userStats?.map((item: IuserStats) => {
+      return {
+        ...item,
+        total: item?.existingCount + item?.uniqueCount,
+        new: item?.uniqueCount,
+        existing: item?.existingCount,
+        percentage: (item?.uniqueCount / (item?.existingCount + item?.uniqueCount)) * 100,
+      };
+    });
+
+    const dataTradersNetPnL = dataStats?.tradingStats?.data?.map((item: ItradingData) => {
+      return { timestamp: item.timestamp, pnl: item.pnl, pnlCumulative: item.currentPnlCumulative };
+    });
+
+    const dataTradersProfit = dataStats?.tradingStats?.data?.map((item: ItradingData) => {
+      return {
+        timestamp: item.timestamp,
+        profit: item.profit,
+        loss: item.loss,
+        profitCumulative: item.currentProfitCumulative,
+        lossCumulative: item.currentLossCumulative,
+      };
+    });
+    const dataMaxTradersNetPnL = dataStats?.tradingStats?.stats?.maxAbsCumulativePnl * 1.1;
+
+    const dataMaxTradersProfit = dataStats?.tradingStats?.stats?.maxCurrentCumulativeProfitLoss * 1.1;
+
     setDataVolume(dataVolumeStats);
     setDataFees(dataFeeStats);
     setDataRate(dataRateStats);
     setELPPool(dataELPPoolStats);
-    // const getDataVolume = dataStats.volumeStats;
+    setUserStats(dataUserStats);
+    setBurnStats(dataStats?.burnedETRs);
+    setTradersNetPnL(dataTradersNetPnL);
+    setTradersProfit(dataTradersProfit);
+    setMaxTradersProfit(dataMaxTradersProfit);
+    setMaxTradersNetPnL(dataMaxTradersNetPnL);
 
-    // DataVolume
-    // const formatDataVolume = getDataVolume.map((item: IvolumeStats) => {
-    //   return {
-    //     ...item,
-    //     VolumeUSDC: +item.VolumeUSDC / 1e6,
-    //     amount: +item.amount / 1e6,
-    //   };
-    // });
-
-    // const sum = formatDataVolume.reduce((acc, obj) => {
-    //   return acc + +obj.amount;
-    // }, 0);
-
-    // console.log('formatDataVolume', formatDataVolume);
-    // console.log('sum', sum);
-    // setTotalVolume(sum);
-    // setDataVolume(formatDataVolume);
-    // End - DataVolume
   }, [dataStats]);
-
-  console.log('dataStats', dataStats);
-
-  // let ret = null;
-  let currentPnlCumulative = 0;
-  let currentProfitCumulative = 0;
-  let currentLossCumulative = 0;
-  const dataMap =
-    data2 && data2.tradingStats.length
-      ? sortBy(data2.tradingStats, (i) => i.timestamp).map((dataItem) => {
-          const profit = +dataItem.profitBFR / 1e6;
-          const loss = +dataItem.lossBFR / 1e6;
-          const profitCumulative = +dataItem.profitCumulativeBFR / 1e6;
-          const lossCumulative = +dataItem.lossCumulativeBFR / 1e6;
-          const pnlCumulative = profitCumulative - lossCumulative;
-          const pnl = profit - loss;
-          currentProfitCumulative += profit;
-          currentLossCumulative -= loss;
-          currentPnlCumulative += pnl;
-          return {
-            profit,
-            loss: -loss,
-            profitCumulative,
-            lossCumulative: -lossCumulative,
-            pnl,
-            pnlCumulative,
-            timestamp: dataItem.timestamp,
-            currentPnlCumulative,
-            currentLossCumulative,
-            currentProfitCumulative,
-          };
-        })
-      : null;
-
-  // console.log('dataMap', dataMap);
-  //   if (dataMap) {
-  //     // console.log(data,'data')
-  //     const maxProfit = maxBy(dataMap, (item) => item.profit).profit;
-  //     const maxLoss = minBy(dataMap, (item) => item.loss).loss;
-  //     const maxProfitLoss = Math.max(maxProfit, -maxLoss);
-
-  //     const maxPnl = maxBy(dataMap, (item) => item.pnl).pnl;
-  //     const minPnl = minBy(dataMap, (item) => item.pnl).pnl;
-  //     const maxCurrentCumulativePnl = maxBy(
-  //       dataMap,
-  //       (item) => item.currentPnlCumulative
-  //     ).currentPnlCumulative;
-  //     const minCurrentCumulativePnl = minBy(
-  //       dataMap,
-  //       (item) => item.currentPnlCumulative
-  //     ).currentPnlCumulative;
-
-  //     const currentProfitCumulative =
-  //     dataMap[dataMap.length - 1].currentProfitCumulative;
-  //     const currentLossCumulative = dataMap[dataMap.length - 1].currentLossCumulative;
-  //     const stats = {
-  //       maxProfit,
-  //       maxLoss,
-  //       maxProfitLoss,
-  //       currentProfitCumulative,
-  //       currentLossCumulative,
-  //       maxCurrentCumulativeProfitLoss: Math.max(
-  //         currentProfitCumulative,
-  //         -currentLossCumulative
-  //       ),
-
-  //       maxAbsPnl: Math.max(Math.abs(maxPnl), Math.abs(minPnl)),
-  //       maxAbsCumulativePnl: Math.max(
-  //         Math.abs(maxCurrentCumulativePnl),
-  //         Math.abs(minCurrentCumulativePnl)
-  //       ),
-  //     };
-
-  //     ret = {
-  //       dataMap,
-  //       stats,
-  //     };
-  //   }
-
-  //   return [ret];
-  // }
 
   const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
     if (dates) {
-      console.log(dates);
-      console.log('From: ', dates[0], ', to: ', dates[1]);
-      console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
       setDateRange(dates as Dayjs[]);
       setFilter({
         ...filter,
@@ -860,29 +228,6 @@ const StatsView = () => {
       console.log('Clear');
     }
   };
-
-  // const exportCSV = () => {
-  //   const headers = [
-  //     { label: 'First Name', value: 'firstname' },
-  //     { label: 'Last Name', value: 'lastname' },
-  //     { label: 'Email', value: 'email' },
-  //   ];
-
-  //   const data = [
-  //     { firstname: 'Ahmed', lastname: 'Tomi', email: 'ah@smthing.co.com' },
-  //     { firstname: 'Raed', lastname: 'Labes', email: 'rl@smthing.co.com' },
-  //     { firstname: 'Yezzi', lastname: 'Min l3b', email: 'ymin@cocococo.com' },
-  //   ];
-
-  //   return <CSVLink data={data} headers={headers}></CSVLink>;
-  // };
-  // useEffect(() => {
-  //   console.log('dateRange',dateRange)
-  //   console.log('dateRange',dateRange[0].toString())
-  //   console.log('dateRange',dayjs(dateRange[0]).unix())
-
-  //   // setDateRange([dayjs().add(-30, 'd'), dayjs()])
-  // },[dateRange])
 
   return (
     <Box marginX={{ base: '0', lg: '-60px' }}>
@@ -949,7 +294,7 @@ const StatsView = () => {
               color={`${dataStats && +dataStats?.overviewStats?.totalVolumeDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
               {dataStats && +dataStats?.overviewStats?.totalVolumeDelta > 0 ? '+' : ''}
-              {dataStats && addComma(dataStats?.overviewStats?.totalVolumeDelta,2)}
+              {dataStats && addComma(dataStats?.overviewStats?.totalVolumeDelta, 2)}
             </Box>
           </Box>
         </GridItem>
@@ -967,7 +312,7 @@ const StatsView = () => {
                 Total Fees
               </Text>
               <Box>
-                <LineChart width={70} height={22} data={data}>
+                <LineChart width={70} height={22} data={dataLine}>
                   <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
                 </LineChart>
               </Box>
@@ -987,7 +332,7 @@ const StatsView = () => {
               color={`${dataStats && +dataStats?.overviewStats?.totalFeesDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
               {dataStats && +dataStats?.overviewStats?.totalFeesDelta > 0 ? '+' : ''}
-              {dataStats && addComma(dataStats?.overviewStats?.totalFeesDelta,2)}
+              {dataStats && addComma(dataStats?.overviewStats?.totalFeesDelta, 2)}
             </Box>
           </Box>
         </GridItem>
@@ -1005,7 +350,7 @@ const StatsView = () => {
                 ELP Pool
               </Text>
               <Box>
-                <LineChart width={70} height={22} data={data}>
+                <LineChart width={70} height={22} data={dataLine}>
                   <Line type="monotone" dataKey="pv" stroke="#F03D3E" strokeWidth={2} dot={false} />
                 </LineChart>
               </Box>
@@ -1025,7 +370,7 @@ const StatsView = () => {
               color={`${dataStats && +dataStats?.overviewStats?.totalPoolDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
               {dataStats && +dataStats?.overviewStats?.totalPoolDelta > 0 ? '+' : ''}
-              {dataStats && addComma(dataStats?.overviewStats?.totalPoolDelta,2)}
+              {dataStats && addComma(dataStats?.overviewStats?.totalPoolDelta, 2)}
             </Box>
           </Box>
         </GridItem>
@@ -1043,7 +388,7 @@ const StatsView = () => {
                 Total Users
               </Text>
               <Box>
-                <LineChart width={70} height={22} data={data}>
+                <LineChart width={70} height={22} data={dataLine}>
                   <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
                 </LineChart>
               </Box>
@@ -1063,7 +408,7 @@ const StatsView = () => {
               color={`${dataStats && +dataStats?.overviewStats?.totalUsersDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
               {dataStats && +dataStats?.overviewStats?.totalUsersDelta > 0 ? '+' : ''}
-              {dataStats && addComma(dataStats?.overviewStats?.totalUsersDelta,2)}
+              {dataStats && addComma(dataStats?.overviewStats?.totalUsersDelta, 2)}
             </Box>
           </Box>
         </GridItem>
@@ -1081,7 +426,7 @@ const StatsView = () => {
                 Net Payout
               </Text>
               <Box>
-                <LineChart width={70} height={22} data={data}>
+                <LineChart width={70} height={22} data={dataLine}>
                   <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
                 </LineChart>
               </Box>
@@ -1101,7 +446,7 @@ const StatsView = () => {
               color={`${dataStats && +dataStats?.overviewStats?.payoutDelta >= 0 ? '#1ED768' : '#F03D3E'}`}
             >
               {dataStats && +dataStats?.overviewStats?.payoutDelta > 0 ? '+' : ''}
-              {dataStats && addComma(dataStats?.overviewStats?.payoutDelta,2)}
+              {dataStats && addComma(dataStats?.overviewStats?.payoutDelta, 2)}
             </Box>
           </Box>
         </GridItem>
@@ -1124,10 +469,10 @@ const StatsView = () => {
                 variant="outline"
                 size={'xs'}
                 background={'#050506'}
-                // onClick={exportCSV}
               >
                 <DownloadCSV
                   data={dataVolume}
+                  filename={`VolumeCSV_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                   headers={[
                     { label: 'Cumulative', key: 'cumulative' },
                     { label: 'Volume USDC', key: 'VolumeUSDC' },
@@ -1138,15 +483,7 @@ const StatsView = () => {
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
-                // width={500}
-                // height={300}
                 data={dataVolume}
-                // margin={{
-                //   top: 5,
-                //   right: 10,
-                //   left: 10,
-                //   bottom: 5,
-                // }}
                 barGap={0}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
@@ -1220,20 +557,13 @@ const StatsView = () => {
                     { label: 'Fees', key: 'fee' },
                     { label: 'Timestamp', key: 'timestamp' },
                   ]}
+                  filename={`FeesCSV_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
-                // width={500}
-                // height={300}
                 data={dataFees}
-                // margin={{
-                //   top: 5,
-                //   right: 10,
-                //   left: 10,
-                //   bottom: 5,
-                // }}
                 barGap={0}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
@@ -1301,31 +631,32 @@ const StatsView = () => {
                 size={'xs'}
                 background={'#050506'}
               >
-                Download CSV
+                <DownloadCSV
+                  data={dataBurnStats}
+                  headers={[
+                    { label: 'Cumulative', key: 'cumulative' },
+                    { label: 'Amount', key: 'amount' },
+                    { label: 'Timestamp', key: 'timestamp' },
+                  ]}
+                  filename={`BurnedETR_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
+                />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
-                // width={500}
-                // height={300}
-                data={data}
-                // margin={{
-                //   top: 5,
-                //   right: 10,
-                //   left: 10,
-                //   bottom: 5,
-                // }}
+                data={dataBurnStats}
                 barGap={0}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
-                  dataKey="name"
+                  dataKey="timestamp"
                   stroke="#6D6D70"
                   style={{
                     fontSize: '12px',
                   }}
                   tickLine={false}
+                  tickFormatter={DataTickDateFormater}
                 />
                 {/* <YAxis /> */}
                 <YAxis
@@ -1335,6 +666,7 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 <YAxis
                   yAxisId="right"
@@ -1343,18 +675,20 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 <Tooltip />
                 <Legend />
-                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#FFCE57" barSize={16} />
+                <Bar yAxisId="left" dataKey="amount" name="Burned ETR" fill="#FFCE57" barSize={16} unit={'ETR'} />
                 <Line
                   type="monotone"
-                  dataKey="amt"
-                  name="amt Name"
+                  dataKey="cumulative"
+                  name="Cumulative"
                   stroke="#FE1A67"
                   connectNulls
                   yAxisId="right"
                   dot={false}
+                  unit={'ETR'}
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -1384,13 +718,12 @@ const StatsView = () => {
                     { label: 'Exchange Rate', key: 'rate' },
                     { label: 'Timestamp', key: 'timestamp' },
                   ]}
+                  filename={`USD/ELP-rate_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
-                // width={500}
-                // height={300}
                 data={dataRate}
                 margin={{
                   right: 60,
@@ -1467,13 +800,12 @@ const StatsView = () => {
                     { label: 'Current USDC Balance', key: 'glpSupply' },
                     { label: 'Timestamp', key: 'timestamp' },
                   ]}
+                  filename={`ELPPool_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
-                // width={500}
-                // height={300}
                 data={dataELPPool}
                 margin={{
                   right: 60,
@@ -1544,31 +876,33 @@ const StatsView = () => {
                 size={'xs'}
                 background={'#050506'}
               >
-                Download CSV
+                <DownloadCSV
+                  data={dataUserStats}
+                  headers={[
+                    { label: 'Existing Count', key: 'existingCount' },
+                    { label: 'Unique Count', key: 'uniqueCount' },
+                    { label: 'unique Count Cumulative', key: 'uniqueCountCumulative' },
+                    { label: 'Timestamp', key: 'timestamp' },
+                  ]}
+                  filename={`NewvsExistingUsers_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
+                />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
-                // width={500}
-                // height={300}
-                data={data}
-                // margin={{
-                //   top: 5,
-                //   right: 10,
-                //   left: 10,
-                //   bottom: 5,
-                // }}
+                data={dataUserStats}
                 barGap={0}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
-                  dataKey="name"
+                  dataKey="timestamp"
                   stroke="#6D6D70"
                   style={{
                     fontSize: '12px',
                   }}
                   tickLine={false}
+                  tickFormatter={DataTickDateFormater}
                 />
                 {/* <YAxis /> */}
                 <YAxis
@@ -1578,6 +912,7 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 <YAxis
                   yAxisId="right"
@@ -1586,19 +921,21 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
                 />
                 <Tooltip />
                 <Legend />
-                <Bar yAxisId="left" dataKey="pv" name="pv Name" fill="#FFCE57" barSize={16} />
-                <Bar yAxisId="left" dataKey="uv" name="uv Name" fill="#8042FF" barSize={16} />
+                <Bar yAxisId="left" dataKey="new" name="New" fill="#FFCE57" barSize={16} />
+                <Bar yAxisId="left" dataKey="existing" name="Existing" fill="#8042FF" barSize={16} />
                 <Line
                   type="monotone"
-                  dataKey="amt"
-                  name="amt Name"
+                  dataKey="percentage"
+                  name="Existing %"
                   stroke="#4CC0C0"
                   connectNulls
                   yAxisId="right"
                   dot={false}
+                  unit="%"
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -1621,25 +958,35 @@ const StatsView = () => {
                 size={'xs'}
                 background={'#050506'}
               >
-                Download CSV
+                <DownloadCSV
+                  data={dataTradersNetPnL}
+                  headers={[
+                    { label: 'PNL', key: 'pnl' },
+                    { label: 'PNL Cumulative', key: 'pnlCumulative' },
+                    { label: 'Timestamp', key: 'timestamp' },
+                  ]}
+                  filename={`TradersNetPnL(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
+                />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 width={500}
                 height={300}
-                data={data3 as any[]}
-                // margin={{
-                //   top: 5,
-                //   right: 10,
-                //   left: 10,
-                //   bottom: 5,
-                // }}
+                data={dataTradersNetPnL}
                 barGap={0}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
-                <XAxis dataKey="name" />
+                <XAxis
+                  dataKey="timestamp"
+                  stroke="#6D6D70"
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  tickLine={false}
+                  tickFormatter={DataTickDateFormater}
+                />
                 {/* <YAxis /> */}
                 <YAxis
                   yAxisId="left"
@@ -1648,6 +995,8 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
+                  domain={[-maxTradersNetPnL, maxTradersNetPnL]}
                 />
                 <YAxis
                   yAxisId="right"
@@ -1656,23 +1005,26 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  tickFormatter={DataTickFormater}
+                  domain={[-maxTradersNetPnL, maxTradersNetPnL]}
                 />
                 <Tooltip />
                 <Legend />
+                <Bar yAxisId="left" dataKey="pnl" barSize={16} fill="white" name="Net PnL" unit="$">
+                  {dataTradersNetPnL.map((entry, index) => {
+                    return <Cell key={`cell-${index}`} fill={`${entry.pnl > 0 ? '#82ca9d' : '#F03D3E'}`} />;
+                  })}
+                </Bar>
                 <Line
                   type="monotone"
-                  dataKey="pv"
-                  name="amt Name"
+                  dataKey="pnlCumulative"
+                  name="Cumulative "
                   stroke="#4CC0C0"
                   connectNulls
                   yAxisId="right"
                   dot={false}
+                  unit="$"
                 />
-                <Bar yAxisId="left" dataKey="uv" stackId="stack" barSize={16} fill="white">
-                  {data3.map((entry, index) => {
-                    return <Cell key={`cell-${index}`} fill={`${entry.uv > 0 ? '#82ca9d' : '#F03D3E'}`} />;
-                  })}
-                </Bar>
               </ComposedChart>
             </ResponsiveContainer>
           </Box>
@@ -1694,20 +1046,24 @@ const StatsView = () => {
                 size={'xs'}
                 background={'#050506'}
               >
-                Download CSV
+                <DownloadCSV
+                  data={dataTradersProfit}
+                  headers={[
+                    { label: 'Profit', key: 'profit' },
+                    { label: 'Loss', key: 'loss' },
+                    { label: 'Profit Cumulative', key: 'profitCumulative' },
+                    { label: 'Loss Cumulative', key: 'lossCumulative' },
+                    { label: 'Timestamp', key: 'timestamp' },
+                  ]}
+                  filename={`TradersProfitvsLoss(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
+                />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
               <ComposedChart
                 width={500}
                 height={300}
-                data={dataMap as any[]}
-                // margin={{
-                //   top: 5,
-                //   right: 10,
-                //   left: 10,
-                //   bottom: 5,
-                // }}
+                data={dataTradersProfit}
                 barGap={0}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
@@ -1719,6 +1075,7 @@ const StatsView = () => {
                     fontSize: '12px',
                   }}
                   tickLine={false}
+                  tickFormatter={DataTickDateFormater}
                 />
                 {/* <YAxis /> */}
                 <YAxis
@@ -1728,6 +1085,8 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  domain={[-maxTradersProfit, maxTradersProfit]}
+                  tickFormatter={DataTickFormater}
                 />
                 <YAxis
                   yAxisId="right"
@@ -1736,19 +1095,15 @@ const StatsView = () => {
                   style={{
                     fontSize: '12px',
                   }}
+                  domain={[-maxTradersProfit, maxTradersProfit]}
+                  tickFormatter={DataTickFormater}
                 />
                 <Tooltip />
                 <Legend />
                 <Bar yAxisId="left" dataKey="profit" fill="#22c761" />
                 <Bar yAxisId="left" dataKey="loss" fill="#f93333" />
-                <Area
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="currentProfitCumulative"
-                  fill="#22c761"
-                  stroke="#22c761"
-                />
-                <Area yAxisId="right" type="monotone" dataKey="currentLossCumulative" fill="#f93333" stroke="#f93333" />
+                <Area yAxisId="right" type="monotone" dataKey="profitCumulative" fill="#22c761" stroke="#22c761" />
+                <Area yAxisId="right" type="monotone" dataKey="lossCumulative" fill="#f93333" stroke="#f93333" />
               </ComposedChart>
             </ResponsiveContainer>
           </Box>

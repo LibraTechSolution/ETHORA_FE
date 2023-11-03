@@ -26,23 +26,41 @@ export interface ItotalTraders {
   uniqueCountCumulative: number;
 }
 
+export interface ItradingData {
+  profit: number;
+  loss: number;
+  profitCumulative: number;
+  lossCumulative: number;
+  pnl: number;
+  pnlCumulative: number;
+  timestamp: string | number;
+  currentPnlCumulative: number;
+  currentLossCumulative: number;
+  currentProfitCumulative: number;
+}
+
 export interface ItradingStats {
-  loss: string;
-  lossCumulative: string;
-  lossCumulativeUSDC: string;
-  lossUSDC: string;
-  profit: string;
-  profitCumulative: string;
-  profitCumulativeUSDC: string;
-  profitUSDC: string;
-  timestamp: string;
+  maxProfit: number;
+  maxLoss: number;
+  maxProfitLoss: number;
+  currentProfitCumulative: number;
+  currentLossCumulative: number;
+  maxCurrentCumulativeProfitLoss: number;
+  maxAbsPnl: number;
+  maxAbsCumulativePnl: number;
 }
 
 export interface IuserStats {
-  existingCount: 5;
-  timestamp: string;
-  uniqueCount: 9;
-  uniqueCountCumulative: 0;
+  existingCount: number;
+  timestamp: string |number;
+  uniqueCount: number;
+  uniqueCountCumulative: number;
+}
+
+export interface IBurnStats {
+  timestamp: number;
+  cumulative: number;
+  amount: number;
 }
 
 export interface IvolumeStats {
@@ -97,7 +115,17 @@ export interface IDataStats {
   poolStats: {
     data: IPoolStats[];
   };
-  tradingStats: ItradingStats[];
+  tradingStats: {
+    data: ItradingData[];
+    stats: ItradingStats;
+  };
   volumeStats: IvolumeStats[];
-  // userStats: IuserStats[];
+  userStats: IuserStats[];
+  burnedETRs: IBurnStats[];
 }
+
+export type ITradersNetPnLChart = Pick<ItradingData, 'pnl' | 'pnlCumulative' | 'timestamp'>;
+export type ITradersProfitChart = Pick<
+  ItradingData,
+  'timestamp' | 'profit' | 'loss' | 'profitCumulative' | 'lossCumulative'
+>;
