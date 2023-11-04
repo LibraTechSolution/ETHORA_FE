@@ -93,17 +93,6 @@ const listPairData: PairData[] = [
     type: PairType.CRYPTO,
   },
   {
-    pair: 'BOGE/USD',
-    isFavorite: false,
-    changed24h: 1815.35,
-    changed24hPercent: 0.4,
-    currentOL: 0,
-    maxTradeSize: 50,
-    maxOL: 2000,
-    payout: 70,
-    type: PairType.CRYPTO,
-  },
-  {
     pair: 'EUR/USD',
     isFavorite: false,
     changed24h: 1815.35,
