@@ -9,7 +9,7 @@ import { Flex, Image, Center, Box, Progress } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ShowPrice } from './TradeTable';
+import { ShowPrice } from './ShowPrice';
 import { useGetTradeContract } from '@/hooks/useGetTradeContract';
 import { readContract } from '@wagmi/core';
 import { divide } from '@/utils/operationBigNumber';

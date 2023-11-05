@@ -94,9 +94,8 @@ export const useGetTradeContract = (pair?: string) => {
 
   const pairConfig = useMemo(() => {
     const tempPair = pair ? pair : params?.pair ? params?.pair : ''
-    if (tempPair) {
-      const pair = (tempPair as string).replace('-', '').toUpperCase()
-      return configPair[pair]
+    if (tempPair && configPair[(tempPair as string).replace('-', '').toUpperCase()]) {
+      return configPair[(tempPair as string).replace('-', '').toUpperCase()]
     }
     return {
       bufferBOSC: '',

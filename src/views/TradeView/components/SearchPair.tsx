@@ -26,6 +26,8 @@ import { divide } from '@/utils/operationBigNumber';
 import bufferBOABI from '@/config/abi/bufferBOABI';
 import { IResponData } from '@/types/api.type';
 import { addComma } from '@/utils/number';
+import useListPairPrice from '@/store/useListPairPrice';
+import { ShowPrice } from './ShowPrice';
 
 interface Props {
   listChanged24h: IResponData<Changed24h> | undefined;
@@ -105,12 +107,9 @@ export const FEED_IDS: { [key: string]: string } = {
   '84c2dde9633d93d1bcad84e7dc41c9d56578b7ec52fabedc1f335d673df0a7c1': 'GBPUSD',
 };
 
-const SearchPair = (props: Props) => {
-  const { listChanged24h, isShow } = props;
-  const { listPairData, setListPairData } = usePairStore();
-  const [search, setSearch] = useState<string>('');
-  const [tab, setTab] = useState<Tab>(Tab.All);
+const CallSocket = () => {
   const [pairPrice, setPairPrice] = useState<{ [key: string]: number }>({});
+  const { setListPairPrice } = useListPairPrice();
 
   useEffect(() => {
     const socket = new WebSocket('wss://hermes.pyth.network/ws');
@@ -163,7 +162,16 @@ const SearchPair = (props: Props) => {
     pairPrice[FEED_IDS[id as string]] = +divide(price, 8);
 
     setPairPrice({ ...pairPrice });
+    setListPairPrice({ ...pairPrice });
   };
+  return <></>;
+};
+
+const SearchPair = (props: Props) => {
+  const { listChanged24h, isShow } = props;
+  const { listPairData, setListPairData } = usePairStore();
+  const [search, setSearch] = useState<string>('');
+  const [tab, setTab] = useState<Tab>(Tab.All);
 
   const listPairShow = useMemo<PairData[]>(() => {
     const tempList = [];
@@ -241,6 +249,7 @@ const SearchPair = (props: Props) => {
           onChange={handleOnChange}
         />
       </InputGroup>
+      <CallSocket />
 
       <Box marginTop="12px">
         <Flex>
@@ -365,7 +374,9 @@ const SearchPair = (props: Props) => {
                     {item.payout}%
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    <p className="pb-1">{addComma(pairPrice[item.pair.replace('/', '').toUpperCase()], 2)}</p>
+                    <p className="pb-1">
+                      <ShowPrice pair={item.pair.replace('/', '')} />
+                    </p>
                     <p
                       className={`flex items-center ${
                         item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'

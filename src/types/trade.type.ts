@@ -88,6 +88,7 @@ export interface ITradingData {
   _id: string,
   createdAt: string,
   updatedAt: string
+  status: TRADE_STATUS
 }
 
 export interface EditTradeReq {
@@ -98,4 +99,9 @@ export interface EditTradeReq {
   slippage: number,
   isAbove: boolean,
   limitOrderDuration: number
+}
+
+export enum TRADE_STATUS {
+  WIN = "Win",
+  LOSS = "Loss",
 }

@@ -11,7 +11,7 @@ import { cloneElement, useCallback, useEffect, useMemo, useRef, useState } from 
 import { Box, Button, Flex, useToast } from '@chakra-ui/react';
 import datafeed from './datafeed';
 import { Dropdown, MenuProps } from 'antd';
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { EditTradeReq, ITradingData, State } from '@/types/trade.type';
 import { divide } from '@/utils/operationBigNumber';
@@ -143,6 +143,7 @@ export const TradingViewChart = () => {
     let tempCurrentPair = params?.pair as string;
     if (!tempCurrentPair || !listPairs.includes(tempCurrentPair.replace('-', '/').toLocaleUpperCase())) {
       tempCurrentPair = '';
+      return notFound();
     }
     return tempCurrentPair;
   }, [params.pair]);

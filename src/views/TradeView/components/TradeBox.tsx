@@ -17,7 +17,7 @@ import { Address, useContractRead } from 'wagmi';
 import optionsConfigABI from '@/config/abi/optionsConfigABI';
 import BigNumber from 'bignumber.js';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
-import { ShowPrice } from './TradeTable';
+import { ShowPrice } from './ShowPrice';
 import { RotateCw } from 'lucide-react';
 import { useGetTradeContract } from '@/hooks/useGetTradeContract';
 
@@ -154,7 +154,7 @@ const TradeBox = (props: PropsType) => {
   return (
     <Box bg="#0c0c10" padding="20px" marginBottom={2} rounded={'10px'}>
       <Flex alignItems="center" justifyContent="space-between" display={{ base: 'flex', xl: 'block', '2xl': 'flex' }}>
-        <Center>
+        <Center justifyContent={'initial'}>
           <Image alt="" src={`/images/icons/${item.pair}.png`} w="20px" h="20px" />
           <p className="px-2 text-sm font-normal text-[#fff]">{item.pair && item.pair.toUpperCase()}</p>
           {item.isAbove ? (
@@ -202,7 +202,7 @@ const TradeBox = (props: PropsType) => {
             fontSize={'12px'}
           >
             <p className="text-sm font-normal text-[#FFFFFF]">
-              <ShowPrice />
+              <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} />
             </p>
           </Tooltip>
         </GridItem>
