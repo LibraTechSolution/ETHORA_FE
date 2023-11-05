@@ -1,21 +1,8 @@
 'use client';
 
-import {
-  Box,
-  Flex,
-  Grid,
-  GridItem,
-  Image,
-  Tab,
-  TabIndicator,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from '@chakra-ui/react';
+import { Box, Grid, GridItem, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import TradeViewHeader from './components/TradeViewHeader';
-import TradeControl from './components/TradeControl';
 import HistoryTable from './components/HistoryTable';
 import TradeTable from './components/TradeTable';
 import CancelTable from './components/CancelTable';

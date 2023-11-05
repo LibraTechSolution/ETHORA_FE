@@ -6,8 +6,8 @@ import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { getTradeCancel } from '@/services/trade';
-import { ITradingData, ITradingParams } from '@/types/trade.type';
-import { Flex, Image } from '@chakra-ui/react';
+import { ITradingData, ITradingParams, TRADE_STATUS } from '@/types/trade.type';
+import { Flex, Image, Text } from '@chakra-ui/react';
 import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import useUserStore from '@/store/useUserStore';
@@ -80,7 +80,9 @@ const CancelTable = () => {
     },
     {
       title: 'Status',
-      render: (value: ITradingData) => 'TODO',
+      dataIndex: 'status',
+      key: 'status',
+      render: (value) => <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>,
     },
   ];
 

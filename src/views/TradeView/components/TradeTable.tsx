@@ -8,7 +8,6 @@ import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams, State } from '@/types/trade.type';
 import { closeTrade, getTrades } from '@/services/trade';
-import useTradeStore from '@/store/useTradeStore';
 import { divide } from '@/utils/operationBigNumber';
 import dayjs from 'dayjs';
 import CountDown from './CountDown';
@@ -19,6 +18,7 @@ import { Status } from '@/types/faucet.type';
 import useUserStore from '@/store/useUserStore';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { RotateCw } from 'lucide-react';
+import { ShowPrice } from './ShowPrice';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -39,11 +39,6 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
       <p className="text-[ #9E9E9F] text-xs font-normal">{probability.toFixed(2)}%</p>
     </Box>
   );
-};
-
-export const ShowPrice = () => {
-  const { price } = useTradeStore();
-  return <span>{addComma(price, 2)}</span>;
 };
 
 const TradeTable = () => {
@@ -102,7 +97,7 @@ const TradeTable = () => {
       title: 'Current Price',
       dataIndex: 'currentPrice',
       key: 'currentPrice',
-      render: () => <ShowPrice />,
+      render: (value, record) => <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} />,
     },
     {
       title: 'Open Time',

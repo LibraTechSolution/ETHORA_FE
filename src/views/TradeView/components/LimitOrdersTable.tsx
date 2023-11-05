@@ -17,7 +17,7 @@ import { Status } from '@/types/faucet.type';
 import EditLimitOrderModal from './EditLimitOrderModal';
 import useUserStore from '@/store/useUserStore';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
-import { ShowPrice } from './TradeTable';
+import { ShowPrice } from './ShowPrice';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -79,7 +79,7 @@ const LimitOrdersTable = () => {
       title: 'Current Price',
       dataIndex: 'currentPrice',
       key: 'currentPrice',
-      render: () => <ShowPrice />,
+      render: (value, record) => <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} />,
     },
     {
       title: 'Time Left',
