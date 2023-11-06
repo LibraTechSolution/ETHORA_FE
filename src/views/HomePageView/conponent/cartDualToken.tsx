@@ -35,14 +35,25 @@ const CardDualToken = ({
       gap={'20px'}
       flexDirection={'column'}
     >
-      <Image src={image} alt={title} width={'77px'} height={'77px'} />
+      <Box
+        width={77}
+        height={77}
+        display={'flex'}
+        alignItems={'center'}
+        justifyContent={'center'}
+        border={'1px solid #242428'}
+        borderRadius={8}
+        backgroundColor={'rgba(28, 28, 30, 0.5)'}
+      >
+        <Image src={image} alt={title} width={'55px'} height={'55px'} />
+      </Box>
       <Text fontSize="20px" textColor={'white'} fontWeight={600}>
         {title}
       </Text>
-      <Text as="span" fontSize={'xs'} textColor={'#9E9E9F'}>
+      <Text as="span" fontSize={'16px'} textColor={'#9E9E9F'}>
         {desc}
       </Text>
-      <Text as="span" fontSize={'xs'} textColor={'#9E9E9F'}>
+      <Text as="span" fontSize={'16px'} textColor={'#9E9E9F'}>
         {percent}
       </Text>
       <Box display={'flex'} alignItems={'center'} gap={'20px'}>

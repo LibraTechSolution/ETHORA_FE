@@ -59,13 +59,15 @@ export const HeaderLanding = () => {
       zIndex={11}
       position={'fixed'}
       width={'100%'}
-      backgroundColor={scrolled ? '#0f0f14eb' : 'transparent'}
+      backgroundColor={scrolled ? '#0f0f14eb' : 'rgba(12, 12, 16, 0.60)'}
+      boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+      backdropFilter={'blur(7px)'}
       top={0}
     >
       <Flex gap={3} alignItems="center" width={'100%'} justifyContent={isMobile ? 'space-between' : 'start'}>
         <Center>
           <Link href="/" className="mr-2">
-            <Image alt="ethora" src="/images/landingpage/logo_landingpage.png" w="full" h="full" />
+            <Image alt="ethora" src="/images/landingpage/logoText.svg" w="full" h="full" />
           </Link>
         </Center>
         {isMobile ? (
