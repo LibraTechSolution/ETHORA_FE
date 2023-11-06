@@ -44,12 +44,15 @@ export const HomeView = () => {
         backgroundRepeat={'no-repeat'}
         backgroundSize={'cover'}
         paddingTop={'86px'}
-        bgImage={{
-          base: "linear-gradient(to bottom, #0f0f14eb, #0f0f1a), url('/images/landingpage/bg-lading-top.gif')",
-          md: "linear-gradient(to bottom, #0f0f14eb, #0c0c10), url('/images/landingpage/bg-lading-top.gif')",
-        }}
+        position={'relative'}
+        height={'100vh'}
+        // bgImage={{
+        //   base: "linear-gradient(to bottom, #0f0f14eb, #0f0f1a), url('/images/landingpage/bg-lading-top.gif')",
+        //   md: "linear-gradient(to bottom, #0f0f14eb, #0c0c10), url('/images/landingpage/bg-lading-top.gif')",
+        // }}
       >
-        <GridItem>
+        <video src="/images/landingpage/bg.mp4" autoPlay loop playsInline muted className="video-bg"></video>
+        <GridItem zIndex={2}>
           <Box paddingLeft={{ base: '12px', md: '50px', lg: '150px' }} paddingRight={{ base: '12px', md: '80px' }}>
             <Box
               display={'flex'}
@@ -68,6 +71,7 @@ export const HomeView = () => {
               textColor={'white'}
               fontSize={{ base: '3xl', md: '30px', lg: '60px' }}
               lineHeight={{ base: '45px', md: '40px', lg: '70px' }}
+              fontWeight={{ base: '500', lg: '600' }}
               marginBottom={{ base: '20px', md: '30px' }}
               textAlign={{ base: 'center', md: 'start' }}
             >
@@ -75,7 +79,7 @@ export const HomeView = () => {
             </Text>
             <Text
               as="p"
-              fontSize={'xs'}
+              fontSize={'16px'}
               color={'#9E9E9F'}
               marginBottom={'30px'}
               textAlign={{ base: 'center', md: 'start' }}
@@ -91,48 +95,52 @@ export const HomeView = () => {
               paddingRight={{ base: '12px', md: '0px' }}
               justifyContent={{ base: 'center', md: 'start' }}
             >
-              <Text as="span" fontSize={'xs'} textColor={'#0052FF'} cursor={'pointer'}>
+              <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
                 Trade <ExternalLinkIcon />
               </Text>
-              <Text as="span" fontSize={'xs'} textColor={'#0052FF'} cursor={'pointer'}>
+              <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
                 Earn Real Yield <ExternalLinkIcon />
               </Text>
-              <Text as="span" fontSize={'xs'} textColor={'#0052FF'} cursor={'pointer'}>
+              <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
                 Buy token <ExternalLinkIcon />
               </Text>
             </Box>
           </Box>
         </GridItem>
-        <GridItem display={{ base: 'none', sm: 'none', md: 'block', lg: 'block' }}>
+        <GridItem display={{ base: 'none', sm: 'none', md: 'block', lg: 'block' }} zIndex={2}>
           <Image alt="trade" src="/images/landingpage/trade.png" w="full" h="full" objectFit="cover" />
         </GridItem>
-        <GridItem display={{ base: 'block', sm: 'block', md: 'none', lg: 'none' }} margin={'0px 12px'}>
+        <GridItem display={{ base: 'block', sm: 'block', md: 'none', lg: 'none' }} margin={'0px 12px'} zIndex={2}>
           <Image alt="trade" src="/images/landingpage/trade_mobile.png" w="full" h="full" objectFit="cover" />
         </GridItem>
+        <div className="gradient-layer" />
       </Grid>
       <Box
         display={'flex'}
         alignItems={'center'}
         justifyContent={'center'}
-        bgImage={"url('/images/landingpage/bg-ethora.png')"}
+        // bgImage={`url('/images/landingpage/bg-ethora.png'), url('/images/landingpage/bg-ethora.png')`}
         bgRepeat="no-repeat"
-        bgPosition={'center'}
-        bgSize={{ base: '400% 370%', sm: '400% 370%', md: '195% 295%', lg: '125% 250%' }}
+        // bgPosition={'center 130px ,center top'}
+        // bgSize={{ base: '400% 370%', sm: '400% 370%', md: '195% 295%', lg: '125% 250%' }}
         paddingTop={'20%'}
         position={'relative'}
         flexDirection={'column'}
+        zIndex={2}
+        className='custom-shawdow'
       >
         <Box
           position="absolute"
           top={'20px'}
           left={'-2'}
           display={{ base: 'none', sm: 'none', md: 'none', lg: 'block' }}
+          zIndex={1}
         >
           <Image src="/images/landingpage/ethora.png" alt="landingpage" width={'full'} height={'full'} />
         </Box>
-        <Box maxWidth={'1150px'} margin={'0 auto'}>
+        <Box maxWidth={'1150px'} margin={'0 auto'} zIndex={2}>
           <Text
-            fontSize={{ base: '28px', md: '60px' }}
+            fontSize={{ base: '28px', md: '56px' }}
             textColor={'white'}
             lineHeight={'120px'}
             fontWeight={600}
@@ -189,7 +197,7 @@ export const HomeView = () => {
           flexDirection={'column'}
         >
           <Text
-            fontSize={{ base: '28px', md: '60px' }}
+            fontSize={{ base: '28px', md: '56px' }}
             textColor={'white'}
             lineHeight={'120px'}
             fontWeight={600}
@@ -211,7 +219,7 @@ export const HomeView = () => {
             marginRight={{ base: '12px', sm: '12px', md: '12px', lg: '0px' }}
           >
             <CardDualToken
-              image="/images/landingpage/img_etr.png"
+              image="/images/landingpage/logo.svg"
               title="ETR"
               desc="ETR is the utility and governance token that accrues up to X% of the fees generated by the platform."
               percent="APR: 9.97%"
@@ -220,7 +228,7 @@ export const HomeView = () => {
               textBtnRight="Stake"
             />
             <CardDualToken
-              image="/images/landingpage/img_elp.png"
+              image="/images/landingpage/logo.svg"
               title="ELP"
               desc="
             BLP is the token issued to liquidity providers and accrues up to 70% of the fees generated by the platform."
