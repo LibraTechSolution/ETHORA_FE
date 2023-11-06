@@ -15,6 +15,7 @@ import {
   Input,
   Button,
   Table,
+  Text,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import { SearchIcon } from 'lucide-react';
@@ -28,6 +29,8 @@ import { IResponData } from '@/types/api.type';
 import { addComma } from '@/utils/number';
 import useListPairPrice from '@/store/useListPairPrice';
 import { ShowPrice } from './ShowPrice';
+import dayjs from 'dayjs';
+import ForexTradingTimeModal from './ForexTradingTimeModal';
 
 interface Props {
   listChanged24h: IResponData<Changed24h> | undefined;
@@ -60,7 +63,7 @@ const MaxOICell = ({ pair }: { pair: string }) => {
     getMaxOI();
   }, [getMaxOI]);
 
-  return <span>{maxOI}</span>;
+  return <span>{addComma(maxOI, 2)} USDC</span>;
 };
 
 const CurrentOICell = ({ pair }: { pair: string }) => {
@@ -86,7 +89,7 @@ const CurrentOICell = ({ pair }: { pair: string }) => {
     return () => clearInterval(interval);
   }, [getCurrentOI]);
 
-  return <span>{currentOI}</span>;
+  return <span>{addComma(currentOI, 2)} USDC</span>;
 };
 
 export const FEED_IDS: { [key: string]: string } = {
@@ -172,6 +175,18 @@ const SearchPair = (props: Props) => {
   const { listPairData, setListPairData } = usePairStore();
   const [search, setSearch] = useState<string>('');
   const [tab, setTab] = useState<Tab>(Tab.All);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+
+  const isClose = useMemo(() => {
+    if (dayjs().utc().day() === 0 || dayjs().utc().day() === 6) {
+      return true;
+    } else {
+      if (dayjs().utc().hour() < 6 || dayjs().utc().hour() > 16) {
+        return true;
+      }
+    }
+    return false;
+  }, []);
 
   const listPairShow = useMemo<PairData[]>(() => {
     const tempList = [];
@@ -371,29 +386,61 @@ const SearchPair = (props: Props) => {
                     </Box>
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    {item.payout}%
+                    {isClose && item.type !== PairType.FOREX ? `${item.payout}%` : '--'}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    <p className="pb-1">
-                      <ShowPrice pair={item.pair.replace('/', '')} />
-                    </p>
-                    <p
-                      className={`flex items-center ${
-                        item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'
-                      }`}
-                    >
-                      {item.changed24hPercent > 0 ? <TriangleUpIcon /> : <TriangleDownIcon />}{' '}
-                      <span className="pl-2">{item.changed24hPercent}%</span>
-                    </p>
+                    {isClose && item.type !== PairType.FOREX ? (
+                      <div>
+                        <p className="pb-1">
+                          <ShowPrice pair={item.pair.replace('/', '')} />
+                        </p>
+                        <p
+                          className={`flex items-center ${
+                            item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'
+                          }`}
+                        >
+                          {item.changed24hPercent > 0 ? <TriangleUpIcon /> : <TriangleDownIcon />}{' '}
+                          <span className="pl-2">{item.changed24hPercent}%</span>
+                        </p>
+                      </div>
+                    ) : (
+                      <Flex py={'9px'} alignItems={'center'}>
+                        <Text textDecoration={'underline'} marginRight={2} onClick={() => setIsOpenModal(true)}>
+                          Schedule
+                        </Text>
+                        <Box
+                          border={'1px solid #F03D3E'}
+                          display="flex"
+                          px={2}
+                          rounded={4}
+                          py={'2px'}
+                          alignItems="center"
+                          backgroundColor="#39272A"
+                        >
+                          <Image alt="" src={'/images/icons/x-circle-red.svg'} w="10px" h="10px" />
+                          <Text textColor={'#F03D3E'} marginLeft={'5px'}>
+                            Close
+                          </Text>
+                        </Box>
+                      </Flex>
+                    )}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    {item.maxTradeSize} USDC
+                    {isClose && item.type !== PairType.FOREX ? `${item.maxTradeSize} USDC` : '--'}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    <CurrentOICell pair={item.pair.replace('/', '').toUpperCase()} /> USDC
+                    {isClose && item.type !== PairType.FOREX ? (
+                      <CurrentOICell pair={item.pair.replace('/', '').toUpperCase()} />
+                    ) : (
+                      '--'
+                    )}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    <MaxOICell pair={item.pair.replace('/', '').toUpperCase()} /> USDC
+                    {isClose && item.type !== PairType.FOREX ? (
+                      <MaxOICell pair={item.pair.replace('/', '').toUpperCase()} />
+                    ) : (
+                      '--'
+                    )}
                   </Td>
                 </Tr>
               ))}
@@ -418,6 +465,7 @@ const SearchPair = (props: Props) => {
           </Table>
         </Box>
       </Box>
+      <ForexTradingTimeModal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} />
     </Box>
   );
 };

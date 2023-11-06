@@ -7,7 +7,7 @@ import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { getTradeHistory } from '@/services/trade';
 import { ITradingData, ITradingParams, TRADE_STATUS } from '@/types/trade.type';
-import { Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
@@ -117,12 +117,29 @@ const HistoryTable = () => {
       title: 'Payout',
       dataIndex: 'payout',
       key: 'payout',
+      render: (value, record) => (
+        <div>
+          <p>{addComma(divide(record.profit, 6), 2)} USDC</p>
+          <Text textColor={record.status === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>
+            Net PnL:{addComma(divide(record.pnl, 6), 2)} USDC
+          </Text>
+        </div>
+      ),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (value) => <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>,
+      render: (value) => (
+        <Box
+          border={value === TRADE_STATUS.WIN ? '1px solid #1ED768' : '1px solid #F03D3E'}
+          display="inline-block"
+          px={2}
+          rounded={4}
+        >
+          <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>
+        </Box>
+      ),
     },
   ];
 
@@ -135,7 +152,7 @@ const HistoryTable = () => {
     },
     enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: false,
+    refetchInterval: 5000,
     refetchOnWindowFocus: false,
   });
 

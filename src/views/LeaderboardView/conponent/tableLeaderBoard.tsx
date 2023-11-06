@@ -58,23 +58,19 @@ const TableLeaderBoard = (props: Props) => {
       title: 'Net PnL (%)',
       dataIndex: 'netPnL',
       key: 'netPnL',
-      render: (value: string) =>
-        +value < 0 ? (
-          <span className="text-[#F03D3E]">{value} %</span>
-        ) : (
-          <span className="text-[#1ED768]">{value} %</span>
-        ),
+      render: (value: string, record: ILeaderBoardDetail) => (
+        <span className={+value < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>
+          {addComma((+record.netPnL / +record.volume) * 100, 2)} %
+        </span>
+      ),
     },
     {
       title: 'Total Payout',
       dataIndex: 'netPnL',
       key: 'netPnL',
-      render: (value: string) =>
-        +value < 0 ? (
-          <span className="text-[#F03D3E]">{value} %</span>
-        ) : (
-          <span className="text-[#1ED768]">{value} %</span>
-        ),
+      render: (value: string) => (
+        <span className={+value < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>{addComma(divide(value, 6), 2)} USDC</span>
+      ),
     },
   ];
 
@@ -110,15 +106,15 @@ const TableLeaderBoard = (props: Props) => {
     },
     {
       title: 'No. of Won trade',
-      dataIndex: 'netPnL',
-      key: 'netPnL',
-      render: (value: string) => 'TODO',
+      dataIndex: 'tradesWon',
+      key: 'tradesWon',
+      render: (value: string) => value,
     },
     {
       title: 'Win rate',
       dataIndex: 'winRate',
       key: 'winRate',
-      render: (value: string) => <span>{value}%</span>,
+      render: (value: string) => <span>{addComma(+value / 1000, 2)}%</span>,
     },
   ];
 

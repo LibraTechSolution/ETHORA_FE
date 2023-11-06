@@ -87,8 +87,10 @@ export interface ITradingData {
   pendingOperation: string | null;
   _id: string,
   createdAt: string,
-  updatedAt: string
-  status: TRADE_STATUS
+  updatedAt: string,
+  status: TRADE_STATUS,
+  pnl: number,
+  profit: number
 }
 
 export interface EditTradeReq {

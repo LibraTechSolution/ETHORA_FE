@@ -11,7 +11,6 @@ const useListShowLinesStore = create<ListLinesState>()(
   (set) => ({
     listLines: [],
     setListLines: (line, isUpdated) => set((state) => {
-      console.log(line)
       let indexOf: number | null = null
       const tempList = [...state.listLines]
       for (let i = 0; i < tempList.length; i++) {

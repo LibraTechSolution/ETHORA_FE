@@ -11,7 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { getProbability } from '@/utils/helper';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { divide, subtract, multiply, gte } from '@/utils/operationBigNumber';
 import { Address, useContractRead } from 'wagmi';
 import optionsConfigABI from '@/config/abi/optionsConfigABI';
@@ -27,6 +27,7 @@ interface PropsType {
 
 interface CloseBtnPropsType {
   item: ITradingData;
+  isDisabled: boolean;
   handleCloseTrade: () => void;
 }
 
@@ -98,11 +99,11 @@ const ShowPnL = (props: PropsType) => {
 };
 
 const CloseButton = (props: CloseBtnPropsType) => {
-  const { item, handleCloseTrade } = props;
+  const { item, handleCloseTrade, isDisabled } = props;
   const { pnl: earlyPnl } = useEarlyPnl({
     trade: item,
   });
-  const { earlycloseAmount, isWin, probability } = earlyPnl;
+  const { earlycloseAmount } = earlyPnl;
   return (
     <Button
       bg={+earlycloseAmount < 0 ? '#F03D3E' : '#1ED768'}
@@ -112,6 +113,7 @@ const CloseButton = (props: CloseBtnPropsType) => {
       _active={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
       rounded="md"
       onClick={handleCloseTrade}
+      isDisabled={isDisabled}
     >
       Close at {(+earlycloseAmount).toFixed(2)}
     </Button>
@@ -124,11 +126,14 @@ const TradeBox = (props: PropsType) => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { setListLines } = useListShowLinesStore();
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   const handleCloseTrade = async () => {
     try {
       await closeTrade(item._id);
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
+      queryClient.invalidateQueries({ queryKey: ['getTradingHistory'] });
+      queryClient.invalidateQueries({ queryKey: ['getTradeCancel'] });
       toast({
         position: 'top',
         render: ({ onClose }) => <ToastLayout title="Close Successfully" status={Status.SUCCESSS} close={onClose} />,
@@ -150,6 +155,20 @@ const TradeBox = (props: PropsType) => {
   const reloadData = () => {
     queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
   };
+
+  useEffect(() => {
+    if (item.state === State.OPENED) {
+      console.log(dayjs().utc().unix());
+      console.log(dayjs(item.openDate).add(1, 'minutes').utc().unix());
+      const time =
+        dayjs().utc().unix() > dayjs(item.openDate).add(1, 'minutes').utc().unix()
+          ? 0
+          : (dayjs(item.openDate).add(1, 'minutes').utc().unix() - dayjs().utc().unix()) * 1000;
+      setTimeout(() => {
+        setIsDisabled(false);
+      }, time);
+    }
+  }, [item.openDate, item.state]);
 
   return (
     <Box bg="#0c0c10" padding="20px" marginBottom={2} rounded={'10px'}>
@@ -224,10 +243,10 @@ const TradeBox = (props: PropsType) => {
         </GridItem>
         <GridItem>
           <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Max Payout</p>
-          <p className="text-sm font-normal text-[#FFFFFF]">{item.payout} USDC</p>
+          <p className="text-sm font-normal text-[#FFFFFF]">{addComma(divide(item.payout ?? 0, 6), 2)} USDC</p>
         </GridItem>
       </Grid>
-      <CloseButton item={item} handleCloseTrade={handleCloseTrade} />
+      <CloseButton item={item} handleCloseTrade={handleCloseTrade} isDisabled={isDisabled} />
     </Box>
   );
 };
