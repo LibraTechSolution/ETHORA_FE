@@ -423,14 +423,14 @@ const EarnView = () => {
           <Heading as="h3" fontSize="24px" fontWeight={400} marginBottom={'12px'}>
             Earn
           </Heading>
-          <Text className="flex w-full items-center">
+          <Text className="flex w-full items-center" color={'#9E9E9F'}>
             Stake ETR and ELP to earn rewards.{' '}
             <Link
               href="https://coinbase.com/faucets/base-ethereum-goerli-faucet"
               target="_blank"
               className="group ml-1 flex text-center align-middle text-[#1E3EF0]"
             >
-              <span className="pr-[10px] group-hover:underline">Learn more</span>
+              <span className="mt-[1px] pr-[10px] group-hover:underline">Learn more</span>
               <ArrowRight className="text-white" />
             </Link>
           </Text>
@@ -462,6 +462,7 @@ const EarnView = () => {
             <CardEarn>
               {isMounted && (
                 <TotalRewardsItem
+                  price={price}
                   claimable_sbfETR={claimable_sbfETR as bigint}
                   claimable_fBLP={claimable_fBLP as bigint}
                   claimable_vETR={claimable_vETR as bigint}

@@ -14,6 +14,7 @@ const TotalRewardsItem = ({
   claimable_fsBLP,
   claimable_sbETR,
   depositBalances_bnETR,
+  price
 }: {
   claimable_sbfETR: bigint;
   claimable_fBLP: bigint;
@@ -23,6 +24,7 @@ const TotalRewardsItem = ({
   claimable_fsBLP: bigint;
   claimable_sbETR: bigint;
   depositBalances_bnETR: bigint;
+  price: number
 }) => {
   const [openClaimModal, setOpenClaimModal] = useState<boolean>(false);
   const [openCompoundRewardsModal, setOpenCompoundRewardsModal] = useState<boolean>(false);
@@ -40,48 +42,48 @@ const TotalRewardsItem = ({
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             USDC
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {USDC !== undefined ? addComma(USDC, 2) : '---'}
+            {USDC !== undefined ? addComma(USDC, 2) : '0.00'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             ETR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {ETR !== undefined ? addComma(ETR, 2) : '---'}
+            {ETR !== undefined ?  `${addComma(ETR, 2)} ($${addComma(ETR * price, 2)}) ` : '0.00 ($0.00)'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Escrowed ETR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {esETR !== undefined ? addComma(esETR, 2) : '---'}
+            {esETR !== undefined ? `${addComma(esETR, 2)} ($${addComma(esETR * price, 2)}) ` : '0.00 ($0.00)'}
           </Text>
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Multiplier Points
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {multiplierPoints !== undefined ? addComma(multiplierPoints, 2) : '---'}
+            {multiplierPoints !== undefined ? addComma(multiplierPoints, 2) : '0.00'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked Multiplier Points
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {stakedMultiplierPoints !== undefined ? addComma(stakedMultiplierPoints, 2) : '---'}
+            {stakedMultiplierPoints !== undefined ? addComma(stakedMultiplierPoints, 2) : '0.00'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>

@@ -370,7 +370,7 @@ export const Header = () => {
                 </Center>
               )}
               <Center justifyContent={'flex-start'}>
-                <Link href="/Earn" className={currentRoute === '/Earn' ? activeStyle : nonActiveStyle}>
+                <Link href="/earn" className={currentRoute === '/earn' ? activeStyle : nonActiveStyle}>
                   Earn
                 </Link>
               </Center>

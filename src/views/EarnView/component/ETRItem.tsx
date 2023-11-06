@@ -52,11 +52,12 @@ const ETRItem = ({
   const USDC_APR =
     (100 * 31536000 * Number(tokensPerInterval_sbfETR) * 10 ** 12) / (Number(totalSupply_sbfETR) * price);
   const boosted_APR = (Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR);
-  const boosted_Percentage = ((Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR)) * 100;
+  const boosted_Percentage = (Number(depositBalances_bnETR) / Number(depositBalances_sbETR)) * 100;
   const Total_APR = isNaN(boosted_APR) ? esETR_APR + USDC_APR : esETR_APR + USDC_APR + boosted_APR;
 
   const totalSupply = formatUnits((totalSupply_ETR - balanceOf_addressDead_ETR) as bigint, 18);
-
+  const stakedMultiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
+  console.log('stakedMultiplierPoints', stakedMultiplierPoints);
   // console.log(formatEther(BigInt(depositBalances_ETR)));
   // console.log(new BigNumber(formatEther(BigInt(depositBalances_ETR))).toFixed(18));
   // console.log(new BigNumber(formatEther(BigInt(depositBalances_ETR))).multipliedBy(price).toFixed(18));
@@ -70,12 +71,9 @@ const ETRItem = ({
       <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
         ETR
       </Heading>
-      <Tooltip label={<div>Hover me</div>} aria-label="A tooltip">
-        Hover me
-      </Tooltip>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Price
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -83,21 +81,21 @@ const ETRItem = ({
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Wallet
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '---'}
+            {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '0.00'}
             {' ETR'}
             {balance !== undefined && `($${addComma(+formatUnits(balance as bigint, 18) * price, 2)})`}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {depositBalances_ETR !== undefined ? addComma(formatUnits(depositBalances_ETR, 18), 2) : '---'}
+            {depositBalances_ETR !== undefined ? addComma(formatUnits(depositBalances_ETR, 18), 2) : '0.00'}
             {' ETR'}
             {depositBalances_ETR !== undefined &&
               `($${addComma(+formatUnits(depositBalances_ETR as bigint, 18) * price, 2)})`}
@@ -105,7 +103,7 @@ const ETRItem = ({
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -143,7 +141,7 @@ const ETRItem = ({
                   </Flex>
                   <Text fontSize={'12px'} color={'#9E9E9F'}>
                     The Boosted APR is from your staked Multiplier Points. APRs are updated weekly on Wednesday and will
-                    depend on the collected for the week
+                    depend on the fees collected for the week.
                   </Text>
                 </Box>
               }
@@ -152,12 +150,12 @@ const ETRItem = ({
               bg="#050506"
               minWidth="450px"
             >
-              <Text as="u"> {Total_APR !== undefined ? addComma(Total_APR, 2) : '---'}%</Text>
+              <Text as="u"> {Total_APR !== undefined ? addComma(Total_APR, 2) : '0.00'}%</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Rewards
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -170,7 +168,7 @@ const ETRItem = ({
                       USDC
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(USDC_Rewards, 2)}%</Box>
+                    <Box padding={'0 8px'}>{addComma(USDC_Rewards, 2)}</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -186,12 +184,12 @@ const ETRItem = ({
               bg="#050506"
               minWidth="215px"
             >
-              <Text as="u"> ${rewards !== undefined ? addComma(rewards, 2) : '---'}</Text>
+              <Text as="u"> ${rewards !== undefined ? addComma(rewards, 2) : '0.00'}</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Multiplier Points APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -208,34 +206,51 @@ const ETRItem = ({
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Boost Percentage
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-             
+            <Tooltip
+              hasArrow
+              label={
+                <>
+                  <Text fontSize={'12px'} marginBottom={'16px'}>{`You are earning  ${addComma(
+                    boosted_Percentage,
+                    2,
+                  )}% more USDC rewards using ${addComma(stakedMultiplierPoints, 4)} Staked Multiplier Points.`}</Text>
+                  <Text fontSize={'12px'}>Use the &quot;Compound&ldquo; button to stake your Multiplier Points.</Text>
+                </>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+              minWidth="215px"
+            >
+              <Text as="u">{boosted_Percentage !== undefined ? addComma(boosted_Percentage, 2) : '0.00'}%</Text>
+            </Tooltip>
           </Text>
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {totalStaked_ETR !== undefined ? addComma(formatUnits(totalStaked_ETR, 18), 2) : '---'}
+            {totalStaked_ETR !== undefined ? addComma(formatUnits(totalStaked_ETR, 18), 2) : '0.00'}
             {' ETR'}
-            {totalStaked_ETR !== undefined && `($${addComma(+formatUnits(totalStaked_ETR as bigint, 18) * price, 2)})`}
+            {totalStaked_ETR !== undefined && ` ($${addComma(+formatUnits(totalStaked_ETR as bigint, 18) * price, 2)})`}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Supply
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {totalSupply !== undefined ? addComma(totalSupply, 2) : '---'}
+            {totalSupply !== undefined ? addComma(totalSupply, 2) : '0.00'}
             {' ETR'}
             {totalSupply_ETR !== undefined &&
               balanceOf_addressDead_ETR !== undefined &&
-              `($${addComma(+totalSupply * price, 2)})`}
+              ` ($${addComma(+totalSupply * price, 2)})`}
           </Text>
         </Box>
         <hr className="border-[#242428]" />

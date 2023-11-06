@@ -2,7 +2,7 @@ import { appConfig } from '@/config';
 import ETR_ABI from '@/config/abi/ETR_ABI';
 import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
 import { useAllowance, useBalanceOf } from '@/hooks/useContractRead';
-import { addComma } from '@/utils/number';
+import { addComma, roundDown } from '@/utils/number';
 import {
   Button,
   Modal,
@@ -157,7 +157,7 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                         Stake
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '---'} esETR
+                        Max: {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '0.00'} esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -189,7 +189,7 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                         fontWeight={400}
                         onClick={() => {
                           if (balance) {
-                            formik.setFieldValue('amount', Number(balance) / 10 ** 18);
+                            formik.setFieldValue('amount', roundDown(Number(balance) / 10 ** 18, 6));
                           }
                         }}
                       >

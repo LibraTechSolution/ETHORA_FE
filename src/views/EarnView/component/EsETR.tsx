@@ -59,39 +59,40 @@ const EsETR = ({
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Price
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            ${price}
+            ${addComma(price, 2)}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Wallet
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {balanceOf_esETR !== undefined ? addComma(formatUnits(balanceOf_esETR as bigint, 18), 2) : '---'}
-            {' esETR'}
-            {balanceOf_esETR !== undefined && `($${addComma(+formatUnits(balanceOf_esETR as bigint, 18) * price, 2)})`}
+            {balanceOf_esETR !== undefined ? addComma(formatUnits(balanceOf_esETR as bigint, 18), 2) : '0.00'}
+            {' esETR '}
+            {balanceOf_esETR !== undefined &&
+              `(${addComma(+formatUnits(balanceOf_esETR as bigint, 18) * price, 2)} USDC)`}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
             {depositBalances_esETR !== undefined
               ? addComma(formatUnits(depositBalances_esETR as bigint, 18), 2)
-              : '---'}
-            {' esETR'}
+              : '0.00'}
+            {' esETR '}
             {depositBalances_esETR !== undefined &&
-              `($${addComma(+formatUnits(depositBalances_esETR as bigint, 18) * price, 2)})`}
+              `(${addComma(+formatUnits(depositBalances_esETR as bigint, 18) * price, 2)} USDC)`}
           </Text>
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -120,12 +121,12 @@ const EsETR = ({
               bg="#050506"
               minWidth="215px"
             >
-              <Text as="u">{total_APR !== undefined ? addComma(total_APR, 2) : '---'}%</Text>
+              <Text as="u">{total_APR !== undefined ? addComma(total_APR, 2) : '0.00'}%</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Multiplier Points APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -143,23 +144,23 @@ const EsETR = ({
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {totalStaked !== undefined ? addComma(totalStaked, 2) : '---'}
-            {' esETR'}
-            {totalStaked !== undefined && `($${addComma(+totalStaked * price, 2)})`}
+            {totalStaked !== undefined ? addComma(totalStaked, 2) : '0.00'}
+            {' esETR '}
+            {totalStaked !== undefined && `(${addComma(+totalStaked * price, 2)} USDC)`}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Supply
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {totalSupply !== undefined ? addComma(totalSupply, 2) : '---'}
-            {' esETR'}
-            {totalSupply !== undefined && `($${addComma(+totalSupply * price, 2)})`}
+            {totalSupply !== undefined ? addComma(totalSupply, 2) : '0.00'}
+            {' esETR '}
+            {totalSupply !== undefined && `(${addComma(+totalSupply * price, 2)} USDC)`}
           </Text>
         </Box>
         <hr className="border-[#242428]" />

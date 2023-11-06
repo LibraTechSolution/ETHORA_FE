@@ -19,6 +19,21 @@ export const addZeroBefore = (number: number) => {
   }
   return number;
 };
+
+export const checkDecimals = (num: number, decimals: number) => {
+  if (!num) {
+    return;
+  }
+  const numArr = num.toString().split('.');
+  const lengthDecimal = numArr[1]?.length || 0;
+  return lengthDecimal <= decimals;
+};
+
+export function roundDown(number: number, decimals = 0) {
+  return checkDecimals(number, decimals)
+    ? number
+    : Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}
 // export function formatBigNumberToFloatNumber(bignumber: BigNumber, decimals = 18) {
 //   return parseFloat(formatEther;
 // }

@@ -68,13 +68,13 @@ const USDCVaultItem = ({
         flexDirection={'column'}
       >
         USDC Vault (ELP Token)
-        <Text as="span" textColor={'#6D6D70'} fontWeight={400} fontSize={'14px'}>
+        <Text as="span" textColor={'#6D6D70'} fontWeight={400} fontSize={'14px'} marginTop={'8px'}>
           Max Capacity : ----USDC
         </Text>
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Exchange Rate
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -91,29 +91,29 @@ const USDCVaultItem = ({
               bg="#050506"
               minWidth="288px"
             >
-              <Text as="u">1.00 ELP = {!!exchangeRate ? exchangeRate?.toString() : 0} USDC</Text>
+              <Text as="u">1.00 ELP = {!!exchangeRate ? addComma(exchangeRate.toString(),2) : '0.00'} USDC</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Wallet
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {wallet !== undefined ? addComma(wallet, 2) : '---'} ELP (0.00 USDC)
+            {wallet !== undefined ? addComma(wallet, 2) : '0.00'} ELP (0.00 USDC)
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {wallet !== undefined ? addComma(wallet, 2) : '---'} ELP (0.00 USDC)
+            {wallet !== undefined ? addComma(wallet, 2) : '0.00'} ELP (0.00 USDC)
           </Text>
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             APR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -150,7 +150,7 @@ const USDCVaultItem = ({
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Rewards
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -179,43 +179,43 @@ const USDCVaultItem = ({
               bg="#050506"
               minWidth="215px"
             >
-              <Text as="u">${rewards !== undefined ? addComma(rewards, 2) : '---'}</Text>
+              <Text as="u">${rewards !== undefined ? addComma(rewards, 2) : '0.00'}</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Lockup Period
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {lockupPeriod_BLP ? lockupPeriod_BLP / 86400 : '---'} day
+            {lockupPeriod_BLP ? lockupPeriod_BLP / 86400 : '0.00'} day
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Withdrawable Amount
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {withdrawableAmount !== undefined ? addComma(withdrawableAmount, 2) : '---'} ELP
+            {withdrawableAmount !== undefined ? addComma(withdrawableAmount, 2) : '0.00'} ELP
           </Text>
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {`${totalStaked !== undefined ? addComma(totalStaked, 2) : '---'} ELP `}
-            {`(${totalStaked_USD !== undefined ? addComma(totalStaked_USD, 2) : '---'} USDC)`}
+            {`${totalStaked !== undefined ? addComma(totalStaked, 2) : '0.00'} ELP `}
+            {`(${totalStaked_USD !== undefined ? addComma(totalStaked_USD, 2) : '0.00'} USDC)`}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Supply
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {`${totalSupply !== undefined ? addComma(totalSupply, 2) : '---'} ELP `}
-            {`(${totalSupply_USD !== undefined ? addComma(totalSupply_USD, 2) : '---'} USDC)`}
+            {`${totalSupply !== undefined ? addComma(totalSupply, 2) : '0.00'} ELP `}
+            {`(${totalSupply_USD !== undefined ? addComma(totalSupply_USD, 2) : '0.00'} USDC)`}
           </Text>
         </Box>
         <hr className="border-[#242428]" />

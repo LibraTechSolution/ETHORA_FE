@@ -30,7 +30,7 @@ import { EarnContext } from '..';
 import { useContractRead } from 'wagmi';
 import SETR_ABI from '@/config/abi/SETR_ABI';
 import useActiveWeb3React from '@/hooks/useActiveWeb3React';
-import { addComma } from '@/utils/number';
+import { addComma, roundDown } from '@/utils/number';
 
 const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { onFetchData } = useContext(EarnContext);
@@ -127,7 +127,7 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                         Max:{' '}
                         {dataDepositBalances !== undefined
                           ? addComma(formatUnits(dataDepositBalances as bigint, 18), 2)
-                          : '---'}{' '}
+                          : '0.00'}{' '}
                         esETR
                       </Text>
                     </Flex>
@@ -161,7 +161,7 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                         fontWeight={400}
                         onClick={() => {
                           if (dataDepositBalances !== undefined) {
-                            formik.setFieldValue('amount', formatEther(BigInt(dataDepositBalances)));
+                            formik.setFieldValue('amount', roundDown(+formatEther(BigInt(dataDepositBalances)), 6));
                           }
                         }}
                       >

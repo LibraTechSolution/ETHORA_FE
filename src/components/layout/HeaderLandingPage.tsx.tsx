@@ -82,7 +82,7 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center>
-              <Link href="Earn" className={currentRoute === '/Earn' ? activeStyle : nonActiveStyle}>
+              <Link href="earn" className={currentRoute === '/earn' ? activeStyle : nonActiveStyle}>
                 Earn
               </Link>
             </Center>
