@@ -7,10 +7,11 @@ import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { getTradeCancel } from '@/services/trade';
 import { ITradingData, ITradingParams, TRADE_STATUS } from '@/types/trade.type';
-import { Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import useUserStore from '@/store/useUserStore';
+import dayjs from 'dayjs';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -67,11 +68,28 @@ const CancelTable = () => {
     },
     {
       title: 'Queue',
-      render: () => 'TODO',
+      dataIndex: 'queuedDate',
+      key: 'queuedDate',
+      render: (value) => (
+        <div>
+          <p>{dayjs(value).format('HH:mm:ss')}</p>
+          <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
+        </div>
+      ),
     },
     {
       title: 'Cancellation',
-      render: () => 'TODO',
+      dataIndex: 'cancellationDate',
+      key: 'cancellationDate',
+      render: (value) =>
+        value ? (
+          <div>
+            <p>{dayjs(value).format('HH:mm:ss')}</p>
+            <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
+          </div>
+        ) : (
+          <span>---</span>
+        ),
     },
     {
       title: 'Reason',
@@ -82,7 +100,16 @@ const CancelTable = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (value) => <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>,
+      render: (value) => (
+        <Box
+          border={value === TRADE_STATUS.WIN ? '1px solid #1ED768' : '1px solid #F03D3E'}
+          display="inline-block"
+          px={2}
+          rounded={4}
+        >
+          <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>
+        </Box>
+      ),
     },
   ];
 
@@ -95,7 +122,7 @@ const CancelTable = () => {
     },
     enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: false,
+    refetchInterval: 5000,
     refetchOnWindowFocus: false,
   });
 

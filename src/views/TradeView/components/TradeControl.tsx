@@ -39,7 +39,7 @@ import { IPermit } from '@/types/auth.type';
 import { approveToken } from '@/services/auth';
 import { useParams } from 'next/navigation';
 import usePairStore from '@/store/usePairStore';
-import { PairData, TRADE_TOKEN } from '@/types/trade.type';
+import { PairData, PairType, TRADE_TOKEN } from '@/types/trade.type';
 import { createTrade } from '@/services/trade';
 import Link from 'next/link';
 import { useQueryClient } from '@tanstack/react-query';
@@ -95,6 +95,9 @@ const TradeControl = () => {
   const queryClient = useQueryClient();
   const { bufferBOSC, settlementFee } = useGetTradeContract();
   const { resetListLine } = useListShowLinesStore();
+  const [referCode, setReferCode] = useState('');
+  const [pairPayout, setPairPayout] = useState(0);
+  const [isPending, setIsPending] = useState<boolean>(false);
 
   useEffect(() => {
     if (address) {
@@ -111,6 +114,17 @@ const TradeControl = () => {
       ) ?? null
     );
   }, [listPairData, params?.pair]);
+
+  const isClose = useMemo(() => {
+    if (dayjs().utc().day() === 0 || dayjs().utc().day() === 6) {
+      return true;
+    } else {
+      if (dayjs().utc().hour() < 6 || dayjs().utc().hour() > 16) {
+        return true;
+      }
+    }
+    return false;
+  }, []);
 
   const isRegisterd = useMemo(() => {
     if (user && address && user.isRegistered) {
@@ -311,8 +325,9 @@ const TradeControl = () => {
       setTimeError('Maximum duration is 4 hours');
       hasError = true;
     }
-
-    if (!balance || (balance && balance < +tradeSize)) {
+    console.log(balance);
+    console.log(tradeSize);
+    if (!balance || (balance && +divide(balance.toString(), 6) < +tradeSize)) {
       setIsShowWarning(true);
       hasError = true;
     }
@@ -321,10 +336,9 @@ const TradeControl = () => {
       hasError = true;
     }
 
-    if (hasError) return;
-
+    if (hasError || isPending) return;
     try {
-      console.log(price);
+      setIsPending(true);
       const currentDate = dayjs().utc().format();
       const data = {
         network: chain?.id ?? 5,
@@ -364,10 +378,13 @@ const TradeControl = () => {
           </ToastLayout>
         ),
       });
-
+      setTimeout(() => {
+        setIsPending(false);
+      }, 1000);
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
     } catch (error) {
+      setIsPending(false);
       toast({
         position: 'top',
         render: ({ onClose }) => (
@@ -376,9 +393,6 @@ const TradeControl = () => {
       });
     }
   };
-
-  const [referCode, setReferCode] = useState('');
-  const [pairPayout, setPairPayout] = useState(0);
 
   const getPayout = useCallback(async () => {
     try {
@@ -693,34 +707,42 @@ const TradeControl = () => {
                   }
 
                   return (
-                    <Grid templateColumns="repeat(2, 1fr)" gap="20px">
-                      <GridItem>
-                        <Button
-                          bgColor="#1ED768"
-                          textColor="#fff"
-                          w="full"
-                          _hover={{ bgColor: '#1ED768', textColor: '#fff' }}
-                          _active={{ bgColor: '#1ED768', textColor: '#fff' }}
-                          onClick={() => handleCreateTrade(true)}
-                        >
-                          <TriangleUpIcon color="#fff" w="14px" h="14px" marginRight="10px" />
-                          Up
-                        </Button>
-                      </GridItem>
-                      <GridItem>
-                        <Button
-                          bgColor="#F03D3E"
-                          textColor="#fff"
-                          w="full"
-                          _hover={{ bgColor: '#F03D3E', textColor: '#fff' }}
-                          _active={{ bgColor: '#F03D3E', textColor: '#fff' }}
-                          onClick={() => handleCreateTrade(false)}
-                        >
-                          <TriangleDownIcon color="#fff" w="14px" h="14px" marginRight="10px" />
-                          Down
-                        </Button>
-                      </GridItem>
-                    </Grid>
+                    <>
+                      {isClose && currentPair?.type === PairType.FOREX ? (
+                        <Center>Trading is halted for this asset</Center>
+                      ) : (
+                        <Grid templateColumns="repeat(2, 1fr)" gap="20px">
+                          <GridItem>
+                            <Button
+                              bgColor="#1ED768"
+                              textColor="#fff"
+                              w="full"
+                              _hover={{ bgColor: '#1ED768', textColor: '#fff' }}
+                              _active={{ bgColor: '#1ED768', textColor: '#fff' }}
+                              onClick={() => handleCreateTrade(true)}
+                              isLoading={isPending}
+                            >
+                              <TriangleUpIcon color="#fff" w="14px" h="14px" marginRight="10px" />
+                              Up
+                            </Button>
+                          </GridItem>
+                          <GridItem>
+                            <Button
+                              bgColor="#F03D3E"
+                              textColor="#fff"
+                              w="full"
+                              _hover={{ bgColor: '#F03D3E', textColor: '#fff' }}
+                              _active={{ bgColor: '#F03D3E', textColor: '#fff' }}
+                              isLoading={isPending}
+                              onClick={() => handleCreateTrade(false)}
+                            >
+                              <TriangleDownIcon color="#fff" w="14px" h="14px" marginRight="10px" />
+                              Down
+                            </Button>
+                          </GridItem>
+                        </Grid>
+                      )}
+                    </>
                   );
                 })()}
               </div>

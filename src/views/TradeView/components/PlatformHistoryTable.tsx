@@ -7,7 +7,7 @@ import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { getPlatformHistory } from '@/services/trade';
 import { ITradingData, ITradingParams, TRADE_STATUS } from '@/types/trade.type';
-import { Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
@@ -118,12 +118,22 @@ const PlatformHistoryTable = () => {
       title: 'Payout',
       dataIndex: 'payout',
       key: 'payout',
+      render: (value) => <span>{addComma(divide(value, 6), 2)}</span>,
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (value) => <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>,
+      render: (value) => (
+        <Box
+          border={value === TRADE_STATUS.WIN ? '1px solid #1ED768' : '1px solid #F03D3E'}
+          display="inline-block"
+          px={2}
+          rounded={4}
+        >
+          <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>
+        </Box>
+      ),
     },
     {
       title: 'User',
