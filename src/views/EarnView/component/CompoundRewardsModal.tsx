@@ -109,7 +109,7 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
           fontWeight={400}
           fontSize={'14px'}
         >
-          <ModalHeader>Claim Rewards</ModalHeader>
+          <ModalHeader>Compound Rewards</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form>

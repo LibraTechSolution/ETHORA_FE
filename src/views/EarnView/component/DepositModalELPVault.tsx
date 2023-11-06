@@ -33,7 +33,7 @@ import ESETR_ABI from '@/config/abi/ESETR_ABI';
 import VBLP_ABI from '@/config/abi/VBLP_ABI';
 import { useBalanceOf } from '@/hooks/useContractRead';
 import { formatUnits } from 'viem';
-import { addComma } from '@/utils/number';
+import { addComma, roundDown } from '@/utils/number';
 
 const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { address } = useAccount();
@@ -79,20 +79,20 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
     ],
   });
 
-//   function xSe(e, t, n, r, i) {
-//     let a = i;
-//     e && (a = e + i);
-//     let o = r
-//       , s = 0;
-//     return e && t && n && n > 0 && (o = t * a / n,
-//     (o > r) && (s = o - r)),
-//     (r >= s) ? r : s
-// }
+  //   function xSe(e, t, n, r, i) {
+  //     let a = i;
+  //     e && (a = e + i);
+  //     let o = r
+  //       , s = 0;
+  //     return e && t && n && n > 0 && (o = t * a / n,
+  //     (o > r) && (s = o - r)),
+  //     (r >= s) ? r : s
+  // }
 
   const getMaxVestableAmount_VBLP = data_VBLP_SC && data_VBLP_SC[0].result;
   const getVestedAmount_VBLP = data_VBLP_SC && data_VBLP_SC[1].result;
 
-  console.log('balance',balance)
+  console.log('balance', balance);
   const SE = balance ? formatUnits(balance as bigint, 18) : 0;
   const WW = (Number(getMaxVestableAmount_VBLP) - Number(getVestedAmount_VBLP)) / 10 ** 18;
   const getMax = Math.min(+SE, WW);
@@ -198,7 +198,7 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         Deposit
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {getMax !== undefined ? addComma(getMax, 2) : '---'} esETR
+                        Max: {getMax !== undefined ? addComma(getMax, 2) : '0.00'} esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -231,7 +231,7 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         fontWeight={400}
                         onClick={() => {
                           if (getMax) {
-                            formik.setFieldValue('amount', getMax);
+                            formik.setFieldValue('amount', roundDown(getMax, 6));
                           }
                         }}
                       >
@@ -243,18 +243,14 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                       </Text>
                     </InputRightElement>
                   </InputGroup>
-                  {formik.errors.amount && formik.touched.amount && (
-                    <Text color="red">
-                      {formik.errors.amount}
-                    </Text>
-                  )}
+                  {formik.errors.amount && formik.touched.amount && <Text color="red">{formik.errors.amount}</Text>}
                   <FormLabel htmlFor="wallet" fontWeight={400} fontSize={'14px'}>
                     <Flex display={'flex'} justifyContent={'space-between'} width={'100%'}>
                       <Text as="span" fontSize={'12px'} color="#9E9E9F">
                         Wallet
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '---'} esETR
+                        {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '0.00'} esETR
                       </Text>
                     </Flex>
                   </FormLabel>

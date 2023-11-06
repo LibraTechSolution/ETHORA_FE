@@ -61,24 +61,24 @@ const ELPVault = ({
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked Tokens
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '---'}
+            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '0.00'} uBLO
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Reserved for Vesting
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {pairAmounts !== undefined ? addComma(pairAmounts, 2) : '---'} /{' '}
-            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '---'}
+            {pairAmounts !== undefined ? addComma(pairAmounts, 2) : '0.00'} /{' '}
+            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '0.00'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Vesting Status
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -98,14 +98,14 @@ const ELPVault = ({
               minWidth="288px"
             >
               <Text as="u">
-                {claimed !== undefined ? addComma(claimed, 2) : '---'} /{' '}
-                {vested !== undefined ? addComma(vested, 2) : '---'}
+                {claimed !== undefined ? addComma(claimed, 2) : '0.00'} /{' '}
+                {vested !== undefined ? addComma(vested, 2) : '0.00'}
               </Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'14px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Claimable
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
@@ -124,7 +124,7 @@ const ELPVault = ({
               bg="#050506"
               minWidth="288px"
             >
-              <Text as="u">{claimable !== undefined ? addComma(claimable, 2) : '---'} ETR</Text>
+              <Text as="u">{claimable !== undefined ? addComma(claimable, 2) : '0.00'} ETR</Text>
             </Tooltip>
           </Text>
         </Box>

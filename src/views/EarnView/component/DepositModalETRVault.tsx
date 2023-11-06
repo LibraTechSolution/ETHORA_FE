@@ -32,7 +32,7 @@ import BigNumber from 'bignumber.js';
 import ESETR_ABI from '@/config/abi/ESETR_ABI';
 import VETR_ABI from '@/config/abi/VETR_ABI';
 import { useBalanceOf } from '@/hooks/useContractRead';
-import { addComma } from '@/utils/number';
+import { addComma, roundDown } from '@/utils/number';
 import { formatUnits } from 'viem';
 
 const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
@@ -101,8 +101,6 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
   const deposited = Number(getVestedAmount_VETR) / 10 ** 18;
   const maxCapacity = Number(getMaxVestableAmount_VETR) / 10 ** 18;
 
-
-
   const formik = useFormik({
     initialValues: {
       amount: '',
@@ -113,15 +111,15 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
     validationSchema: validationSchema,
   });
 
-//   const xSe = (e, t, n, r, i) => {
-//     let a = i;
-//     e && (a = e + i);
-//     let o = r
-//       , s = "0";
-//     return e && t && n && n > 0 && (o = t * a / n,
-//     (o > r) && (s = o - r)),
-//     (r >= s) ? r : s
-// }
+  //   const xSe = (e, t, n, r, i) => {
+  //     let a = i;
+  //     e && (a = e + i);
+  //     let o = r
+  //       , s = "0";
+  //     return e && t && n && n > 0 && (o = t * a / n,
+  //     (o > r) && (s = o - r)),
+  //     (r >= s) ? r : s
+  // }
 
   const onApprove = async () => {
     // if (!isApproved) {
@@ -211,7 +209,7 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         Deposit
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {getMax !== undefined ? addComma(getMax, 2) : '---'} esETR
+                        Max: {getMax !== undefined ? addComma(getMax, 2) : '0.00'} esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -244,7 +242,7 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         fontWeight={400}
                         onClick={() => {
                           if (getMax) {
-                            formik.setFieldValue('amount', getMax);
+                            formik.setFieldValue('amount', roundDown(getMax, 6));
                           }
                         }}
                       >
@@ -256,18 +254,14 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                       </Text>
                     </InputRightElement>
                   </InputGroup>
-                  {formik.errors.amount && formik.touched.amount && (
-                    <Text color="red">
-                      {formik.errors.amount}
-                    </Text>
-                  )}
+                  {formik.errors.amount && formik.touched.amount && <Text color="red">{formik.errors.amount}</Text>}
                   <FormLabel htmlFor="wallet" fontWeight={400} fontSize={'14px'}>
                     <Flex display={'flex'} justifyContent={'space-between'} width={'100%'}>
                       <Text as="span" fontSize={'12px'} color="#9E9E9F">
                         Wallet
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '---'} esETR
+                        {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '0.00'} esETR
                       </Text>
                     </Flex>
                   </FormLabel>

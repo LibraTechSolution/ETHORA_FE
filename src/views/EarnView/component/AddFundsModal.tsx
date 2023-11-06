@@ -32,7 +32,7 @@ import BigNumber from 'bignumber.js';
 import { useBalanceOf } from '@/hooks/useContractRead';
 import VETR_ABI from '@/config/abi/VETR_ABI';
 import USDC_ABI from '@/config/abi/USDC_ABI';
-import { addComma } from '@/utils/number';
+import { addComma, roundDown } from '@/utils/number';
 import { formatUnits } from 'viem';
 
 // const validationSchema = Yup.object({
@@ -72,7 +72,7 @@ const AddFundsModal = ({
       .required('The number is required!')
       .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
       .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(balance as bigint, 6)),
-      rememberMe: Yup.boolean().equals([true]),
+    rememberMe: Yup.boolean().equals([true]),
   });
 
   const formik = useFormik({
@@ -147,7 +147,7 @@ const AddFundsModal = ({
     console.log('getAllowance', getAllowance);
     setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)));
   }, [getAllowance]);
-  
+
   return (
     <>
       {/* <Button onClick={onOpen}>Open Modal</Button> */}
@@ -175,7 +175,7 @@ const AddFundsModal = ({
                         Pay
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Balance: {balance !== undefined ? addComma(formatUnits(balance as bigint, 6), 2) : '---'} USDC
+                        Balance: {balance !== undefined ? addComma(formatUnits(balance as bigint, 6), 2) : '0.00'} USDC
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -208,7 +208,7 @@ const AddFundsModal = ({
                         fontWeight={400}
                         onClick={() => {
                           if (balance) {
-                            formik.setFieldValue('amount', Number(balance) / 10 ** 6);
+                            formik.setFieldValue('amount', roundDown(Number(balance) / 10 ** 6, 6));
                           }
                         }}
                       >

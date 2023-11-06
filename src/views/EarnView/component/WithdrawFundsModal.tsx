@@ -29,7 +29,7 @@ import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
 import { useContractRead, useContractReads } from 'wagmi';
 import FBLP_ABI from '@/config/abi/FBLP_ABI';
 import VBLP_ABI from '@/config/abi/VBLP_ABI';
-import { addComma } from '@/utils/number';
+import { addComma, roundDown } from '@/utils/number';
 import BLP_ABI from '@/config/abi/BLP_ABI';
 
 // const validationSchema = Yup.object({
@@ -126,8 +126,7 @@ const WithdrawFundsModal = ({
       : Number(availableBalance_BLP) / 10 ** 6;
   const unlockedLiquidity = Number(getUnlockedLiquidity_BLP) / 10 ** 6;
 
-  const getMax = Math.min(LA, KW, unlockedLiquidity)
-
+  const getMax = Math.min(LA, KW, unlockedLiquidity);
 
   const onWithdrawfund = async (amount: string) => {
     const amoutBigint = BigInt(+amount * 10 ** 6);
@@ -184,7 +183,7 @@ const WithdrawFundsModal = ({
                         Pay
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {getMax !== undefined ? addComma(getMax, 2) : '---'} ELP
+                        Max: {getMax !== undefined ? addComma(getMax, 2) : '0.00'} ELP
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -217,7 +216,7 @@ const WithdrawFundsModal = ({
                         fontWeight={400}
                         onClick={() => {
                           if (getMax) {
-                            formik.setFieldValue('amount', getMax);
+                            formik.setFieldValue('amount', roundDown(getMax, 6));
                           }
                         }}
                       >
