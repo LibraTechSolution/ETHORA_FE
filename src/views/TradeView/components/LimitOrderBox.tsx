@@ -45,7 +45,10 @@ const LimitOrderBox = (props: PropsType) => {
   useEffect(() => {
     if (item.state === State.OPENED) return;
 
-    if (price <= (item.strike * (100 + item.slippage)) / 100 && price >= (item.strike * (100 - item.slippage)) / 100) {
+    if (
+      price <= (item.strike * (100 + item.slippage / 100)) / 100 &&
+      price >= (item.strike * (100 - item.slippage / 100)) / 100
+    ) {
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
     }

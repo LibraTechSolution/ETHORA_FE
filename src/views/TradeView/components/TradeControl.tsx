@@ -48,6 +48,7 @@ import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { useGetTradeContract } from '@/hooks/useGetTradeContract';
 import bufferBOABI from '@/config/abi/bufferBOABI';
 import { divide, subtract } from '@/utils/operationBigNumber';
+import useAdvanceSetting from '@/store/useAdvanceSetting';
 dayjs.extend(utc);
 
 const approveParamType = [
@@ -98,6 +99,7 @@ const TradeControl = () => {
   const [referCode, setReferCode] = useState('');
   const [pairPayout, setPairPayout] = useState(0);
   const [isPending, setIsPending] = useState<boolean>(false);
+  const { advanceSetting } = useAdvanceSetting();
 
   useEffect(() => {
     if (address) {
@@ -290,7 +292,7 @@ const TradeControl = () => {
     setTimeType(e.target.value);
   };
 
-  const convertToTimeStamp = () => {
+  const convertToTimeStamp = (time: string) => {
     if (time.includes('m')) {
       return +time.slice(0, -1) * 60;
     } else {
@@ -316,17 +318,15 @@ const TradeControl = () => {
       }
     }
 
-    if (convertToTimeStamp() < 180) {
+    if (convertToTimeStamp(time) < 180) {
       setTimeError('Minimum duration is 3 minutes');
       hasError = true;
     }
 
-    if (convertToTimeStamp() > 14400) {
+    if (convertToTimeStamp(time) > 14400) {
       setTimeError('Maximum duration is 4 hours');
       hasError = true;
     }
-    console.log(balance);
-    console.log(tradeSize);
     if (!balance || (balance && +divide(balance.toString(), 6) < +tradeSize)) {
       setIsShowWarning(true);
       hasError = true;
@@ -344,13 +344,18 @@ const TradeControl = () => {
         network: chain?.id ?? 5,
         strike: tradeType === TradeType.LIMIT ? +limitOrderPrice * 100000000 : Math.round(+price * 100000000),
         strikeDate: currentDate,
-        period: convertToTimeStamp(),
+        period: convertToTimeStamp(time),
         targetContract: bufferBOSC as string,
         tradeSize: (+tradeSize * 1000000).toString(),
-        slippage: 0,
+        slippage: address && advanceSetting ? +advanceSetting[address].slippage * 100 : 5,
         isAbove,
         isLimitOrder: tradeType === TradeType.LIMIT,
-        limitOrderDuration: 18000,
+        limitOrderDuration:
+          address && advanceSetting
+            ? convertToTimeStamp(
+                `${advanceSetting[address].limitOrderExpiryTime}${advanceSetting[address].limitOrderExpiryTimeType}`,
+              )
+            : 18000,
         token: TRADE_TOKEN.USDC,
         pair: currentPair?.pair ? currentPair?.pair.replace('/', '-').toLowerCase() : '',
         referralCode: referCode ?? '',
@@ -720,7 +725,7 @@ const TradeControl = () => {
                               _hover={{ bgColor: '#1ED768', textColor: '#fff' }}
                               _active={{ bgColor: '#1ED768', textColor: '#fff' }}
                               onClick={() => handleCreateTrade(true)}
-                              isLoading={isPending}
+                              isDisabled={isPending}
                             >
                               <TriangleUpIcon color="#fff" w="14px" h="14px" marginRight="10px" />
                               Up
@@ -733,7 +738,7 @@ const TradeControl = () => {
                               w="full"
                               _hover={{ bgColor: '#F03D3E', textColor: '#fff' }}
                               _active={{ bgColor: '#F03D3E', textColor: '#fff' }}
-                              isLoading={isPending}
+                              isDisabled={isPending}
                               onClick={() => handleCreateTrade(false)}
                             >
                               <TriangleDownIcon color="#fff" w="14px" h="14px" marginRight="10px" />

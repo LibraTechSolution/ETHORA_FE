@@ -117,7 +117,7 @@ const TradeTable = () => {
           <CountDown endTime={dayjs(value.openDate).utc().unix() + value.period} period={value.period} hideBar={true} />
         ) : (
           <span className="flex items-center text-xs font-normal text-[#9E9E9F]">
-            <span className="mr-1">{value.state === State.QUEUED ? 'In queued' : 'Processing...'}</span>
+            <span className="mr-1">{value.state === State.QUEUED ? 'In queue' : 'Processing...'}</span>
             <RotateCw color="#1E3EF0" cursor="pointer" onClick={reloadData} />
           </span>
         ),
