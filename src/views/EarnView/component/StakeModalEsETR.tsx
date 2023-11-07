@@ -23,16 +23,20 @@ import {
   InputRightElement,
   Box,
   Flex,
+  useToast,
+  Link,
 } from '@chakra-ui/react';
 import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
 import BigNumber from 'bignumber.js';
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import { formatUnits, parseUnits } from 'viem';
+import { formatUnits, BaseError } from 'viem';
 import { useAccount, useContractRead, useContractWrite } from 'wagmi';
 import * as Yup from 'yup';
 import { EarnContext } from '..';
 import ESETR_ABI from '@/config/abi/ESETR_ABI';
+import { ToastLayout } from '@/components/ToastLayout';
+import { Status } from '@/types/faucet.type';
 
 const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { address } = useAccount();
@@ -41,6 +45,7 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
   const [loadingStake, setLoadingStake] = useState<boolean>(false);
   const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
   const { onFetchData } = useContext(EarnContext);
+  const toast = useToast();
 
   const { data: getAllowance } = useContractRead({
     address: appConfig.ESETR_SC as `0x${string}`,
@@ -55,8 +60,8 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
   const validationSchema = Yup.object({
     amount: Yup.string()
       .required('The number is required!')
-      .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
-      .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(balance as bigint, 18)),
+      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
+      .test('Greater amount?', 'Not enough funds!', (value) => +value <= +formatUnits(balance as bigint, 18)),
   });
 
   const formik = useFormik({
@@ -88,10 +93,42 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
       console.log('data-hash', data);
       setLoadingApproved(false);
       setIsApproved(true);
-    } catch (error) {
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Successful transaction" status={Status.SUCCESSS} close={onClose}>
+            <p className="text-[14px] font-medium text-white">{'Successful transaction'}</p>
+            <Link href={`https://goerli.arbiscan.io/tx/${hash}`} isExternal color="#3396FF" fontSize={'12px'}>
+              View on explorer (Hyperlink to transaction on Basescan)
+            </Link>
+          </ToastLayout>
+        ),
+      });
+    } catch (error: any) {
       console.log(error);
       setLoadingApproved(false);
       setIsApproved(false);
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Approve account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
     }
     // }
   };
@@ -116,9 +153,42 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
       setLoadingStake(false);
       onFetchData();
       onDismiss();
-    } catch (error) {
-      setLoadingStake(false);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Successful transaction" status={Status.SUCCESSS} close={onClose}>
+            <p className="text-[14px] font-medium text-white">{'Successful transaction'}</p>
+            <Link href={`https://goerli.arbiscan.io/tx/${hash}`} isExternal color="#3396FF" fontSize={'12px'}>
+              View on explorer (Hyperlink to transaction on Basescan)
+            </Link>
+          </ToastLayout>
+        ),
+      });
+    } catch (error: any) {
       console.log(error);
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+      setLoadingStake(false);
+      onDismiss();
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Approve account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
     }
   };
 
@@ -145,7 +215,7 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
           fontWeight={400}
           fontSize={'14px'}
         >
-          <ModalHeader>Stake esETR</ModalHeader>
+          <ModalHeader fontSize={'24px'}>Stake esETR</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form>
@@ -164,7 +234,7 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                   <InputGroup>
                     <Input
                       id="amount"
-                      placeholder="Enter amount"
+                      placeholder="0.0"
                       paddingRight={'125px'}
                       fontSize={'14px'}
                       border={'1px solid #6D6D70'}
@@ -187,6 +257,9 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={400}
+                        _hover={{
+                          background: '#252528',
+                        }}
                         onClick={() => {
                           if (balance) {
                             formik.setFieldValue('amount', roundDown(Number(balance) / 10 ** 18, 6));
@@ -197,7 +270,7 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                       </Button>
                       |
                       <Text marginLeft={'4px'} fontSize={'14px'} fontWeight={400}>
-                        USDC
+                        esETR
                       </Text>
                     </InputRightElement>
                   </InputGroup>

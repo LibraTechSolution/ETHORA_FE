@@ -167,7 +167,7 @@ const EsETR = ({
         <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
           <CustomConnectButton>
             <Flex gap={'8px'} justifyContent={'flex-end'}>
-              <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenUnStakeModal(true)}>
+              <Button colorScheme="primary" variant={'outline'}  fontSize={'16px'} size="md" onClick={() => setOpenUnStakeModal(true)}>
                 Unstake
               </Button>
               <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenStakeModal(true)}>

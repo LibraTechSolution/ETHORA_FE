@@ -67,9 +67,23 @@ const USDCVaultItem = ({
         display={'flex'}
         flexDirection={'column'}
       >
-        USDC Vault (ELP Token)
+        <Tooltip
+          hasArrow
+          label={
+            <Text fontSize={'12px'}>
+              USDC vault takes counterposition against each trade and collects up to [percentage] of the settlement fee.
+              USDC vault might face drawdowns if traders are collectively net profitable.
+            </Text>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+          minWidth="288px"
+        >
+          <Text>USDC Vault (ELP Token)</Text>
+        </Tooltip>
         <Text as="span" textColor={'#6D6D70'} fontWeight={400} fontSize={'14px'} marginTop={'8px'}>
-          Max Capacity : ----USDC
+          Max Capacity : 10,000,000 USDC
         </Text>
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
@@ -91,7 +105,7 @@ const USDCVaultItem = ({
               bg="#050506"
               minWidth="288px"
             >
-              <Text as="u">1.00 ELP = {!!exchangeRate ? addComma(exchangeRate.toString(),2) : '0.00'} USDC</Text>
+              <Text as="u">1.00 ELP = {!!exchangeRate ? addComma(exchangeRate.toString(), 2) : '0.00'} USDC</Text>
             </Tooltip>
           </Text>
         </Box>
@@ -222,7 +236,13 @@ const USDCVaultItem = ({
         <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
           <CustomConnectButton>
             <Flex gap={'8px'} justifyContent={'flex-end'}>
-              <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenWithdrawFundModal(true)}>
+              <Button
+                colorScheme="primary"
+                variant={'outline'}
+                fontSize={'16px'}
+                size="md"
+                onClick={() => setOpenWithdrawFundModal(true)}
+              >
                 Withdraw Funds
               </Button>
               <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenAddFundModal(true)}>

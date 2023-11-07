@@ -134,6 +134,7 @@ const ELPVault = ({
             <Flex gap={'8px'} justifyContent={'flex-end'}>
               <Button
                 colorScheme="primary"
+                variant={'outline'}
                 fontSize={'16px'}
                 size="md"
                 onClick={onWithdraw}
