@@ -2,7 +2,12 @@
 
 import { Bangers, Nunito, Poppins } from 'next/font/google';
 
-import { ChakraProvider as ChakraBaseProvider, ChakraProviderProps, extendTheme } from '@chakra-ui/react';
+import {
+  ChakraProvider as ChakraBaseProvider,
+  ChakraProviderProps,
+  defineStyleConfig,
+  extendTheme,
+} from '@chakra-ui/react';
 
 // const nunito = Nunito({
 //   style: ['italic', 'normal'],
@@ -29,6 +34,82 @@ const poppins = Poppins({
 
 const colorBlack = 'black';
 
+const Button = defineStyleConfig({
+  // The styles all button have in common
+  baseStyle: {
+    // fontWeight: 'bold',
+    // textTransform: 'uppercase',
+    borderRadius: '0.625rem', // <-- border radius is same for all variants and sizes
+  },
+  // Two sizes: sm and md
+  sizes: {
+    sm: {
+      fontSize: 'sm',
+      px: 4, // <-- px is short for paddingLeft and paddingRight
+      py: 3, // <-- py is short for paddingTop and paddingBottom
+    },
+    md: {
+      fontSize: 'md',
+      px: 6, // <-- these values are tokens from the design system
+      py: 4, // <-- these values are tokens from the design system
+    },
+  },
+  // Two variants: outline and solid
+  variants: {
+    outline: {
+      border: '2px solid',
+      borderColor: 'primary.500',
+      color: 'primary.500',
+      _hover: {
+        borderColor: 'primary.400',
+        color: 'primary.400',
+      },
+      _disabled: {
+        opacity: 0.5,
+      },
+    },
+    solid: {
+      bg: 'primary.500',
+      color: 'white',
+      _hover: {
+        backgroundColor: 'primary.400',
+        color: 'white',
+      },
+      _disabled: {
+        bg: '#3D3D40',
+        color: '#6D6D70',
+        pointerEvents: 'none',
+      },
+    },
+  },
+  // The default size and variant values
+  // defaultProps: {
+  //   size: 'md',
+  //   variant: 'solid',
+  // },
+});
+
+const Checkbox = defineStyleConfig({
+  // parts: ['control'],
+  baseStyle: {
+    label: {
+      _disabled: {
+        color: 'white',
+        opacity: 1,
+      },
+    },
+    control: {
+      _checked: {
+        _disabled: {
+          bg: '#3D3D40',
+          borderColor: '#3D3D40',
+          // color: 'white',
+        },
+      },
+    },
+  },
+});
+
 const customTheme = extendTheme({
   breakpoints: {
     base: '0em', // 0px
@@ -52,13 +133,14 @@ const customTheme = extendTheme({
   },
   colors: {
     primary: {
-      100: '#DEDCFD',
-      300: '#BDB9FB',
-      400: '#9B95F8',
+      100: '#D2D8FC',
+      200: '#A5B2F9',
+      300: '#788BF6',
+      400: '#4B65F3',
       500: '#1E3EF0',
-      600: '#9B95F8',
-      700: '#7A72F6',
-      900: '#594FF4',
+      600: '#1E3EF0',
+      700: '#1E3EF0',
+      900: '#1E3EF0',
     },
   },
   fontSizes: {
@@ -111,6 +193,10 @@ const customTheme = extendTheme({
     wide: '0.025em',
     wider: '0.05em',
     widest: '0.1em',
+  },
+  components: {
+    Button,
+    Checkbox,
   },
 });
 

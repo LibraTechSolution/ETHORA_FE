@@ -20,20 +20,24 @@ import {
   InputRightElement,
   Box,
   Flex,
+  useToast,
+  Link,
 } from '@chakra-ui/react';
 import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import { formatEther, formatUnits, parseUnits } from 'viem';
+import { BaseError, formatEther, formatUnits, parseUnits } from 'viem';
 import * as Yup from 'yup';
 import { EarnContext } from '..';
 import { useContractRead } from 'wagmi';
 import SETR_ABI from '@/config/abi/SETR_ABI';
 import useActiveWeb3React from '@/hooks/useActiveWeb3React';
 import { addComma, roundDown } from '@/utils/number';
-
+import { ToastLayout } from '@/components/ToastLayout';
+import { Status } from '@/types/faucet.type';
 
 const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
+  const toast = useToast();
   const { onFetchData } = useContext(EarnContext);
   const [loadingUnStake, setLoadingUnStake] = useState<boolean>(false);
   const { address } = useActiveWeb3React();
@@ -47,12 +51,15 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
     args: [address as `0x${string}`, appConfig.ETR_SC as `0x${string}`],
   });
 
-
   const validationSchema = Yup.object({
     amount: Yup.string()
       .required('The number is required!')
-      .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
-      .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(dataDepositBalances as bigint, 18)),
+      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
+      .test(
+        'Greater amount?',
+        'Not enough funds!',
+        (value) => +value <= +formatUnits(dataDepositBalances as bigint, 18),
+      ),
   });
 
   const formik = useFormik({
@@ -77,7 +84,6 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
         functionName: 'unstakeBfr',
         args: [amoutBigint],
       });
-
       const { hash } = await writeContract(configUnStake);
       const data = await waitForTransaction({
         hash,
@@ -85,9 +91,41 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
       setLoadingUnStake(false);
       onFetchData();
       onDismiss();
-    } catch (error) {
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Successful transaction" status={Status.SUCCESSS} close={onClose}>
+            <p className="text-[14px] font-medium text-white">{'Successful transaction'}</p>
+            <Link href={`https://goerli.arbiscan.io/tx/${hash}`} isExternal color="#3396FF" fontSize={'12px'}>
+              View on explorer (Hyperlink to transaction on Basescan)
+            </Link>
+          </ToastLayout>
+        ),
+      });
+    } catch (error: any) {
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
       setLoadingUnStake(false);
-      console.log(error);
+      onDismiss();
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Approve account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
     }
   };
 
@@ -110,7 +148,7 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
           fontWeight={400}
           fontSize={'14px'}
         >
-          <ModalHeader>Unstake ETR</ModalHeader>
+          <ModalHeader fontSize={'24px'}>Unstake ETR</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form>
@@ -134,7 +172,7 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
                     <Input
                       id="amount"
                       // name="amount"
-                      placeholder="Enter amount"
+                      placeholder="0.0"
                       paddingRight={'125px'}
                       fontSize={'14px'}
                       border={'1px solid #6D6D70'}
@@ -157,9 +195,12 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={400}
+                        _hover={{
+                          background: '#252528',
+                        }}
                         onClick={() => {
                           if (dataDepositBalances !== undefined) {
-                            formik.setFieldValue('amount', roundDown(+formatEther(BigInt(dataDepositBalances)),6));
+                            formik.setFieldValue('amount', roundDown(+formatEther(BigInt(dataDepositBalances)), 6));
                           }
                         }}
                       >
@@ -167,7 +208,7 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
                       </Button>
                       |
                       <Text marginLeft={'4px'} fontSize={'14px'} fontWeight={400}>
-                        USDC
+                        ETR
                       </Text>
                     </InputRightElement>
                   </InputGroup>
@@ -184,7 +225,9 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
           <ModalFooter>
             <Button
               colorScheme="primary"
-              onClick={() => formik.handleSubmit()}
+              onClick={() => {
+                formik.handleSubmit();
+              }}
               width={'100%'}
               isLoading={loadingUnStake}
             >

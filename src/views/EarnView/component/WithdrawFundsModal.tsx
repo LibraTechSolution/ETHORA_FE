@@ -16,6 +16,8 @@ import {
   InputGroup,
   InputRightElement,
   Flex,
+  useToast,
+  Link,
 } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
@@ -31,6 +33,9 @@ import FBLP_ABI from '@/config/abi/FBLP_ABI';
 import VBLP_ABI from '@/config/abi/VBLP_ABI';
 import { addComma, roundDown } from '@/utils/number';
 import BLP_ABI from '@/config/abi/BLP_ABI';
+import { ToastLayout } from '@/components/ToastLayout';
+import { Status } from '@/types/faucet.type';
+import { BaseError } from 'viem';
 
 // const validationSchema = Yup.object({
 //   amount: Yup.string().required(),
@@ -50,11 +55,12 @@ const WithdrawFundsModal = ({
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
   const { address } = useActiveWeb3React();
   const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
+  const toast = useToast();
 
   const validationSchema = Yup.object({
     amount: Yup.string()
       .required('The number is required!')
-      .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0),
+      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0),
     // .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(dataDepositBalances as bigint, 18)),
     rememberMe: Yup.boolean().equals([true]),
   });
@@ -146,9 +152,42 @@ const WithdrawFundsModal = ({
       setLoadingWithdraw(false);
       onFetchData();
       onDismiss();
-    } catch (error) {
-      setLoadingWithdraw(false);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Successful transaction" status={Status.SUCCESSS} close={onClose}>
+            <p className="text-[14px] font-medium text-white">{'Successful transaction'}</p>
+            <Link href={`https://goerli.arbiscan.io/tx/${hash}`} isExternal color='#3396FF' fontSize={'12px'}>
+              View on explorer (Hyperlink to transaction on Basescan)
+            </Link>
+          </ToastLayout>
+        ),
+      });
+    } catch (error: any) {
       console.log(error);
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+      setLoadingWithdraw(false);
+      onDismiss();
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Approve account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
     }
   };
 
@@ -171,7 +210,7 @@ const WithdrawFundsModal = ({
           fontWeight={400}
           fontSize={'14px'}
         >
-          <ModalHeader>Sell ELP</ModalHeader>
+          <ModalHeader fontSize={'24px'}>Sell ELP</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form>
@@ -191,7 +230,7 @@ const WithdrawFundsModal = ({
                     <Input
                       id="amount"
                       // name="pay"
-                      placeholder="Enter amount"
+                      placeholder="0.0"
                       paddingRight={'125px'}
                       fontSize={'14px'}
                       border={'1px solid #6D6D70'}
@@ -214,6 +253,9 @@ const WithdrawFundsModal = ({
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={400}
+                        _hover={{
+                          background: '#252528',
+                        }}
                         onClick={() => {
                           if (getMax) {
                             formik.setFieldValue('amount', roundDown(getMax, 6));

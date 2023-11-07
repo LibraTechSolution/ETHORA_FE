@@ -14,7 +14,7 @@ const TotalRewardsItem = ({
   claimable_fsBLP,
   claimable_sbETR,
   depositBalances_bnETR,
-  price
+  price,
 }: {
   claimable_sbfETR: bigint;
   claimable_fBLP: bigint;
@@ -24,7 +24,7 @@ const TotalRewardsItem = ({
   claimable_fsBLP: bigint;
   claimable_sbETR: bigint;
   depositBalances_bnETR: bigint;
-  price: number
+  price: number;
 }) => {
   const [openClaimModal, setOpenClaimModal] = useState<boolean>(false);
   const [openCompoundRewardsModal, setOpenCompoundRewardsModal] = useState<boolean>(false);
@@ -54,7 +54,7 @@ const TotalRewardsItem = ({
             ETR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {ETR !== undefined ?  `${addComma(ETR, 2)} ($${addComma(ETR * price, 2)}) ` : '0.00 ($0.00)'}
+            {ETR !== undefined ? `${addComma(ETR, 2)} ($${addComma(ETR * price, 2)}) ` : '0.00 ($0.00)'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -97,7 +97,13 @@ const TotalRewardsItem = ({
               {/* <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
                 Claim ARB
               </Button> */}
-              <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenClaimModal(true)}>
+              <Button
+                colorScheme="primary"
+                variant={'outline'}
+                fontSize={'16px'}
+                size="md"
+                onClick={() => setOpenClaimModal(true)}
+              >
                 Claim
               </Button>
               <Button

@@ -18,6 +18,8 @@ import {
   InputRightElement,
   Box,
   Flex,
+  useToast,
+  Link,
 } from '@chakra-ui/react';
 import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
 import { useFormik } from 'formik';
@@ -26,7 +28,9 @@ import * as Yup from 'yup';
 import { EarnContext } from '..';
 import { appConfig } from '@/config';
 import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
-
+import { BaseError } from 'viem';
+import { ToastLayout } from '@/components/ToastLayout';
+import { Status } from '@/types/faucet.type';
 // const validationSchema = Yup.object({
 //   pay: Yup.string().required(),
 //   rememberMe: Yup.boolean().equals([true]),
@@ -35,7 +39,7 @@ import RewardRouterV2_ABI from '@/config/abi/RewardRouterV2_ABI';
 const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { onFetchData } = useContext(EarnContext);
   const [loadingClaim, setLoadingClaim] = useState<boolean>(false);
-
+  const toast = useToast();
   const formik = useFormik({
     initialValues: {
       claimETR: false,
@@ -76,9 +80,42 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
       setLoadingClaim(false);
       onFetchData();
       onDismiss();
-    } catch (error) {
-      setLoadingClaim(false);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Successful transaction" status={Status.SUCCESSS} close={onClose}>
+            <p className="text-[14px] font-medium text-white">{'Successful transaction'}</p>
+            <Link href={`https://goerli.arbiscan.io/tx/${hash}`} isExternal color="#3396FF" fontSize={'12px'}>
+              View on explorer (Hyperlink to transaction on Basescan)
+            </Link>
+          </ToastLayout>
+        ),
+      });
+    } catch (error: any) {
       console.log(error);
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+      setLoadingClaim(false);
+      onDismiss();
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Approve account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
     }
   };
 
@@ -101,7 +138,7 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
           fontWeight={400}
           fontSize={'14px'}
         >
-          <ModalHeader>Claim Rewards</ModalHeader>
+          <ModalHeader fontSize={'24px'}>Claim Rewards</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form>
