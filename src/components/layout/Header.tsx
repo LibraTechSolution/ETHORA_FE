@@ -23,13 +23,15 @@ import {
 } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useUserStore from '@/store/useUserStore';
 import { Image } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { AccountModal } from '../AccountModal';
 import { appConfig } from '@/config';
+import AdvanceSetting from '@/views/TradeView/components/AdvanceSetting';
+import useAdvanceSetting from '@/store/useAdvanceSetting';
 
 export const Header = () => {
   const [isMobile] = useMediaQuery('(max-width: 992px)');
@@ -37,10 +39,13 @@ export const Header = () => {
   const { isOpen: isOpenDraw, onOpen: onOpenDraw, onClose: onCloseDraw } = useDisclosure();
   const { address } = useAccount();
   const { listWallets, setUser, setToken } = useUserStore();
+  const { advanceSetting, setListAdvanceSetting } = useAdvanceSetting();
   const currentRoute = usePathname();
   const linkStyle = 'rounded-[10px] px-3 py-2 ';
   const activeStyle = linkStyle + ' bg-[#1E3EF0] text-[#fff]';
   const nonActiveStyle = linkStyle + ' text-[#6D6D70]';
+  const [isShow, setIsShow] = useState<boolean>(false);
+  const settingRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (address) {
@@ -51,8 +56,28 @@ export const Header = () => {
         setUser(null);
         setToken(null);
       }
+      console.log(address);
+      console.log(advanceSetting);
+      if (!advanceSetting || !(advanceSetting && advanceSetting[address])) {
+        console.log(address);
+        setListAdvanceSetting(address);
+      }
     }
   }, [address, listWallets, setToken, setUser]);
+
+  const handleOutSideClick = (e: Event) => {
+    if (!settingRef.current?.contains(e.target as Node)) {
+      setIsShow(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutSideClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutSideClick);
+    };
+  }, [settingRef]);
 
   return (
     <>
@@ -328,7 +353,7 @@ export const Header = () => {
               }}
             </ConnectButton.Custom>
           </Center>
-          <Center>
+          <Center ref={settingRef} cursor="pointer" position={'relative'} zIndex={1}>
             <Button
               borderColor="#1E3EF0"
               textColor="#1E3EF0"
@@ -336,9 +361,11 @@ export const Header = () => {
               _hover={{ bg: 'transparent' }}
               padding="10px"
               size={`${isMobile ? 'sm' : 'md'}`}
+              onClick={() => address && setIsShow(!isShow)}
             >
               <Image alt="setting" src="/images/icons/settings.svg" w="18px" h="18px" />
             </Button>
+            <AdvanceSetting isShow={isShow} onClose={setIsShow} />
           </Center>
           <Center>
             <Image

@@ -338,3 +338,6 @@
     background-position: center 84px, center -540px;
   }
 }
+.ant-switch.ant-switch-checked, .ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled) {
+  background-color: #1E3EF0;
+}

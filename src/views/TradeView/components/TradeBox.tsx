@@ -158,8 +158,6 @@ const TradeBox = (props: PropsType) => {
 
   useEffect(() => {
     if (item.state === State.OPENED) {
-      console.log(dayjs().utc().unix());
-      console.log(dayjs(item.openDate).add(1, 'minutes').utc().unix());
       const time =
         dayjs().utc().unix() > dayjs(item.openDate).add(1, 'minutes').utc().unix()
           ? 0
@@ -200,7 +198,7 @@ const TradeBox = (props: PropsType) => {
         />
       ) : (
         <span className="flex items-center text-xs font-normal text-[#9E9E9F]">
-          <span className="mr-1">{item.state === State.QUEUED ? 'In queued...' : 'Processing...'}</span>
+          <span className="mr-1">{item.state === State.QUEUED ? 'In queue...' : 'Processing...'}</span>
           <RotateCw color="#1E3EF0" cursor="pointer" onClick={reloadData} />
         </span>
       )}
