@@ -2,7 +2,11 @@ import { create } from 'zustand';
 import { persist } from "zustand/middleware";
 import { StorageStoreName } from "./constants";
 
-interface ISetting {
+interface IObjectKeys {
+  [key: string]: string | number | boolean;
+}
+
+export interface ISetting extends IObjectKeys {
   isPartialFill: boolean,
   slippage: string,
   limitOrderExpiryTime: number,
@@ -13,7 +17,7 @@ interface ISetting {
 
 }
 
-const defaultSetting: ISetting = {
+export const defaultSetting: ISetting = {
   isPartialFill: true,
   slippage: '0.05',
   limitOrderExpiryTime: 5,

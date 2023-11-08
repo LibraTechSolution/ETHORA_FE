@@ -1,4 +1,4 @@
-import useAdvanceSetting from '@/store/useAdvanceSetting';
+import useAdvanceSetting, { ISetting, defaultSetting } from '@/store/useAdvanceSetting';
 import {
   Box,
   Button,
@@ -50,6 +50,15 @@ const AdvanceSetting = (props: Props) => {
     }
   }, [advanceSetting, address]);
 
+  const setData = (keys: Array<string>, values: Array<string | number | boolean>) => {
+    if (advanceSetting && address && keys.length > 0) {
+      const temp = { ...advanceSetting[address] };
+      keys.forEach((key: string, index) => (temp[key as keyof ISetting] = values[index]));
+
+      setListAdvanceSetting(address, temp);
+    }
+  };
+
   const handleOnChangeSlippage = (e: ChangeEvent<HTMLInputElement>) => {
     setSlippageError('');
     let isError = false;
@@ -63,16 +72,12 @@ const AdvanceSetting = (props: Props) => {
       isError = true;
       setSlippageError('Slippage tolerance must be less than 5%');
     }
-    if (+numberValue < 0.005) {
+    if (+numberValue < 0.01) {
       isError = true;
-      setSlippageError('Slippage tolerance must be greater than 0.005%');
+      setSlippageError('Slippage tolerance must be greater than 0.01%');
     }
     setSlippage(numberValue);
-    if (advanceSetting && address && !isError) {
-      const temp = { ...advanceSetting[address] };
-      temp.slippage = numberValue;
-      setListAdvanceSetting(address, temp);
-    }
+    !isError && setData(['slippage'], [numberValue]);
   };
 
   const convertToTimeStamp = (time: string) => {
@@ -101,12 +106,7 @@ const AdvanceSetting = (props: Props) => {
       setTimeError('Max limit order expiry time is 24 hours');
     }
     setTimeNumber(numberValue);
-    if (advanceSetting && address && !isError) {
-      const temp = { ...advanceSetting[address] };
-      temp.limitOrderExpiryTime = +numberValue;
-      temp.limitOrderExpiryTimeType = timeType;
-      setListAdvanceSetting(address, temp);
-    }
+    !isError && setData(['limitOrderExpiryTime', 'limitOrderExpiryTimeType'], [+numberValue, timeType]);
   };
 
   const handleOnchangeTimeType = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -121,12 +121,7 @@ const AdvanceSetting = (props: Props) => {
       isError = true;
       setTimeError('Max limit order expiry time is 24 hours');
     }
-    if (advanceSetting && address && !isError) {
-      const temp = { ...advanceSetting[address] };
-      temp.limitOrderExpiryTime = +timeNumber;
-      temp.limitOrderExpiryTimeType = e.target.value;
-      setListAdvanceSetting(address, temp);
-    }
+    !isError && setData(['limitOrderExpiryTime', 'limitOrderExpiryTimeType'], [+timeNumber, e.target.value]);
   };
 
   return (
@@ -134,12 +129,14 @@ const AdvanceSetting = (props: Props) => {
       position={'absolute'}
       top={'calc(100% + 10px)'}
       right={0}
-      bgColor={'rgb(28, 28, 30)'}
       rounded={'20px'}
       paddingX={'32px'}
       paddingY={'26px'}
       w={{ base: 'calc(100vw - 20px)', md: '568px' }}
       display={isShow ? 'block' : 'none'}
+      backdropFilter={'blur(7px)'}
+      boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+      bgColor={'rgba(28, 28, 30, 0.5)'}
     >
       <Flex alignItems="center" justifyContent={'space-between'} marginBottom={'26px'}>
         <Text fontSize={'24px'} fontWeight={600} textColor={'#fff'}>
@@ -158,6 +155,18 @@ const AdvanceSetting = (props: Props) => {
           color={'#fff'}
           paddingX={3}
           paddingY={'9px'}
+          onClick={() => {
+            isFirstLoad.current = true;
+            setData(
+              ['isPartialFill', 'slippage', 'limitOrderExpiryTime', 'limitOrderExpiryTimeType'],
+              [
+                defaultSetting.isPartialFill,
+                defaultSetting.slippage,
+                defaultSetting.limitOrderExpiryTime,
+                defaultSetting.limitOrderExpiryTimeType,
+              ],
+            );
+          }}
         >
           <RotateCcw color="#fff" size={16} />
           <Text textColor={'13px'} fontWeight="600" marginLeft={'8px'}>
@@ -186,11 +195,7 @@ const AdvanceSetting = (props: Props) => {
         <Switch
           checked={isPartialFill}
           onChange={(value) => {
-            if (advanceSetting && address) {
-              const temp = { ...advanceSetting[address] };
-              temp.isPartialFill = value;
-              setListAdvanceSetting(address, temp);
-            }
+            setData(['isPartialFill'], [value]);
             setIsPartialFill(value);
           }}
         />
@@ -235,11 +240,7 @@ const AdvanceSetting = (props: Props) => {
             onClick={() => {
               setSlippageError('');
               setSlippage(item);
-              if (advanceSetting && address) {
-                const temp = { ...advanceSetting[address] };
-                temp.slippage = item;
-                setListAdvanceSetting(address, temp);
-              }
+              setData(['slippage'], [item]);
             }}
           >
             {item}%
@@ -312,6 +313,13 @@ const AdvanceSetting = (props: Props) => {
           color={'#fff'}
           paddingX={3}
           paddingY={'9px'}
+          onClick={() => {
+            isFirstLoad.current = true;
+            setData(
+              ['isShowTradeSize', 'isShowSharePopup'],
+              [defaultSetting.isShowTradeSize, defaultSetting.isShowSharePopup],
+            );
+          }}
         >
           <RotateCcw color="#fff" size={16} />
           <Text textColor={'13px'} fontWeight="600" marginLeft={'8px'}>
@@ -328,11 +336,7 @@ const AdvanceSetting = (props: Props) => {
         <Switch
           checked={isShowTradeSize}
           onChange={(value) => {
-            if (advanceSetting && address) {
-              const temp = { ...advanceSetting[address] };
-              temp.isShowTradeSize = value;
-              setListAdvanceSetting(address, temp);
-            }
+            setData(['isShowTradeSize'], [value]);
             setIsShowTradeSize(value);
           }}
         />
@@ -346,11 +350,7 @@ const AdvanceSetting = (props: Props) => {
         <Switch
           checked={isShowSharePopup}
           onChange={(value) => {
-            if (advanceSetting && address) {
-              const temp = { ...advanceSetting[address] };
-              temp.isShowSharePopup = value;
-              setListAdvanceSetting(address, temp);
-            }
+            setData(['isShowSharePopup'], [value]);
             setIsShowSharePopup(value);
           }}
         />
@@ -366,6 +366,10 @@ const AdvanceSetting = (props: Props) => {
           color={'#fff'}
           paddingX={3}
           paddingY={'9px'}
+          onClick={() => {
+            isFirstLoad.current = true;
+            setData(['isShowFavoriteAsset'], [defaultSetting.isShowFavoriteAsset]);
+          }}
         >
           <RotateCcw color="#fff" size={16} />
           <Text textColor={'13px'} fontWeight="600" marginLeft={'8px'}>
@@ -382,11 +386,7 @@ const AdvanceSetting = (props: Props) => {
         <Switch
           checked={isShowFavoriteAsset}
           onChange={(value) => {
-            if (advanceSetting && address) {
-              const temp = { ...advanceSetting[address] };
-              temp.isShowFavoriteAsset = value;
-              setListAdvanceSetting(address, temp);
-            }
+            setData(['isShowFavoriteAsset'], [value]);
             setIsShowFavoriteAsset(value);
           }}
         />
@@ -399,6 +399,10 @@ const AdvanceSetting = (props: Props) => {
           color={'#fff'}
           paddingX={3}
           paddingY={'9px'}
+          onClick={() => {
+            isFirstLoad.current = true;
+            address && setListAdvanceSetting(address);
+          }}
         >
           <RotateCcw color="#fff" size={16} />
           <Text textColor={'16px'} fontWeight="600" marginLeft={'8px'}>

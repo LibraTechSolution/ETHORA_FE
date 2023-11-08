@@ -79,7 +79,7 @@ export const FaucetView = () => {
           rounded="20px"
           width="504px"
           marginBottom="20px"
-          bgColor="#1C1C1E80"
+          bgColor="rgba(28, 28, 30, 0.5)"
         >
           <h1 className="pb-2 text-2xl font-[600] text-[#fff]">Claim TESTNET ETH</h1>
           <p className="pb-5 text-[#D0D0D2]">You will need to claim testnet tokens to cover the gas fee.</p>
@@ -125,7 +125,7 @@ export const FaucetView = () => {
           paddingX="32px"
           rounded="20px"
           width="504px"
-          bgColor="#1C1C1E80"
+          bgColor="rgba(28, 28, 30, 0.5)"
         >
           <h1 className="mb-5 pb-2 text-center text-2xl font-[600] text-[#fff]">Claim TESTNET Tokens</h1>
           <Center>
