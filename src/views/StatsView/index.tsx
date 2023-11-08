@@ -97,7 +97,7 @@ const CustomTooltip = (data: any) => {
           {DataTickDateFormater(payload[0]?.payload?.timestamp)}
           {payload[0]?.payload?.total !== undefined && `, Total: ${payload[0]?.payload?.total}`}
         </p>
-        {payload.map((item: any, index: number) => {
+        {payload?.map((item: any, index: number) => {
           return (
             // eslint-disable-next-line tailwindcss/no-custom-classname
             <p className={`flex items-center text-sm`} key={index} style={{ color: item.color }}>
@@ -113,7 +113,6 @@ const CustomTooltip = (data: any) => {
 
   return null;
 };
-
 
 const rangePresets: TimeRangePickerProps['presets'] = [
   { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
@@ -213,7 +212,6 @@ const StatsView = () => {
     setTradersProfit(dataTradersProfit);
     setMaxTradersProfit(dataMaxTradersProfit);
     setMaxTradersNetPnL(dataMaxTradersNetPnL);
-
   }, [dataStats]);
 
   const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
@@ -471,7 +469,7 @@ const StatsView = () => {
                 background={'#050506'}
               >
                 <DownloadCSV
-                  data={dataVolume}
+                  data={dataVolume ? dataVolume : []}
                   filename={`VolumeCSV_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                   headers={[
                     { label: 'Cumulative', key: 'cumulative' },
@@ -482,10 +480,7 @@ const StatsView = () => {
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
-              <ComposedChart
-                data={dataVolume}
-                barGap={0}
-              >
+              <ComposedChart data={dataVolume} barGap={0}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
@@ -551,7 +546,7 @@ const StatsView = () => {
                 background={'#050506'}
               >
                 <DownloadCSV
-                  data={dataFees}
+                  data={dataFees ? dataFees : []}
                   headers={[
                     { label: 'Cumulative', key: 'cumulative' },
                     { label: 'Fees', key: 'fee' },
@@ -562,10 +557,7 @@ const StatsView = () => {
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
-              <ComposedChart
-                data={dataFees}
-                barGap={0}
-              >
+              <ComposedChart data={dataFees} barGap={0}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
@@ -632,7 +624,7 @@ const StatsView = () => {
                 background={'#050506'}
               >
                 <DownloadCSV
-                  data={dataBurnStats}
+                  data={dataBurnStats ? dataBurnStats : []}
                   headers={[
                     { label: 'Cumulative', key: 'cumulative' },
                     { label: 'Amount', key: 'amount' },
@@ -643,10 +635,7 @@ const StatsView = () => {
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
-              <ComposedChart
-                data={dataBurnStats}
-                barGap={0}
-              >
+              <ComposedChart data={dataBurnStats} barGap={0}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
@@ -713,7 +702,7 @@ const StatsView = () => {
                 background={'#050506'}
               >
                 <DownloadCSV
-                  data={dataRate}
+                  data={dataRate ? dataRate : []}
                   headers={[
                     { label: 'Exchange Rate', key: 'rate' },
                     { label: 'Timestamp', key: 'timestamp' },
@@ -795,7 +784,7 @@ const StatsView = () => {
                 background={'#050506'}
               >
                 <DownloadCSV
-                  data={dataELPPool}
+                  data={dataELPPool ? dataELPPool : []}
                   headers={[
                     { label: 'Current USDC Balance', key: 'glpSupply' },
                     { label: 'Timestamp', key: 'timestamp' },
@@ -877,22 +866,21 @@ const StatsView = () => {
                 background={'#050506'}
               >
                 <DownloadCSV
-                  data={dataUserStats}
+                  data={dataUserStats ? dataUserStats : []}
                   headers={[
                     { label: 'Existing Count', key: 'existingCount' },
                     { label: 'Unique Count', key: 'uniqueCount' },
                     { label: 'unique Count Cumulative', key: 'uniqueCountCumulative' },
                     { label: 'Timestamp', key: 'timestamp' },
                   ]}
-                  filename={`NewvsExistingUsers_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
+                  filename={`NewvsExistingUsers_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format(
+                    'YYYY-MM-DD',
+                  )}`}
                 />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
-              <ComposedChart
-                data={dataUserStats}
-                barGap={0}
-              >
+              <ComposedChart data={dataUserStats} barGap={0}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
@@ -959,23 +947,20 @@ const StatsView = () => {
                 background={'#050506'}
               >
                 <DownloadCSV
-                  data={dataTradersNetPnL}
+                  data={dataTradersNetPnL ? dataTradersNetPnL : []}
                   headers={[
                     { label: 'PNL', key: 'pnl' },
                     { label: 'PNL Cumulative', key: 'pnlCumulative' },
                     { label: 'Timestamp', key: 'timestamp' },
                   ]}
-                  filename={`TradersNetPnL(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
+                  filename={`TradersNetPnL(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format(
+                    'YYYY-MM-DD',
+                  )}`}
                 />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
-              <ComposedChart
-                width={500}
-                height={300}
-                data={dataTradersNetPnL}
-                barGap={0}
-              >
+              <ComposedChart width={500} height={300} data={dataTradersNetPnL} barGap={0}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
@@ -1011,7 +996,7 @@ const StatsView = () => {
                 <Tooltip />
                 <Legend />
                 <Bar yAxisId="left" dataKey="pnl" barSize={16} fill="white" name="Net PnL" unit="$">
-                  {dataTradersNetPnL.map((entry, index) => {
+                  {dataTradersNetPnL?.map((entry, index) => {
                     return <Cell key={`cell-${index}`} fill={`${entry.pnl > 0 ? '#82ca9d' : '#F03D3E'}`} />;
                   })}
                 </Bar>
@@ -1047,7 +1032,7 @@ const StatsView = () => {
                 background={'#050506'}
               >
                 <DownloadCSV
-                  data={dataTradersProfit}
+                  data={dataTradersProfit ? dataTradersProfit : []}
                   headers={[
                     { label: 'Profit', key: 'profit' },
                     { label: 'Loss', key: 'loss' },
@@ -1055,17 +1040,14 @@ const StatsView = () => {
                     { label: 'Loss Cumulative', key: 'lossCumulative' },
                     { label: 'Timestamp', key: 'timestamp' },
                   ]}
-                  filename={`TradersProfitvsLoss(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
+                  filename={`TradersProfitvsLoss(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format(
+                    'YYYY-MM-DD',
+                  )}`}
                 />
               </Button>
             </Box>
             <ResponsiveContainer width="99%" height="100%" aspect={2}>
-              <ComposedChart
-                width={500}
-                height={300}
-                data={dataTradersProfit}
-                barGap={0}
-              >
+              <ComposedChart width={500} height={300} data={dataTradersProfit} barGap={0}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#23252E" />
                 <Tooltip content={CustomTooltip} />
                 <XAxis
