@@ -143,7 +143,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
 
     toast({
       position: 'top',
-      render: ({ onClose }) => <ToastLayout title="Copy Successfully" status={Status.SUCCESSS} close={onClose} />,
+      render: ({ onClose }) => <ToastLayout title="Copied successfully" status={Status.SUCCESSS} close={onClose} />,
     });
   };
 

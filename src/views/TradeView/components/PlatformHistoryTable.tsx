@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import { convertDurationToHourMinutesSeconds } from '@/utils/time';
 import { formatAddress } from '@/utils/address';
 import useUserStore from '@/store/useUserStore';
+import Link from 'next/link';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -139,7 +140,11 @@ const PlatformHistoryTable = () => {
       title: 'User',
       dataIndex: 'userAddress',
       key: 'userAddress',
-      render: (value) => <span>{formatAddress(value)}</span>,
+      render: (value) => (
+        <Link href={`/profile?address=${address}`} target="_blank">
+          <span>{formatAddress(value)}</span>
+        </Link>
+      ),
     },
   ];
 

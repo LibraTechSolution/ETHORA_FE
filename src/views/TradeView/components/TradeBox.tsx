@@ -130,13 +130,35 @@ const TradeBox = (props: PropsType) => {
 
   const handleCloseTrade = async () => {
     try {
-      await closeTrade(item._id);
+      const res = await closeTrade(item._id);
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       queryClient.invalidateQueries({ queryKey: ['getTradingHistory'] });
       queryClient.invalidateQueries({ queryKey: ['getTradeCancel'] });
+
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Close Successfully" status={Status.SUCCESSS} close={onClose} />,
+        render: ({ onClose }) => (
+          <ToastLayout status={Status.SUCCESSS} close={onClose}>
+            <p className="text-[#9E9E9F]">
+              <span className="text-[#fff]">{res.data.data.pair.toUpperCase()}</span>{' '}
+              <span className="text-[#fff]">{res.data.data.isAbove ? 'Up' : 'Down'}</span> @{' '}
+              <span className="pr-2 text-[#fff]">{addComma(divide(res.data.data.strike, 8), 2)}</span>
+              <span className={+res.data.data.profit <= 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>
+                {addComma(divide(res.data.data.profit, 6), 2)}
+              </span>
+            </p>
+            <Flex className="text-[#9E9E9F]">
+              <span>
+                {dayjs(res.data.data.openDate).format('MM/DD/YYYY')} {dayjs(res.data.data.openDate).format('HH:mm:ss')}
+              </span>
+              <span className="px-1">-</span>
+              <span>
+                {dayjs(res.data.data.userCloseDate).format('MM/DD/YYYY')}{' '}
+                {dayjs(res.data.data.userCloseDate).format('HH:mm:ss')}
+              </span>
+            </Flex>
+          </ToastLayout>
+        ),
       });
     } catch (error) {
       console.log(error);

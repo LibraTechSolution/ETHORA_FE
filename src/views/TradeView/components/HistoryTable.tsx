@@ -119,9 +119,9 @@ const HistoryTable = () => {
       key: 'payout',
       render: (value, record) => (
         <div>
-          <p>{addComma(divide(record.profit, 6), 2)} USDC</p>
+          <p>{addComma(divide(record.profit, 6), 6)} USDC</p>
           <Text textColor={record.status === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>
-            Net PnL:{addComma(divide(record.pnl, 6), 2)} USDC
+            Net PnL: {addComma(divide(record.pnl, 6), 6)} USDC
           </Text>
         </div>
       ),
@@ -131,13 +131,26 @@ const HistoryTable = () => {
       dataIndex: 'status',
       key: 'status',
       render: (value) => (
-        <Box
-          border={value === TRADE_STATUS.WIN ? '1px solid #1ED768' : '1px solid #F03D3E'}
-          display="inline-block"
-          px={2}
-          rounded={4}
-        >
-          <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>
+        <Box display={'inline-block'}>
+          <Box
+            border={value === TRADE_STATUS.WIN ? '1px solid #1ED768' : '1px solid #F03D3E'}
+            display="flex"
+            px={2}
+            rounded={4}
+            py={'2px'}
+            alignItems="center"
+            backgroundColor={value === TRADE_STATUS.WIN ? 'rgba(21, 189, 89, 0.10)' : 'rgba(240, 61, 62, 0.10);'}
+          >
+            <Image
+              alt=""
+              src={value === TRADE_STATUS.WIN ? '/images/icons/check-circle.svg' : '/images/icons/x-circle-red.svg'}
+              w="10px"
+              h="10px"
+            />
+            <Text paddingLeft={'5px'} textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>
+              {value}
+            </Text>
+          </Box>
         </Box>
       ),
     },

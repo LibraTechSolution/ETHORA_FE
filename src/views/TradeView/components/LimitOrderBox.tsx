@@ -1,7 +1,7 @@
 'use client';
 
 import useTradeStore from '@/store/useTradeStore';
-import { addComma, addZeroBefore } from '@/utils/number';
+import { addComma } from '@/utils/number';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { Flex, Center, GridItem, Button, Box, Grid, Image, useToast, Tooltip } from '@chakra-ui/react';
 import CountDown from './CountDown';
@@ -28,12 +28,24 @@ const LimitOrderBox = (props: PropsType) => {
 
   const handleCancelTrade = async () => {
     try {
-      await cancelTrade(item._id);
-      queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
+      const res = await cancelTrade(item._id);
+
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Cancel Successfully" status={Status.SUCCESSS} close={onClose} />,
+        render: ({ onClose }) => (
+          <ToastLayout status={Status.SUCCESSS} close={onClose}>
+            <p className="font-semibold text-[#fff]">Order cancelled</p>
+            <p className="text-[#9E9E9F]">
+              <span className="text-[#fff]">{res.data.data.pair.toUpperCase()}</span> to go{' '}
+              <span className="text-[#fff]">{res.data.data.isAbove ? 'Upper' : 'Lower'}</span>
+            </p>
+            <p className="text-[#9E9E9F]">
+              Total amount: <span className="text-[#fff]">{addComma(divide(res.data.data.tradeSize, 6), 2)}</span> USDC
+            </p>
+          </ToastLayout>
+        ),
       });
+      queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
     } catch (error) {
       toast({
         position: 'top',

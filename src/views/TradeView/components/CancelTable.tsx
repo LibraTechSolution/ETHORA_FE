@@ -100,14 +100,22 @@ const CancelTable = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (value) => (
-        <Box
-          border={value === TRADE_STATUS.WIN ? '1px solid #1ED768' : '1px solid #F03D3E'}
-          display="inline-block"
-          px={2}
-          rounded={4}
-        >
-          <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>
+      render: () => (
+        <Box display={'inline-block'}>
+          <Box
+            border={'1px solid #F03D3E'}
+            display="flex"
+            px={2}
+            rounded={4}
+            py={'2px'}
+            alignItems="center"
+            backgroundColor="#39272A"
+          >
+            <Image alt="" src={'/images/icons/x-circle-red.svg'} w="10px" h="10px" />
+            <Text paddingLeft={'5px'} textColor={'#F03D3E'}>
+              Cancelled
+            </Text>
+          </Box>
         </Box>
       ),
     },

@@ -98,7 +98,8 @@ const TradeControl = () => {
   const { resetListLine } = useListShowLinesStore();
   const [referCode, setReferCode] = useState('');
   const [pairPayout, setPairPayout] = useState(0);
-  const [isPending, setIsPending] = useState<boolean>(false);
+  const [isPendingUp, setIsPendingUp] = useState<boolean>(false);
+  const [isPendingDown, setIsPendingDown] = useState<boolean>(false);
   const { advanceSetting } = useAdvanceSetting();
 
   useEffect(() => {
@@ -150,6 +151,7 @@ const TradeControl = () => {
   };
 
   const handleMax = () => {
+    setTradeSizeError('');
     if (!balance) return;
     let maxBalance = BigNumber(balance.toString()).div(1000000).toString();
 
@@ -336,9 +338,13 @@ const TradeControl = () => {
       hasError = true;
     }
 
-    if (hasError || isPending) return;
+    if (hasError) return;
     try {
-      setIsPending(true);
+      if (isAbove) {
+        setIsPendingUp(true);
+      } else {
+        setIsPendingDown(true);
+      }
       const currentDate = dayjs().utc().format();
       const data = {
         network: chain?.id ?? 5,
@@ -366,7 +372,7 @@ const TradeControl = () => {
         render: ({ onClose }) => (
           <ToastLayout
             title="Trade order placed"
-            content={`${data.pair} to go ${isAbove ? 'Upper' : 'Lower'}`}
+            content={`${data.pair} to go ${isAbove ? 'Higher' : 'Lower'}`}
             status={Status.SUCCESSS}
             close={onClose}
           >
@@ -375,7 +381,7 @@ const TradeControl = () => {
             </p>
             <p className="text-[#9E9E9F]">
               <span className="text-[#fff]">{data.pair.toUpperCase()}</span> to go{' '}
-              <span className="text-[#fff]">{isAbove ? 'Upper' : 'Lower'}</span>
+              <span className="text-[#fff]">{isAbove ? 'Higher' : 'Lower'}</span>
             </p>
             <p className="text-[#9E9E9F]">
               Total amount: <span className="text-[#fff]">{tradeSize}</span> USDC
@@ -384,12 +390,20 @@ const TradeControl = () => {
         ),
       });
       setTimeout(() => {
-        setIsPending(false);
-      }, 1000);
+        if (isAbove) {
+          setIsPendingUp(false);
+        } else {
+          setIsPendingDown(false);
+        }
+      }, 200);
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
     } catch (error) {
-      setIsPending(false);
+      if (isAbove) {
+        setIsPendingUp(false);
+      } else {
+        setIsPendingDown(false);
+      }
       toast({
         position: 'top',
         render: ({ onClose }) => (
@@ -725,7 +739,8 @@ const TradeControl = () => {
                               _hover={{ bgColor: '#1ED768', textColor: '#fff' }}
                               _active={{ bgColor: '#1ED768', textColor: '#fff' }}
                               onClick={() => handleCreateTrade(true)}
-                              isDisabled={isPending}
+                              isDisabled={isPendingUp}
+                              isLoading={isPendingUp}
                             >
                               <TriangleUpIcon color="#fff" w="14px" h="14px" marginRight="10px" />
                               Up
@@ -738,7 +753,8 @@ const TradeControl = () => {
                               w="full"
                               _hover={{ bgColor: '#F03D3E', textColor: '#fff' }}
                               _active={{ bgColor: '#F03D3E', textColor: '#fff' }}
-                              isDisabled={isPending}
+                              isDisabled={isPendingDown}
+                              isLoading={isPendingDown}
                               onClick={() => handleCreateTrade(false)}
                             >
                               <TriangleDownIcon color="#fff" w="14px" h="14px" marginRight="10px" />

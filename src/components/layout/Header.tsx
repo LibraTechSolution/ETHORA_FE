@@ -368,12 +368,14 @@ export const Header = () => {
             <AdvanceSetting isShow={isShow} onClose={setIsShow} />
           </Center>
           <Center>
-            <Image
-              alt="avatar"
-              src="/images/icons/avatar.svg"
-              w={isMobile ? '32px' : '40px'}
-              h={isMobile ? '32px' : '40px'}
-            />
+            <Link href={'/profile'}>
+              <Image
+                alt="avatar"
+                src="/images/icons/avatar.svg"
+                w={isMobile ? '32px' : '40px'}
+                h={isMobile ? '32px' : '40px'}
+              />
+            </Link>
           </Center>
         </Flex>
         <Drawer isOpen={isOpenDraw} placement="left" onClose={onCloseDraw}>

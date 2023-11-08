@@ -201,12 +201,16 @@ export const TradingViewChart = () => {
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Edit successfully" status={Status.SUCCESSS} close={onClose} />,
+        render: ({ onClose }) => (
+          <ToastLayout title="Changed strike price successfully" status={Status.SUCCESSS} close={onClose} />
+        ),
       });
     } catch (error) {
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Edit Unsuccessfully" status={Status.ERROR} close={onClose} />,
+        render: ({ onClose }) => (
+          <ToastLayout title="Changed strike price unsuccessfully" status={Status.ERROR} close={onClose} />
+        ),
       });
       tradeDataLine?.line.setText(divide(tradeDataLine.tradeData.strike, 8).toString());
       tradeDataLine?.line.setPrice(+divide(tradeDataLine.tradeData.strike, 8));

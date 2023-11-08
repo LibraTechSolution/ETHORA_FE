@@ -181,7 +181,7 @@ const SearchPair = (props: Props) => {
     if (dayjs().utc().day() === 0 || dayjs().utc().day() === 6) {
       return true;
     } else {
-      if (dayjs().utc().hour() < 6 || dayjs().utc().hour() > 16) {
+      if (dayjs().utc().hour() < 6 || dayjs().utc().hour() >= 16) {
         return true;
       }
     }
@@ -381,17 +381,17 @@ const SearchPair = (props: Props) => {
                             h="20px"
                             marginLeft={'12px'}
                             marginRight={'8px'}
-                          />{' '}
+                          />
                           {item.pair}
                         </Box>
                       </Link>
                     </Box>
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    {isClose && item.type !== PairType.FOREX ? `${item.payout}%` : '--'}
+                    {item.type === PairType.CRYPTO ? `${item.payout}%` : !isClose ? `${item.payout}%` : '--'}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    {isClose && item.type !== PairType.FOREX ? (
+                    {item.type === PairType.CRYPTO ? (
                       <div>
                         <p className="pb-1">
                           <ShowPrice pair={item.pair.replace('/', '')} />
@@ -405,7 +405,7 @@ const SearchPair = (props: Props) => {
                           <span className="pl-2">{item.changed24hPercent}%</span>
                         </p>
                       </div>
-                    ) : (
+                    ) : isClose ? (
                       <Flex py={'9px'} alignItems={'center'}>
                         <Text textDecoration={'underline'} marginRight={2} onClick={() => setIsOpenModal(true)}>
                           Schedule
@@ -425,20 +425,42 @@ const SearchPair = (props: Props) => {
                           </Text>
                         </Box>
                       </Flex>
+                    ) : (
+                      <div>
+                        <p className="pb-1">
+                          <ShowPrice pair={item.pair.replace('/', '')} />
+                        </p>
+                        <p
+                          className={`flex items-center ${
+                            item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'
+                          }`}
+                        >
+                          {item.changed24hPercent > 0 ? <TriangleUpIcon /> : <TriangleDownIcon />}{' '}
+                          <span className="pl-2">{item.changed24hPercent}%</span>
+                        </p>
+                      </div>
                     )}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    {isClose && item.type !== PairType.FOREX ? `${item.maxTradeSize} USDC` : '--'}
+                    {item.type === PairType.CRYPTO
+                      ? `${item.maxTradeSize} USDC`
+                      : !isClose
+                      ? `${item.maxTradeSize} USDC`
+                      : '--'}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    {isClose && item.type !== PairType.FOREX ? (
+                    {item.type === PairType.CRYPTO ? (
+                      <CurrentOICell pair={item.pair.replace('/', '').toUpperCase()} />
+                    ) : !isClose ? (
                       <CurrentOICell pair={item.pair.replace('/', '').toUpperCase()} />
                     ) : (
                       '--'
                     )}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    {isClose && item.type !== PairType.FOREX ? (
+                    {item.type === PairType.CRYPTO ? (
+                      <MaxOICell pair={item.pair.replace('/', '').toUpperCase()} />
+                    ) : !isClose ? (
                       <MaxOICell pair={item.pair.replace('/', '').toUpperCase()} />
                     ) : (
                       '--'

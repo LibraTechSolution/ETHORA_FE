@@ -44,8 +44,8 @@ const TradeView = () => {
               <Tab
                 color="#6D6D70"
                 fontSize={'sm'}
-                fontWeight={'medium'}
-                _selected={{ color: '#1E3EF0' }}
+                fontWeight={'normal'}
+                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -55,8 +55,8 @@ const TradeView = () => {
               <Tab
                 color="#6D6D70"
                 fontSize={'sm'}
-                fontWeight={'medium'}
-                _selected={{ color: '#1E3EF0' }}
+                fontWeight={'normal'}
+                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -66,8 +66,8 @@ const TradeView = () => {
               <Tab
                 color="#6D6D70"
                 fontSize={'sm'}
-                fontWeight={'medium'}
-                _selected={{ color: '#1E3EF0' }}
+                fontWeight={'normal'}
+                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -77,8 +77,8 @@ const TradeView = () => {
               <Tab
                 color="#6D6D70"
                 fontSize={'sm'}
-                fontWeight={'medium'}
-                _selected={{ color: '#1E3EF0' }}
+                fontWeight={'normal'}
+                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -88,8 +88,8 @@ const TradeView = () => {
               <Tab
                 color="#6D6D70"
                 fontSize={'sm'}
-                fontWeight={'medium'}
-                _selected={{ color: '#1E3EF0' }}
+                fontWeight={'normal'}
+                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
@@ -99,8 +99,8 @@ const TradeView = () => {
               <Tab
                 color="#6D6D70"
                 fontSize={'sm'}
-                fontWeight={'medium'}
-                _selected={{ color: '#1E3EF0' }}
+                fontWeight={'normal'}
+                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
                 _active={{ bgColor: 'transparent' }}
                 paddingX="12px"
                 paddingY="8px"
