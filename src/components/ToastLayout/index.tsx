@@ -6,7 +6,7 @@ import { Button, Center, Flex, Image } from '@chakra-ui/react';
 import { useMemo } from 'react';
 
 interface ToastProp {
-  title: string;
+  title?: string;
   content?: string;
   status: Status;
   close: () => void;

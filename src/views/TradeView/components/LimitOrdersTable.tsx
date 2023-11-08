@@ -139,7 +139,7 @@ const LimitOrdersTable = () => {
               handleCancelTrade(record);
             }}
           >
-            Close
+            Cancel
           </Button>
         </Flex>
       ),

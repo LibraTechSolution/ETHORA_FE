@@ -217,7 +217,7 @@ const AdvanceSetting = (props: Props) => {
           <Image alt="warning" src={`/images/icons/warning-grey.svg`} w="16px" h="16px" />
         </Tooltip>
       </Box>
-      <Box display={{ base: 'flex', xl: 'block', '3xl': 'flex' }} marginBottom={'8px'}>
+      <Box display={'flex'} marginBottom={'8px'}>
         {['0.03', '0.25', '0.5'].map((item) => (
           <Button
             key={item}
