@@ -243,7 +243,9 @@ const SearchPair = (props: Props) => {
       position={'absolute'}
       top={'100%'}
       left={0}
-      bgColor={'rgb(28, 28, 30)'}
+      backdropFilter={'blur(7px)'}
+      boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+      bgColor={'rgba(28, 28, 30, 0.5)'}
       rounded={'20px'}
       padding={'20px'}
       w={{ base: 'calc(100vw - 20px)', xl: '1028px' }}
