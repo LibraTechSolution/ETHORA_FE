@@ -155,7 +155,8 @@ export const TradingViewChart = () => {
   const handleClose = useCallback(
     async (item: ITradingData) => {
       try {
-        await closeTrade(item._id);
+        const closingTime = dayjs().utc().unix();
+        await closeTrade(item._id, closingTime.toString());
         queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
         toast({
           position: 'top',

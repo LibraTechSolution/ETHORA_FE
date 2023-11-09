@@ -344,10 +344,10 @@ const SearchPair = (props: Props) => {
                   Max Trade Size
                 </Th>
                 <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'}>
-                  Current Ol
+                  Current OI
                 </Th>
                 <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'}>
-                  Max Ol
+                  Max OI
                 </Th>
               </Tr>
             </Thead>

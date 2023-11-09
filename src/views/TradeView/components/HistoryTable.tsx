@@ -13,6 +13,8 @@ import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { convertDurationToHourMinutesSeconds } from '@/utils/time';
 import useUserStore from '@/store/useUserStore';
+import ShareModal from './ShareModal';
+import useAdvanceSetting from '@/store/useAdvanceSetting';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -25,6 +27,9 @@ const HistoryTable = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { tokens, user } = useUserStore();
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
+  const { advanceSetting } = useAdvanceSetting();
 
   useEffect(() => {
     if (chain) {
@@ -59,13 +64,13 @@ const HistoryTable = () => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
     },
     {
       title: 'Expiry Price',
       dataIndex: 'expiryPrice',
       key: 'expiryPrice',
-      render: (value) => <span>{addComma(divide(value, 8), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
     },
     {
       title: 'Open Time',
@@ -111,7 +116,7 @@ const HistoryTable = () => {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
     },
     {
       title: 'Payout',
@@ -130,8 +135,8 @@ const HistoryTable = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (value) => (
-        <Box display={'inline-block'}>
+      render: (value, record) => (
+        <Box display={'flex'}>
           <Box
             border={value === TRADE_STATUS.WIN ? '1px solid #1ED768' : '1px solid #F03D3E'}
             display="flex"
@@ -151,10 +156,27 @@ const HistoryTable = () => {
               {value}
             </Text>
           </Box>
+          {address && advanceSetting && advanceSetting[address].isShowSharePopup && (
+            <Text
+              color={'#1677FF'}
+              fontWeight={400}
+              fontSize={'14px'}
+              ml={'45px'}
+              onClick={() => openShareModal(record)}
+              cursor={'pointer'}
+            >
+              Share
+            </Text>
+          )}
         </Box>
       ),
     },
   ];
+
+  const openShareModal = (item: ITradingData) => {
+    setIsOpenModal(true);
+    setSelectedItem(item);
+  };
 
   const { data: tradingData, isInitialLoading } = useQuery({
     queryKey: ['getTradingHistory', filter],
@@ -174,23 +196,28 @@ const HistoryTable = () => {
   };
 
   return (
-    <Table
-      columns={columns}
-      dataSource={tradingData?.docs}
-      pagination={{
-        pageSize: tradingData?.meta.limit,
-        current: tradingData?.meta.page,
-        total: tradingData?.meta.totalDocs,
-        hideOnSinglePage: true,
-        showTotal: (total: number, range: [number, number]) => `Results: ${range[0]} - ${range[1]}  of ${total}`,
-      }}
-      // scroll={{ y: 300 }}
-      scroll={{ x: 'max-content' }}
-      loading={isInitialLoading}
-      className="customTable"
-      rowKey={(record) => record._id}
-      onChange={handleChangePage}
-    />
+    <>
+      <Table
+        columns={columns}
+        dataSource={tradingData?.docs}
+        pagination={{
+          pageSize: tradingData?.meta.limit,
+          current: tradingData?.meta.page,
+          total: tradingData?.meta.totalDocs,
+          hideOnSinglePage: true,
+          showTotal: (total: number, range: [number, number]) => `Results: ${range[0]} - ${range[1]}  of ${total}`,
+        }}
+        // scroll={{ y: 300 }}
+        scroll={{ x: 'max-content' }}
+        loading={isInitialLoading}
+        className="customTable"
+        rowKey={(record) => record._id}
+        onChange={handleChangePage}
+      />
+      {isOpenModal && selectedItem && (
+        <ShareModal item={selectedItem} isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} />
+      )}
+    </>
   );
 };
 export default HistoryTable;

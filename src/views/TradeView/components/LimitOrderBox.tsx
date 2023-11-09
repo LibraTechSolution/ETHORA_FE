@@ -14,6 +14,8 @@ import { Status } from '@/types/faucet.type';
 import { useEffect } from 'react';
 import { divide } from '@/utils/operationBigNumber';
 import { convertDurationToHourAndMinutes } from '@/utils/time';
+import { ShowPrice } from './ShowPrice';
+import useListShowLinesStore from '@/store/useListShowLinesStore';
 
 interface PropsType {
   item: ITradingData;
@@ -25,6 +27,7 @@ const LimitOrderBox = (props: PropsType) => {
   const { price } = useTradeStore();
   const queryClient = useQueryClient();
   const toast = useToast();
+  const { setListLines, listLines } = useListShowLinesStore();
 
   const handleCancelTrade = async () => {
     try {
@@ -46,6 +49,8 @@ const LimitOrderBox = (props: PropsType) => {
         ),
       });
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
+      const isRemove = listLines.some((line) => line._id === item._id);
+      isRemove && setListLines(item);
     } catch (error) {
       toast({
         position: 'top',
@@ -131,14 +136,12 @@ const LimitOrderBox = (props: PropsType) => {
                 </span>
               </Tooltip>
 
-              <span className="text-xs font-normal text-[#6D6D70]">±{item.slippage}%</span>
+              <span className="text-xs font-normal text-[#6D6D70]">±{item.slippage / 100}%</span>
             </p>
           </GridItem>
           <GridItem>
             <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Duration</p>
-            <p className="text-sm font-normal text-[#FFFFFF]">
-              {convertDurationToHourAndMinutes(item.limitOrderDuration)}
-            </p>
+            <p className="text-sm font-normal text-[#FFFFFF]">{convertDurationToHourAndMinutes(item.period)}</p>
           </GridItem>
         </Grid>
         <Grid templateColumns="repeat(2, 1fr)" marginBottom="3" gap={3}>
@@ -167,7 +170,7 @@ const LimitOrderBox = (props: PropsType) => {
               borderRadius={'4px'}
               fontSize={'12px'}
             >
-              <p className="text-sm font-normal text-[#FFFFFF]">{addComma(price.toFixed(2), 2)}</p>
+              <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} />
             </Tooltip>
           </GridItem>
         </Grid>

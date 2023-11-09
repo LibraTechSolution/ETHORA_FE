@@ -19,6 +19,7 @@ import useUserStore from '@/store/useUserStore';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { RotateCw } from 'lucide-react';
 import { ShowPrice } from './ShowPrice';
+import { ToastCloseTrade } from './ToastCloseTrade';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -34,10 +35,45 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
   return (
     <Box>
       <p className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
-        {(+earlycloseAmount).toFixed(2)}
+        {(+earlycloseAmount).toFixed(2)} USDC
       </p>
       <p className="text-[ #9E9E9F] text-xs font-normal">{probability.toFixed(2)}%</p>
     </Box>
+  );
+};
+
+interface CloseBtnPropsType {
+  item: ITradingData;
+  handleCloseTrade: (item: ITradingData) => void;
+}
+
+const CloseButton = (props: CloseBtnPropsType) => {
+  const { item, handleCloseTrade } = props;
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (item.state === State.OPENED) {
+      const time =
+        dayjs().utc().unix() > dayjs(item.openDate).add(1, 'minutes').utc().unix()
+          ? 0
+          : (dayjs(item.openDate).add(1, 'minutes').utc().unix() - dayjs().utc().unix()) * 1000;
+      setTimeout(() => {
+        setIsDisabled(false);
+      }, time);
+    }
+  }, [item.openDate, item.state]);
+
+  return (
+    <Button
+      colorScheme="blackAlpha"
+      size={'sm'}
+      onClick={() => {
+        handleCloseTrade(item);
+      }}
+      isDisabled={isDisabled}
+    >
+      Close
+    </Button>
   );
 };
 
@@ -91,7 +127,7 @@ const TradeTable = () => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
     },
     {
       title: 'Current Price',
@@ -135,7 +171,7 @@ const TradeTable = () => {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
     },
     {
       title: 'PnL | Probability',
@@ -159,28 +195,23 @@ const TradeTable = () => {
           >
             {listLines.some((item) => item._id === record._id) ? 'Hide' : 'View'}
           </Button>
-          <Button
-            colorScheme="blackAlpha"
-            size={'sm'}
-            onClick={() => {
-              handleCancelTrade(record);
-            }}
-          >
-            Close
-          </Button>
+          <CloseButton item={record} handleCloseTrade={handleCloseTrade} />
         </Flex>
       ),
     },
   ];
 
-  const handleCancelTrade = async (item: ITradingData) => {
+  const handleCloseTrade = async (item: ITradingData) => {
     try {
-      await closeTrade(item._id);
+      const closingTime = dayjs().utc().unix();
+      await closeTrade(item._id, closingTime.toString());
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Close Successfully" status={Status.SUCCESSS} close={onClose} />,
+        render: ({ onClose }) => <ToastCloseTrade item={item} onClose={onClose} closeTime={closingTime} />,
       });
+      const isRemove = listLines.some((line) => line._id === item._id);
+      isRemove && setListLines(item);
     } catch (error) {
       console.log(error);
       toast({
