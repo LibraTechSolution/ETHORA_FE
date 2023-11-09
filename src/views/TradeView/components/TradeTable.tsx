@@ -1,9 +1,9 @@
 'use client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Empty, Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { Box, Button, Flex, Image, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, useToast, Text } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams, State } from '@/types/trade.type';
@@ -19,12 +19,7 @@ import useUserStore from '@/store/useUserStore';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { RotateCw } from 'lucide-react';
 import { ShowPrice } from './ShowPrice';
-
-const defaultParams: ITradingParams = {
-  limit: 10,
-  page: 1,
-  network: '421613',
-};
+import { useSearchParams } from 'next/navigation';
 
 const PnLCell = ({ trade }: { trade: ITradingData }) => {
   const { pnl: earlyPnl } = useEarlyPnl({
@@ -41,9 +36,20 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
   );
 };
 
-const TradeTable = () => {
+const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
+  const searchParams = useSearchParams();
+  const addressURL = searchParams.get('address');
+  const checkAddress = addressURL ? addressURL : address;
+
+  const defaultParams: ITradingParams = {
+    limit: 10,
+    page: 1,
+    network: '421613',
+    ...(!!isProfile && { userAddress: checkAddress }),
+  };
+
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const queryClient = useQueryClient();
   const toast = useToast();
@@ -142,35 +148,39 @@ const TradeTable = () => {
       dataIndex: 'probability',
       render: (value: string, record: ITradingData) => <PnLCell trade={record} />,
     },
-    {
-      title: 'Action',
-      dataIndex: 'action',
-      key: 'action',
-      width: '150px',
-      render: (_, record) => (
-        <Flex>
-          <Button
-            colorScheme="blackAlpha"
-            size={'sm'}
-            onClick={() => {
-              showAndHideLine(record);
-            }}
-            marginRight={'12px'}
-          >
-            {listLines.some((item) => item._id === record._id) ? 'Hide' : 'View'}
-          </Button>
-          <Button
-            colorScheme="blackAlpha"
-            size={'sm'}
-            onClick={() => {
-              handleCancelTrade(record);
-            }}
-          >
-            Close
-          </Button>
-        </Flex>
-      ),
-    },
+    ...(!isProfile
+      ? [
+          {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            width: '150px',
+            render: (_: any, record: ITradingData) => (
+              <Flex>
+                <Button
+                  colorScheme="blackAlpha"
+                  size={'sm'}
+                  onClick={() => {
+                    showAndHideLine(record);
+                  }}
+                  marginRight={'12px'}
+                >
+                  {listLines.some((item) => item._id === record._id) ? 'Hide' : 'View'}
+                </Button>
+                <Button
+                  colorScheme="blackAlpha"
+                  size={'sm'}
+                  onClick={() => {
+                    handleCancelTrade(record);
+                  }}
+                >
+                  Close
+                </Button>
+              </Flex>
+            ),
+          },
+        ]
+      : []),
   ];
 
   const handleCancelTrade = async (item: ITradingData) => {
@@ -197,7 +207,9 @@ const TradeTable = () => {
       console.log(error);
     },
     // select: transformData,
-    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
+    enabled: isProfile
+      ? !!checkAddress
+      : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: 15000,
     refetchOnWindowFocus: false,
@@ -224,6 +236,23 @@ const TradeTable = () => {
       className="customTable"
       rowKey={(record) => record._id}
       onChange={handleChangePage}
+      locale={{
+        emptyText: (
+          <Box
+            background="#0C0C10"
+            margin="-16px -16px"
+            padding="20px"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+          >
+            <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
+            <Text color={'#6D6D70'} fontSize={'14px'}>
+              No active trades at present.
+            </Text>
+          </Box>
+        ),
+      }}
     />
   );
 };
