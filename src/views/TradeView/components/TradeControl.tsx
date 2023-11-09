@@ -74,7 +74,6 @@ const TradeControl = () => {
   const { address } = useAccount();
   const { onOpen } = useModalStore();
   const balance = useBalanceOf(appConfig.USDC_SC as Address);
-  // const balance = 1;
   const [tradeSize, setTradeSize] = useState<string>('0');
   const [tradeSizeError, setTradeSizeError] = useState<string>('');
   const [limitOrderPrice, setLimitOrderPrice] = useState<string>('0');
@@ -82,7 +81,6 @@ const TradeControl = () => {
   const [timeError, setTimeError] = useState<string>('');
   const [tradeType, setTradeType] = useState<string>('market');
   const { price } = useTradeStore();
-  // const price = 0;
   const { user, toggleApprovedAccount } = useUserStore();
   const listTimes = ['3m', '5m', '15m', '1h'];
   const [time, setTime] = useState<string>('15m');
@@ -95,7 +93,7 @@ const TradeControl = () => {
   const [isShowWarning, setIsShowWarning] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const { bufferBOSC, settlementFee } = useGetTradeContract();
-  const { resetListLine } = useListShowLinesStore();
+  const { resetListLine, setListLines } = useListShowLinesStore();
   const [referCode, setReferCode] = useState('');
   const [pairPayout, setPairPayout] = useState(0);
   const [isPendingUp, setIsPendingUp] = useState<boolean>(false);
@@ -367,6 +365,7 @@ const TradeControl = () => {
         referralCode: referCode ?? '',
       };
       const res = await createTrade(data);
+      setListLines(res.data.data);
       toast({
         position: 'top',
         render: ({ onClose }) => (

@@ -62,6 +62,9 @@ export const Header = () => {
         console.log(address);
         setListAdvanceSetting(address);
       }
+    } else {
+      setUser(null);
+      setToken(null);
     }
   }, [address, listWallets, setToken, setUser]);
 

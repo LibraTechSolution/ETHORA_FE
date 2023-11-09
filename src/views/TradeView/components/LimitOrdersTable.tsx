@@ -79,7 +79,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
     },
     {
       title: 'Current Price',
@@ -164,6 +164,8 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
         position: 'top',
         render: ({ onClose }) => <ToastLayout title="Cancel Successfully" status={Status.SUCCESSS} close={onClose} />,
       });
+      const isRemove = listLines.some((line) => line._id === item._id);
+      isRemove && setListLines(item);
     } catch (error) {
       toast({
         position: 'top',

@@ -13,6 +13,8 @@ import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { convertDurationToHourMinutesSeconds } from '@/utils/time';
 import useUserStore from '@/store/useUserStore';
+import ShareModal from './ShareModal';
+import useAdvanceSetting from '@/store/useAdvanceSetting';
 import { useSearchParams } from 'next/navigation';
 
 const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
@@ -31,6 +33,9 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
 
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { tokens, user } = useUserStore();
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
+  const { advanceSetting } = useAdvanceSetting();
 
   useEffect(() => {
     if (chain) {
@@ -65,13 +70,13 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
     },
     {
       title: 'Expiry Price',
       dataIndex: 'expiryPrice',
       key: 'expiryPrice',
-      render: (value) => <span>{addComma(divide(value, 8), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
     },
     {
       title: 'Open Time',
@@ -117,7 +122,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
     },
     {
       title: 'Payout',
@@ -136,8 +141,8 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (value) => (
-        <Box display={'inline-block'}>
+      render: (value, record) => (
+        <Box display={'flex'}>
           <Box
             border={value === TRADE_STATUS.WIN ? '1px solid #1ED768' : '1px solid #F03D3E'}
             display="flex"
@@ -157,10 +162,27 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
               {value}
             </Text>
           </Box>
+          {address && advanceSetting && advanceSetting[address].isShowSharePopup && (
+            <Text
+              color={'#1677FF'}
+              fontWeight={400}
+              fontSize={'14px'}
+              ml={'45px'}
+              onClick={() => openShareModal(record)}
+              cursor={'pointer'}
+            >
+              Share
+            </Text>
+          )}
         </Box>
       ),
     },
   ];
+
+  const openShareModal = (item: ITradingData) => {
+    setIsOpenModal(true);
+    setSelectedItem(item);
+  };
 
   const { data: tradingData, isInitialLoading } = useQuery({
     queryKey: ['getTradingHistory', filter],
@@ -182,40 +204,45 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
   };
 
   return (
-    <Table
-      columns={columns}
-      dataSource={tradingData?.docs}
-      pagination={{
-        pageSize: tradingData?.meta.limit,
-        current: tradingData?.meta.page,
-        total: tradingData?.meta.totalDocs,
-        hideOnSinglePage: true,
-        showTotal: (total: number, range: [number, number]) => `Results: ${range[0]} - ${range[1]}  of ${total}`,
-      }}
-      // scroll={{ y: 300 }}
-      scroll={{ x: 'max-content' }}
-      loading={isInitialLoading}
-      className="customTable"
-      rowKey={(record) => record._id}
-      onChange={handleChangePage}
-      locale={{
-        emptyText: (
-          <Box
-            background="#0C0C10"
-            margin="-16px -16px"
-            padding="20px"
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-          >
-            <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
-            <Text color={'#6D6D70'} fontSize={'14px'}>
-              No active trades at present.
-            </Text>
-          </Box>
-        ),
-      }}
-    />
+    <>
+      <Table
+        columns={columns}
+        dataSource={tradingData?.docs}
+        pagination={{
+          pageSize: tradingData?.meta.limit,
+          current: tradingData?.meta.page,
+          total: tradingData?.meta.totalDocs,
+          hideOnSinglePage: true,
+          showTotal: (total: number, range: [number, number]) => `Results: ${range[0]} - ${range[1]}  of ${total}`,
+        }}
+        // scroll={{ y: 300 }}
+        scroll={{ x: 'max-content' }}
+        loading={isInitialLoading}
+        className="customTable"
+        rowKey={(record) => record._id}
+        onChange={handleChangePage}
+        locale={{
+          emptyText: (
+            <Box
+              background="#0C0C10"
+              margin="-16px -16px"
+              padding="20px"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+            >
+              <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
+              <Text color={'#6D6D70'} fontSize={'14px'}>
+                No active trades at present.
+              </Text>
+            </Box>
+          ),
+        }}
+      />
+      {isOpenModal && selectedItem && (
+        <ShareModal item={selectedItem} isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} />
+      )}
+    </>
   );
 };
 export default HistoryTable;

@@ -346,3 +346,32 @@
 .ant-switch.ant-switch-checked, .ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled) {
   background-color: #1E3EF0;
 }
+
+// .marquee {
+//   height: 25px;
+//   width: 420px;
+
+//   overflow: hidden;
+//   position: relative;
+// }
+
+// .marquee .marquee-item {
+//   display: block;
+//   width: 200%;
+//   height: 30px;
+
+//   position: absolute;
+//   overflow: hidden;
+
+//   animation: marquee 5s linear infinite;
+// }
+
+// .marquee .item {
+//   float: left;
+//   width: 50%;
+// }
+
+// @keyframes marquee {
+//   0% { left: 0; }
+//   100% { left: -100%; }
+// }

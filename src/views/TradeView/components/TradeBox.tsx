@@ -20,6 +20,7 @@ import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { ShowPrice } from './ShowPrice';
 import { RotateCw } from 'lucide-react';
 import { useGetTradeContract } from '@/hooks/useGetTradeContract';
+import { ToastCloseTrade } from './ToastCloseTrade';
 
 interface PropsType {
   item: ITradingData;
@@ -39,6 +40,8 @@ export const useEarlyPnl = ({ trade, lockedAmmount }: { trade: ITradingData; loc
     abi: optionsConfigABI,
     functionName: 'iv',
   });
+
+  console.log('iv', iv);
 
   let probability = useMemo(
     () => getProbability(trade, +price, new BigNumber(iv?.toString() ?? '0').toNumber()),
@@ -85,6 +88,7 @@ const ShowPnL = (props: PropsType) => {
     trade: item,
   });
   const { earlycloseAmount, isWin, probability } = earlyPnl;
+  console.log(earlycloseAmount);
   return (
     <GridItem>
       <p className="mb-2 text-xs font-normal text-[#9E9E9F]">PnL|Probability</p>
@@ -125,43 +129,24 @@ const TradeBox = (props: PropsType) => {
   const { price } = useTradeStore();
   const queryClient = useQueryClient();
   const toast = useToast();
-  const { setListLines } = useListShowLinesStore();
+  const { setListLines, listLines } = useListShowLinesStore();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   const handleCloseTrade = async () => {
     try {
-      const res = await closeTrade(item._id);
+      const closingTime = dayjs().utc().unix();
+      await closeTrade(item._id, closingTime.toString());
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       queryClient.invalidateQueries({ queryKey: ['getTradingHistory'] });
       queryClient.invalidateQueries({ queryKey: ['getTradeCancel'] });
 
       toast({
         position: 'top',
-        render: ({ onClose }) => (
-          <ToastLayout status={Status.SUCCESSS} close={onClose}>
-            <p className="text-[#9E9E9F]">
-              <span className="text-[#fff]">{res.data.data.pair.toUpperCase()}</span>{' '}
-              <span className="text-[#fff]">{res.data.data.isAbove ? 'Up' : 'Down'}</span> @{' '}
-              <span className="pr-2 text-[#fff]">{addComma(divide(res.data.data.strike, 8), 2)}</span>
-              <span className={+res.data.data.profit <= 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>
-                {addComma(divide(res.data.data.profit, 6), 2)}
-              </span>
-            </p>
-            <Flex className="text-[#9E9E9F]">
-              <span>
-                {dayjs(res.data.data.openDate).format('MM/DD/YYYY')} {dayjs(res.data.data.openDate).format('HH:mm:ss')}
-              </span>
-              <span className="px-1">-</span>
-              <span>
-                {dayjs(res.data.data.userCloseDate).format('MM/DD/YYYY')}{' '}
-                {dayjs(res.data.data.userCloseDate).format('HH:mm:ss')}
-              </span>
-            </Flex>
-          </ToastLayout>
-        ),
+        render: ({ onClose }) => <ToastCloseTrade item={item} onClose={onClose} closeTime={closingTime} />,
       });
+      const isRemove = listLines.some((line) => line._id === item._id);
+      isRemove && setListLines(item);
     } catch (error) {
-      console.log(error);
       toast({
         position: 'top',
         render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,
@@ -171,7 +156,8 @@ const TradeBox = (props: PropsType) => {
 
   const timeOutCallBack = () => {
     queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
-    setListLines(item);
+    const isRemove = listLines.some((line) => line._id === item._id);
+    isRemove && setListLines(item);
   };
 
   const reloadData = () => {

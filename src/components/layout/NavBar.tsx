@@ -7,7 +7,6 @@ import NextLink from 'next/link';
 
 const NavBar = () => {
   const currentRoute = usePathname();
-  console.log(currentRoute);
   return (
     <Box
       zIndex={1}

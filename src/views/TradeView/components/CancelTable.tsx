@@ -58,13 +58,13 @@ const CancelTable = () => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
     },
     {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
     },
     {
       title: 'Queue',

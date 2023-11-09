@@ -22,6 +22,8 @@ export const getProbability = (trade: ITradingData, price: number, IV: number, e
   const currentEpoch = dayjs().utc().unix();
   const expiryTime = getExpiry(trade, expiryTs);
 
+  console.log('IV', IV)
+
   return getProbabilityByTime(trade, price, currentEpoch, expiryTime, IV);
 };
 
@@ -54,6 +56,6 @@ export const DataTickFormater = (number: number) => {
   }
 };
 
-export const DataTickDateFormater = (time: number| string) => {
+export const DataTickDateFormater = (time: number | string) => {
   return dayjs(+time * 1000).format('DD.MM')
 };

@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import CountDown from './CountDown';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import useUserStore from '@/store/useUserStore';
+import { ShowPrice } from './ShowPrice';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -25,7 +26,6 @@ const PlatformTradesTable = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
-  const { price } = useTradeStore();
   const { tokens, user } = useUserStore();
 
   useEffect(() => {
@@ -61,13 +61,11 @@ const PlatformTradesTable = () => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
     },
     {
       title: 'Current Price',
-      dataIndex: 'currentPrice',
-      key: 'currentPrice',
-      render: () => <span>{addComma(price, 2)}</span>,
+      render: (value: ITradingData) => <ShowPrice pair={value.pair.replace('-', '').toUpperCase()} />,
     },
     {
       title: 'Open Time',
@@ -99,7 +97,7 @@ const PlatformTradesTable = () => {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)}</span>,
+      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
     },
   ];
 
