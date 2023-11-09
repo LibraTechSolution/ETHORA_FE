@@ -150,3 +150,33 @@ export interface ITradingLimitOrderData {
 export interface TradingLimitOrderDataResponse extends IPaginationResponse {
   items: Array<ITradingLimitOrderData>;
 }
+
+export interface IProfileParams {
+  network: number;
+  userAddress?: string;
+}
+
+export interface IProfileResponse {
+  stats: {
+    daily: number;
+    weekly: number;
+    winTrade: number;
+    totalTrade: number;
+    mostTradedContract: any;
+  };
+  metrics: {
+    referral: {
+      totalRebateEarned: bigint;
+      totalVolumeTrades: bigint;
+      totalTrades: number;
+      tier: number;
+    };
+    USDC: {
+      contract: string;
+      totalPayout: bigint;
+      netPnl: bigint;
+      openInterest: bigint;
+      volume: bigint;
+    };
+  };
+}

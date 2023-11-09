@@ -15,16 +15,22 @@ import { convertDurationToHourMinutesSeconds } from '@/utils/time';
 import useUserStore from '@/store/useUserStore';
 import ShareModal from './ShareModal';
 import useAdvanceSetting from '@/store/useAdvanceSetting';
+import { useSearchParams } from 'next/navigation';
 
-const defaultParams: ITradingParams = {
-  limit: 10,
-  page: 1,
-  network: '421613',
-};
-
-const HistoryTable = () => {
+const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
+  const searchParams = useSearchParams();
+  const addressURL = searchParams.get('address');
+  const checkAddress = addressURL ? addressURL : address;
+
+  const defaultParams: ITradingParams = {
+    limit: 10,
+    page: 1,
+    network: '421613',
+    ...(!!isProfile && { userAddress: checkAddress }),
+  };
+
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { tokens, user } = useUserStore();
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
@@ -185,7 +191,9 @@ const HistoryTable = () => {
       // notification.error({ message: error.message });
       console.log(error);
     },
-    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
+    enabled: isProfile
+      ? !!checkAddress
+      : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: 5000,
     refetchOnWindowFocus: false,
@@ -213,6 +221,23 @@ const HistoryTable = () => {
         className="customTable"
         rowKey={(record) => record._id}
         onChange={handleChangePage}
+        locale={{
+          emptyText: (
+            <Box
+              background="#0C0C10"
+              margin="-16px -16px"
+              padding="20px"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+            >
+              <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
+              <Text color={'#6D6D70'} fontSize={'14px'}>
+                No active trades at present.
+              </Text>
+            </Box>
+          ),
+        }}
       />
       {isOpenModal && selectedItem && (
         <ShareModal item={selectedItem} isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} />

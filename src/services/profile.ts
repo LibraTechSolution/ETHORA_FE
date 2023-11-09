@@ -1,6 +1,30 @@
-import { ITradingActiveData, ITradingActiveParams, ITradingHistoryData, ITradingHistoryParams, ITradingLimitOrderData, ITradingLimitOrderParams, TradingHistoryDataResponse } from '@/types/profile';
+import {
+  IProfileParams,
+  IProfileResponse,
+  ITradingActiveData,
+  ITradingActiveParams,
+  ITradingHistoryData,
+  ITradingHistoryParams,
+  ITradingLimitOrderData,
+  ITradingLimitOrderParams,
+  TradingHistoryDataResponse,
+} from '@/types/profile';
 import { deleteKeyNil } from '@/utils';
 import { axiosInstance } from '@/utils/axios';
+
+export const getProfile = async (params: IProfileParams): Promise<IProfileResponse> => {
+  const response = await axiosInstance.get('/users/stats', {
+    params: deleteKeyNil({
+      ...params,
+    }),
+    headers: {
+      Expires: '-1',
+      'Cache-Control': 'no-cache',
+    },
+  });
+  console.log('response', response);
+  return response.data.data as IProfileResponse;
+};
 
 export const getTradingHistory = async (params?: ITradingHistoryParams): Promise<ITradingHistoryData[]> => {
   const response = await axiosInstance.get('/trades/user/history', {
@@ -41,4 +65,3 @@ export const getTradingLimitOrder = async (params?: ITradingLimitOrderParams): P
   });
   return response.data.data.docs as ITradingLimitOrderData[];
 };
-
