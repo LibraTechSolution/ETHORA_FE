@@ -6,7 +6,7 @@ import { formatEther } from 'viem';
 
 import { Tooltip } from '@chakra-ui/react';
 
-type Value = string | number | undefined | BigNumber | bigint;
+export type Value = string | number | undefined | BigNumber | bigint;
 
 interface Props extends PropsWithChildren {
   value: Value;

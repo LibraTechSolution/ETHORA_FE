@@ -1,10 +1,11 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
 import { addComma } from '@/utils/number';
 import { Heading, Box, Text, Flex, Button, Tooltip, Spacer } from '@chakra-ui/react';
-import { formatUnits } from 'viem';
+import { formatEther, formatUnits } from 'viem';
 import UnStakeModaEsETR from './UnStakeModaEsETR';
 import StakeModalEsETR from './StakeModalEsETR';
 import { useState } from 'react';
+import BigNumber from 'bignumber.js';
 
 const EsETR = ({
   price,
@@ -71,10 +72,10 @@ const EsETR = ({
             Wallet
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {balanceOf_esETR !== undefined ? addComma(formatUnits(balanceOf_esETR as bigint, 18), 2) : '0.00'}
+            {balanceOf_esETR !== undefined ? addComma(BigNumber(formatEther(balanceOf_esETR as bigint)).toFixed(), 2) : '0.00'}
             {' esETR '}
             {balanceOf_esETR !== undefined &&
-              `(${addComma(+formatUnits(balanceOf_esETR as bigint, 18) * price, 2)} USDC)`}
+              `(${addComma(BigNumber(formatEther(balanceOf_esETR as bigint)).multipliedBy(price).toFixed(), 2)} USDC)`}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -83,11 +84,11 @@ const EsETR = ({
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
             {depositBalances_esETR !== undefined
-              ? addComma(formatUnits(depositBalances_esETR as bigint, 18), 2)
+              ? addComma(BigNumber(formatEther(depositBalances_esETR as bigint)).toFixed(), 2)
               : '0.00'}
             {' esETR '}
             {depositBalances_esETR !== undefined &&
-              `(${addComma(+formatUnits(depositBalances_esETR as bigint, 18) * price, 2)} USDC)`}
+              `(${addComma(BigNumber(formatEther(depositBalances_esETR as bigint)).multipliedBy(price).toFixed(), 2)} USDC)`}
           </Text>
         </Box>
         <hr className="border-[#242428]" />

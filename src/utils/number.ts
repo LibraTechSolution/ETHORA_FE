@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 
 export const addComma = (number: string | number, numberDecimal?: number) => {
-  if (!number) return '0';
+  if (!number) return '0.00';
   const value = number.toString();
   let interger = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   let decimal = '';

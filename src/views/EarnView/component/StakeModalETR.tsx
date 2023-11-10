@@ -127,18 +127,30 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
         } else {
           msgContent = 'Something went wrong. Please try again later.';
         }
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={msgContent}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
+      } else {
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={'Something went wrong. Please try again later.'}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
       }
-      toast({
-        position: 'top',
-        render: ({ onClose }) => (
-          <ToastLayout
-            title="Approve account Unsuccessfully"
-            content={msgContent}
-            status={Status.ERROR}
-            close={onClose}
-          />
-        ),
-      });
     }
     // }
   };
@@ -199,20 +211,32 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
         } else {
           msgContent = 'Something went wrong. Please try again later.';
         }
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={msgContent}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
+      } else {
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={'Something went wrong. Please try again later.'}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
       }
       setLoadingStake(false);
       onDismiss();
-      toast({
-        position: 'top',
-        render: ({ onClose }) => (
-          <ToastLayout
-            title="Approve account Unsuccessfully"
-            content={msgContent}
-            status={Status.ERROR}
-            close={onClose}
-          />
-        ),
-      });
     }
   };
 
@@ -292,19 +316,21 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
                         fontSize={'14px'}
                         background={'#0C0C10'}
                         color="#ffffff"
-                        fontWeight={400}
+                        fontWeight={600}
                         _hover={{
                           background: '#252528',
                         }}
                         onClick={() => {
                           if (balance) {
-                            formik.setFieldValue('amount', roundDown(Number(balance) / 10 ** 18, 6));
+                            formik.setFieldValue('amount', Number(balance) / 10 ** 18);
                           }
                         }}
                       >
                         Max
                       </Button>
-                      |
+                      <Box as={'span'} color={'#38383A'}>
+                        |
+                      </Box>
                       <Text marginLeft={'4px'} fontSize={'14px'} fontWeight={400}>
                         ETR
                       </Text>

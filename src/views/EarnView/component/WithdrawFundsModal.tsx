@@ -18,6 +18,7 @@ import {
   Flex,
   useToast,
   Link,
+  Box,
 } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
@@ -56,26 +57,6 @@ const WithdrawFundsModal = ({
   const { address } = useActiveWeb3React();
   const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
   const toast = useToast();
-
-  const validationSchema = Yup.object({
-    amount: Yup.string()
-      .required('The number is required!')
-      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0),
-    // .test('Greater amount?', 'Not enough funds!', (value) => +value < +formatUnits(dataDepositBalances as bigint, 18)),
-    rememberMe: Yup.boolean().equals([true]),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      amount: '',
-      rememberMe: false,
-    },
-    onSubmit: (values) => {
-      console.log('onSubmit');
-      onWithdrawfund(values.amount);
-    },
-    validationSchema: validationSchema,
-  });
 
   const { data: pairAmounts_vBLP } = useContractRead({
     address: appConfig.VBLP_SC as `0x${string}`,
@@ -134,6 +115,26 @@ const WithdrawFundsModal = ({
 
   const getMax = Math.min(LA, KW, unlockedLiquidity);
 
+  const validationSchema = Yup.object({
+    amount: Yup.string()
+      .required('The number is required!')
+      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
+      .test('Greater amount?', 'Not enough funds!', (value) => +value <= +getMax),
+    // rememberMe: Yup.boolean().equals([true]),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      amount: '',
+      // rememberMe: true,
+    },
+    onSubmit: (values) => {
+      console.log('onSubmit');
+      onWithdrawfund(values.amount);
+    },
+    validationSchema: validationSchema,
+  });
+
   const onWithdrawfund = async (amount: string) => {
     const amoutBigint = BigInt(+amount * 10 ** 6);
     try {
@@ -157,7 +158,7 @@ const WithdrawFundsModal = ({
         render: ({ onClose }) => (
           <ToastLayout title="Successful transaction" status={Status.SUCCESSS} close={onClose}>
             <p className="text-[14px] font-medium text-white">{'Successful transaction'}</p>
-            <Link href={`https://goerli.arbiscan.io/tx/${hash}`} isExternal color='#3396FF' fontSize={'12px'}>
+            <Link href={`https://goerli.arbiscan.io/tx/${hash}`} isExternal color="#3396FF" fontSize={'12px'}>
               View on explorer (Hyperlink to transaction on Basescan)
             </Link>
           </ToastLayout>
@@ -174,20 +175,32 @@ const WithdrawFundsModal = ({
         } else {
           msgContent = 'Something went wrong. Please try again later.';
         }
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={msgContent}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
+      } else {
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={'Something went wrong. Please try again later.'}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
       }
       setLoadingWithdraw(false);
       onDismiss();
-      toast({
-        position: 'top',
-        render: ({ onClose }) => (
-          <ToastLayout
-            title="Approve account Unsuccessfully"
-            content={msgContent}
-            status={Status.ERROR}
-            close={onClose}
-          />
-        ),
-      });
     }
   };
 
@@ -252,7 +265,7 @@ const WithdrawFundsModal = ({
                         fontSize={'14px'}
                         background={'#0C0C10'}
                         color="#ffffff"
-                        fontWeight={400}
+                        fontWeight={600}
                         _hover={{
                           background: '#252528',
                         }}
@@ -264,7 +277,9 @@ const WithdrawFundsModal = ({
                       >
                         Max
                       </Button>
-                      |
+                      <Box as={'span'} color={'#38383A'}>
+                        |
+                      </Box>
                       <Text marginLeft={'4px'} fontSize={'14px'} fontWeight={400}>
                         ELP
                       </Text>
@@ -280,24 +295,25 @@ const WithdrawFundsModal = ({
                   <Text as="span" fontSize={'12px'} color="#9E9E9F">
                     Receive
                   </Text>{' '}
-                  <Text as="span" fontSize={'14px'} color={'#1ED768'}>
+                  <Text as="span" fontSize={'16px'} color={'#1ED768'}>
                     {addComma(+formik.values.amount / +exchangeRate, 2)}
-                    {''} ELP
+                    {''} USDC
                   </Text>
                 </Flex>
-                <Checkbox
+                {/* <Checkbox
                   id="rememberMe"
                   // name="rememberMe"
                   {...formik.getFieldProps('rememberMe')}
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
+                  defaultChecked
                 >
                   <Text as="span" fontSize={'14px'}>
                     {' '}
                     I have read how the USDC vault works and am aware of risk associated with being a liquidity provider
                   </Text>
-                </Checkbox>
+                </Checkbox> */}
               </VStack>
             </form>
           </ModalBody>
@@ -307,7 +323,7 @@ const WithdrawFundsModal = ({
               colorScheme="primary"
               onClick={() => formik.handleSubmit()}
               width={'100%'}
-              isDisabled={loadingWithdraw || !formik.values.rememberMe}
+              isDisabled={loadingWithdraw}
             >
               Withdraw Funds
             </Button>

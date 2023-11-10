@@ -130,18 +130,30 @@ const AddFundsModal = ({
         } else {
           msgContent = 'Something went wrong. Please try again later.';
         }
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={msgContent}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
+      } else {
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={'Something went wrong. Please try again later.'}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
       }
-      toast({
-        position: 'top',
-        render: ({ onClose }) => (
-          <ToastLayout
-            title="Approve account Unsuccessfully"
-            content={msgContent}
-            status={Status.ERROR}
-            close={onClose}
-          />
-        ),
-      });
     }
     // }
   };
@@ -187,20 +199,32 @@ const AddFundsModal = ({
         } else {
           msgContent = 'Something went wrong. Please try again later.';
         }
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={msgContent}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
+      } else {
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={'Something went wrong. Please try again later.'}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
       }
       setLoadingDeposit(false);
       onDismiss();
-      toast({
-        position: 'top',
-        render: ({ onClose }) => (
-          <ToastLayout
-            title="Approve account Unsuccessfully"
-            content={msgContent}
-            status={Status.ERROR}
-            close={onClose}
-          />
-        ),
-      });
     }
   };
 
@@ -270,7 +294,7 @@ const AddFundsModal = ({
                         fontSize={'14px'}
                         background={'#0C0C10'}
                         color="#ffffff"
-                        fontWeight={400}
+                        fontWeight={600}
                         _hover={{
                           background: '#252528',
                         }}
@@ -282,7 +306,9 @@ const AddFundsModal = ({
                       >
                         Max
                       </Button>
-                      |
+                      <Box as={'span'} color={'#38383A'}>
+                        |
+                      </Box>
                       <Text marginLeft={'4px'} fontSize={'14px'} fontWeight={400}>
                         USDC
                       </Text>
@@ -298,7 +324,7 @@ const AddFundsModal = ({
                   <Text as="span" fontSize={'12px'} color="#9E9E9F">
                     Receive
                   </Text>{' '}
-                  <Text as="span" fontSize={'14px'} color={'#1ED768'}>
+                  <Text as="span" fontSize={'16px'} color={'#1ED768'}>
                     {addComma(+formik.values.amount / +exchangeRate, 2)} ELP
                   </Text>
                 </Flex>

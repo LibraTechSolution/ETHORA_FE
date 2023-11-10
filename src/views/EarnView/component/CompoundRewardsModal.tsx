@@ -111,20 +111,32 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
         } else {
           msgContent = 'Something went wrong. Please try again later.';
         }
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={msgContent}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
+      } else {
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={'Something went wrong. Please try again later.'}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
       }
       setLoadingCompound(false);
       onDismiss();
-      toast({
-        position: 'top',
-        render: ({ onClose }) => (
-          <ToastLayout
-            title="Approve account Unsuccessfully"
-            content={msgContent}
-            status={Status.ERROR}
-            close={onClose}
-          />
-        ),
-      });
     }
   };
 
