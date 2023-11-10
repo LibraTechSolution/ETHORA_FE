@@ -116,28 +116,28 @@ const ETRItem = ({
                       Boosted APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(boosted_APR, 2)}%</Box>
+                    <Box padding={'0 8px'}>{boosted_APR !== undefined ? addComma(boosted_APR, 6) : '0.00'}%</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Escrowed ETR APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(esETR_APR, 2)}%</Box>
+                    <Box padding={'0 8px'}>{esETR_APR !== undefined ? addComma(esETR_APR, 6) : '0.00'}%</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Base USDC APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(USDC_APR, 2)}%</Box>
+                    <Box padding={'0 8px'}>{USDC_APR !== undefined ? addComma(USDC_APR, 6) : '0.00'}%</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Total APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(Total_APR, 2)}%</Box>
+                    <Box padding={'0 8px'}>{Total_APR !== undefined ? addComma(Total_APR, 6) : '0.00'}%</Box>
                   </Flex>
                   <Text fontSize={'12px'} color={'#9E9E9F'}>
                     The Boosted APR is from your staked Multiplier Points. APRs are updated weekly on Wednesday and will
@@ -168,14 +168,16 @@ const ETRItem = ({
                       USDC
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(USDC_Rewards, 2)}</Box>
+                    <Box padding={'0 8px'}>{USDC_Rewards !== undefined ? addComma(USDC_Rewards, 6) : '0.00'}</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Escrowed ETR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{`${addComma(esETR_Rewards, 2)}($${addComma(esETR_USD_Rewards, 2)})`}</Box>
+                    <Box padding={'0 8px'}>{`${esETR_Rewards !== undefined ? addComma(esETR_Rewards, 6) : '0.00'}($${
+                      esETR_USD_Rewards !== undefined ? addComma(esETR_USD_Rewards, 2) : '0.00'
+                    })`}</Box>
                   </Flex>
                 </Box>
               }
@@ -216,8 +218,10 @@ const ETRItem = ({
                 <>
                   <Text fontSize={'12px'} marginBottom={'16px'}>{`You are earning  ${addComma(
                     boosted_Percentage,
-                    2,
-                  )}% more USDC rewards using ${addComma(stakedMultiplierPoints, 4)} Staked Multiplier Points.`}</Text>
+                    6,
+                  )}% more USDC rewards using ${
+                    stakedMultiplierPoints !== undefined ? addComma(stakedMultiplierPoints, 6) : '0.00'
+                  } Staked Multiplier Points.`}</Text>
                   <Text fontSize={'12px'}>Use the &quot;Compound&ldquo; button to stake your Multiplier Points.</Text>
                 </>
               }

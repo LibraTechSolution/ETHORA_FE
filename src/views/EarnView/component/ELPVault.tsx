@@ -87,8 +87,8 @@ const ELPVault = ({
               label={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
-                    {addComma(claimed, 2)} esETR tokens have been converted to ETR from the {addComma(vested, 2)} esETR
-                    deposited for vesting.
+                    {claimed !== undefined ? addComma(claimed, 6) : '0.00'} esETR tokens have been converted to ETR from
+                    the {vested !== undefined ? addComma(vested, 6) : '0.00'} esETR deposited for vesting.
                   </Text>
                 </Box>
               }
@@ -114,7 +114,7 @@ const ELPVault = ({
               label={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
-                    {addComma(claimable, 2)} ETR tokens can be claimed, use the options under the Total Rewards section
+                    {addComma(claimable, 6)} ETR tokens can be claimed, use the options under the Total Rewards section
                     to claim them.
                   </Text>
                 </Box>

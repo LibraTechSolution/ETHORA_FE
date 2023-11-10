@@ -352,14 +352,14 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                                   Deposited
                                 </Box>
                                 <Spacer />
-                                <Box padding={'0 8px'}>{addComma(deposited, 2)} esBFR</Box>
+                                <Box padding={'0 8px'}>{addComma(deposited, 6)} esBFR</Box>
                               </Flex>
                               <Flex margin={'0 -8px'} alignItems={'center'}>
                                 <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                                   Max Capacity
                                 </Box>
                                 <Spacer />
-                                <Box padding={'0 8px'}>{addComma(maxCapacity, 2)} esBFR</Box>
+                                <Box padding={'0 8px'}>{addComma(maxCapacity, 6)} esBFR</Box>
                               </Flex>
                             </Box>
                           }

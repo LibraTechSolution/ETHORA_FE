@@ -105,14 +105,14 @@ const EsETR = ({
                       Escrowed ETR APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(esETR_APR, 2)}%</Box>
+                    <Box padding={'0 8px'}>{esETR_APR !== undefined ? addComma(esETR_APR, 6) : '0.00'}%</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Base USDC APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(USDC_APR, 2)}%</Box>
+                    <Box padding={'0 8px'}>{USDC_APR !== undefined ? addComma(USDC_APR, 6) : '0.00'}%</Box>
                   </Flex>
                 </Box>
               }
@@ -167,7 +167,13 @@ const EsETR = ({
         <Box position={'absolute'} left={'20px'} right={'20px'} bottom={'20px'} textAlign={'right'}>
           <CustomConnectButton>
             <Flex gap={'8px'} justifyContent={'flex-end'}>
-              <Button colorScheme="primary" variant={'outline'}  fontSize={'16px'} size="md" onClick={() => setOpenUnStakeModal(true)}>
+              <Button
+                colorScheme="primary"
+                variant={'outline'}
+                fontSize={'16px'}
+                size="md"
+                onClick={() => setOpenUnStakeModal(true)}
+              >
                 Unstake
               </Button>
               <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenStakeModal(true)}>
