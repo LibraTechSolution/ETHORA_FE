@@ -118,6 +118,9 @@
   span.ant-table-column-sorter.ant-table-column-sorter-full {
     color: #6d6d70;
   }
+  &.ant-table-wrapper td.ant-table-column-sort {
+    background-color: transparent;
+  }
 }
 
 .tradingTableTab .customTable {

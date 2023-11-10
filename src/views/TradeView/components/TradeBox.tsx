@@ -41,8 +41,6 @@ export const useEarlyPnl = ({ trade, lockedAmmount }: { trade: ITradingData; loc
     functionName: 'iv',
   });
 
-  console.log('iv', iv);
-
   let probability = useMemo(
     () => getProbability(trade, +price, new BigNumber(iv?.toString() ?? '0').toNumber()),
     [trade, price, iv],

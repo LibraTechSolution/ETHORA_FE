@@ -7,7 +7,7 @@ const listPairData: PairData[] = [
   {
     pair: 'BTC/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 100,
@@ -18,7 +18,7 @@ const listPairData: PairData[] = [
   {
     pair: 'ETH/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 50,
@@ -29,7 +29,7 @@ const listPairData: PairData[] = [
   {
     pair: 'LINK/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 50,
@@ -40,7 +40,7 @@ const listPairData: PairData[] = [
   {
     pair: 'TON/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 50,
@@ -51,7 +51,7 @@ const listPairData: PairData[] = [
   {
     pair: 'ARB/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 50,
@@ -62,7 +62,7 @@ const listPairData: PairData[] = [
   {
     pair: 'XRP/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 50,
@@ -73,7 +73,7 @@ const listPairData: PairData[] = [
   {
     pair: 'SOL/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 50,
@@ -84,7 +84,7 @@ const listPairData: PairData[] = [
   {
     pair: 'BNB/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 50,
@@ -95,7 +95,7 @@ const listPairData: PairData[] = [
   {
     pair: 'EUR/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 100,
@@ -106,7 +106,7 @@ const listPairData: PairData[] = [
   {
     pair: 'XAU/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 100,
@@ -117,7 +117,7 @@ const listPairData: PairData[] = [
   {
     pair: 'GBP/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 100,
@@ -128,7 +128,7 @@ const listPairData: PairData[] = [
   {
     pair: 'XAG/USD',
     isFavorite: false,
-    changed24h: 1815.35,
+    currentPrice: 1815.35,
     changed24hPercent: 0.4,
     currentOL: 0,
     maxTradeSize: 100,

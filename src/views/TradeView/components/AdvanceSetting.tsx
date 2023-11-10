@@ -38,7 +38,7 @@ const AdvanceSetting = (props: Props) => {
   const isFirstLoad = useRef(true);
 
   useEffect(() => {
-    if (advanceSetting && address && isFirstLoad.current) {
+    if (advanceSetting && address && advanceSetting[address] && isFirstLoad.current) {
       setSlippage(advanceSetting[address].slippage);
       setIsPartialFill(advanceSetting[address].isPartialFill);
       setIsShowTradeSize(advanceSetting[address].isShowTradeSize);

@@ -1,5 +1,4 @@
 export default [
-
   {
     anonymous: false,
     inputs: [
@@ -177,6 +176,7 @@ export default [
     stateMutability: 'nonpayable',
     type: 'function',
   },
+  { inputs: [], name: 'mint', outputs: [], stateMutability: 'nonpayable', type: 'function' },
   {
     inputs: [],
     name: 'name',

@@ -2,7 +2,7 @@ export interface PairData {
   pair: string,
   isFavorite: boolean,
   payout: number,
-  changed24h: number,
+  currentPrice: number,
   changed24hPercent: number,
   maxTradeSize: number,
   currentOL: number,
