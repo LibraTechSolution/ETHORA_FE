@@ -88,21 +88,27 @@ const ETRVault = ({
                       ETR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(stakedTokensETR, 2)}%</Box>
+                    <Box padding={'0 8px'}>
+                      {stakedTokensETR !== undefined ? addComma(stakedTokensETR, 6) : '0.00'}%
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       esETR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(stakedTokens_esETR, 2)}%</Box>
+                    <Box padding={'0 8px'}>
+                      {stakedTokens_esETR !== undefined ? addComma(stakedTokens_esETR, 6) : '0.00'}%
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Multiplier Points
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(multiplierPoints, 2)}%</Box>
+                    <Box padding={'0 8px'}>
+                      {multiplierPoints !== undefined ? addComma(multiplierPoints, 6) : '0.00'}%
+                    </Box>
                   </Flex>
                 </Box>
               }
@@ -134,8 +140,8 @@ const ETRVault = ({
               label={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
-                    {addComma(claimed, 2)} esETR tokens have been converted to ETR from the {addComma(vested, 2)} esETR
-                    deposited for vesting.
+                    {claimed !== undefined ? addComma(claimed, 6) : '0.00'} esETR tokens have been converted to ETR from
+                    the {vested !== undefined ? addComma(vested, 6) : '0.00'} esETR deposited for vesting.
                   </Text>
                 </Box>
               }
@@ -161,8 +167,8 @@ const ETRVault = ({
               label={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
-                    {addComma(claimable, 2)} ETR tokens can be claimed, use the options under the Total Rewards section
-                    to claim them.
+                    {claimable !== undefined ? addComma(claimable, 6) : '0.00'} ETR tokens can be claimed, use the
+                    options under the Total Rewards section to claim them.
                   </Text>
                 </Box>
               }

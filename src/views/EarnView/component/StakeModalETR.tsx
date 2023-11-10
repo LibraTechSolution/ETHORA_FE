@@ -253,7 +253,9 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
                         Max:{' '}
                         <Tooltip
                           hasArrow
-                          label={`${addComma(formatUnits(balance as bigint, 18), 6)} ETR`}
+                          label={`${
+                            balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 6) : '0.00'
+                          } ETR`}
                           color="white"
                           placement="top"
                           bg="black"

@@ -140,14 +140,14 @@ const USDCVaultItem = ({
                       Escrowed ETR APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(esETR_APR, 2)}%</Box>
+                    <Box padding={'0 8px'}>{esETR_APR !== undefined && addComma(esETR_APR, 6)}%</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       USDC APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(USDC_APR, 2)}%</Box>
+                    <Box padding={'0 8px'}>{USDC_APR !== undefined && addComma(USDC_APR, 6)}%</Box>
                   </Flex>
                   <Text fontSize={'12px'} color={'#9E9E9F'}>
                     APRs are updated weekly on Wednesday and will depend on the fees collected for the week.
@@ -177,14 +177,16 @@ const USDCVaultItem = ({
                       USDC
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{addComma(USDC_Rewards, 2)}%</Box>
+                    <Box padding={'0 8px'}>{USDC_Rewards !== undefined ? addComma(USDC_Rewards, 6) : '0.00'}%</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Escrowed ETR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{`${addComma(esETR_Rewards, 2)}($${addComma(esETR_USD_Rewards, 2)})`}</Box>
+                    <Box padding={'0 8px'}>{`${esETR_Rewards !== undefined ? addComma(esETR_Rewards, 6) : '0.00'}($${
+                      esETR_USD_Rewards !== undefined ? addComma(esETR_USD_Rewards, 6) : '0.00'
+                    })`}</Box>
                   </Flex>
                 </Box>
               }
