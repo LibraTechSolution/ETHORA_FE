@@ -1,7 +1,7 @@
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
-const configPair: {
+export const configPair: {
   [key: string]: {
     bufferBOSC: string,
     optionConfigSC: string,

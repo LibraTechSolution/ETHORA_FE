@@ -110,7 +110,7 @@ export const FEED_IDS: { [key: string]: string } = {
   '84c2dde9633d93d1bcad84e7dc41c9d56578b7ec52fabedc1f335d673df0a7c1': 'GBPUSD',
 };
 
-const CallSocket = () => {
+export const CallSocket = () => {
   const [pairPrice, setPairPrice] = useState<{ [key: string]: number }>({});
   const { setListPairPrice } = useListPairPrice();
 

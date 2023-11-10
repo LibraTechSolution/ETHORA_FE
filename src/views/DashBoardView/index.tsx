@@ -20,13 +20,7 @@ const DashBoardView = () => {
     console.log(`selected ${value}`);
   };
   return (
-    <Flex
-      flexDirection={'column'}
-      height={'calc(100vh - 60px)'}
-      w={'100%'}
-      bgImage="url('/images/profile/bg-item.png')"
-      backgroundRepeat={'no-repeat'}
-    >
+    <Flex>
       <Box
         paddingTop={['40px', '40px', '40px', '40px']}
         paddingLeft={['12px', '12px', '30px', '80px']}

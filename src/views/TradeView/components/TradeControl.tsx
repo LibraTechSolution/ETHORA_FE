@@ -29,7 +29,7 @@ import { useAccount, useNetwork } from 'wagmi';
 import useTradeStore from '@/store/useTradeStore';
 import { addComma } from '@/utils/number';
 import { readContract, signTypedData } from '@wagmi/core';
-import usdcABI from '@/config/abi/usdcABI';
+import USDC_ABI from '@/config/abi/USDC_ABI';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { getSVR } from '@/utils/helper';
@@ -274,7 +274,7 @@ const TradeControl = () => {
       setIsLoadingApprove(true);
       const nonce = await readContract({
         address: appConfig.USDC_SC as Address,
-        abi: usdcABI,
+        abi: USDC_ABI,
         functionName: 'nonces',
         args: [address as Address],
       });
@@ -351,11 +351,11 @@ const TradeControl = () => {
         period: convertToTimeStamp(time),
         targetContract: bufferBOSC as string,
         tradeSize: (+tradeSize * 1000000).toString(),
-        slippage: address && advanceSetting ? +advanceSetting[address].slippage * 100 : 5,
+        slippage: address && advanceSetting && advanceSetting[address] ? +advanceSetting[address].slippage * 100 : 5,
         isAbove,
         isLimitOrder: tradeType === TradeType.LIMIT,
         limitOrderDuration:
-          address && advanceSetting
+          address && advanceSetting && advanceSetting[address]
             ? convertToTimeStamp(
                 `${advanceSetting[address].limitOrderExpiryTime}${advanceSetting[address].limitOrderExpiryTimeType}`,
               )

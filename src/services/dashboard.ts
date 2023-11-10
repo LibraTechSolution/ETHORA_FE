@@ -1,8 +1,9 @@
-import { IOverviewParams } from "@/types/dashboard.type";
+import { IResponData } from "@/types/api.type";
+import { IOverviewData, IOverviewParams } from "@/types/dashboard.type";
 import { deleteKeyNil } from "@/utils";
 import { axiosInstance } from "@/utils/axios";
 
-export const getDashboardOverview = async (params: IOverviewParams): Promise<any> => {
+export const getDashboardOverview = async (params: IOverviewParams): Promise<IOverviewData> => {
   const response = await axiosInstance.get('/dashboard/overview', {
     params: deleteKeyNil({
       ...params,
@@ -12,6 +13,6 @@ export const getDashboardOverview = async (params: IOverviewParams): Promise<any
       'Cache-Control': 'no-cache',
     },
   });
-  return response.data.data as any;
+  return response.data.data as IOverviewData;
   // return response.data.data.docs as ITradingLimitOrderData[];
 };

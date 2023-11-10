@@ -3,6 +3,8 @@ import ItemCardTab from './ItemCardTab';
 import { useQuery } from '@tanstack/react-query';
 import { getDashboardOverview } from '@/services/dashboard';
 import { notification } from 'antd';
+import { divide } from '@/utils/operationBigNumber';
+import { addComma } from '@/utils/number';
 
 const dataTrading = [
   {
@@ -71,9 +73,43 @@ const TradingTab = () => {
         Trading Overview
       </Text>
       <Flex flexDirection={'column'}>
-        {dataTrading.map((item, idx) => (
-          <ItemCardTab key={idx} title={item.title} value={item.value} />
-        ))}
+        <ItemCardTab
+          title={'Fees / Volume'}
+          value={`${addComma(
+            divide(dataDashboardOverviews?.totalStats?.totalSettlementFees ?? 0, 6),
+            2,
+          )} USDC / ${addComma(divide(dataDashboardOverviews?.totalStats.totalVolume ?? 0, 6), 2)} USDC`}
+        />
+        <ItemCardTab
+          title={'Fees / Volume (24h)'}
+          value={`${addComma(
+            divide(dataDashboardOverviews?.total24stats?.reduce((acc, item) => acc + +item.settlementFee, 0) ?? 0, 6),
+            2,
+          )} USDC/ TODO USDC`}
+        />
+        <ItemCardTab title={'Average Daily Volume'} value={`TODO USDC`} />
+        <ItemCardTab
+          title={'Average Trade size'}
+          value={`${addComma(
+            divide(
+              divide(dataDashboardOverviews?.totalStats?.totalVolume ?? 0, 6),
+              (dataDashboardOverviews?.totalStats?.totalTrades ?? 1).toString(),
+            ),
+            2,
+          )} USDC`}
+        />
+        <ItemCardTab
+          title={'Total Trades'}
+          value={`${addComma(dataDashboardOverviews?.totalStats?.totalTrades ?? 0, 2)}`}
+        />
+        <ItemCardTab
+          title={'Open Interest (USDC)'}
+          value={`${addComma(dataDashboardOverviews?.OIstats?.totalVolume ?? 0, 2)} USDC`}
+        />
+        <ItemCardTab
+          title={'Total Traders'}
+          value={`${addComma(dataDashboardOverviews?.totalTraders[0].uniqueCountCumulative ?? 0, 2)}`}
+        />
       </Flex>
     </Box>
   );
