@@ -50,7 +50,7 @@ const CustomConnectButton = ({ children, isFullWidth }: { children: React.ReactN
                     marginTop={'20px'}
                     _hover={{ bgColor: '#ff494a' }}
                   >
-                    Wrong network
+                    Switch network
                   </Button>
                 );
               }

@@ -4,11 +4,12 @@ import { appConfig } from '@/config';
 import { useBalanceOf } from '@/hooks/useContractRead';
 import { addComma } from '@/utils/number';
 import { Flex, Heading, Text, Box, Button, Tooltip, Spacer } from '@chakra-ui/react';
-import { formatEther, formatUnits } from 'viem';
+import { formatEther, formatUnits, parseUnits } from 'viem';
 import { useState } from 'react';
 import StakeModalETR from './StakeModalETR';
 import UnStakeModaETR from './UnStakeModaETR';
 import BigNumber from 'bignumber.js';
+import { Value } from '@/components/Currency';
 
 const ETRItem = ({
   price,
@@ -57,14 +58,26 @@ const ETRItem = ({
 
   const totalSupply = formatUnits((totalSupply_ETR - balanceOf_addressDead_ETR) as bigint, 18);
   const stakedMultiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
-  console.log('stakedMultiplierPoints', stakedMultiplierPoints);
-  // console.log(formatEther(BigInt(depositBalances_ETR)));
-  // console.log(new BigNumber(formatEther(BigInt(depositBalances_ETR))).toFixed(18));
-  // console.log(new BigNumber(formatEther(BigInt(depositBalances_ETR))).multipliedBy(price).toFixed(18));
-  // console.log(BigNumber(depositBalances_ETR.toString()).multipliedBy(price));
-  // console.log(+BigNumber(depositBalances_ETR.toString()).multipliedBy(price));
-  // console.log(+formatUnits(depositBalances_ETR as bigint, 18) * price);
-  // console.log(new BigNumber(formatEther(depositBalances_ETR)).multipliedBy(price).toString());
+
+  // console.log('stakedMultiplierPoints', stakedMultiplierPoints);
+  // const a = balance && balance * parseUnits(price.toString(), 6);
+  // const b = balance ? balance?.toString() : '0'
+  // const a = BigNumber(formatEther(balance as bigint))
+  // console.log(addComma(BigNumber(formatEther(balance as bigint)).toFixed(),2))
+  // console.log(new BigNumber(formatEther(balance as bigint)).decimalPlaces(6).toFixed())
+  // console.log(BigNumber(formatEther(balance as bigint)).decimalPlaces(6).toFixed())
+  // console.log('balance',BigNumber(formatEther(balance as bigint)).multipliedBy(price))
+  // console.log('balance',BigNumber(formatEther(balance as bigint)).multipliedBy(price).toFixed())
+  // console.log('balance',BigNumber(formatEther(balance as bigint)).decimalPlaces(6))
+
+  // console.log(new BigNumber(b).multipliedBy(price).toFixed(6));
+  // console.log(formatEther(BigInt(balance)));
+  // console.log(new BigNumber(formatEther(BigInt(balance))).toFixed(18));
+  // console.log(new BigNumber(formatEther(BigInt(balance))).multipliedBy(price).toFixed(18));
+  // console.log(BigNumber(balance.toString()).multipliedBy(price));
+  // console.log(+BigNumber(balance.toString()).multipliedBy(price));
+  // console.log(+formatUnits(balance as bigint, 18) * price);
+  // console.log(new BigNumber(formatEther(balance)).multipliedBy(price).toString());
 
   return (
     <>
@@ -85,9 +98,9 @@ const ETRItem = ({
             Wallet
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '0.00'}
+            {balance !== undefined ? addComma(BigNumber(formatEther(balance as bigint)).toFixed(),2) : '0.00'}
             {' ETR'}
-            {balance !== undefined && `($${addComma(+formatUnits(balance as bigint, 18) * price, 2)})`}
+            {balance !== undefined && `($${addComma(BigNumber(formatEther(balance as bigint)).multipliedBy(price).toFixed(), 2)})`}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -95,10 +108,10 @@ const ETRItem = ({
             Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {depositBalances_ETR !== undefined ? addComma(formatUnits(depositBalances_ETR, 18), 2) : '0.00'}
+            {depositBalances_ETR !== undefined ? addComma(BigNumber(formatEther(depositBalances_ETR as bigint)).toFixed(), 2) : '0.00'}
             {' ETR'}
             {depositBalances_ETR !== undefined &&
-              `($${addComma(+formatUnits(depositBalances_ETR as bigint, 18) * price, 2)})`}
+              `($${addComma(BigNumber(formatEther(depositBalances_ETR as bigint)).multipliedBy(price).toFixed(), 2)})`}
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -240,9 +253,9 @@ const ETRItem = ({
             Total Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {totalStaked_ETR !== undefined ? addComma(formatUnits(totalStaked_ETR, 18), 2) : '0.00'}
+            {totalStaked_ETR !== undefined ? addComma(BigNumber(formatEther(totalStaked_ETR as bigint)).toFixed(), 2) : '0.00'}
             {' ETR'}
-            {totalStaked_ETR !== undefined && ` ($${addComma(+formatUnits(totalStaked_ETR as bigint, 18) * price, 2)})`}
+            {totalStaked_ETR !== undefined && ` ($${addComma(BigNumber(formatEther(totalStaked_ETR as bigint)).multipliedBy(price).toFixed(), 2)})`}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>

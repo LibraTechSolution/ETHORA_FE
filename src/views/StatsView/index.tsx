@@ -392,7 +392,7 @@ const StatsView = () => {
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              ${addComma(dataStats?.overviewStats?.totalUsers as number, 2)}
+              {addComma(dataStats?.overviewStats?.totalUsers as number, 2)}
             </Text>
             <Box
               as="span"
@@ -1003,7 +1003,7 @@ const StatsView = () => {
                 <Line
                   type="monotone"
                   dataKey="pnlCumulative"
-                  name="Cumulative "
+                  name="Cumulative PnL"
                   stroke="#4CC0C0"
                   connectNulls
                   yAxisId="right"
@@ -1082,10 +1082,10 @@ const StatsView = () => {
                 />
                 <Tooltip />
                 <Legend />
-                <Bar yAxisId="left" dataKey="profit" fill="#22c761" />
-                <Bar yAxisId="left" dataKey="loss" fill="#f93333" />
-                <Area yAxisId="right" type="monotone" dataKey="profitCumulative" fill="#22c761" stroke="#22c761" />
-                <Area yAxisId="right" type="monotone" dataKey="lossCumulative" fill="#f93333" stroke="#f93333" />
+                <Bar yAxisId="left" dataKey="profit" fill="#22c761" name='Profit'/>
+                <Bar yAxisId="left" dataKey="loss" fill="#f93333" name='Loss'/>
+                <Area yAxisId="right" type="monotone" dataKey="profitCumulative" fill="#22c761" stroke="#22c761" name='Cumulative Profit'/>
+                <Area yAxisId="right" type="monotone" dataKey="lossCumulative" fill="#f93333" stroke="#f93333" name='Cumulative Loss'/>
               </ComposedChart>
             </ResponsiveContainer>
           </Box>

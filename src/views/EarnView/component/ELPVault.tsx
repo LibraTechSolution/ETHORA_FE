@@ -1,12 +1,15 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
 import { addComma } from '@/utils/number';
-import { Heading, Box, Text, Flex, Button, Tooltip } from '@chakra-ui/react';
+import { Heading, Box, Text, Flex, Button, Tooltip, useToast } from '@chakra-ui/react';
 import DepositModalELPVault from './DepositModalELPVault';
 import { useContext, useState } from 'react';
 import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
 import { appConfig } from '@/config';
 import { EarnContext } from '..';
 import VBLP_ABI from '@/config/abi/VBLP_ABI';
+import { ToastLayout } from '@/components/ToastLayout';
+import { Status } from '@/types/faucet.type';
+import { BaseError } from 'viem';
 
 const ELPVault = ({
   depositBalances_fBLP,
@@ -21,6 +24,7 @@ const ELPVault = ({
   claimable_vBLP: bigint;
   getVestedAmount_vBLP: bigint;
 }) => {
+  const toast = useToast();
   const [openDepositModal, setOpenDepositModal] = useState<boolean>(false);
   const { onFetchData } = useContext(EarnContext);
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
@@ -34,6 +38,20 @@ const ELPVault = ({
   const claimable = Number(claimable_vBLP) / 10 ** 18;
 
   const onWithdraw = async () => {
+    if (claimable === 0) {
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            // title="Approve account Unsuccessfully"
+            content={'You have not deposited any tokens'}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+      return;
+    }
     try {
       setLoadingWithdraw(true);
       const configUnStake = await prepareWriteContract({
@@ -51,6 +69,39 @@ const ELPVault = ({
     } catch (error) {
       setLoadingWithdraw(false);
       console.log(error);
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={msgContent}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
+      } else {
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout
+              // title="Approve account Unsuccessfully"
+              content={'Something went wrong. Please try again later.'}
+              status={Status.ERROR}
+              close={onClose}
+            />
+          ),
+        });
+      }
     }
   };
 
@@ -65,7 +116,7 @@ const ELPVault = ({
             Staked Tokens
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '0.00'} uBLO
+            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '0.00'} ELP
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
