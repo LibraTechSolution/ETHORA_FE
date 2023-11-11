@@ -61,13 +61,21 @@ const PlatformHistoryTable = () => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
+      render: (value, record) => (
+        <span>
+          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+        </span>
+      ),
     },
     {
       title: 'Expiry Price',
       dataIndex: 'expiryPrice',
       key: 'expiryPrice',
-      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
+      render: (value, record) => (
+        <span>
+          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+        </span>
+      ),
     },
     {
       title: 'Open Time',
@@ -131,8 +139,21 @@ const PlatformHistoryTable = () => {
           display="inline-block"
           px={2}
           rounded={4}
+          py={'2px'}
+          alignItems="center"
+          backgroundColor={value === TRADE_STATUS.WIN ? 'rgba(21, 189, 89, 0.10)' : 'rgba(240, 61, 62, 0.10);'}
         >
-          <Text textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>{value}</Text>
+          <Flex alignItems={'center'}>
+            <Image
+              alt=""
+              src={value === TRADE_STATUS.WIN ? '/images/icons/check-circle.svg' : '/images/icons/x-circle-red.svg'}
+              w="10px"
+              h="10px"
+            />
+            <Text paddingLeft={'5px'} textColor={value === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>
+              {value}
+            </Text>
+          </Flex>
         </Box>
       ),
     },
@@ -162,7 +183,7 @@ const PlatformHistoryTable = () => {
   });
 
   const handleChangePage = (pagination: TablePaginationConfig) => {
-    setFilter({ ...defaultParams, page: pagination.current ?? 1 });
+    setFilter({ ...defaultParams, page: pagination.current ?? 1, limit: pagination.pageSize ?? 10 });
   };
 
   return (
@@ -182,6 +203,23 @@ const PlatformHistoryTable = () => {
       className="customTable"
       rowKey={(record) => record._id}
       onChange={handleChangePage}
+      locale={{
+        emptyText: (
+          <Box
+            background="#0C0C10"
+            margin="-16px -16px"
+            padding="20px"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+          >
+            <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
+            <Text color={'#6D6D70'} fontSize={'14px'}>
+              No active platform history.
+            </Text>
+          </Box>
+        ),
+      }}
     />
   );
 };

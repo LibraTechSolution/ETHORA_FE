@@ -31,7 +31,7 @@ const DashBoardView = () => {
           <Heading as="h4" fontSize={24} lineHeight={'36px'} color={'white'} fontWeight={600}>
             Dashboard
           </Heading>
-          <Box>
+          {/* <Box>
             <Select
               size="large"
               defaultValue="china"
@@ -52,7 +52,7 @@ const DashBoardView = () => {
                 </div>
               </Option>
             </Select>
-          </Box>
+          </Box> */}
         </Box>
         <Box marginBottom={'16px'} overflow={'overflow-auto'}>
           <Flex gap={'32px'} marginBottom={'20px'}>

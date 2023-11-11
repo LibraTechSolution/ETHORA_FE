@@ -70,13 +70,21 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
+      render: (value, record) => (
+        <span>
+          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+        </span>
+      ),
     },
     {
       title: 'Expiry Price',
       dataIndex: 'expiryPrice',
       key: 'expiryPrice',
-      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
+      render: (value, record) => (
+        <span>
+          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+        </span>
+      ),
     },
     {
       title: 'Open Time',
@@ -162,7 +170,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
               {value}
             </Text>
           </Box>
-          {address && advanceSetting && advanceSetting[address].isShowSharePopup && (
+          {address && advanceSetting && advanceSetting[address] && advanceSetting[address]?.isShowSharePopup && (
             <Text
               color={'#1677FF'}
               fontWeight={400}
@@ -200,7 +208,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
   });
 
   const handleChangePage = (pagination: TablePaginationConfig) => {
-    setFilter({ ...defaultParams, page: pagination.current ?? 1 });
+    setFilter({ ...defaultParams, page: pagination.current ?? 1, limit: pagination.pageSize ?? 10 });
   };
 
   return (
@@ -233,7 +241,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
             >
               <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
               <Text color={'#6D6D70'} fontSize={'14px'}>
-                No active trades at present.
+                No trade history.
               </Text>
             </Box>
           ),

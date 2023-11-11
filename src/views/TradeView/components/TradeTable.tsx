@@ -138,13 +138,21 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
+      render: (value, record) => (
+        <span>
+          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+        </span>
+      ),
     },
     {
       title: 'Current Price',
       dataIndex: 'currentPrice',
       key: 'currentPrice',
-      render: (value, record) => <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} />,
+      render: (value, record) => (
+        <>
+          <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} /> {record.pair.split('-')[1].toUpperCase()}
+        </>
+      ),
     },
     {
       title: 'Open Time',
@@ -247,7 +255,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       ? !!checkAddress
       : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 15000,
+    refetchInterval: 10000,
     refetchOnWindowFocus: false,
   });
 

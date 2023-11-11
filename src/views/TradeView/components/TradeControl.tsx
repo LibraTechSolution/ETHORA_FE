@@ -173,9 +173,6 @@ const TradeControl = () => {
       numberValue = inputName === InputName.TRADE_SIZE ? tradeSize.toString() : limitOrderPrice.toString();
     }
     if (inputName === InputName.TRADE_SIZE) {
-      if (currentPair?.maxTradeSize && +numberValue > currentPair?.maxTradeSize) {
-        numberValue = currentPair?.maxTradeSize.toString();
-      }
       setTradeSize(numberValue);
     } else {
       setLimitOrderPrice(numberValue);
@@ -331,8 +328,13 @@ const TradeControl = () => {
       setIsShowWarning(true);
       hasError = true;
     }
-    if (+tradeSize < 5) {
-      setTradeSizeError('Min trade size is 5 USDC');
+
+    if (currentPair?.maxTradeSize && +tradeSize > currentPair?.maxTradeSize) {
+      setTradeSizeError('Amount exceeds max trade size');
+      hasError = true;
+    }
+    if (currentPair?.minTradeSize && +tradeSize < currentPair?.minTradeSize) {
+      setTradeSizeError(`Min trade size is ${currentPair?.minTradeSize} USDC`);
       hasError = true;
     }
 
@@ -576,7 +578,7 @@ const TradeControl = () => {
           <Center justifyContent={'start'} mb={3}>
             <InfoIcon color={'#F03D3E'} />
             <span className="pl-2 pr-1 text-sm font-normal text-[#F03D3E]">You don&apos;t have enough USDC.</span>{' '}
-            <Link href={'https://www.binance.com'} target="_blank">
+            <Link href={'/faucet'} target="_blank">
               <span className="text-sm font-normal text-[#1E3EF0] underline">Buy USDC</span>{' '}
             </Link>
           </Center>

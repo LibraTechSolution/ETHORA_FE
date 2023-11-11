@@ -141,7 +141,7 @@ const ShareModal = (props: PropsType) => {
                   Start Trading
                 </Text>
                 <Text color={'#fff'} fontSize={'12px'} fontWeight={400}>
-                  {addComma(divide(item.strike, 8), 2)} USDC
+                  {addComma(divide(item.strike, 8), 2)} {item.pair.split('-')[1].toUpperCase()}
                 </Text>
               </GridItem>
               <GridItem w="100%" paddingRight="2.5">
@@ -149,7 +149,7 @@ const ShareModal = (props: PropsType) => {
                   Expiry Price
                 </Text>
                 <Text color={'#fff'} fontSize={'12px'} fontWeight={400}>
-                  {addComma(divide(item.expiryPrice ?? 0, 8), 2)} USDC
+                  {addComma(divide(item.expiryPrice ?? 0, 8), 2)} {item.pair.split('-')[1].toUpperCase()}
                 </Text>
               </GridItem>
               <GridItem w="100%" paddingRight="2.5">

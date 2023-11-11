@@ -5,9 +5,12 @@ export interface PairData {
   currentPrice: number,
   changed24hPercent: number,
   maxTradeSize: number,
+  minTradeSize: number,
   currentOL: number,
   maxOL: number,
-  type: PairType
+  type: PairType,
+  status: boolean,
+  dailyVol: string
 }
 
 export enum PairType {
