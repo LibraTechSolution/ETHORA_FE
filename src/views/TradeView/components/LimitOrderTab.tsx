@@ -41,7 +41,7 @@ const LimitOrderTab = () => {
     },
     enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: false,
+    refetchInterval: 10000,
     refetchOnWindowFocus: false,
   });
 
@@ -63,7 +63,7 @@ const LimitOrderTab = () => {
         (isError || !dataLimitOrders || (dataLimitOrders && dataLimitOrders?.docs.length === 0)) && (
           <Flex direction={'column'} alignItems={'center'} bg="#0c0c10" paddingY="60px">
             <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
-            <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+            <p className="text-sm font-normal text-[#6D6D70]">There are no pending orders.</p>
           </Flex>
         )}
       {isOpenModal && (

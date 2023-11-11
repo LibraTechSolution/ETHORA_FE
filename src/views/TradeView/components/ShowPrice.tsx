@@ -7,7 +7,7 @@ export const ShowPrice = ({ pair }: { pair?: string }) => {
   const { listPairPrice } = useListPairPrice();
   return (
     <span>
-      {pair && listPairPrice[pair] ? addComma(listPairPrice[pair].toFixed(2), 2) : addComma(price.toFixed(2), 2)} USDC
+      {pair && listPairPrice[pair] ? addComma(listPairPrice[pair].toFixed(2), 2) : addComma(price.toFixed(2), 2)}
     </span>
   );
 };

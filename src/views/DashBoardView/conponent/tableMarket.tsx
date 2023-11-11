@@ -1,18 +1,25 @@
 import bufferBOABI from '@/config/abi/bufferBOABI';
-import { useGetTradeContract } from '@/hooks/useGetTradeContract';
+import { configPair, useGetTradeContract } from '@/hooks/useGetTradeContract';
+import { getDashboardMarket } from '@/services/dashboard';
 import { getChanged24h } from '@/services/trade';
+import useListPairPriceSlow from '@/store/useListPairPriceSlow';
 import usePairStore from '@/store/usePairStore';
-import { PairData } from '@/types/trade.type';
+import { IDashboardMarketData } from '@/types/dashboard.type';
+import { PairData, PairType } from '@/types/trade.type';
 import { addComma } from '@/utils/number';
-import { divide } from '@/utils/operationBigNumber';
+import { add, divide } from '@/utils/operationBigNumber';
 import { CallSocket } from '@/views/TradeView/components/SearchPair';
 import { ShowPrice } from '@/views/TradeView/components/ShowPrice';
 import { Box, Flex, Image, Stat, StatArrow, StatHelpText, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import { readContract } from '@wagmi/core';
-import { Badge, Progress, Table } from 'antd';
+import { Address, readContract } from '@wagmi/core';
+import { Badge, Progress, Table, notification } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import { appConfig } from '@/config';
+dayjs.extend(utc);
 
 const columns: ColumnsType<PairData> = [
   {
@@ -43,21 +50,28 @@ const columns: ColumnsType<PairData> = [
   },
   {
     title: 'Current Price',
-    dataIndex: 'pair',
+    dataIndex: 'currentPrice',
     key: 'Current Price',
-    render: (value) => <ShowPrice pair={value.replace('/', '')} />,
+    sorter: (a, b) => a.currentPrice - b.currentPrice,
+    render: (value, record) => (
+      <>
+        <ShowPrice pair={record.pair.replace('/', '')} /> {record.pair.split('/')[1].toUpperCase()}
+      </>
+    ),
   },
   {
     title: 'Open Interest',
-    dataIndex: 'pair',
+    dataIndex: 'currentOL',
     key: 'Open Interest',
-    render: (value) => <CurrentOICell pair={value.replace('/', '').toUpperCase()} />,
+    sorter: (a, b) => a.currentOL - b.currentOL,
+    render: (value) => `${addComma(value, 2)} USDC`,
   },
   {
     title: '24h Volume',
-    dataIndex: 'volume',
+    dataIndex: 'dailyVol',
     key: 'volume',
-    // sorter: (a, b) => a.name.length - b.name.length,
+    sorter: (a, b) => +a.dailyVol - +b.dailyVol,
+    render: (value) => `${addComma(divide(value, 6), 2)} USDC`,
   },
   {
     title: 'Utilization',
@@ -114,7 +128,7 @@ const columns: ColumnsType<PairData> = [
     dataIndex: 'status',
     key: 'status',
     render: (status) =>
-      status === 1 ? (
+      status ? (
         <Badge
           status="success"
           text={
@@ -135,33 +149,6 @@ const columns: ColumnsType<PairData> = [
       ),
   },
 ];
-
-const CurrentOICell = ({ pair }: { pair: string }) => {
-  const { bufferBOSC } = useGetTradeContract(pair);
-  const [currentOI, setCurrentOI] = useState(0);
-
-  const getCurrentOI = useCallback(async () => {
-    try {
-      const currentOI = await readContract({
-        address: bufferBOSC as `0x${string}`,
-        abi: bufferBOABI,
-        functionName: 'totalMarketOI',
-      });
-      setCurrentOI(+divide(currentOI.toString(), 6));
-    } catch (error) {}
-  }, [bufferBOSC]);
-
-  useEffect(() => {
-    getCurrentOI();
-    const interval = setInterval(() => {
-      getCurrentOI();
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [getCurrentOI]);
-
-  return <span>{addComma(currentOI, 2)} USDC</span>;
-};
 
 const Utilization = ({ pair }: { pair: string }) => {
   const { bufferBOSC } = useGetTradeContract(pair);
@@ -217,6 +204,21 @@ const Utilization = ({ pair }: { pair: string }) => {
   );
 };
 
+const ContractWithPair: Record<string, string> = {
+  '0xbf41098cd4a6a405e6e33647b983d1a63334bc1b': 'BTCUSD',
+  '0x8edf4f76a8ae9f80cee8a10107927ba1997c2609': 'ETHUSD',
+  '0xdc45cbc2e65306cde17cc4e7af2fe23611eb7e4e': 'LINKUSD',
+  '0x25ffe1a6bb755c9a4bda91ac2b0adb98a85f85d2': 'TONUSD',
+  '0xd6cdd8e8b2b8e3947912275c55284b88a30f839f': 'ARBUSD',
+  '0x1a01e687278fbd5c3d86134062c1c241b9a199ec': 'XRPUSD',
+  '0x3365eea63b05c38885c6b6b0e1bbd151cf92c15d': 'SOLUSD',
+  '0x1d389065da6a3d8f6e713909c8fe28c77c750ccc': 'BNBUSD',
+  '0x17b5df926f47905650b121a3988e0af2ee4419a1': 'EURUSD',
+  '0x6bbc6820023eb35a324601b16a5b42607b9f9e1e': 'XAUUSD',
+  '0xcb77e309c0f0854c13f0b3d64e2dca94e64fbc6b': 'GBPUSD',
+  '0x0992adedd90a0d0a37b298f317fe324eda2bad62': 'XAGUSD',
+};
+
 const TableMarket = () => {
   const { data: listChanged24h } = useQuery({
     queryKey: ['getChanged24h'],
@@ -224,7 +226,60 @@ const TableMarket = () => {
     refetchInterval: false,
     refetchOnWindowFocus: false,
   });
+  const [listPriceShow, setListPriceShow] = useState<{ [key: string]: number }>();
   const { listPairData } = usePairStore();
+  const { listPairPriceSlow } = useListPairPriceSlow();
+  const networkID = appConfig.includeTestnet ? 421613 : 8453;
+
+  const transferData = (data: IDashboardMarketData) => {
+    if (!data?.volumePerContracts) return;
+    const tempObj: Record<string, string> = {};
+    for (let i = 0; i < data.volumePerContracts.length; i++) {
+      tempObj[ContractWithPair[data.volumePerContracts[i].optionContract.address]] = add(
+        tempObj[ContractWithPair[data.volumePerContracts[i].optionContract.address]] ?? '0',
+        data.volumePerContracts[i].amount,
+      );
+    }
+    return tempObj;
+  };
+  const { data: dataDashboardMaret } = useQuery({
+    queryKey: ['getDashboardMarket', networkID],
+    queryFn: () => getDashboardMarket({ network: networkID }),
+    onError: (error: any) => {
+      notification.error({ message: error.message });
+    },
+    // enabled: !!networkID,
+    select: transferData,
+    cacheTime: 0,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    setListPriceShow(listPairPriceSlow);
+  }, [listPairPriceSlow]);
+
+  const isClose = useMemo(() => {
+    if (dayjs().utc().day() === 0 || dayjs().utc().day() === 6) {
+      return true;
+    } else {
+      if (dayjs().utc().hour() < 6 || dayjs().utc().hour() >= 16) {
+        return true;
+      }
+    }
+    return false;
+  }, []);
+
+  const getCurrentOI = async (bufferBOSC: `0x${string}`) => {
+    try {
+      const currentOI = await readContract({
+        address: bufferBOSC as `0x${string}`,
+        abi: bufferBOABI,
+        functionName: 'totalMarketOI',
+      });
+      return divide(currentOI.toString(), 6);
+    } catch (error) {}
+  };
 
   const listPairShow = useMemo<PairData[]>(() => {
     const tempChanged24h = listChanged24h?.data?.data;
@@ -239,9 +294,24 @@ const TableMarket = () => {
       } else {
         tempListPairData[i].changed24hPercent = -2;
       }
+      if (listPriceShow) {
+        tempListPairData[i].currentPrice = listPriceShow[tempListPairData[i].pair.replace('/', '') as string];
+      }
+      if (tempListPairData[i].type === PairType.FOREX) {
+        tempListPairData[i].status = !isClose;
+      }
+      if (tempListPairData[i].type === PairType.CRYPTO) {
+        tempListPairData[i].status = true;
+      }
+      if (dataDashboardMaret) {
+        tempListPairData[i].dailyVol = dataDashboardMaret[tempListPairData[i].pair.replace('/', '') as string] ?? 0;
+      }
+      getCurrentOI(configPair[tempListPairData[i].pair.replace('/', '') as string].bufferBOSC as Address).then(
+        (item) => (tempListPairData[i].currentOL = item ? +item : 0),
+      );
     }
     return tempListPairData;
-  }, [listChanged24h, listPairData]);
+  }, [dataDashboardMaret, isClose, listChanged24h, listPairData, listPriceShow]);
 
   return (
     <>

@@ -58,7 +58,11 @@ const CancelTable = () => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
+      render: (value, record) => (
+        <span>
+          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+        </span>
+      ),
     },
     {
       title: 'Trade Size',
@@ -135,7 +139,7 @@ const CancelTable = () => {
   });
 
   const handleChangePage = (pagination: TablePaginationConfig) => {
-    setFilter({ ...defaultParams, page: pagination.current ?? 1 });
+    setFilter({ ...defaultParams, page: pagination.current ?? 1, limit: pagination.pageSize ?? 10 });
   };
 
   return (
@@ -155,6 +159,23 @@ const CancelTable = () => {
       className="customTable"
       rowKey={(record) => record._id}
       onChange={handleChangePage}
+      locale={{
+        emptyText: (
+          <Box
+            background="#0C0C10"
+            margin="-16px -16px"
+            padding="20px"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+          >
+            <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
+            <Text color={'#6D6D70'} fontSize={'14px'}>
+              No cancelled trades.
+            </Text>
+          </Box>
+        ),
+      }}
     />
   );
 };

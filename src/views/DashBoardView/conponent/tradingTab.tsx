@@ -5,41 +5,8 @@ import { getDashboardOverview } from '@/services/dashboard';
 import { notification } from 'antd';
 import { divide } from '@/utils/operationBigNumber';
 import { addComma } from '@/utils/number';
+import dayjs from 'dayjs';
 
-const dataTrading = [
-  {
-    title: 'Fees / Volume',
-    value: '900.15K USDC/6.92M USDC',
-  },
-  {
-    title: 'Average Daily Volume',
-    value: '1.06K USDC/9.17K USDC',
-  },
-  {
-    title: 'Average Daily Volume',
-    value: '28,269.85 USDC',
-  },
-  {
-    title: 'Average Trade size',
-    value: '75.28 USDC',
-  },
-  {
-    title: 'Total Trades',
-    value: '91998',
-  },
-  {
-    title: 'Open Interest (USDC)',
-    value: '0.00 USDC',
-  },
-  {
-    title: 'Open Interest (ETR)',
-    value: '0.00 ETR',
-  },
-  {
-    title: 'Total Traders',
-    value: '1642',
-  },
-];
 const TradingTab = () => {
   const networkID = 421613;
   const { data: dataDashboardOverviews } = useQuery({
@@ -54,7 +21,6 @@ const TradingTab = () => {
     refetchOnWindowFocus: false,
   });
 
-  console.log('dataDashboardOverviews', dataDashboardOverviews);
   return (
     <Box
       boxShadow="1px 0.5px 0px 0px #38383A inset"
@@ -85,9 +51,30 @@ const TradingTab = () => {
           value={`${addComma(
             divide(dataDashboardOverviews?.total24stats?.reduce((acc, item) => acc + +item.settlementFee, 0) ?? 0, 6),
             2,
-          )} USDC/ TODO USDC`}
+          )} USDC/ ${addComma(
+            divide(dataDashboardOverviews?.total24stats?.reduce((acc, item) => acc + +item.amount, 0) ?? 0, 6),
+            2,
+          )} USDC`}
         />
-        <ItemCardTab title={'Average Daily Volume'} value={`TODO USDC`} />
+        <ItemCardTab
+          title={'Average Daily Volume'}
+          value={`${
+            dataDashboardOverviews
+              ? addComma(
+                  divide(
+                    divide(
+                      dataDashboardOverviews?.totalStats?.totalVolume ?? 0,
+                      dayjs()
+                        .diff(dataDashboardOverviews?.tradingStartDate, 'd')
+                        .toString(),
+                    ),
+                    6,
+                  ),
+                  2,
+                )
+              : 0
+          } USDC`}
+        />
         <ItemCardTab
           title={'Average Trade size'}
           value={`${addComma(

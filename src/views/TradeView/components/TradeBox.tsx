@@ -225,7 +225,7 @@ const TradeBox = (props: PropsType) => {
             fontSize={'12px'}
           >
             <p className="text-sm font-normal text-[#FFFFFF]">
-              <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} />
+              <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} /> {item.pair.split('-')[1].toUpperCase()}
             </p>
           </Tooltip>
         </GridItem>

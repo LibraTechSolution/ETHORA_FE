@@ -20,7 +20,7 @@ import {
 import _ from 'lodash';
 import { SearchIcon } from 'lucide-react';
 import Link from 'next/link';
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useGetTradeContract } from '@/hooks/useGetTradeContract';
 import { readContract } from '@wagmi/core';
 import { divide } from '@/utils/operationBigNumber';
@@ -31,6 +31,7 @@ import useListPairPrice from '@/store/useListPairPrice';
 import { ShowPrice } from './ShowPrice';
 import dayjs from 'dayjs';
 import ForexTradingTimeModal from './ForexTradingTimeModal';
+import useListPairPriceSlow from '@/store/useListPairPriceSlow';
 
 interface Props {
   listChanged24h: IResponData<Changed24h> | undefined;
@@ -113,6 +114,7 @@ export const FEED_IDS: { [key: string]: string } = {
 export const CallSocket = () => {
   const [pairPrice, setPairPrice] = useState<{ [key: string]: number }>({});
   const { setListPairPrice } = useListPairPrice();
+  const { setListPairPriceSlow } = useListPairPriceSlow();
 
   useEffect(() => {
     const socket = new WebSocket('wss://hermes.pyth.network/ws');
@@ -156,8 +158,11 @@ export const CallSocket = () => {
     };
   }, []);
 
+  const count = useRef(0);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updatePairPriceToMem = (json: any) => {
+    count.current = count.current + 1;
     const {
       id,
       price: { price },
@@ -166,6 +171,10 @@ export const CallSocket = () => {
 
     setPairPrice({ ...pairPrice });
     setListPairPrice({ ...pairPrice });
+
+    if (count.current === 1 || count.current % 150 === 0) {
+      setListPairPriceSlow({ ...pairPrice });
+    }
   };
   return <></>;
 };
@@ -331,22 +340,22 @@ const SearchPair = (props: Props) => {
           <Table variant="simple">
             <Thead>
               <Tr>
-                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'}>
+                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'} textTransform={'capitalize'}>
                   Asset
                 </Th>
-                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'}>
+                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'} textTransform={'capitalize'}>
                   Payout
                 </Th>
-                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'}>
-                  24 Change
+                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'} textTransform={'capitalize'}>
+                  24h Change
                 </Th>
-                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'}>
+                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'} textTransform={'capitalize'}>
                   Max Trade Size
                 </Th>
-                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'}>
+                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'} textTransform={'capitalize'}>
                   Current OI
                 </Th>
-                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'}>
+                <Th color={'#9E9E9F'} fontSize={'12px'} border="none" fontWeight={'400'} textTransform={'capitalize'}>
                   Max OI
                 </Th>
               </Tr>
@@ -394,7 +403,7 @@ const SearchPair = (props: Props) => {
                     {item.type === PairType.CRYPTO ? (
                       <div>
                         <p className="pb-1">
-                          <ShowPrice pair={item.pair.replace('/', '')} />
+                          <ShowPrice pair={item.pair.replace('/', '')} /> {item.pair.split('/')[1]}
                         </p>
                         <p
                           className={`flex items-center ${
@@ -421,14 +430,14 @@ const SearchPair = (props: Props) => {
                         >
                           <Image alt="" src={'/images/icons/x-circle-red.svg'} w="10px" h="10px" />
                           <Text textColor={'#F03D3E'} marginLeft={'5px'}>
-                            Close
+                            Closed
                           </Text>
                         </Box>
                       </Flex>
                     ) : (
                       <div>
                         <p className="pb-1">
-                          <ShowPrice pair={item.pair.replace('/', '')} />
+                          <ShowPrice pair={item.pair.replace('/', '')} /> {item.pair.split('/')[1]}
                         </p>
                         <p
                           className={`flex items-center ${

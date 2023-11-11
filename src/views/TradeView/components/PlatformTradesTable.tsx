@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { Flex, Image } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
@@ -61,11 +61,19 @@ const PlatformTradesTable = () => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
+      render: (value, record: ITradingData) => (
+        <span>
+          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+        </span>
+      ),
     },
     {
       title: 'Current Price',
-      render: (value: ITradingData) => <ShowPrice pair={value.pair.replace('-', '').toUpperCase()} />,
+      render: (value: ITradingData) => (
+        <>
+          <ShowPrice pair={value.pair.replace('-', '').toUpperCase()} /> {value.pair.split('-')[1].toUpperCase()}
+        </>
+      ),
     },
     {
       title: 'Open Time',
@@ -119,7 +127,7 @@ const PlatformTradesTable = () => {
   });
 
   const handleChangePage = (pagination: TablePaginationConfig) => {
-    setFilter({ ...defaultParams, page: pagination.current ?? 1 });
+    setFilter({ ...defaultParams, page: pagination.current ?? 1, limit: pagination.pageSize ?? 10 });
   };
 
   return (
@@ -139,6 +147,23 @@ const PlatformTradesTable = () => {
       className="customTable"
       rowKey={(record) => record._id}
       onChange={handleChangePage}
+      locale={{
+        emptyText: (
+          <Box
+            background="#0C0C10"
+            margin="-16px -16px"
+            padding="20px"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+          >
+            <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
+            <Text color={'#6D6D70'} fontSize={'14px'}>
+              No active platform trades at present.
+            </Text>
+          </Box>
+        ),
+      }}
     />
   );
 };

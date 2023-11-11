@@ -41,7 +41,7 @@ const TraderTab = () => {
     },
     enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 15000,
+    refetchInterval: 10000,
     refetchOnWindowFocus: false,
   });
 

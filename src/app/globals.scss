@@ -350,31 +350,10 @@
   background-color: #1E3EF0;
 }
 
-// .marquee {
-//   height: 25px;
-//   width: 420px;
+.chakra-modal__content-container {
+  background-color: rgba(0,0,0,0.7);
 
-//   overflow: hidden;
-//   position: relative;
-// }
-
-// .marquee .marquee-item {
-//   display: block;
-//   width: 200%;
-//   height: 30px;
-
-//   position: absolute;
-//   overflow: hidden;
-
-//   animation: marquee 5s linear infinite;
-// }
-
-// .marquee .item {
-//   float: left;
-//   width: 50%;
-// }
-
-// @keyframes marquee {
-//   0% { left: 0; }
-//   100% { left: -100%; }
-// }
+  .chakra-modal__content {
+    background: #0f0f11;
+  }
+}

@@ -39,19 +39,22 @@ const AdvanceSetting = (props: Props) => {
 
   useEffect(() => {
     if (advanceSetting && address && advanceSetting[address] && isFirstLoad.current) {
-      setSlippage(advanceSetting[address].slippage);
-      setIsPartialFill(advanceSetting[address].isPartialFill);
-      setIsShowTradeSize(advanceSetting[address].isShowTradeSize);
-      setIsShowSharePopup(advanceSetting[address].isShowSharePopup);
-      setIsShowFavoriteAsset(advanceSetting[address].isShowFavoriteAsset);
-      setTimeType(advanceSetting[address].limitOrderExpiryTimeType);
-      setTimeNumber(advanceSetting[address].limitOrderExpiryTime.toString());
+      advanceSetting[address]?.slippage && setSlippage(advanceSetting[address].slippage);
+      advanceSetting[address]?.isPartialFill && setIsPartialFill(advanceSetting[address].isPartialFill);
+      advanceSetting[address]?.isShowTradeSize && setIsShowTradeSize(advanceSetting[address].isShowTradeSize);
+      advanceSetting[address]?.isShowSharePopup && setIsShowSharePopup(advanceSetting[address].isShowSharePopup);
+      advanceSetting[address]?.isShowFavoriteAsset &&
+        setIsShowFavoriteAsset(advanceSetting[address].isShowFavoriteAsset);
+      advanceSetting[address]?.limitOrderExpiryTimeType &&
+        setTimeType(advanceSetting[address].limitOrderExpiryTimeType);
+      advanceSetting[address]?.limitOrderExpiryTime &&
+        setTimeNumber(advanceSetting[address].limitOrderExpiryTime.toString());
       isFirstLoad.current = false;
     }
   }, [advanceSetting, address]);
 
   const setData = (keys: Array<string>, values: Array<string | number | boolean>) => {
-    if (advanceSetting && address && keys.length > 0) {
+    if (advanceSetting && address && advanceSetting[address] && keys.length > 0) {
       const temp = { ...advanceSetting[address] };
       keys.forEach((key: string, index) => (temp[key as keyof ISetting] = values[index]));
 
@@ -355,7 +358,7 @@ const AdvanceSetting = (props: Props) => {
           }}
         />
       </Flex>
-      <Flex alignItems="center" marginBottom={'8px'}>
+      {/* <Flex alignItems="center" marginBottom={'8px'}>
         <Text fontSize={'16px'} fontWeight={400} textColor={'#fff'} marginRight={'8px'}>
           Miscellaneous
         </Text>
@@ -390,7 +393,7 @@ const AdvanceSetting = (props: Props) => {
             setIsShowFavoriteAsset(value);
           }}
         />
-      </Flex>
+      </Flex> */}
       <Center>
         <Button
           bgColor={'#0C0C10'}

@@ -134,7 +134,7 @@ const TradeViewHeader = () => {
 
   return (
     <>
-      <ListFavoritePairs />
+      {/* <ListFavoritePairs /> */}
       <Flex alignItems="center" justifyContent="space-between">
         <Flex justifyContent={{ base: 'space-between', xl: 'normal' }} width={{ base: '100%', xl: 'auto' }}>
           <Center cursor="pointer" position={'relative'} zIndex={1} ref={pairRef}>
@@ -155,8 +155,8 @@ const TradeViewHeader = () => {
             <SearchPair listChanged24h={listChanged24h?.data} isShow={isShow} />
           </Center>
           <Center paddingX={10} display={{ base: 'none', xl: 'flex' }}>
-            <p className="min-w-[120px] text-2xl font-normal text-[#fff]">
-              <ShowPrice />
+            <p className="min-w-[190px] text-2xl font-normal text-[#fff]">
+              <ShowPrice /> {currentPair?.pair.split('/')[1].toUpperCase()}
             </p>
           </Center>
           <Center>
@@ -167,7 +167,7 @@ const TradeViewHeader = () => {
               alignItems={{ base: 'center', xl: '' }}
             >
               <p className="mr-3 block text-sm font-semibold text-[#fff] xl:hidden">
-                <ShowPrice />
+                <ShowPrice /> {currentPair?.pair.split('/')[1].toUpperCase()}
               </p>
               <p className="hidden pb-2 text-xs font-normal text-[#9E9E9F] xl:block ">24h Change</p>
               <span

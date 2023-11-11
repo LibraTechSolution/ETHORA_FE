@@ -12,6 +12,7 @@ export interface IOverviewData {
   totalStats: IStat,
   USDCstats: IStat,
   ETRstats: IStat,
+  tradingStartDate: string,
   totalTraders: {
     uniqueCountCumulative: number
   }[],
@@ -33,4 +34,18 @@ export interface IOverviewData {
   ETRIOstats: {
     totalVolume: string
   }
+}
+
+interface IVolumePerContract {
+  optionContract: {
+    address: string
+  },
+  amount: string,
+  settlementFee: string,
+  depositToken: string
+}
+
+export interface IDashboardMarketData {
+  volumePerContracts: IVolumePerContract[],
+  optionContracts: []
 }

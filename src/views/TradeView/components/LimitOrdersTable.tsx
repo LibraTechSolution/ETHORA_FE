@@ -19,6 +19,7 @@ import useUserStore from '@/store/useUserStore';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { ShowPrice } from './ShowPrice';
 import { useSearchParams } from 'next/navigation';
+import { convertDurationToHourAndMinutes, convertDurationToHourMinutesSeconds } from '@/utils/time';
 
 const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
@@ -76,22 +77,30 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       ),
     },
     {
-      title: 'Strike Price',
+      title: 'Trigger Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value) => <span>{addComma(divide(value, 8), 2)} USDC</span>,
+      render: (value, record) => (
+        <span>
+          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+        </span>
+      ),
     },
     {
       title: 'Current Price',
       dataIndex: 'currentPrice',
       key: 'currentPrice',
-      render: (value, record) => <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} />,
+      render: (value, record) => (
+        <>
+          <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} /> {record.pair.split('-')[1].toUpperCase()}
+        </>
+      ),
     },
     {
-      title: 'Time Left',
-      dataIndex: 'limitOrderExpirationDate',
-      key: 'limitOrderExpirationDate',
-      render: (value: string) => <CountDown endTime={dayjs(value).unix()} period={0} hideBar={true} />,
+      title: 'Duration',
+      dataIndex: 'period',
+      key: 'Duration',
+      render: (value) => convertDurationToHourMinutesSeconds(value, true),
     },
     {
       title: 'Order Expiry',
@@ -185,7 +194,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       ? !!checkAddress
       : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: false,
+    refetchInterval: 10000,
     refetchOnWindowFocus: false,
   });
 
@@ -223,7 +232,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
             >
               <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
               <Text color={'#6D6D70'} fontSize={'14px'}>
-                No active trades at present.
+                No active limit orders.
               </Text>
             </Box>
           ),
