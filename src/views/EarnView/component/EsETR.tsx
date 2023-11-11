@@ -6,6 +6,7 @@ import UnStakeModaEsETR from './UnStakeModaEsETR';
 import StakeModalEsETR from './StakeModalEsETR';
 import { useState } from 'react';
 import BigNumber from 'bignumber.js';
+import Currency from '@/components/Currency';
 
 const EsETR = ({
   price,
@@ -64,7 +65,7 @@ const EsETR = ({
             Price
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            ${addComma(price, 2)}
+            $<Currency value={price !== undefined ? price : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -72,10 +73,25 @@ const EsETR = ({
             Wallet
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {balanceOf_esETR !== undefined ? addComma(BigNumber(formatEther(balanceOf_esETR as bigint)).toFixed(), 2) : '0.00'}
+            <Currency
+              value={balanceOf_esETR !== undefined ? BigNumber(formatEther(balanceOf_esETR as bigint)).toFixed() : 0}
+              decimal={2}
+              unit="esETR"
+            />
             {' esETR '}
-            {balanceOf_esETR !== undefined &&
-              `(${addComma(BigNumber(formatEther(balanceOf_esETR as bigint)).multipliedBy(price).toFixed(), 2)} USDC)`}
+            {'('}
+            <Currency
+              value={
+                balanceOf_esETR !== undefined
+                  ? BigNumber(formatEther(balanceOf_esETR as bigint))
+                      .multipliedBy(price)
+                      .toFixed()
+                  : 0
+              }
+              decimal={2}
+              unit="USDC"
+            />
+            {'USDC)'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -83,12 +99,29 @@ const EsETR = ({
             Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {depositBalances_esETR !== undefined
-              ? addComma(BigNumber(formatEther(depositBalances_esETR as bigint)).toFixed(), 2)
-              : '0.00'}
+            <Currency
+              value={
+                depositBalances_esETR !== undefined
+                  ? BigNumber(formatEther(depositBalances_esETR as bigint)).toFixed()
+                  : 0
+              }
+              decimal={2}
+              unit="esETR"
+            />
             {' esETR '}
-            {depositBalances_esETR !== undefined &&
-              `(${addComma(BigNumber(formatEther(depositBalances_esETR as bigint)).multipliedBy(price).toFixed(), 2)} USDC)`}
+            {'('}
+            <Currency
+              value={
+                depositBalances_esETR !== undefined
+                  ? BigNumber(formatEther(depositBalances_esETR as bigint))
+                      .multipliedBy(price)
+                      .toFixed()
+                  : 0
+              }
+              decimal={2}
+              unit="USDC"
+            />
+            {' USDC)'}
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -117,7 +150,7 @@ const EsETR = ({
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
-                      Boosted APR   
+                      Boosted APR
                     </Box>
                     <Spacer />
                     <Box padding={'0 8px'}>{boosted_APR !== undefined ? addComma(boosted_APR, 6) : '0.00'}%</Box>
@@ -156,9 +189,11 @@ const EsETR = ({
             Total Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {totalStaked !== undefined ? addComma(totalStaked, 2) : '0.00'}
+            <Currency value={totalStaked !== undefined ? totalStaked : 0} decimal={2} unit="esETR" />
             {' esETR '}
-            {totalStaked !== undefined && `(${addComma(+totalStaked * price, 2)} USDC)`}
+            {'('}
+            <Currency value={totalStaked !== undefined ? +totalStaked * price : 0} decimal={2} unit='USDC'/>
+            {' USDC)'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -166,9 +201,12 @@ const EsETR = ({
             Total Supply
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {totalSupply !== undefined ? addComma(totalSupply, 2) : '0.00'}
+            <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="esETR" />
             {' esETR '}
-            {totalSupply !== undefined && `(${addComma(+totalSupply * price, 2)} USDC)`}
+            {'('}
+            <Currency value={totalSupply !== undefined ? +totalSupply * price : 0} decimal={2} unit='USDC'/>
+            {' USDC)'}
+
           </Text>
         </Box>
         <hr className="border-[#242428]" />

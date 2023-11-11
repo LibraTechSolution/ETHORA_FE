@@ -16,7 +16,7 @@ import {
   IvolumeStatsChart,
 } from '@/types/stats.type';
 import { addComma } from '@/utils/number';
-import { Box, Button, Grid, GridItem, Heading, Text, useMediaQuery } from '@chakra-ui/react';
+import { Box, Button, Grid, GridItem, Heading, Text, useMediaQuery, Image } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { DatePicker, TimeRangePickerProps, notification } from 'antd';
 import { Download } from 'lucide-react';
@@ -42,6 +42,7 @@ import DateRangeStyle from './style';
 import { DataTickDateFormater, DataTickFormater } from '@/utils/helper';
 import DownloadCSV from './DownloadCSV';
 import type { RangePickerProps } from 'antd/es/date-picker';
+import Currency from '@/components/Currency';
 
 const dataLine = [
   {
@@ -278,13 +279,21 @@ const StatsView = () => {
                 Total Volume
               </Text>
               <Box>
-                <LineChart data={dataVolume} width={70} height={22}>
-                  <Line type="monotone" dataKey="VolumeUSDC" stroke="#1ED768" strokeWidth={2} dot={false} />
-                </LineChart>
+                {dataStats && +dataStats?.overviewStats?.totalVolumeDelta >= 0 ? (
+                  <Image src="/images/stats/ChartGreen.png" alt="ChartGreen" />
+                ) : (
+                  <Image src="/images/stats/ChartRed.png" alt="ChartRed" />
+                )}
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              ${addComma(dataStats?.overviewStats?.totalVolume as number, 2)}
+              $
+              <Currency
+                value={
+                  dataStats?.overviewStats?.totalVolume !== undefined ? dataStats?.overviewStats?.totalVolume : 0.0
+                }
+                decimal={2}
+              />
             </Text>
             <Box
               as="span"
@@ -318,13 +327,19 @@ const StatsView = () => {
                 Total Fees
               </Text>
               <Box>
-                <LineChart width={70} height={22} data={dataLine}>
-                  <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
-                </LineChart>
+                {dataStats && +dataStats?.overviewStats?.totalFeesDelta >= 0 ? (
+                  <Image src="/images/stats/ChartGreen.png" alt="ChartGreen" />
+                ) : (
+                  <Image src="/images/stats/ChartRed.png" alt="ChartRed" />
+                )}
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              ${addComma(dataStats?.overviewStats?.totalFees as number, 2)}
+              $
+              <Currency
+                value={dataStats?.overviewStats?.totalFees !== undefined ? dataStats?.overviewStats?.totalFees : 0.0}
+                decimal={2}
+              />
             </Text>
             <Box
               as="span"
@@ -356,13 +371,19 @@ const StatsView = () => {
                 ELP Pool
               </Text>
               <Box>
-                <LineChart width={70} height={22} data={dataLine}>
-                  <Line type="monotone" dataKey="pv" stroke="#F03D3E" strokeWidth={2} dot={false} />
-                </LineChart>
+                {dataStats && +dataStats?.overviewStats?.totalPoolDelta >= 0 ? (
+                  <Image src="/images/stats/ChartGreen.png" alt="ChartGreen" />
+                ) : (
+                  <Image src="/images/stats/ChartRed.png" alt="ChartRed" />
+                )}
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              ${addComma(dataStats?.overviewStats?.totalPool as number, 2)}
+              $
+              <Currency
+                value={dataStats?.overviewStats?.totalPool !== undefined ? dataStats?.overviewStats?.totalPool : 0.0}
+                decimal={2}
+              />
             </Text>
             <Box
               as="span"
@@ -394,9 +415,11 @@ const StatsView = () => {
                 Total Users
               </Text>
               <Box>
-                <LineChart width={70} height={22} data={dataLine}>
-                  <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
-                </LineChart>
+                {dataStats && +dataStats?.overviewStats?.totalUsersDelta >= 0 ? (
+                  <Image src="/images/stats/ChartGreen.png" alt="ChartGreen" />
+                ) : (
+                  <Image src="/images/stats/ChartRed.png" alt="ChartRed" />
+                )}
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
@@ -432,13 +455,19 @@ const StatsView = () => {
                 Net Payout
               </Text>
               <Box>
-                <LineChart width={70} height={22} data={dataLine}>
-                  <Line type="monotone" dataKey="pv" stroke="#1ED768" strokeWidth={2} dot={false} />
-                </LineChart>
+                {dataStats && +dataStats?.overviewStats?.payoutDelta >= 0 ? (
+                  <Image src="/images/stats/ChartGreen.png" alt="ChartGreen" />
+                ) : (
+                  <Image src="/images/stats/ChartRed.png" alt="ChartRed" />
+                )}
               </Box>
             </Box>
             <Text fontSize={'24px'} fontWeight={600} color={'white'} marginBottom={'10px'}>
-              ${addComma(dataStats?.overviewStats?.payout as number, 2)}
+              $
+              <Currency
+                value={dataStats?.overviewStats?.payout !== undefined ? dataStats?.overviewStats?.payout : 0.0}
+                decimal={2}
+              />
             </Text>
             <Box
               as="span"
@@ -1090,10 +1119,24 @@ const StatsView = () => {
                 />
                 <Tooltip />
                 <Legend />
-                <Bar yAxisId="left" dataKey="profit" fill="#22c761" name='Profit'/>
-                <Bar yAxisId="left" dataKey="loss" fill="#f93333" name='Loss'/>
-                <Area yAxisId="right" type="monotone" dataKey="profitCumulative" fill="#22c761" stroke="#22c761" name='Cumulative Profit'/>
-                <Area yAxisId="right" type="monotone" dataKey="lossCumulative" fill="#f93333" stroke="#f93333" name='Cumulative Loss'/>
+                <Bar yAxisId="left" dataKey="profit" fill="#22c761" name="Profit" />
+                <Bar yAxisId="left" dataKey="loss" fill="#f93333" name="Loss" />
+                <Area
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="profitCumulative"
+                  fill="#22c761"
+                  stroke="#22c761"
+                  name="Cumulative Profit"
+                />
+                <Area
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="lossCumulative"
+                  fill="#f93333"
+                  stroke="#f93333"
+                  name="Cumulative Loss"
+                />
               </ComposedChart>
             </ResponsiveContainer>
           </Box>

@@ -9,8 +9,9 @@ import { useState } from 'react';
 import StakeModalETR from './StakeModalETR';
 import UnStakeModaETR from './UnStakeModaETR';
 import BigNumber from 'bignumber.js';
-import { Value } from '@/components/Currency';
+// import { Currency } from '@/components/Currency';
 import Link from 'next/link';
+import Currency from '@/components/Currency';
 
 const ETRItem = ({
   price,
@@ -91,7 +92,7 @@ const ETRItem = ({
             Price
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            ${price}
+            $<Currency value={0.055} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -99,9 +100,24 @@ const ETRItem = ({
             Wallet
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {balance !== undefined ? addComma(BigNumber(formatEther(balance as bigint)).toFixed(),2) : '0.00'}
-            {' ETR'}
-            {balance !== undefined && `($${addComma(BigNumber(formatEther(balance as bigint)).multipliedBy(price).toFixed(), 2)})`}
+            <Currency
+              value={balance !== undefined ? BigNumber(formatEther(balance as bigint)).toFixed() : 0}
+              decimal={2}
+              unit="ETR"
+            />
+            {' ETR '}
+            {'($'}
+            <Currency
+              value={
+                balance !== undefined
+                  ? BigNumber(formatEther(balance as bigint))
+                      .multipliedBy(price)
+                      .toFixed()
+                  : 0
+              }
+              decimal={2}
+            />
+            {')'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -109,10 +125,27 @@ const ETRItem = ({
             Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {depositBalances_ETR !== undefined ? addComma(BigNumber(formatEther(depositBalances_ETR as bigint)).toFixed(), 2) : '0.00'}
+            {/* {depositBalances_ETR !== undefined ? addComma(BigNumber(formatEther(depositBalances_ETR as bigint)).toFixed(), 2) : '0.00'} */}
+            <Currency
+              value={
+                depositBalances_ETR !== undefined ? BigNumber(formatEther(depositBalances_ETR as bigint)).toFixed() : 0
+              }
+              decimal={2}
+              unit="ETR"
+            />
             {' ETR'}
-            {depositBalances_ETR !== undefined &&
-              `($${addComma(BigNumber(formatEther(depositBalances_ETR as bigint)).multipliedBy(price).toFixed(), 2)})`}
+            {'($'}
+            <Currency
+              value={
+                depositBalances_ETR !== undefined
+                  ? BigNumber(formatEther(depositBalances_ETR as bigint))
+                      .multipliedBy(price)
+                      .toFixed()
+                  : 0
+              }
+              decimal={2}
+            />
+            {')'}
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -254,9 +287,24 @@ const ETRItem = ({
             Total Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {totalStaked_ETR !== undefined ? addComma(BigNumber(formatEther(totalStaked_ETR as bigint)).toFixed(), 2) : '0.00'}
+            <Currency
+              value={totalStaked_ETR !== undefined ? BigNumber(formatEther(totalStaked_ETR as bigint)).toFixed() : 0}
+              decimal={2}
+              unit="ETR"
+            />
             {' ETR'}
-            {totalStaked_ETR !== undefined && ` ($${addComma(BigNumber(formatEther(totalStaked_ETR as bigint)).multipliedBy(price).toFixed(), 2)})`}
+            {'($'}
+            <Currency
+              value={
+                totalStaked_ETR !== undefined
+                  ? BigNumber(formatEther(totalStaked_ETR as bigint))
+                      .multipliedBy(price)
+                      .toFixed()
+                  : 0
+              }
+              decimal={2}
+            />
+            {')'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -264,11 +312,16 @@ const ETRItem = ({
             Total Supply
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {totalSupply !== undefined ? addComma(totalSupply, 2) : '0.00'}
+            <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="ETR" />
             {' ETR'}
-            {totalSupply_ETR !== undefined &&
-              balanceOf_addressDead_ETR !== undefined &&
-              ` ($${addComma(+totalSupply * price, 2)})`}
+            {'($'}
+            <Currency
+              value={
+                totalSupply_ETR !== undefined && balanceOf_addressDead_ETR !== undefined ? +totalSupply * price : 0
+              }
+              decimal={2}
+            />
+            {')'}
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -287,7 +340,7 @@ const ETRItem = ({
               <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenStakeModal(true)}>
                 Stake
               </Button>
-              <Link href="https://app.uniswap.org/swap" target='_blank'>
+              <Link href="https://app.uniswap.org/swap" target="_blank">
                 <Button colorScheme="primary" fontSize={'16px'} size="md" as={'span'}>
                   Buy ETR
                 </Button>

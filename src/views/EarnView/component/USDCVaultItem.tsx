@@ -6,6 +6,7 @@ import { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { addComma } from '@/utils/number';
 import { parseUnits } from 'viem';
+import Currency from '@/components/Currency';
 
 const USDCVaultItem = ({
   price,
@@ -118,8 +119,15 @@ const USDCVaultItem = ({
             Wallet
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {`${wallet !== undefined ? addComma(wallet, 2) : '0.00'} ELP`}{' '}
-            {`(${addComma(exchangeRate.multipliedBy(wallet).toFormat(), 2)} USDC)`}
+            <Currency value={wallet !== undefined ? wallet : 0} decimal={2} unit="ELP" />
+            {' ELP  '}
+            {'('}
+            <Currency
+              value={wallet !== undefined ? exchangeRate.multipliedBy(wallet).toFixed() : 0}
+              decimal={2}
+              unit="USDC"
+            />
+            {' USDC)'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -127,8 +135,15 @@ const USDCVaultItem = ({
             Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {`${wallet !== undefined ? addComma(wallet, 2) : '0.00'} ELP`}{' '}
-            {`(${addComma(exchangeRate.multipliedBy(wallet).toFormat(), 2)} USDC)`}
+            <Currency value={wallet !== undefined ? wallet : 0} decimal={2} unit="ELP" />
+            {' ELP  '}
+            {'('}
+            <Currency
+              value={wallet !== undefined ? exchangeRate.multipliedBy(wallet).toFixed() : 0}
+              decimal={2}
+              unit="USDC"
+            />
+            {' USDC)'}
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -218,7 +233,7 @@ const USDCVaultItem = ({
             Withdrawable Amount
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {withdrawableAmount !== undefined ? addComma(withdrawableAmount, 2) : '0.00'} ELP
+            <Currency value={withdrawableAmount !== undefined ? withdrawableAmount : 0} decimal={2} unit="ELP" /> ELP
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -227,8 +242,15 @@ const USDCVaultItem = ({
             Total Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {`${totalStaked !== undefined ? addComma(totalStaked, 2) : '0.00'} ELP `}
-            {`(${totalStaked_USD !== undefined ? addComma(totalStaked_USD, 2) : '0.00'} USDC)`}
+            <Currency value={totalStaked !== undefined ? totalStaked : 0} decimal={2} unit="ELP" />
+            {' ELP  '}
+            {'('}
+            <Currency
+              value={totalStaked_USD !== undefined ? totalStaked_USD : 0}
+              decimal={2}
+              unit="USDC"
+            />
+            {' USDC)'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -236,8 +258,15 @@ const USDCVaultItem = ({
             Total Supply
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {`${totalSupply !== undefined ? addComma(totalSupply, 2) : '0.00'} ELP `}
-            {`(${totalSupply_USD !== undefined ? addComma(totalSupply_USD, 2) : '0.00'} USDC)`}
+            <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="ELP" />
+            {' ELP  '}
+            {'('}
+            <Currency
+              value={totalSupply_USD !== undefined ? totalSupply_USD : 0}
+              decimal={2}
+              unit="USDC"
+            />
+            {' USDC)'}
           </Text>
         </Box>
         <hr className="border-[#242428]" />

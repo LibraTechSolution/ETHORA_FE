@@ -12,6 +12,7 @@ import VETR_ABI from '@/config/abi/VETR_ABI';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { BaseError } from 'viem';
+import Currency from '@/components/Currency';
 
 const ETRVault = ({
   depositBalances_ETR,
@@ -174,8 +175,8 @@ const ETRVault = ({
             Reserved for Vesting
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {pairAmounts !== undefined ? addComma(pairAmounts, 2) : '0.00'} /{' '}
-            {depositBalances !== undefined ? addComma(depositBalances, 2) : '0.00'}
+            <Currency value={pairAmounts !== undefined ? pairAmounts : 0.00} decimal={2} /> /{' '}
+            <Currency value={depositBalances !== undefined ? depositBalances : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
