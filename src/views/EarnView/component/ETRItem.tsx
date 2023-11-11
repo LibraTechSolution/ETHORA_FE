@@ -10,6 +10,7 @@ import StakeModalETR from './StakeModalETR';
 import UnStakeModaETR from './UnStakeModaETR';
 import BigNumber from 'bignumber.js';
 import { Value } from '@/components/Currency';
+import Link from 'next/link';
 
 const ETRItem = ({
   price,
@@ -286,9 +287,11 @@ const ETRItem = ({
               <Button colorScheme="primary" fontSize={'16px'} size="md" onClick={() => setOpenStakeModal(true)}>
                 Stake
               </Button>
-              <Button colorScheme="primary" fontSize={'16px'} size="md">
-                Buy ETR
-              </Button>
+              <Link href="https://app.uniswap.org/swap" target='_blank'>
+                <Button colorScheme="primary" fontSize={'16px'} size="md" as={'span'}>
+                  Buy ETR
+                </Button>
+              </Link>
             </Flex>
           </CustomConnectButton>
         </Box>

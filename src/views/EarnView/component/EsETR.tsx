@@ -115,6 +115,13 @@ const EsETR = ({
                     <Spacer />
                     <Box padding={'0 8px'}>{USDC_APR !== undefined ? addComma(USDC_APR, 6) : '0.00'}%</Box>
                   </Flex>
+                  <Flex margin={'0 -8px'} alignItems={'center'}>
+                    <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                      Boosted APR   
+                    </Box>
+                    <Spacer />
+                    <Box padding={'0 8px'}>{boosted_APR !== undefined ? addComma(boosted_APR, 6) : '0.00'}%</Box>
+                  </Flex>
                 </Box>
               }
               color="white"
