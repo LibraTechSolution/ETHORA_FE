@@ -4,6 +4,7 @@ import ClaimModal from './ClaimModal';
 import CompoundRewardsModal from './CompoundRewardsModal';
 import { useState } from 'react';
 import { addComma } from '@/utils/number';
+import Currency from '@/components/Currency';
 
 const TotalRewardsItem = ({
   claimable_sbfETR,
@@ -46,7 +47,7 @@ const TotalRewardsItem = ({
             USDC
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {USDC !== undefined ? addComma(USDC, 2) : '0.00'}
+            <Currency value={USDC !== undefined ? USDC : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -54,7 +55,10 @@ const TotalRewardsItem = ({
             ETR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {ETR !== undefined ? `${addComma(ETR, 2)} ($${addComma(ETR * price, 2)}) ` : '0.00 ($0.00)'}
+            <Currency value={ETR !== undefined ? ETR : 0} decimal={2} />
+            {'($'}
+            <Currency value={ETR !== undefined ? +ETR * price : 0} decimal={2} />
+            {')'}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -62,7 +66,10 @@ const TotalRewardsItem = ({
             Escrowed ETR
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {esETR !== undefined ? `${addComma(esETR, 2)} ($${addComma(esETR * price, 2)}) ` : '0.00 ($0.00)'}
+            <Currency value={esETR !== undefined ? esETR : 0} decimal={2} />
+            {'($'}
+            <Currency value={esETR !== undefined ? +esETR * price : 0} decimal={2} />
+            {')'}
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -71,7 +78,7 @@ const TotalRewardsItem = ({
             Multiplier Points
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {multiplierPoints !== undefined ? addComma(multiplierPoints, 2) : '0.00'}
+            <Currency value={multiplierPoints !== undefined ? multiplierPoints : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -79,7 +86,7 @@ const TotalRewardsItem = ({
             Staked Multiplier Points
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {stakedMultiplierPoints !== undefined ? addComma(stakedMultiplierPoints, 2) : '0.00'}
+            <Currency value={stakedMultiplierPoints !== undefined ? stakedMultiplierPoints : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>

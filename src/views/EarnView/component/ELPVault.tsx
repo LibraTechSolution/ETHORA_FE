@@ -10,6 +10,7 @@ import VBLP_ABI from '@/config/abi/VBLP_ABI';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { BaseError } from 'viem';
+import Currency from '@/components/Currency';
 
 const ELPVault = ({
   depositBalances_fBLP,
@@ -116,7 +117,7 @@ const ELPVault = ({
             Staked Tokens
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '0.00'} ELP
+            <Currency value={stakedTokens !== undefined ? stakedTokens : 0} decimal={2} /> ELP
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -124,8 +125,8 @@ const ELPVault = ({
             Reserved for Vesting
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {pairAmounts !== undefined ? addComma(pairAmounts, 2) : '0.00'} /{' '}
-            {stakedTokens !== undefined ? addComma(stakedTokens, 2) : '0.00'}
+            <Currency value={pairAmounts !== undefined ? pairAmounts : 0} decimal={2} /> /{' '}
+            <Currency value={stakedTokens !== undefined ? stakedTokens : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>

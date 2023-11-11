@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import BigNumber from 'bignumber.js';
 import { isNil } from 'lodash';
 import { FC, PropsWithChildren } from 'react';
@@ -14,6 +14,8 @@ interface Props extends PropsWithChildren {
   rounded?: boolean;
   decimal?: number;
   decimalNumber?: number;
+  tofixedLabel?: number;
+  unit?: string;
 }
 
 const getValue = (
@@ -23,8 +25,8 @@ const getValue = (
   decimal = 3,
   decimalNumber = 0,
 ) => {
-  let valueShow = '---';
-  let fullValue = '---';
+  let valueShow = '0.00';
+  let fullValue = '0.000000';
   let isRounded = false;
   try {
     if (!isNil(value)) {
@@ -38,9 +40,10 @@ const getValue = (
       if (valueBig.isNaN()) {
         throw new Error();
       }
-      const valueStr = valueBig.toFixed(decimal, BigNumber.ROUND_FLOOR);
-      valueShow = BigNumber(valueStr).toFormat();
-      fullValue = valueBig.toFormat();
+      const valueStr = valueBig.toFormat(decimal, BigNumber.ROUND_FLOOR);
+      // valueShow = BigNumber(valueStr).toFormat();
+      valueShow = valueStr;
+      fullValue = valueBig.toFormat(6);
       isRounded = valueShow !== fullValue;
 
       if (rounded && valueBig.gt(10 ** 3)) {
@@ -52,8 +55,8 @@ const getValue = (
       }
     }
   } catch {
-    valueShow = '---';
-    fullValue = '---';
+    valueShow = '0.00';
+    fullValue = '0.000000';
     isRounded = false;
   }
   return {
@@ -63,10 +66,14 @@ const getValue = (
   };
 };
 
-const Currency: FC<Props> = ({ value, isWei, rounded, decimal, decimalNumber }) => {
+const Currency: FC<Props> = ({ value, isWei, rounded, decimal, decimalNumber, unit }) => {
   const { value: valueShow, isRounded, fullValue } = getValue(value, isWei, rounded, decimal, decimalNumber);
-  if (!isRounded) return <>{valueShow}</>;
-  return <Tooltip label={fullValue}>{valueShow}</Tooltip>;
+  // if (!isRounded) return <>{valueShow}</>;
+  return (
+    <Tooltip hasArrow label={`${unit === '$' ? unit : ''}${fullValue} ${!unit ? '' : unit !== '$' ? unit : ''}`}>
+      {valueShow}
+    </Tooltip>
+  );
 };
 
 export default Currency;
