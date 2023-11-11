@@ -217,7 +217,7 @@ const ProfileView = () => {
                   <Text fontSize={'2xl'}>
                     {dataProfileInfo && dataProfileInfo?.stats?.winTrade && dataProfileInfo?.stats?.totalTrade
                       ? ((dataProfileInfo?.stats?.winTrade / dataProfileInfo?.stats?.totalTrade) * 100).toFixed(2)
-                      : '00.0'}
+                      : '0.00'}
                     %
                   </Text>
                 ) : (

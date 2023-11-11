@@ -41,6 +41,7 @@ import {
 import DateRangeStyle from './style';
 import { DataTickDateFormater, DataTickFormater } from '@/utils/helper';
 import DownloadCSV from './DownloadCSV';
+import type { RangePickerProps } from 'antd/es/date-picker';
 
 const dataLine = [
   {
@@ -119,6 +120,12 @@ const rangePresets: TimeRangePickerProps['presets'] = [
   { label: 'Last 60 Days', value: [dayjs().add(-60, 'd'), dayjs()] },
   { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] },
 ];
+
+const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+  // Can not select days before today and today
+  return current && current > dayjs().endOf('day');
+};
+
 const defaultDay = {
   rangeDay: [dayjs().add(-30, 'd'), dayjs()],
   rangeDayTimeStem: [dayjs().add(-30, 'd').unix(), dayjs().unix()],
@@ -242,6 +249,7 @@ const StatsView = () => {
         <DateRangeStyle>
           <RangePicker
             presets={rangePresets}
+            disabledDate={disabledDate}
             showTime={isMobile ? true : false}
             format="YYYY/MM/DD"
             onChange={onRangeChange}
