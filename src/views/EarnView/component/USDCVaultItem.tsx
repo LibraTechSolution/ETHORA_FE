@@ -5,6 +5,7 @@ import WithdrawFundsModal from './WithdrawFundsModal';
 import { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { addComma } from '@/utils/number';
+import { parseUnits } from 'viem';
 
 const USDCVaultItem = ({
   price,
@@ -42,8 +43,11 @@ const USDCVaultItem = ({
   const USDC_APR = (100 * 31536000 * Number(tokensPerInterval_fBLP)) / Number(balanceOf_BLP_USDC);
   const esETR_APR =
     (100 * 31536000 * Number(tokensPerInterval_fsBLP) * price) / (Number(balanceOf_BLP_USDC) * 10 ** 12);
-
   const Total_APR = USDC_APR + esETR_APR;
+
+  // console.log(Number(exchangeRate) * 10 ** 6)
+  // console.log(parseUnits(exchangeRate.toFixed(), 6))
+  // console.log(Number(exchangeRate.dividedBy(claimable_fsBLP.toString())) / 10 ** 18)
 
   const USDC_Rewards = Number(claimable_fBLP) / 10 ** 6;
   const esETR_Rewards = Number(claimable_fsBLP) / 10 ** 18;
@@ -51,9 +55,9 @@ const USDCVaultItem = ({
   const rewards = USDC_Rewards + esETR_Rewards;
   const withdrawableAmount = Number(getUnlockedLiquidity_BLP) / 10 ** 6;
   const totalStaked = Number(balanceOf_fBLP_BLP) / 10 ** 6;
-  const totalStaked_USD = (Number(balanceOf_fBLP_BLP) * price) / 10 ** 6;
+  const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP.toString())) / 10 ** 6;
   const totalSupply_USD = Number(balanceOf_BLP_USDC) / 10 ** 6;
-  const totalSupply = Number(balanceOf_BLP_USDC) / (price * 10 ** 6);
+  const totalSupply = Number(balanceOf_BLP_USDC) / (Number(exchangeRate) * 10 ** 6);
 
   console.log('exchangeRate', exchangeRate, typeof exchangeRate);
 
@@ -114,7 +118,8 @@ const USDCVaultItem = ({
             Wallet
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {wallet !== undefined ? addComma(wallet, 2) : '0.00'} ELP (0.00 USDC)
+            {`${wallet !== undefined ? addComma(wallet, 2) : '0.00'} ELP`}{' '}
+            {`(${addComma(exchangeRate.multipliedBy(wallet).toFormat(), 2)} USDC)`}
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
@@ -122,7 +127,8 @@ const USDCVaultItem = ({
             Staked
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {wallet !== undefined ? addComma(wallet, 2) : '0.00'} ELP (0.00 USDC)
+            {`${wallet !== undefined ? addComma(wallet, 2) : '0.00'} ELP`}{' '}
+            {`(${addComma(exchangeRate.multipliedBy(wallet).toFormat(), 2)} USDC)`}
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -193,7 +199,7 @@ const USDCVaultItem = ({
               color="white"
               placement="top"
               bg="#050506"
-              minWidth="215px"
+              minWidth="350px"
             >
               <Text as="u">${rewards !== undefined ? addComma(rewards, 2) : '0.00'}</Text>
             </Tooltip>
