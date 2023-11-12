@@ -45,7 +45,7 @@ import Link from 'next/link';
 import { useQueryClient } from '@tanstack/react-query';
 import referralABI from '@/config/abi/referralABI';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
-import { useGetTradeContract } from '@/hooks/useGetTradeContract';
+import { useGetMinMaxTradeSize, useGetTradeContract } from '@/hooks/useGetTradeContract';
 import bufferBOABI from '@/config/abi/bufferBOABI';
 import { divide, subtract } from '@/utils/operationBigNumber';
 import useAdvanceSetting from '@/store/useAdvanceSetting';
@@ -99,6 +99,7 @@ const TradeControl = () => {
   const [isPendingUp, setIsPendingUp] = useState<boolean>(false);
   const [isPendingDown, setIsPendingDown] = useState<boolean>(false);
   const { advanceSetting } = useAdvanceSetting();
+  const { minTradeSize, maxTradeSize } = useGetMinMaxTradeSize();
 
   useEffect(() => {
     if (address) {
@@ -153,8 +154,8 @@ const TradeControl = () => {
     if (!balance) return;
     let maxBalance = BigNumber(balance.toString()).div(1000000).toString();
 
-    if (currentPair?.maxTradeSize && +maxBalance > currentPair?.maxTradeSize) {
-      maxBalance = currentPair?.maxTradeSize.toString();
+    if (+maxBalance > maxTradeSize) {
+      maxBalance = maxTradeSize.toString();
     }
     setTradeSize(maxBalance);
   };
@@ -329,12 +330,12 @@ const TradeControl = () => {
       hasError = true;
     }
 
-    if (currentPair?.maxTradeSize && +tradeSize > currentPair?.maxTradeSize) {
+    if (+tradeSize > maxTradeSize) {
       setTradeSizeError('Amount exceeds max trade size');
       hasError = true;
     }
-    if (currentPair?.minTradeSize && +tradeSize < currentPair?.minTradeSize) {
-      setTradeSizeError(`Min trade size is ${currentPair?.minTradeSize} USDC`);
+    if (+tradeSize < minTradeSize) {
+      setTradeSizeError(`Min trade size is ${minTradeSize} USDC`);
       hasError = true;
     }
 

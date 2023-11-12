@@ -34,7 +34,7 @@ const AdvanceSetting = (props: Props) => {
   const [isPartialFill, setIsPartialFill] = useState<boolean>(true);
   const [isShowTradeSize, setIsShowTradeSize] = useState<boolean>(true);
   const [isShowSharePopup, setIsShowSharePopup] = useState<boolean>(true);
-  const [isShowFavoriteAsset, setIsShowFavoriteAsset] = useState<boolean>(true);
+  // const [isShowFavoriteAsset, setIsShowFavoriteAsset] = useState<boolean>(true);
   const isFirstLoad = useRef(true);
 
   useEffect(() => {
@@ -43,8 +43,8 @@ const AdvanceSetting = (props: Props) => {
       advanceSetting[address]?.isPartialFill && setIsPartialFill(advanceSetting[address].isPartialFill);
       advanceSetting[address]?.isShowTradeSize && setIsShowTradeSize(advanceSetting[address].isShowTradeSize);
       advanceSetting[address]?.isShowSharePopup && setIsShowSharePopup(advanceSetting[address].isShowSharePopup);
-      advanceSetting[address]?.isShowFavoriteAsset &&
-        setIsShowFavoriteAsset(advanceSetting[address].isShowFavoriteAsset);
+      // advanceSetting[address]?.isShowFavoriteAsset &&
+      //   setIsShowFavoriteAsset(advanceSetting[address].isShowFavoriteAsset);
       advanceSetting[address]?.limitOrderExpiryTimeType &&
         setTimeType(advanceSetting[address].limitOrderExpiryTimeType);
       advanceSetting[address]?.limitOrderExpiryTime &&
@@ -131,11 +131,11 @@ const AdvanceSetting = (props: Props) => {
     <Box
       position={'absolute'}
       top={'calc(100% + 10px)'}
-      right={0}
+      right={{ base: '-25px', md: '0' }}
       rounded={'20px'}
       paddingX={'32px'}
       paddingY={'26px'}
-      w={{ base: 'calc(100vw - 20px)', md: '568px' }}
+      w={{ base: 'calc(100vw - 40px)', md: '568px' }}
       display={isShow ? 'block' : 'none'}
       backdropFilter={'blur(7px)'}
       boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}

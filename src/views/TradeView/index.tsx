@@ -10,130 +10,168 @@ import LimitOrdersTable from './components/LimitOrdersTable';
 import PlatformTradesTable from './components/PlatformTradesTable';
 import PlatformHistoryTable from './components/PlatformHistoryTable';
 import TradeLeftSide from './components/TradeLeftSide';
+import { createContext, useState } from 'react';
 
 const TradingViewChart = dynamic(
   () => import('@/components/TradingView/TradingView').then((mod) => mod.TradingViewChart),
   { ssr: false },
 );
 
-const TradeView = () => {
-  return (
-    <Grid
-      templateColumns={{ base: '', xl: 'repeat(24, 1fr)' }}
-      gap={4}
-      paddingTop="20px"
-      bg="rgba(28, 28, 30, 0.50)"
-      display={{ base: 'block', xl: 'grid' }}
-      marginX={{ base: '-12px', lg: '-80px' }}
-      paddingRight={{ base: '0px', lg: '26px' }}
-    >
-      <GridItem display={{ base: 'none', xl: 'block' }} colSpan={{ base: 24, xl: 5 }}>
-        <TradeLeftSide />
-      </GridItem>
-      <GridItem colSpan={{ base: 24, xl: 19 }}>
-        <>
-          <TradeViewHeader />
-          <TradingViewChart />
-        </>
-        <Box display={{ base: 'block', xl: 'none' }} marginTop={'12px'}>
-          <TradeLeftSide />
-        </Box>
-        <Box marginTop="12px" display={{ base: 'none', xl: 'block' }}>
-          <Tabs>
-            <TabList borderBottom="1px solid #1C1C1E" bg="#0c0c10" roundedTop="10px">
-              <Tab
-                color="#6D6D70"
-                fontSize={'sm'}
-                fontWeight={'normal'}
-                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
-                _active={{ bgColor: 'transparent' }}
-                paddingX="12px"
-                paddingY="8px"
-              >
-                Trades
-              </Tab>
-              <Tab
-                color="#6D6D70"
-                fontSize={'sm'}
-                fontWeight={'normal'}
-                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
-                _active={{ bgColor: 'transparent' }}
-                paddingX="12px"
-                paddingY="8px"
-              >
-                Limit Orders
-              </Tab>
-              <Tab
-                color="#6D6D70"
-                fontSize={'sm'}
-                fontWeight={'normal'}
-                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
-                _active={{ bgColor: 'transparent' }}
-                paddingX="12px"
-                paddingY="8px"
-              >
-                History
-              </Tab>
-              <Tab
-                color="#6D6D70"
-                fontSize={'sm'}
-                fontWeight={'normal'}
-                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
-                _active={{ bgColor: 'transparent' }}
-                paddingX="12px"
-                paddingY="8px"
-              >
-                Cancelled
-              </Tab>
-              <Tab
-                color="#6D6D70"
-                fontSize={'sm'}
-                fontWeight={'normal'}
-                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
-                _active={{ bgColor: 'transparent' }}
-                paddingX="12px"
-                paddingY="8px"
-              >
-                Platform Trades
-              </Tab>
-              <Tab
-                color="#6D6D70"
-                fontSize={'sm'}
-                fontWeight={'normal'}
-                _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
-                _active={{ bgColor: 'transparent' }}
-                paddingX="12px"
-                paddingY="8px"
-              >
-                Platform History
-              </Tab>
-            </TabList>
-            <TabIndicator mt="-1.5px" height="2px" bg="#1E3EF0" borderRadius="1px" />
+interface createContextType {
+  updateTradeSize: (tradeSize: number) => void;
+  updateLimitOrderSize: (tradeSize: number) => void;
+  limitOrderSize: number;
+  tradeSize: number;
+}
 
-            <TabPanels paddingTop={2} className="tradingTableTab">
-              <TabPanel padding="0">
-                <TradeTable />
-              </TabPanel>
-              <TabPanel padding="0">
-                <LimitOrdersTable />
-              </TabPanel>
-              <TabPanel padding="0">
-                <HistoryTable />
-              </TabPanel>
-              <TabPanel padding="0">
-                <CancelTable />
-              </TabPanel>
-              <TabPanel padding="0">
-                <PlatformTradesTable />
-              </TabPanel>
-              <TabPanel padding="0">
-                <PlatformHistoryTable />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </Box>
-      </GridItem>
-    </Grid>
+export const TradeContext = createContext<createContextType>({
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  updateTradeSize: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  updateLimitOrderSize: () => {},
+  limitOrderSize: 0,
+  tradeSize: 0,
+});
+
+const TradeView = () => {
+  const [tradeSize, setTradeSize] = useState<number>(0);
+  const [limitOrderSize, setLimitOrderSize] = useState<number>(0);
+  return (
+    <TradeContext.Provider
+      value={{
+        tradeSize,
+        limitOrderSize,
+        updateLimitOrderSize: (limitOrderSize: number) => setLimitOrderSize(limitOrderSize),
+        updateTradeSize: (tradeSize: number) => setTradeSize(tradeSize),
+      }}
+    >
+      <Grid
+        templateColumns={{ base: '', xl: 'repeat(24, 1fr)' }}
+        gap={4}
+        paddingTop="20px"
+        bg="rgba(28, 28, 30, 0.50)"
+        display={{ base: 'block', xl: 'grid' }}
+        marginX={{ base: '-12px', lg: '-80px' }}
+        paddingRight={{ base: '0px', lg: '26px' }}
+      >
+        <GridItem display={{ base: 'none', xl: 'block' }} colSpan={{ base: 24, xl: 5 }}>
+          <TradeLeftSide />
+        </GridItem>
+        <GridItem colSpan={{ base: 24, xl: 19 }}>
+          <>
+            <TradeViewHeader />
+            <TradingViewChart />
+          </>
+          <Box display={{ base: 'block', xl: 'none' }} marginTop={'12px'}>
+            <TradeLeftSide />
+          </Box>
+          <Box marginTop="12px" display={{ base: 'none', xl: 'block' }}>
+            <Tabs>
+              <TabList
+                borderBottom="1px solid #1C1C1E"
+                bg="rgba(28, 28, 30, 0.50)"
+                roundedTop="10px"
+                backdropFilter={'blur(7px)'}
+                boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+              >
+                <Tab
+                  color="#6D6D70"
+                  fontSize={'sm'}
+                  fontWeight={'normal'}
+                  _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
+                  _active={{ bgColor: 'transparent' }}
+                  paddingX="12px"
+                  paddingY="8px"
+                >
+                  <>
+                    Trades{' '}
+                    <span className="ml-2 rounded-3xl bg-[#0C0C10] px-2 font-normal text-white">{tradeSize}</span>
+                  </>
+                </Tab>
+                <Tab
+                  color="#6D6D70"
+                  fontSize={'sm'}
+                  fontWeight={'normal'}
+                  _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
+                  _active={{ bgColor: 'transparent' }}
+                  paddingX="12px"
+                  paddingY="8px"
+                >
+                  Limit Orders{' '}
+                  <span className="ml-2 rounded-3xl bg-[#0C0C10] px-2 font-normal text-white">{limitOrderSize}</span>
+                </Tab>
+                <Tab
+                  color="#6D6D70"
+                  fontSize={'sm'}
+                  fontWeight={'normal'}
+                  _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
+                  _active={{ bgColor: 'transparent' }}
+                  paddingX="12px"
+                  paddingY="8px"
+                >
+                  History
+                </Tab>
+                <Tab
+                  color="#6D6D70"
+                  fontSize={'sm'}
+                  fontWeight={'normal'}
+                  _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
+                  _active={{ bgColor: 'transparent' }}
+                  paddingX="12px"
+                  paddingY="8px"
+                >
+                  Cancelled
+                </Tab>
+                <Tab
+                  color="#6D6D70"
+                  fontSize={'sm'}
+                  fontWeight={'normal'}
+                  _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
+                  _active={{ bgColor: 'transparent' }}
+                  paddingX="12px"
+                  paddingY="8px"
+                >
+                  Platform Trades
+                </Tab>
+                <Tab
+                  color="#6D6D70"
+                  fontSize={'sm'}
+                  fontWeight={'normal'}
+                  _selected={{ color: '#1E3EF0', fontWeight: 'medium' }}
+                  _active={{ bgColor: 'transparent' }}
+                  paddingX="12px"
+                  paddingY="8px"
+                >
+                  Platform History
+                </Tab>
+              </TabList>
+              <TabIndicator mt="-1.5px" height="2px" bg="#1E3EF0" borderRadius="1px" />
+
+              <TabPanels paddingTop={2} className="tradingTableTab">
+                <TabPanel padding="0">
+                  <TradeTable />
+                </TabPanel>
+                <TabPanel padding="0">
+                  <LimitOrdersTable />
+                </TabPanel>
+                <TabPanel padding="0">
+                  <HistoryTable />
+                </TabPanel>
+                <TabPanel padding="0">
+                  <CancelTable />
+                </TabPanel>
+                <TabPanel padding="0">
+                  <PlatformTradesTable />
+                </TabPanel>
+                <TabPanel padding="0">
+                  <PlatformHistoryTable />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </Box>
+        </GridItem>
+      </Grid>
+    </TradeContext.Provider>
   );
 };
 export default TradeView;

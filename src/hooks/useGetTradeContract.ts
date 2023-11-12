@@ -1,5 +1,12 @@
+import bufferBOABI from "@/config/abi/bufferBOABI";
+import optionsConfigABI from "@/config/abi/optionsConfigABI";
+import usePairStore from "@/store/usePairStore";
+import { PairData } from "@/types/trade.type";
+import { divide } from "@/utils/operationBigNumber";
+import { readContract } from "@wagmi/core";
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Address } from "wagmi";
 
 export const configPair: {
   [key: string]: {
@@ -106,4 +113,45 @@ export const useGetTradeContract = (pair?: string) => {
   }, [params, pair])
 
   return pairConfig
+}
+
+export const useGetMinMaxTradeSize = (pair?: string) => {
+  const params = useParams();
+  const [maxTradeSize, setMaxTradeSize] = useState<number>(100)
+  const [minTradeSize, setMinTradeSize] = useState<number>(0)
+
+  const pairConfig = useMemo(() => {
+    const tempPair = pair ? pair : params?.pair ? params?.pair : ''
+    if (tempPair && configPair[(tempPair as string).replace('-', '').toUpperCase()]) {
+      return configPair[(tempPair as string).replace('-', '').toUpperCase()]
+    }
+    return {
+      bufferBOSC: '',
+      optionConfigSC: '',
+      marketOIConfigSC: '',
+      settlementFee: 1
+    }
+  }, [params, pair])
+
+  const getMinMaxTradeSize = useCallback(async () => {
+    const maxTradeSize = await readContract({
+      address: pairConfig.bufferBOSC as Address,
+      abi: bufferBOABI,
+      functionName: 'getMaxTradeSize'
+    });
+    const minTradeSize = await readContract({
+      address: pairConfig.optionConfigSC as Address,
+      abi: optionsConfigABI,
+      functionName: 'minFee'
+    });
+    setMaxTradeSize(+divide(maxTradeSize.toString() ?? '0', 6))
+    setMinTradeSize(+divide(minTradeSize.toString() ?? '0', 6))
+  }, [pairConfig.bufferBOSC, pairConfig.optionConfigSC])
+
+  useEffect(() => {
+    if (!pairConfig) return
+    getMinMaxTradeSize()
+  }, [getMinMaxTradeSize, pairConfig])
+
+  return { maxTradeSize, minTradeSize }
 }

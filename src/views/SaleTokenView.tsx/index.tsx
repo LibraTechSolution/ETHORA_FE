@@ -1,6 +1,6 @@
 'use client';
 import { Box, Flex, Image, Heading, Text, Button, Grid, Accordion, useMediaQuery } from '@chakra-ui/react';
-import React from 'react';
+import React, { useRef } from 'react';
 import ItemCardSale from './conponent/itemCardSale';
 import ItemCardPublicSale from './conponent/itemCardPublicSale';
 import AccordionCustoms from './conponent/accordionCustom';
@@ -8,25 +8,27 @@ import FooterLadingPage from '@/components/layout/FooterLandingPage';
 
 const dataFAQ = [
   {
-    title: 'What’s the difference between a Public Sale and Private Sale?',
-    desc: 'In the Private Sale. To participate, participants will have to meet certain requirements presented on the IDO card. Each eligible participant will be able to commit any amount of raise token up to the maximum commit limit. In the Public Sale, everyone can commit.',
+    title: 'What’s the difference between a Public Sale and a Private Sale?',
+    desc: 'In a Private Sale, you need to meet certain requirements listed on the IDO card to join. You can commit any amount of tokens, up to a maximum limit, if you are eligible. In a Public Sale, anyone can join and make a commitment.',
   },
   {
-    title: 'Which sale should I commit to? Can I do both?',
-    desc: '',
+    title: 'Which sale should I participate in? Can I participate in both?',
+    desc: 'You have the option to choose one or participate in both simultaneously!We suggest checking your eligibility for the Private Sale first. In the Public Sale, if the amount you commit is too small, you might not receive a significant number of IDO tokens.',
   },
   {
     title: 'How much is the participation fee?',
-    desc: '',
+    desc: 'There’s only a participation fee for the Public Sale: there’s no fee for the Private Sale. The participation fee decreases in cliffs, based on the percentage of overflow from the “Public Sale” portion of the IDO.',
   },
   {
     title: 'Where does the participation fee go?',
-    desc: '',
+    desc: 'After the IDO concludes, the participation fee will be transferred to the team’s treasury. These funds can then be utilized for purchasing and removing ETR tokens from circulation in the future.',
   },
 ];
 
 export const SaleTokenView = () => {
   const [isMobile] = useMediaQuery('(max-width: 768px)');
+  const faqRef = useRef<HTMLDivElement>(null);
+
   return (
     <Flex flexDirection={'column'} height="100%" w={'100%'}>
       <Box
@@ -79,6 +81,7 @@ export const SaleTokenView = () => {
                 _hover={{ bg: 'transparent' }}
                 padding={'8px 16px'}
                 w={{ base: '100%', sm: '100', md: 'auto', lg: 'auto' }}
+                onClick={() => faqRef?.current && faqRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })}
               >
                 How does it work
               </Button>
@@ -352,7 +355,7 @@ export const SaleTokenView = () => {
           >
             FAQ
           </Text>
-          <Box maxW={'720px'} margin={'0 auto'} position={'relative'} zIndex={2}>
+          <Box maxW={'720px'} margin={'0 auto'} position={'relative'} zIndex={2} ref={faqRef}>
             <Accordion>
               {dataFAQ.map((item, idx) => (
                 <AccordionCustoms key={idx} title={item.title} desc={item.desc} />

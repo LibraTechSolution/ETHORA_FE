@@ -95,15 +95,21 @@ export const HomeView = () => {
               paddingRight={{ base: '12px', md: '0px' }}
               justifyContent={{ base: 'center', md: 'start' }}
             >
-              <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
-                Trade <ExternalLinkIcon />
-              </Text>
-              <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
-                Earn Real Yield <ExternalLinkIcon />
-              </Text>
-              <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
-                Buy token <ExternalLinkIcon />
-              </Text>
+              <Link href={'/trade/BTC-USD'}>
+                <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
+                  Trade <ExternalLinkIcon />
+                </Text>
+              </Link>
+              <Link href={'/earn'}>
+                <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
+                  Earn Real Yield <ExternalLinkIcon />
+                </Text>
+              </Link>
+              <Link href={'/sale-token'}>
+                <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
+                  Buy token <ExternalLinkIcon />
+                </Text>
+              </Link>
             </Box>
           </Box>
         </GridItem>
@@ -127,7 +133,7 @@ export const HomeView = () => {
         position={'relative'}
         flexDirection={'column'}
         zIndex={2}
-        className='custom-shawdow'
+        className="custom-shawdow"
       >
         <Box
           position="absolute"
