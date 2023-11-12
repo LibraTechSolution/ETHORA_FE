@@ -34,7 +34,7 @@ import BigNumber from 'bignumber.js';
 import ESETR_ABI from '@/config/abi/ESETR_ABI';
 import VBLP_ABI from '@/config/abi/VBLP_ABI';
 import { useBalanceOf } from '@/hooks/useContractRead';
-import { formatUnits, BaseError } from 'viem';
+import { formatUnits, BaseError, parseEther } from 'viem';
 import { addComma, roundDown } from '@/utils/number';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
@@ -50,7 +50,7 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
   const balance = useBalanceOf(appConfig.ESETR_SC as `0x${string}`);
   const validationSchema = Yup.object({
     amount: Yup.string()
-      .required('The number is required!')
+      .required('Amount is required')
       .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
       .test('Greater amount?', 'Not enough funds!', (value) => +value <= +formatUnits(balance as bigint, 18)),
   });
@@ -185,7 +185,7 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
   };
 
   const onDeposit = async (amount: string) => {
-    const amoutBigint = BigInt(+amount * 10 ** 18);
+    const amoutBigint = parseEther(BigNumber(amount).toFixed());
 
     try {
       setLoadingStake(true);

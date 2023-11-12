@@ -36,7 +36,8 @@ import { addComma, roundDown } from '@/utils/number';
 import BLP_ABI from '@/config/abi/BLP_ABI';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
-import { BaseError } from 'viem';
+import { BaseError, parseUnits } from 'viem';
+import BigNumber from 'bignumber.js';
 
 // const validationSchema = Yup.object({
 //   amount: Yup.string().required(),
@@ -117,7 +118,7 @@ const WithdrawFundsModal = ({
 
   const validationSchema = Yup.object({
     amount: Yup.string()
-      .required('The number is required!')
+      .required('Amount is required')
       .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
       .test('Greater amount?', 'Not enough funds!', (value) => +value <= +getMax),
     // rememberMe: Yup.boolean().equals([true]),
@@ -136,7 +137,7 @@ const WithdrawFundsModal = ({
   });
 
   const onWithdrawfund = async (amount: string) => {
-    const amoutBigint = BigInt(+amount * 10 ** 6);
+    const amoutBigint = parseUnits(BigNumber(amount).toFixed(), 6);
     try {
       setLoadingWithdraw(true);
       const configUnStake = await prepareWriteContract({
@@ -296,6 +297,9 @@ const WithdrawFundsModal = ({
                     Receive
                   </Text>{' '}
                   <Text as="span" fontSize={'16px'} color={'#1ED768'}>
+                  {/* {BigNumber(formik?.values?.amount ? formik?.values?.amount : 0)
+                              .dividedBy(deposited)
+                              .toFormat(2)} */}
                     {addComma(+formik.values.amount / +exchangeRate, 2)}
                     {''} USDC
                   </Text>

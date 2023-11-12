@@ -31,7 +31,7 @@ import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/
 import BigNumber from 'bignumber.js';
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import { TransactionExecutionError, UserRejectedRequestError, formatUnits, parseUnits, BaseError } from 'viem';
+import { TransactionExecutionError, UserRejectedRequestError, formatUnits, parseUnits, BaseError, parseEther } from 'viem';
 import {
   useAccount,
   useContractRead,
@@ -69,7 +69,7 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
 
   const validationSchema = Yup.object({
     amount: Yup.string()
-      .required('The number is required!')
+      .required('Amount is required')
       .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
       .test('Greater amount?', 'Not enough funds!', (value) => +value <= +formatUnits(balance as bigint, 18)),
   });
@@ -156,8 +156,8 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
   };
 
   const onStake = async (amount: string) => {
-    const amoutBigint = BigInt(+amount * 10 ** 18);
-
+    const amoutBigint = parseEther(BigNumber(amount).toFixed());
+    
     try {
       setLoadingStake(true);
       const configStake = await prepareWriteContract({

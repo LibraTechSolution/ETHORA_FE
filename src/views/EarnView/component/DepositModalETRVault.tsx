@@ -35,9 +35,10 @@ import ESETR_ABI from '@/config/abi/ESETR_ABI';
 import VETR_ABI from '@/config/abi/VETR_ABI';
 import { useBalanceOf } from '@/hooks/useContractRead';
 import { addComma, roundDown } from '@/utils/number';
-import { formatUnits, BaseError } from 'viem';
+import { formatUnits, BaseError, parseEther, formatEther } from 'viem';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
+import Currency from '@/components/Currency';
 
 const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { address } = useAccount();
@@ -51,7 +52,7 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
   const balance = useBalanceOf(appConfig.ESETR_SC as `0x${string}`);
   const validationSchema = Yup.object({
     amount: Yup.string()
-      .required('The number is required!')
+      .required('Amount is required')
       .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
       .test('Greater amount?', 'Not enough funds!', (value) => +value <= +formatUnits(balance as bigint, 18)),
   });
@@ -99,9 +100,12 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
   const getCombinedAverageStakedAmount_VETR = data_VETR_SC && data_VETR_SC[2].result;
   const pairAmounts_VETR = data_VETR_SC && data_VETR_SC[3].result;
 
-  const SE = balance ? formatUnits(balance as bigint, 18) : 0;
-  const GW = (Number(getMaxVestableAmount_VETR) - Number(getVestedAmount_VETR)) / 10 ** 18;
-  const getMax = Math.min(+SE, GW);
+  const SE = formatEther(balance as bigint);
+  const GW = BigNumber(formatEther(getMaxVestableAmount_VETR as bigint)).minus(
+    formatEther(getVestedAmount_VETR as bigint),
+  );
+  const getMax = BigNumber.minimum(SE, GW).toFixed();
+
   const deposited = Number(getVestedAmount_VETR) / 10 ** 18;
   const maxCapacity = Number(getMaxVestableAmount_VETR) / 10 ** 18;
 
@@ -115,14 +119,12 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
     validationSchema: validationSchema,
   });
 
-  //   const xSe = (e, t, n, r, i) => {
-  //     let a = i;
-  //     e && (a = e + i);
-  //     let o = r
-  //       , s = "0";
-  //     return e && t && n && n > 0 && (o = t * a / n,
-  //     (o > r) && (s = o - r)),
-  //     (r >= s) ? r : s
+  // function xSe(e, t, n, r, i) {
+  //   let a = i;
+  //   e && (a = e + i);
+  //   let o = r,
+  //     s = 0;
+  //   return e && t && n && n > 0 && ((o = (t * a) / n), o > r && (s = o - r)), r >= s ? r : s;
   // }
 
   const onApprove = async () => {
@@ -196,7 +198,7 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
   };
 
   const onDeposit = async (amount: string) => {
-    const amoutBigint = BigInt(+amount * 10 ** 18);
+    const amoutBigint = parseEther(BigNumber(amount).toFixed());
 
     try {
       setLoadingStake(true);
@@ -338,7 +340,7 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         }}
                         onClick={() => {
                           if (getMax) {
-                            formik.setFieldValue('amount', roundDown(getMax, 6));
+                            formik.setFieldValue('amount', roundDown(+getMax, 6));
                           }
                         }}
                       >
@@ -359,7 +361,12 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         Wallet
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '0.00'} esETR
+                        <Currency
+                          value={balance !== undefined ? formatUnits(balance as bigint, 18) : 0}
+                          decimal={2}
+                          unit="esETR"
+                        />{' '}
+                        esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -395,7 +402,10 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                           minWidth="215px"
                         >
                           <Text as="u">
-                            {+formik.values.amount + deposited} / {addComma(maxCapacity, 2)}
+                            {BigNumber(formik?.values?.amount ? formik?.values?.amount : 0)
+                              .plus(deposited)
+                              .toFormat(2)}{' '}
+                            / {addComma(maxCapacity, 2)}
                           </Text>
                         </Tooltip>
                       </Text>

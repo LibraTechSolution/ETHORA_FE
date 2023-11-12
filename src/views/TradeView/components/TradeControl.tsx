@@ -535,7 +535,7 @@ const TradeControl = () => {
         <Center>
           <Image src="/images/icons/wallet.svg" alt="wallet" w="20px" h="20px" marginRight="8px" />
           <span className="text-sm font-normal text-[#ffffff]">
-            <Currency decimalNumber={6} value={balance} /> USDC
+            <Currency decimalNumber={6} value={balance} decimal={2} /> USDC
           </span>
         </Center>
       </Flex>
