@@ -86,7 +86,6 @@ const ShowPnL = (props: PropsType) => {
     trade: item,
   });
   const { earlycloseAmount, isWin, probability } = earlyPnl;
-  console.log(earlycloseAmount);
   return (
     <GridItem>
       <p className="mb-2 text-xs font-normal text-[#9E9E9F]">PnL|Probability</p>

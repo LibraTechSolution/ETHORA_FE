@@ -29,12 +29,10 @@ const TraderTab = () => {
 
   const {
     data: dataActiveTrades,
-    isLoading,
     isError,
-    isFetched,
     isInitialLoading,
   } = useQuery({
-    queryKey: ['getActiveTrades', filter],
+    queryKey: ['getActiveTrades'],
     queryFn: () => getTrades(filter),
     onError: (error: any) => {
       console.log(error);

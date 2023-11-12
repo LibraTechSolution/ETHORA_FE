@@ -65,8 +65,7 @@ export const FaucetView = () => {
   return (
     <Flex
       flexDirection={'column'}
-      height="100vh"
-      paddingTop="160px"
+      paddingTop={{ base: '10px', lg: '160px' }}
       bgImage="url('/images/profile/bg-item.png')"
       bgRepeat="no-repeat"
       bgPosition="top -87px left 45px"

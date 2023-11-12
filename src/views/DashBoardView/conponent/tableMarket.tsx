@@ -242,7 +242,7 @@ const TableMarket = () => {
     }
     return tempObj;
   };
-  const { data: dataDashboardMaret } = useQuery({
+  const { data: dataDashboardMaret, isInitialLoading } = useQuery({
     queryKey: ['getDashboardMarket', networkID],
     queryFn: () => getDashboardMarket({ network: networkID }),
     onError: (error: any) => {
@@ -314,18 +314,42 @@ const TableMarket = () => {
   }, [dataDashboardMaret, isClose, listChanged24h, listPairData, listPriceShow]);
 
   return (
-    <>
+    <Box>
       <CallSocket />
       <Table
         columns={columns}
         dataSource={listPairShow}
-        // scroll={{ x: 'max-content' }}
-        // loading={isLoading}
+        pagination={{
+          pageSize: 100,
+          current: 1,
+          total: 12,
+          hideOnSinglePage: true,
+          showTotal: (total: number, range: [number, number]) => `Results: ${range[0]} - ${range[1]}  of ${total}`,
+        }}
+        // scroll={{ y: 300 }}
+        scroll={{ x: 'max-content' }}
+        loading={isInitialLoading}
         className="customTable"
-        // total={85}
-        // rowKey={(record) => record.id}
+        rowKey={(record) => record.pair}
+        locale={{
+          emptyText: (
+            <Box
+              background="#0C0C10"
+              margin="-16px -16px"
+              padding="20px"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+            >
+              <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
+              <Text color={'#6D6D70'} fontSize={'14px'}>
+                No pair at present.
+              </Text>
+            </Box>
+          ),
+        }}
       />
-    </>
+    </Box>
   );
 };
 export default TableMarket;

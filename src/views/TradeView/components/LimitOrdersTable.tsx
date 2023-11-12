@@ -1,6 +1,6 @@
 'use client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { SetStateAction, useEffect, useState } from 'react';
+import { SetStateAction, useContext, useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { Box, Button, Flex, Image, useToast, Text } from '@chakra-ui/react';
@@ -20,6 +20,7 @@ import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { ShowPrice } from './ShowPrice';
 import { useSearchParams } from 'next/navigation';
 import { convertDurationToHourAndMinutes, convertDurationToHourMinutesSeconds } from '@/utils/time';
+import { TradeContext } from '..';
 
 const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
@@ -41,6 +42,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
   const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
   const queryClient = useQueryClient();
   const { tokens, user } = useUserStore();
+  const { updateLimitOrderSize } = useContext(TradeContext);
   const { setListLines, listLines } = useListShowLinesStore();
 
   useEffect(() => {
@@ -201,6 +203,11 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
   const handleChangePage = (pagination: TablePaginationConfig) => {
     setFilter({ ...defaultParams, page: pagination.current ?? 1 });
   };
+
+  useEffect(() => {
+    if (!tradingData?.meta?.totalDocs) return;
+    updateLimitOrderSize(tradingData?.meta?.totalDocs);
+  }, [tradingData, updateLimitOrderSize]);
 
   return (
     <>

@@ -21,7 +21,7 @@ import _ from 'lodash';
 import { SearchIcon } from 'lucide-react';
 import Link from 'next/link';
 import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useGetTradeContract } from '@/hooks/useGetTradeContract';
+import { useGetMinMaxTradeSize, useGetTradeContract } from '@/hooks/useGetTradeContract';
 import { readContract } from '@wagmi/core';
 import { divide } from '@/utils/operationBigNumber';
 import bufferBOABI from '@/config/abi/bufferBOABI';
@@ -91,6 +91,11 @@ const CurrentOICell = ({ pair }: { pair: string }) => {
   }, [getCurrentOI]);
 
   return <span>{addComma(currentOI, 2)} USDC</span>;
+};
+
+const MaxTradeSize = ({ pair }: { pair: string }) => {
+  const { maxTradeSize } = useGetMinMaxTradeSize();
+  return <>{addComma(maxTradeSize, 2)} USDC</>;
 };
 
 export const FEED_IDS: { [key: string]: string } = {
@@ -451,11 +456,13 @@ const SearchPair = (props: Props) => {
                     )}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    {item.type === PairType.CRYPTO
-                      ? `${item.maxTradeSize} USDC`
-                      : !isClose
-                      ? `${item.maxTradeSize} USDC`
-                      : '--'}
+                    {item.type === PairType.CRYPTO ? (
+                      <MaxTradeSize pair={item.pair.replace('/', '').toUpperCase()} />
+                    ) : !isClose ? (
+                      <MaxTradeSize pair={item.pair.replace('/', '').toUpperCase()} />
+                    ) : (
+                      '--'
+                    )}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
                     {item.type === PairType.CRYPTO ? (

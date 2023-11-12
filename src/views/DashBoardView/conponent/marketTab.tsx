@@ -3,7 +3,7 @@ import TableMarket from './tableMarket';
 
 const MarketTab = () => {
   return (
-    <Box>
+    <Box width={{ base: 'calc(100vw - 35px)', lg: 'calc(100vw - 202px)' }}>
       <Box display={'flex'} gap={'5px'} alignItems={'start'} marginBottom={'20px'} flexDirection={'column'}>
         <Heading as="h4" fontSize={24} lineHeight={'36px'} color={'white'} fontWeight={600}>
           Markets
@@ -12,9 +12,7 @@ const MarketTab = () => {
           Discover new Pairs available on Ethora
         </Text>
       </Box>
-      <Box paddingRight={['0px', '0px', '20px', '20px']}>
-        <TableMarket />
-      </Box>
+      <TableMarket />
     </Box>
   );
 };

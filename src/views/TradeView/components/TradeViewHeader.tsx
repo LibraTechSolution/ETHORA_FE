@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ShowPrice } from './ShowPrice';
-import { useGetTradeContract } from '@/hooks/useGetTradeContract';
+import { useGetMinMaxTradeSize, useGetTradeContract } from '@/hooks/useGetTradeContract';
 import { readContract } from '@wagmi/core';
 import { divide } from '@/utils/operationBigNumber';
 import bufferBOABI from '@/config/abi/bufferBOABI';
@@ -63,6 +63,7 @@ const TradeViewHeader = () => {
   const { bufferBOSC } = useGetTradeContract();
   const [maxOI, setMaxOI] = useState(1000);
   const [currentOI, setCurrentOI] = useState(0);
+  const { maxTradeSize } = useGetMinMaxTradeSize();
 
   const { data: listChanged24h } = useQuery({
     queryKey: ['getChanged24h'],
@@ -185,7 +186,7 @@ const TradeViewHeader = () => {
             </Box>
             <Box borderRight="1px solid #38383A" paddingX="20px" display={{ base: 'none', xl: 'block' }}>
               <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Max Trade Size</p>
-              <p className="text-sm font-normal leading-6 text-[#fff]">{currentPair?.maxTradeSize} USDC</p>
+              <p className="text-sm font-normal leading-6 text-[#fff]">{maxTradeSize} USDC</p>
             </Box>
             <Box borderRight="1px solid #38383A" paddingX="20px" display={{ base: 'none', xl: 'block' }}>
               <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Payout</p>

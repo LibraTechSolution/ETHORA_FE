@@ -14,24 +14,14 @@ export enum TradingTabType {
   Markets = 'Markets',
 }
 const DashBoardView = () => {
-  const { Option } = Select;
   const [defaultTabs, setDefaultTabs] = useState<TradingTabType>(TradingTabType.Trading);
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
   return (
-    <Flex>
-      <Box
-        paddingTop={['40px', '40px', '40px', '40px']}
-        paddingLeft={['12px', '12px', '30px', '80px']}
-        paddingRight={['12px', '12px', '80px', '90px']}
-        marginBottom={['100px', '100px', '0px', '0px']}
-      >
-        <Box display={'flex'} gap={'20px'} alignItems={'center'} marginBottom={'20px'}>
-          <Heading as="h4" fontSize={24} lineHeight={'36px'} color={'white'} fontWeight={600}>
-            Dashboard
-          </Heading>
-          {/* <Box>
+    <Box>
+      <Box display={'flex'} gap={'20px'} alignItems={'center'} marginBottom={'20px'}>
+        <Heading as="h4" fontSize={24} lineHeight={'36px'} color={'white'} fontWeight={600}>
+          Dashboard
+        </Heading>
+        {/* <Box>
             <Select
               size="large"
               defaultValue="china"
@@ -53,62 +43,61 @@ const DashBoardView = () => {
               </Option>
             </Select>
           </Box> */}
-        </Box>
-        <Box marginBottom={'16px'} overflow={'overflow-auto'}>
-          <Flex gap={'32px'} marginBottom={'20px'}>
-            <Box
-              className="mr-2"
-              role="presentation"
-              onClick={() => {
-                setDefaultTabs(TradingTabType.Trading);
-              }}
-              borderBottom={'2px solid'}
-              borderColor={defaultTabs === TradingTabType.Trading ? '#1E3EF0' : 'transparent'}
-              pointerEvents={defaultTabs === TradingTabType.Trading ? 'none' : 'auto'}
-              cursor={defaultTabs === TradingTabType.Trading ? 'default' : 'pointer'}
-              color={defaultTabs === TradingTabType.Trading ? '#1E3EF0' : '#9E9E9F'}
-            >
-              Trading
-            </Box>
-            <Box
-              className="mr-2"
-              role="presentation"
-              onClick={() => {
-                setDefaultTabs(TradingTabType.Tokens);
-              }}
-              borderBottom={'2px solid'}
-              borderColor={defaultTabs === TradingTabType.Tokens ? '#1E3EF0' : 'transparent'}
-              pointerEvents={defaultTabs === TradingTabType.Tokens ? 'none' : 'auto'}
-              cursor={defaultTabs === TradingTabType.Tokens ? 'default' : 'pointer'}
-              color={defaultTabs === TradingTabType.Tokens ? '#1E3EF0' : '#9E9E9F'}
-            >
-              Tokens
-            </Box>
-            <Box
-              className="mr-2"
-              role="presentation"
-              onClick={() => {
-                setDefaultTabs(TradingTabType.Markets);
-              }}
-              borderBottom={'2px solid'}
-              borderColor={defaultTabs === TradingTabType.Markets ? '#1E3EF0' : 'transparent'}
-              pointerEvents={defaultTabs === TradingTabType.Markets ? 'none' : 'auto'}
-              cursor={defaultTabs === TradingTabType.Markets ? 'default' : 'pointer'}
-              color={defaultTabs === TradingTabType.Markets ? '#1E3EF0' : '#9E9E9F'}
-            >
-              HistoryTab
-            </Box>
-          </Flex>
-          <Box>
-            {defaultTabs === TradingTabType.Trading && <TradingTab />}
-
-            {defaultTabs === TradingTabType.Tokens && <TokenTab />}
-
-            {defaultTabs === TradingTabType.Markets && <MarketTab />}
-          </Box>
-        </Box>
       </Box>
-    </Flex>
+      <Box marginBottom={'16px'}>
+        <Flex gap={'32px'} marginBottom={'20px'}>
+          <Box
+            className="mr-2"
+            role="presentation"
+            onClick={() => {
+              setDefaultTabs(TradingTabType.Trading);
+            }}
+            borderBottom={'2px solid'}
+            borderColor={defaultTabs === TradingTabType.Trading ? '#1E3EF0' : 'transparent'}
+            pointerEvents={defaultTabs === TradingTabType.Trading ? 'none' : 'auto'}
+            cursor={defaultTabs === TradingTabType.Trading ? 'default' : 'pointer'}
+            color={defaultTabs === TradingTabType.Trading ? '#1E3EF0' : '#9E9E9F'}
+          >
+            Trading
+          </Box>
+          <Box
+            className="mr-2"
+            role="presentation"
+            onClick={() => {
+              setDefaultTabs(TradingTabType.Tokens);
+            }}
+            borderBottom={'2px solid'}
+            borderColor={defaultTabs === TradingTabType.Tokens ? '#1E3EF0' : 'transparent'}
+            pointerEvents={defaultTabs === TradingTabType.Tokens ? 'none' : 'auto'}
+            cursor={defaultTabs === TradingTabType.Tokens ? 'default' : 'pointer'}
+            color={defaultTabs === TradingTabType.Tokens ? '#1E3EF0' : '#9E9E9F'}
+          >
+            Tokens
+          </Box>
+          <Box
+            className="mr-2"
+            role="presentation"
+            onClick={() => {
+              setDefaultTabs(TradingTabType.Markets);
+            }}
+            borderBottom={'2px solid'}
+            borderColor={defaultTabs === TradingTabType.Markets ? '#1E3EF0' : 'transparent'}
+            pointerEvents={defaultTabs === TradingTabType.Markets ? 'none' : 'auto'}
+            cursor={defaultTabs === TradingTabType.Markets ? 'default' : 'pointer'}
+            color={defaultTabs === TradingTabType.Markets ? '#1E3EF0' : '#9E9E9F'}
+          >
+            Markets Tab
+          </Box>
+        </Flex>
+        <>
+          {defaultTabs === TradingTabType.Trading && <TradingTab />}
+
+          {defaultTabs === TradingTabType.Tokens && <TokenTab />}
+
+          {defaultTabs === TradingTabType.Markets && <MarketTab />}
+        </>
+      </Box>
+    </Box>
   );
 };
 export default DashBoardView;

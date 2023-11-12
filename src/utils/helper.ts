@@ -21,9 +21,6 @@ export const getSVR = (sig: string) => {
 export const getProbability = (trade: ITradingData, price: number, IV: number, expiryTs?: string) => {
   const currentEpoch = dayjs().utc().unix();
   const expiryTime = getExpiry(trade, expiryTs);
-
-  console.log('IV', IV)
-
   return getProbabilityByTime(trade, price, currentEpoch, expiryTime, IV);
 };
 

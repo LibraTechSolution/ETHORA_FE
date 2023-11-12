@@ -1,6 +1,6 @@
 'use client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Empty, Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { Box, Button, Flex, Image, useToast, Text } from '@chakra-ui/react';
@@ -21,6 +21,7 @@ import { RotateCw } from 'lucide-react';
 import { ShowPrice } from './ShowPrice';
 import { ToastCloseTrade } from './ToastCloseTrade';
 import { useSearchParams } from 'next/navigation';
+import { TradeContext } from '..';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -81,6 +82,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const searchParams = useSearchParams();
+  const { updateTradeSize } = useContext(TradeContext);
   const addressURL = searchParams.get('address');
   const checkAddress = addressURL ? addressURL : address;
 
@@ -245,7 +247,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   };
 
   const { data: tradingData, isInitialLoading } = useQuery({
-    queryKey: ['getActiveTrades', filter],
+    queryKey: ['getActiveTrades'],
     queryFn: () => getTrades(filter),
     onError: (error: any) => {
       console.log(error);
@@ -262,6 +264,11 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   const handleChangePage = (pagination: TablePaginationConfig) => {
     setFilter({ ...defaultParams, page: pagination.current ?? 1 });
   };
+
+  useEffect(() => {
+    if (!tradingData?.meta?.totalDocs) return;
+    updateTradeSize(tradingData?.meta?.totalDocs);
+  }, [tradingData, updateTradeSize]);
 
   return (
     <Table
