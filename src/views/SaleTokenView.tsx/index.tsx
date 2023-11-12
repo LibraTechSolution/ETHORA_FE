@@ -81,7 +81,7 @@ export const SaleTokenView = () => {
                 _hover={{ bg: 'transparent' }}
                 padding={'8px 16px'}
                 w={{ base: '100%', sm: '100', md: 'auto', lg: 'auto' }}
-                onClick={() => faqRef?.current && faqRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                onClick={() => faqRef?.current && faqRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })}
               >
                 How does it work
               </Button>
@@ -334,6 +334,7 @@ export const SaleTokenView = () => {
         bgRepeat="no-repeat"
         bgPosition={'100% 57%'}
         bgSize={'cover'}
+        ref={faqRef}
       >
         <Box margin={{ base: '30px 12px 0px', sm: '30px 12px 0px', md: '160px 20px 0px', lg: '160px 240px 0px' }}>
           <Box
@@ -355,7 +356,7 @@ export const SaleTokenView = () => {
           >
             FAQ
           </Text>
-          <Box maxW={'720px'} margin={'0 auto'} position={'relative'} zIndex={2} ref={faqRef}>
+          <Box maxW={'720px'} margin={'0 auto'} position={'relative'} zIndex={2}>
             <Accordion>
               {dataFAQ.map((item, idx) => (
                 <AccordionCustoms key={idx} title={item.title} desc={item.desc} />
