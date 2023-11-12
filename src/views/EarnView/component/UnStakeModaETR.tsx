@@ -26,7 +26,7 @@ import {
 import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import { BaseError, formatEther, formatUnits, parseUnits } from 'viem';
+import { BaseError, formatEther, formatUnits, parseEther, parseUnits } from 'viem';
 import * as Yup from 'yup';
 import { EarnContext } from '..';
 import { useContractRead } from 'wagmi';
@@ -35,6 +35,7 @@ import useActiveWeb3React from '@/hooks/useActiveWeb3React';
 import { addComma, roundDown } from '@/utils/number';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
+import BigNumber from 'bignumber.js';
 
 const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const toast = useToast();
@@ -53,7 +54,7 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
 
   const validationSchema = Yup.object({
     amount: Yup.string()
-      .required('The number is required!')
+      .required('Amount is required')
       .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
       .test(
         'Greater amount?',
@@ -73,7 +74,7 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
   });
 
   const onUnStake = async (amount: string) => {
-    const amoutBigint = BigInt(+amount * 10 ** 18);
+    const amoutBigint =  parseEther(BigNumber(amount).toFixed());
 
     try {
       setLoadingUnStake(true);

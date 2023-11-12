@@ -35,7 +35,7 @@ import { useBalanceOf } from '@/hooks/useContractRead';
 import VETR_ABI from '@/config/abi/VETR_ABI';
 import USDC_ABI from '@/config/abi/USDC_ABI';
 import { addComma, roundDown } from '@/utils/number';
-import { formatUnits, BaseError } from 'viem';
+import { formatUnits, BaseError, parseUnits } from 'viem';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 
@@ -69,7 +69,7 @@ const AddFundsModal = ({
 
   const validationSchema = Yup.object({
     amount: Yup.string()
-      .required('The number is required!')
+      .required('Amount is required')
       .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
       .test('Greater amount?', 'Not enough funds!', (value) => +value <= +formatUnits(balance as bigint, 6)),
     rememberMe: Yup.boolean().equals([true]),
@@ -159,7 +159,7 @@ const AddFundsModal = ({
   };
 
   const onAddFund = async (amount: string) => {
-    const amoutBigint = BigInt(+amount * 10 ** 6);
+    const amoutBigint = parseUnits(BigNumber(amount).toFixed(), 6);
     try {
       setLoadingDeposit(true);
       const configStake = await prepareWriteContract({

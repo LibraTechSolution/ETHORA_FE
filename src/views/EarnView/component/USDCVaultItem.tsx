@@ -5,7 +5,7 @@ import WithdrawFundsModal from './WithdrawFundsModal';
 import { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { addComma } from '@/utils/number';
-import { parseUnits } from 'viem';
+import { formatUnits, parseUnits } from 'viem';
 import Currency from '@/components/Currency';
 
 const USDCVaultItem = ({
@@ -56,11 +56,9 @@ const USDCVaultItem = ({
   const rewards = USDC_Rewards + esETR_Rewards;
   const withdrawableAmount = Number(getUnlockedLiquidity_BLP) / 10 ** 6;
   const totalStaked = Number(balanceOf_fBLP_BLP) / 10 ** 6;
-  const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP.toString())) / 10 ** 6;
+  const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP?.toString())) / 10 ** 6;
   const totalSupply_USD = Number(balanceOf_BLP_USDC) / 10 ** 6;
   const totalSupply = Number(balanceOf_BLP_USDC) / (Number(exchangeRate) * 10 ** 6);
-
-  console.log('exchangeRate', exchangeRate, typeof exchangeRate);
 
   return (
     <>
@@ -245,11 +243,7 @@ const USDCVaultItem = ({
             <Currency value={totalStaked !== undefined ? totalStaked : 0} decimal={2} unit="ELP" />
             {' ELP  '}
             {'('}
-            <Currency
-              value={totalStaked_USD !== undefined ? totalStaked_USD : 0}
-              decimal={2}
-              unit="USDC"
-            />
+            <Currency value={totalStaked_USD !== undefined ? totalStaked_USD : 0} decimal={2} unit="USDC" />
             {' USDC)'}
           </Text>
         </Box>
@@ -261,11 +255,7 @@ const USDCVaultItem = ({
             <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="ELP" />
             {' ELP  '}
             {'('}
-            <Currency
-              value={totalSupply_USD !== undefined ? totalSupply_USD : 0}
-              decimal={2}
-              unit="USDC"
-            />
+            <Currency value={totalSupply_USD !== undefined ? totalSupply_USD : 0} decimal={2} unit="USDC" />
             {' USDC)'}
           </Text>
         </Box>

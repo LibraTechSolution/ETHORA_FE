@@ -11,7 +11,7 @@ import { EarnContext } from '..';
 import VETR_ABI from '@/config/abi/VETR_ABI';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
-import { BaseError } from 'viem';
+import { BaseError, formatUnits } from 'viem';
 import Currency from '@/components/Currency';
 
 const ETRVault = ({
@@ -38,21 +38,23 @@ const ETRVault = ({
   const { onFetchData } = useContext(EarnContext);
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
 
-  const stakedTokensETR = Number(depositBalances_ETR) / 10 ** 18;
-  const stakedTokens_esETR = Number(depositBalances_esETR) / 10 ** 18;
-  const multiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
+  const stakedTokensETR = formatUnits(depositBalances_ETR, 18);
+  const stakedTokens_esETR = formatUnits(depositBalances_esETR, 18);
+  const multiplierPoints = formatUnits(depositBalances_bnETR, 18);
 
-  const stakedTokens = stakedTokensETR + stakedTokens_esETR + multiplierPoints;
+  const stakedTokens = Number(stakedTokensETR) + Number(stakedTokens_esETR) + Number(multiplierPoints);
 
-  const pairAmounts = Number(pairAmounts_vETR) / 10 ** 18;
-  const depositBalances = (Number(depositBalances_bnETR) + Number(depositBalances_sbETR)) / 10 ** 18;
+  const pairAmounts = formatUnits(pairAmounts_vETR, 18);
+  const depositBalances = Number(formatUnits(depositBalances_bnETR, 18)) + Number(formatUnits(depositBalances_sbETR, 18));
 
-  const claimed = (Number(claimedAmounts_vETR) + Number(claimable_vETR)) / 10 ** 18;
-  const vested = Number(getVestedAmount_vETR) / 10 ** 18;
-  const claimable = Number(claimable_vETR) / 10 ** 18;
+  const claimed = Number(formatUnits(claimedAmounts_vETR, 18)) + Number(formatUnits(claimable_vETR, 18));
+  const vested = formatUnits(getVestedAmount_vETR, 18)
+  const claimable = formatUnits(claimable_vETR, 18)
+
+  console.log('stakedTokensETR', stakedTokensETR)
 
   const onWithdraw = async () => {
-    if (claimable === 0) {
+    if (+claimable === 0) {
       toast({
         position: 'top',
         render: ({ onClose }) => (
