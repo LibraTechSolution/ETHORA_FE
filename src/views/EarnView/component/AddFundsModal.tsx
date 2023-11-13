@@ -38,6 +38,7 @@ import { addComma, roundDown } from '@/utils/number';
 import { formatUnits, BaseError, parseUnits } from 'viem';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
+import Currency from '@/components/Currency';
 
 const AddFundsModal = ({
   isOpen,
@@ -78,7 +79,7 @@ const AddFundsModal = ({
   const formik = useFormik({
     initialValues: {
       amount: '',
-      rememberMe: false,
+      rememberMe: true,
     },
     onSubmit: (values) => {
       console.log('onSubmit');
@@ -325,7 +326,7 @@ const AddFundsModal = ({
                     Receive
                   </Text>{' '}
                   <Text as="span" fontSize={'16px'} color={'#1ED768'}>
-                    {addComma(+formik.values.amount / +exchangeRate, 2)} ELP
+                    <Currency value={exchangeRate !== undefined ? BigNumber(formik.values.amount).dividedBy(exchangeRate) : 0} decimal={2} unit="ELP" /> ELP
                   </Text>
                 </Flex>
                 <Checkbox
@@ -335,6 +336,7 @@ const AddFundsModal = ({
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
+                  defaultChecked
                 >
                   <Text as="span" fontSize={'14px'}>
                     {' '}
