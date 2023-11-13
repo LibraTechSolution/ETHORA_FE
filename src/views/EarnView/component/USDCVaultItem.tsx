@@ -39,6 +39,10 @@ const USDCVaultItem = ({
   const [openWithdrawFundModal, setOpenWithdrawFundModal] = useState<boolean>(false);
 
   // const exchangeRate = totalTokenXBalance_BLP / totalSupply_BLP;
+  console.log('totalTokenXBalance_BLP',totalTokenXBalance_BLP);
+  console.log('totalSupply_BLP',totalSupply_BLP);
+  console.log(totalTokenXBalance_BLP/totalTokenXBalance_BLP)
+
   const exchangeRate = BigNumber(totalTokenXBalance_BLP?.toString()).dividedBy(totalSupply_BLP?.toString());
   const wallet = Number(stakedAmounts_fsBLP) / 10 ** 6;
   const USDC_APR = (100 * 31536000 * Number(tokensPerInterval_fBLP)) / Number(balanceOf_BLP_USDC);
@@ -53,7 +57,7 @@ const USDCVaultItem = ({
   const USDC_Rewards = Number(claimable_fBLP) / 10 ** 6;
   const esETR_Rewards = Number(claimable_fsBLP) / 10 ** 18;
   const esETR_USD_Rewards = (Number(claimable_fsBLP) * price) / 10 ** 18;
-  const rewards = USDC_Rewards + esETR_Rewards;
+  const rewards = USDC_Rewards + esETR_USD_Rewards;
   const withdrawableAmount = Number(getUnlockedLiquidity_BLP) / 10 ** 6;
   const totalStaked = Number(balanceOf_fBLP_BLP) / 10 ** 6;
   const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP?.toString())) / 10 ** 6;
@@ -196,7 +200,7 @@ const USDCVaultItem = ({
                       USDC
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{USDC_Rewards !== undefined ? addComma(USDC_Rewards, 6) : '0.00'}%</Box>
+                    <Box padding={'0 8px'}>{USDC_Rewards !== undefined ? addComma(USDC_Rewards, 6) : '0.00'}</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>

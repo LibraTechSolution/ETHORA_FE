@@ -38,6 +38,7 @@ import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { BaseError, parseUnits } from 'viem';
 import BigNumber from 'bignumber.js';
+import Currency from '@/components/Currency';
 
 // const validationSchema = Yup.object({
 //   amount: Yup.string().required(),
@@ -297,10 +298,7 @@ const WithdrawFundsModal = ({
                     Receive
                   </Text>{' '}
                   <Text as="span" fontSize={'16px'} color={'#1ED768'}>
-                  {/* {BigNumber(formik?.values?.amount ? formik?.values?.amount : 0)
-                              .dividedBy(deposited)
-                              .toFormat(2)} */}
-                    {addComma(+formik.values.amount / +exchangeRate, 2)}
+                    <Currency value={exchangeRate !== undefined ? BigNumber(formik.values.amount).multipliedBy(exchangeRate) : 0} decimal={2} unit="USDC" />
                     {''} USDC
                   </Text>
                 </Flex>
