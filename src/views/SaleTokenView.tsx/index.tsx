@@ -252,7 +252,10 @@ export const SaleTokenView = () => {
           </Box>
         </Grid>
       </Box>
-      <Box margin={{ base: '30px 12px 0px', sm: '30px 12px 0px', md: '160px 20px 0px', lg: '160px 240px 24px' }}>
+      <Box
+        margin={{ base: '30px 12px 0px', sm: '30px 12px 0px', md: '160px 20px 0px', lg: '160px 240px 24px' }}
+        ref={faqRef}
+      >
         <Text
           fontSize={{ base: '28px', md: '56px' }}
           textColor={'white'}
@@ -334,18 +337,19 @@ export const SaleTokenView = () => {
         bgRepeat="no-repeat"
         bgPosition={'100% 57%'}
         bgSize={'cover'}
-        ref={faqRef}
       >
         <Box margin={{ base: '30px 12px 0px', sm: '30px 12px 0px', md: '160px 20px 0px', lg: '160px 240px 0px' }}>
-          <Box
+          <Image
+            src="/images/saleToken/logo-token.png"
+            alt="landingpage"
+            width={'750px'}
+            height={'750px'}
             position="absolute"
             bottom={'-200px'}
             left={'-165px'}
             zIndex={1}
             display={{ base: 'none', sm: 'none', md: 'block', lg: 'block' }}
-          >
-            <Image src="/images/saleToken/logo-token.png" alt="landingpage" width={'750px'} height={'750px'} />
-          </Box>
+          />
           <Text
             fontSize={{ base: '28px', md: '56px' }}
             textColor={'white'}

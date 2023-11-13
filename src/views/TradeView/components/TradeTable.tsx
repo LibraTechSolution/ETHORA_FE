@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useContext, useEffect, useState } from 'react';
 import { Empty, Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { Box, Button, Flex, Image, useToast, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, useToast, Text, Tooltip } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams, State } from '@/types/trade.type';
@@ -142,7 +142,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       key: 'strike',
       render: (value, record) => (
         <span>
-          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
         </span>
       ),
     },
@@ -150,21 +150,34 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Current Price',
       dataIndex: 'currentPrice',
       key: 'currentPrice',
-      render: (value, record) => (
-        <>
-          <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} /> {record.pair.split('-')[1].toUpperCase()}
-        </>
-      ),
+      render: (value, record) =>
+        record?.pair && (
+          <>
+            <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} /> {record.pair.split('-')[1].toUpperCase()}
+          </>
+        ),
     },
     {
       title: 'Open Time',
       dataIndex: 'openDate',
       key: 'openDate',
       render: (value) => (
-        <div>
-          <p>{dayjs(value).format('HH:mm:ss')}</p>
-          <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
-        </div>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={4} color="white">
+              {dayjs(value).utc().format('MM/DD/YYYY')} {dayjs(value).utc().format('HH:mm:ss')}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <div>
+            <p>{dayjs(value).format('HH:mm:ss')}</p>
+            <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
+          </div>
+        </Tooltip>
       ),
     },
     {
@@ -182,10 +195,23 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
     {
       title: 'Close Time',
       render: (value: ITradingData) => (
-        <div>
-          <p>{dayjs(value.openDate).add(value.period, 'second').format('HH:mm:ss')}</p>
-          <p className="text-[#9E9E9F]">{dayjs(value.openDate).add(value.period, 'second').format('MM/DD/YYYY')}</p>
-        </div>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={4} color="white">
+              {dayjs(value.openDate).add(value.period, 'second').utc().format('MM/DD/YYYY')}{' '}
+              {dayjs(value.openDate).add(value.period, 'second').utc().format('HH:mm:ss')}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <div>
+            <p>{dayjs(value.openDate).add(value.period, 'second').format('HH:mm:ss')}</p>
+            <p className="text-[#9E9E9F]">{dayjs(value.openDate).add(value.period, 'second').format('MM/DD/YYYY')}</p>
+          </div>
+        </Tooltip>
       ),
     },
     {
@@ -261,13 +287,16 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
     refetchOnWindowFocus: false,
   });
 
+  useEffect(() => {
+    isProfile && setFilter({ ...defaultParams, userAddress: addressURL ? addressURL : address });
+  }, [address, addressURL, isProfile]);
+
   const handleChangePage = (pagination: TablePaginationConfig) => {
     setFilter({ ...defaultParams, page: pagination.current ?? 1 });
   };
 
   useEffect(() => {
-    if (!tradingData?.meta?.totalDocs) return;
-    updateTradeSize(tradingData?.meta?.totalDocs);
+    updateTradeSize(tradingData?.meta?.totalDocs ?? 0);
   }, [tradingData, updateTradeSize]);
 
   return (

@@ -166,7 +166,7 @@ export const ActiveAccountModal = () => {
       toast({
         position: 'top',
         render: ({ onClose }) => (
-          <ToastLayout title="Created account successfully" status={Status.SUCCESSS} close={onClose} />
+          <ToastLayout title="Registered account successfully" status={Status.SUCCESSS} close={onClose} />
         ),
       });
       setIsLoadingRegister(false);
@@ -177,7 +177,7 @@ export const ActiveAccountModal = () => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Register account Unsuccessfully"
+            title="Registered account Unsuccessfully"
             content={error.response.data.message}
             status={Status.ERROR}
             close={onClose}

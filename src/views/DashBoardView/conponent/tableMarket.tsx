@@ -53,11 +53,12 @@ const columns: ColumnsType<PairData> = [
     dataIndex: 'currentPrice',
     key: 'Current Price',
     sorter: (a, b) => a.currentPrice - b.currentPrice,
-    render: (value, record) => (
-      <>
-        <ShowPrice pair={record.pair.replace('/', '')} /> {record.pair.split('/')[1].toUpperCase()}
-      </>
-    ),
+    render: (value, record) =>
+      record?.pair && (
+        <>
+          <ShowPrice pair={record.pair.replace('/', '')} /> {record.pair.split('/')[1].toUpperCase()}
+        </>
+      ),
   },
   {
     title: 'Open Interest',

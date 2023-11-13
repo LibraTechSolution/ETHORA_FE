@@ -25,7 +25,7 @@ import {
 //   variable: '--font-bangers',
 // });
 
-const poppins = Poppins({
+export const poppins = Poppins({
   weight: ['400', '500', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
   subsets: ['latin'],

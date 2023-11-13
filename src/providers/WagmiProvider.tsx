@@ -24,7 +24,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   [publicProvider()],
 );
 
-const projectId = 'YOUR_PROJECT_ID';
+const projectId = '12e38ee3a03a9abc2d80cf849b11312d';
 
 const demoAppInfo = {
   appName: 'Rainbowkit Demo',

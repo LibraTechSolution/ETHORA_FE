@@ -149,7 +149,7 @@ const ReferralView = () => {
         if (error.shortMessage.includes('code not exist')) {
           msgContent = 'Please enter a valid referral code.';
         } else if (error.shortMessage.includes('traded')) {
-          msgContent = 'Please enter a valid referral code.';
+          msgContent = 'You cannot change referral code after opening your first trade.';
         } else {
           msgContent = 'Something went wrong. Please try again later.';
         }

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.ant-table-wrapper .ant-table {
+  font-family: '__Poppins_abc337','__Poppins_Fallback_abc337';
+}
+
 .customTable {
   .ant-table-content::-webkit-scrollbar {
     width: 5px;

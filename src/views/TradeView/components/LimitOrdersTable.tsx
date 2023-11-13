@@ -3,12 +3,12 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { SetStateAction, useContext, useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { Box, Button, Flex, Image, useToast, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, useToast, Text, Tooltip, Spacer } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import { cancelTrade, getLimitOrders } from '@/services/trade';
-import { divide } from '@/utils/operationBigNumber';
+import { add, divide, multiply, subtract } from '@/utils/operationBigNumber';
 import dayjs from 'dayjs';
 import CountDown from './CountDown';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
@@ -51,6 +51,10 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
     }
   }, [chain]);
 
+  useEffect(() => {
+    isProfile && setFilter({ ...defaultParams, userAddress: addressURL ? addressURL : address });
+  }, [address, addressURL]);
+
   const showAndHideLine = (item: ITradingData) => {
     setListLines(item);
   };
@@ -83,20 +87,64 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       dataIndex: 'strike',
       key: 'strike',
       render: (value, record) => (
-        <span>
-          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
-        </span>
+        <>
+          <p>
+            {addComma(divide(value, 8), 2)} {record.pair && record.pair.split('-')[1].toUpperCase()}
+          </p>
+
+          <Tooltip
+            hasArrow
+            label={
+              <Box w="100%" p={4} color="white">
+                The strike price will vary from{' '}
+                {addComma(
+                  divide(
+                    subtract(
+                      record.strike.toString(),
+                      multiply(record.strike.toString(), ((record.slippage ?? 0) / 100).toString()),
+                    ),
+                    8,
+                  ),
+                  2,
+                )}{' '}
+                to{' '}
+                {addComma(
+                  divide(
+                    add(
+                      record.strike.toString(),
+                      multiply(record.strike.toString(), ((record.slippage ?? 0) / 100).toString()),
+                    ),
+                    8,
+                  ),
+                  2,
+                )}
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
+            minWidth="215px"
+          >
+            <Box className="inline-block text-[#9E9E9F]">
+              <Flex className="items-center">
+                <Image alt="warning" src={`/images/icons/warning-grey.svg`} w="12px" h="12px" marginRight={'6px'} />
+                Slippage - {record.slippage / 100}%
+              </Flex>
+            </Box>
+          </Tooltip>
+        </>
       ),
     },
     {
       title: 'Current Price',
       dataIndex: 'currentPrice',
       key: 'currentPrice',
-      render: (value, record) => (
-        <>
-          <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} /> {record.pair.split('-')[1].toUpperCase()}
-        </>
-      ),
+      render: (value, record) =>
+        record?.pair && (
+          <>
+            <ShowPrice pair={record.pair.replace('-', '').toUpperCase()} /> {record.pair.split('-')[1].toUpperCase()}
+          </>
+        ),
     },
     {
       title: 'Duration',
@@ -109,10 +157,22 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       dataIndex: 'limitOrderExpirationDate',
       key: 'limitOrderExpirationDate',
       render: (value: string) => (
-        <div>
-          <p>{dayjs(value).format('HH:mm:ss')}</p>
-          <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
-        </div>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={4} color="white">
+              {dayjs(value).utc().format('MM/DD/YYYY')} {dayjs(value).utc().format('HH:mm:ss')}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <div>
+            <p>{dayjs(value).format('HH:mm:ss')}</p>
+            <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
+          </div>
+        </Tooltip>
       ),
     },
     {
@@ -205,8 +265,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
   };
 
   useEffect(() => {
-    if (!tradingData?.meta?.totalDocs) return;
-    updateLimitOrderSize(tradingData?.meta?.totalDocs);
+    updateLimitOrderSize(tradingData?.meta?.totalDocs ?? 0);
   }, [tradingData, updateLimitOrderSize]);
 
   return (

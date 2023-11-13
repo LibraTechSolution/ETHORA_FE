@@ -223,9 +223,11 @@ const TradeBox = (props: PropsType) => {
             borderRadius={'4px'}
             fontSize={'12px'}
           >
-            <p className="text-sm font-normal text-[#FFFFFF]">
-              <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} /> {item.pair.split('-')[1].toUpperCase()}
-            </p>
+            {item?.pair && (
+              <p className="text-sm font-normal text-[#FFFFFF]">
+                <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} /> {item.pair.split('-')[1].toUpperCase()}
+              </p>
+            )}
           </Tooltip>
         </GridItem>
       </Grid>
