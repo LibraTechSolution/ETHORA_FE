@@ -37,19 +37,19 @@ const ETRVault = ({
   const [openDepositModal, setOpenDepositModal] = useState<boolean>(false);
   const { onFetchData } = useContext(EarnContext);
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
-
-  const stakedTokensETR = formatUnits(depositBalances_ETR, 18);
-  const stakedTokens_esETR = formatUnits(depositBalances_esETR, 18);
-  const multiplierPoints = formatUnits(depositBalances_bnETR, 18);
+  console.log('depositBalances_ETR', depositBalances_ETR)
+  const stakedTokensETR = depositBalances_ETR ? formatUnits(depositBalances_ETR, 18) : 0;
+  const stakedTokens_esETR = depositBalances_esETR ? formatUnits(depositBalances_esETR, 18) : 0;
+  const multiplierPoints = depositBalances_bnETR ? formatUnits(depositBalances_bnETR, 18) : 0;
 
   const stakedTokens = Number(stakedTokensETR) + Number(stakedTokens_esETR) + Number(multiplierPoints);
 
-  const pairAmounts = formatUnits(pairAmounts_vETR, 18);
-  const depositBalances = Number(formatUnits(depositBalances_bnETR, 18)) + Number(formatUnits(depositBalances_sbETR, 18));
+  const pairAmounts = pairAmounts_vETR ? formatUnits(pairAmounts_vETR, 18) : 0;
+  const depositBalances = Number(depositBalances_bnETR ? formatUnits(depositBalances_bnETR, 18) : 0) + Number(depositBalances_sbETR ? formatUnits(depositBalances_sbETR, 18) : 0);
 
-  const claimed = Number(formatUnits(claimedAmounts_vETR, 18)) + Number(formatUnits(claimable_vETR, 18));
-  const vested = formatUnits(getVestedAmount_vETR, 18)
-  const claimable = formatUnits(claimable_vETR, 18)
+  const claimed = Number(claimedAmounts_vETR ? formatUnits(claimedAmounts_vETR, 18) : 0) + Number(claimable_vETR ? formatUnits(claimable_vETR, 18) : 0);
+  const vested = getVestedAmount_vETR ? formatUnits(getVestedAmount_vETR, 18) : 0
+  const claimable = claimable_vETR ? formatUnits(claimable_vETR, 18) : 0
 
   console.log('stakedTokensETR', stakedTokensETR)
 
