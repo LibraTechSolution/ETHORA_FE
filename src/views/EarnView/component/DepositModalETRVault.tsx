@@ -452,7 +452,7 @@ const DepositModalETRVault = ({
                                 <Spacer />
                                 <Box padding={'0 8px'}>
                                   {pairAmounts_VETR !== undefined
-                                    ? addComma(formatEther(pairAmounts_VETR), 6)
+                                    ? BigNumber(formatEther(pairAmounts_VETR as bigint)).toFormat(6)
                                     : '0.000000'}
                                 </Box>
                               </Flex>
@@ -463,7 +463,7 @@ const DepositModalETRVault = ({
                                 <Spacer />
                                 <Box padding={'0 8px'}>
                                   {pairAmounts_VETR !== undefined && reserveFirst !== undefined
-                                    ? BigNumber(formatEther(reserveFirst - pairAmounts_VETR)).toFormat(6)
+                                    ? BigNumber(+formatEther(reserveFirst as bigint) - +formatEther(pairAmounts_VETR as bigint)).toFormat(6)
                                     : '0.000000'}
                                 </Box>
                               </Flex>
