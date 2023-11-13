@@ -56,7 +56,7 @@ const USDCVaultItem = ({
   const rewards = USDC_Rewards + esETR_Rewards;
   const withdrawableAmount = Number(getUnlockedLiquidity_BLP) / 10 ** 6;
   const totalStaked = Number(balanceOf_fBLP_BLP) / 10 ** 6;
-  const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP.toString())) / 10 ** 6;
+  const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP?.toString())) / 10 ** 6;
   const totalSupply_USD = Number(balanceOf_BLP_USDC) / 10 ** 6;
   const totalSupply = Number(balanceOf_BLP_USDC) / (Number(exchangeRate) * 10 ** 6);
 
