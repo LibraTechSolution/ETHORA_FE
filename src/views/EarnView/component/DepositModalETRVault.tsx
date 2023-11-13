@@ -110,9 +110,8 @@ const DepositModalETRVault = ({
   const pairAmounts_VETR = data_VETR_SC && data_VETR_SC[3].result;
   
   const SE = formatEther(balance as bigint);
-  const GW = BigNumber(formatEther(getMaxVestableAmount_VETR as bigint)).minus(
-    formatEther(getVestedAmount_VETR as bigint),
-  );
+  const GW = BigNumber(getMaxVestableAmount_VETR ? formatEther(getMaxVestableAmount_VETR as bigint) : 0).minus(
+    getVestedAmount_VETR ? formatEther(getVestedAmount_VETR as bigint) : 0);
   const getMax = BigNumber.minimum(SE, GW).toFixed();
 
   const deposited = Number(getVestedAmount_VETR) / 10 ** 18;
@@ -363,7 +362,7 @@ const DepositModalETRVault = ({
                         onClick={() => {
                           if (getMax) {
                             formik.setFieldValue('amount', roundDown(+getMax, 6));
-                            setAmoutBigNumer(parseEther(roundDown(+getMax, 6).toString()));
+                            setAmoutBigNumer(parseEther(roundDown(+getMax, 6)?.toString()));
                             console.log(roundDown(+getMax, 6));
                           }
                         }}
