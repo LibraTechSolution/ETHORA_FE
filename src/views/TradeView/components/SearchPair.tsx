@@ -407,9 +407,11 @@ const SearchPair = (props: Props) => {
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
                     {item.type === PairType.CRYPTO ? (
                       <div>
-                        <p className="pb-1">
-                          <ShowPrice pair={item.pair.replace('/', '')} /> {item.pair.split('/')[1]}
-                        </p>
+                        {item?.pair && (
+                          <p className="pb-1">
+                            <ShowPrice pair={item.pair.replace('/', '')} /> {item.pair.split('/')[1]}
+                          </p>
+                        )}
                         <p
                           className={`flex items-center ${
                             item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'
@@ -441,9 +443,11 @@ const SearchPair = (props: Props) => {
                       </Flex>
                     ) : (
                       <div>
-                        <p className="pb-1">
-                          <ShowPrice pair={item.pair.replace('/', '')} /> {item.pair.split('/')[1]}
-                        </p>
+                        {item?.pair && (
+                          <p className="pb-1">
+                            <ShowPrice pair={item.pair.replace('/', '')} /> {item.pair.split('/')[1]}
+                          </p>
+                        )}
                         <p
                           className={`flex items-center ${
                             item.changed24hPercent > 0 ? 'text-[#1ED768]' : 'text-[#F03D3E]'

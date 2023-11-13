@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text, Tooltip } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
@@ -63,27 +63,40 @@ const PlatformTradesTable = () => {
       key: 'strike',
       render: (value, record: ITradingData) => (
         <span>
-          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
         </span>
       ),
     },
     {
       title: 'Current Price',
-      render: (value: ITradingData) => (
-        <>
-          <ShowPrice pair={value.pair.replace('-', '').toUpperCase()} /> {value.pair.split('-')[1].toUpperCase()}
-        </>
-      ),
+      render: (value: ITradingData) =>
+        value.pair && (
+          <>
+            <ShowPrice pair={value.pair.replace('-', '').toUpperCase()} /> {value.pair.split('-')[1].toUpperCase()}
+          </>
+        ),
     },
     {
       title: 'Open Time',
       dataIndex: 'openDate',
       key: 'openDate',
       render: (value) => (
-        <div>
-          <p>{dayjs(value).format('HH:mm:ss')}</p>
-          <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
-        </div>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={4} color="white">
+              {dayjs(value).utc().format('MM/DD/YYYY')} {dayjs(value).utc().format('HH:mm:ss')}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <div>
+            <p>{dayjs(value).format('HH:mm:ss')}</p>
+            <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
+          </div>
+        </Tooltip>
       ),
     },
     {
@@ -95,10 +108,23 @@ const PlatformTradesTable = () => {
     {
       title: 'Close Time',
       render: (value: ITradingData) => (
-        <div>
-          <p>{dayjs(value.openDate).add(value.period, 'second').format('HH:mm:ss')}</p>
-          <p className="text-[#9E9E9F]">{dayjs(value.openDate).add(value.period, 'second').format('MM/DD/YYYY')}</p>
-        </div>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={4} color="white">
+              {dayjs(value.openDate).add(value.period, 'second').utc().format('MM/DD/YYYY')}{' '}
+              {dayjs(value.openDate).add(value.period, 'second').utc().format('HH:mm:ss')}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <div>
+            <p>{dayjs(value.openDate).add(value.period, 'second').format('HH:mm:ss')}</p>
+            <p className="text-[#9E9E9F]">{dayjs(value.openDate).add(value.period, 'second').format('MM/DD/YYYY')}</p>
+          </div>
+        </Tooltip>
       ),
     },
     {

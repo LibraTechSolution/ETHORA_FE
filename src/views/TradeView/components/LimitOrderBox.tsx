@@ -170,9 +170,11 @@ const LimitOrderBox = (props: PropsType) => {
               borderRadius={'4px'}
               fontSize={'12px'}
             >
-              <>
-                <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} /> {item.pair.split('-')[1].toUpperCase()}
-              </>
+              {item?.pair && (
+                <>
+                  <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} /> {item.pair.split('-')[1].toUpperCase()}
+                </>
+              )}
             </Tooltip>
           </GridItem>
         </Grid>

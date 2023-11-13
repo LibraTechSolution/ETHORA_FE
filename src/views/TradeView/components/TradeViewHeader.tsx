@@ -156,9 +156,11 @@ const TradeViewHeader = () => {
             <SearchPair listChanged24h={listChanged24h?.data} isShow={isShow} />
           </Center>
           <Center paddingX={10} display={{ base: 'none', xl: 'flex' }}>
-            <p className="min-w-[190px] text-2xl font-normal text-[#fff]">
-              <ShowPrice /> {currentPair?.pair.split('/')[1].toUpperCase()}
-            </p>
+            {currentPair?.pair && (
+              <p className="min-w-[190px] text-2xl font-normal text-[#fff]">
+                <ShowPrice /> {currentPair?.pair.split('/')[1].toUpperCase()}
+              </p>
+            )}
           </Center>
           <Center>
             <Box
@@ -167,9 +169,11 @@ const TradeViewHeader = () => {
               display={{ base: 'flex', xl: 'block' }}
               alignItems={{ base: 'center', xl: '' }}
             >
-              <p className="mr-3 block text-sm font-semibold text-[#fff] xl:hidden">
-                <ShowPrice /> {currentPair?.pair.split('/')[1].toUpperCase()}
-              </p>
+              {currentPair?.pair && (
+                <p className="mr-3 block text-sm font-semibold text-[#fff] xl:hidden">
+                  <ShowPrice /> {currentPair?.pair.split('/')[1].toUpperCase()}
+                </p>
+              )}
               <p className="hidden pb-2 text-xs font-normal text-[#9E9E9F] xl:block ">24h Change</p>
               <span
                 className={`h-6 rounded border ${
@@ -186,7 +190,7 @@ const TradeViewHeader = () => {
             </Box>
             <Box borderRight="1px solid #38383A" paddingX="20px" display={{ base: 'none', xl: 'block' }}>
               <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Max Trade Size</p>
-              <p className="text-sm font-normal leading-6 text-[#fff]">{maxTradeSize} USDC</p>
+              <p className="text-sm font-normal leading-6 text-[#fff]">{addComma(maxTradeSize, 2)} USDC</p>
             </Box>
             <Box borderRight="1px solid #38383A" paddingX="20px" display={{ base: 'none', xl: 'block' }}>
               <p className="pb-2 text-xs font-normal text-[#9E9E9F]">Payout</p>

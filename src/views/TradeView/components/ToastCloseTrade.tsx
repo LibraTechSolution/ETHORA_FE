@@ -35,7 +35,7 @@ export const ToastCloseTrade = (props: ToastUIType) => {
         </span>
         <span className="px-1">-</span>
         <span>
-          {dayjs(closeTime).format('MM/DD/YYYY')} {dayjs(closeTime).format('HH:mm:ss')}
+          {dayjs(closeTime * 1000).format('MM/DD/YYYY')} {dayjs(closeTime * 1000).format('HH:mm:ss')}
         </span>
       </Flex>
     </ToastLayout>

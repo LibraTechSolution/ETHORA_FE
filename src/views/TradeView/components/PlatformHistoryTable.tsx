@@ -7,7 +7,7 @@ import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { getPlatformHistory } from '@/services/trade';
 import { ITradingData, ITradingParams, TRADE_STATUS } from '@/types/trade.type';
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text, Tooltip } from '@chakra-ui/react';
 import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
@@ -63,7 +63,7 @@ const PlatformHistoryTable = () => {
       key: 'strike',
       render: (value, record) => (
         <span>
-          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
         </span>
       ),
     },
@@ -73,7 +73,7 @@ const PlatformHistoryTable = () => {
       key: 'expiryPrice',
       render: (value, record) => (
         <span>
-          {addComma(divide(value, 8), 2)} {record.pair.split('-')[1].toUpperCase()}
+          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
         </span>
       ),
     },
@@ -82,10 +82,22 @@ const PlatformHistoryTable = () => {
       dataIndex: 'openDate',
       key: 'openDate',
       render: (value) => (
-        <div>
-          <p>{dayjs(value).format('HH:mm:ss')}</p>
-          <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
-        </div>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={4} color="white">
+              {dayjs(value).utc().format('MM/DD/YYYY')} {dayjs(value).utc().format('HH:mm:ss')}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <div>
+            <p>{dayjs(value).format('HH:mm:ss')}</p>
+            <p className="text-[#9E9E9F]">{dayjs(value).format('MM/DD/YYYY')}</p>
+          </div>
+        </Tooltip>
       ),
     },
     {
@@ -110,10 +122,22 @@ const PlatformHistoryTable = () => {
           closeTime = value.userCloseDate;
         }
         return (
-          <div>
-            <p>{dayjs(closeTime).format('HH:mm:ss')}</p>
-            <p className="text-[#9E9E9F]">{dayjs(closeTime).format('MM/DD/YYYY')}</p>
-          </div>
+          <Tooltip
+            hasArrow
+            label={
+              <Box p={4} color="white">
+                {dayjs(closeTime).utc().format('MM/DD/YYYY')} {dayjs(closeTime).utc().format('HH:mm:ss')}
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
+          >
+            <div>
+              <p>{dayjs(closeTime).format('HH:mm:ss')}</p>
+              <p className="text-[#9E9E9F]">{dayjs(closeTime).format('MM/DD/YYYY')}</p>
+            </div>
+          </Tooltip>
         );
       },
     },

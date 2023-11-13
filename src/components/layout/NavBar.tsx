@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Center, Flex, Link } from '@chakra-ui/react';
+import { Box, Center, Flex, Link, Tooltip } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
 import { BarChartBig, LayoutGrid, Redo, TrendingUp, Trophy } from 'lucide-react';
 import NextLink from 'next/link';
@@ -30,74 +30,153 @@ const NavBar = () => {
           borderRightWidth={{ base: '0', lg: '2px' }}
           borderRight={{ base: 'none', lg: currentRoute === '/dashboard' ? '2px solid #1E3EF0' : 'none' }}
         >
-          <Link
-            as={NextLink}
-            href="/dashboard"
-            className={`${
-              currentRoute === '/dashboard' ? 'border-[#1E3EF0]' : 'border-[#9E9E9F]'
-            } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+          <Tooltip
+            hasArrow
+            label={
+              <Box p={4} color="white">
+                Dashboard
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
           >
-            <LayoutGrid
+            <Link
+              as={NextLink}
+              href="/dashboard"
               className={`${
-                currentRoute === '/dashboard' ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
-              } group-hover:text-[#1E3EF0]`}
-              strokeWidth={1}
-            />
-          </Link>
+                currentRoute === '/dashboard' ? 'border-[#1E3EF0]' : 'border-[#252528]'
+              } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+            >
+              <LayoutGrid
+                className={`${
+                  currentRoute === '/dashboard' ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
+                } group-hover:text-[#1E3EF0]`}
+                strokeWidth={1}
+              />
+            </Link>
+          </Tooltip>
         </Center>
         <Center
           width={{ base: 'auto', lg: '100%' }}
           borderRightWidth={{ base: '0', lg: '2px' }}
           borderRight={{ base: 'none', lg: currentRoute.includes('trade') ? '2px solid #1E3EF0' : 'none' }}
         >
-          <Link
-            as={NextLink}
-            href="/trade/BTC-USD"
-            className={`${
-              currentRoute.includes('trade') ? 'border-[#1E3EF0]' : 'border-[#9E9E9F]'
-            } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+          <Tooltip
+            hasArrow
+            label={
+              <Box p={4} color="white">
+                Trade
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
           >
-            <BarChartBig
+            <Link
+              as={NextLink}
+              href="/trade/BTC-USD"
               className={`${
-                currentRoute.includes('trade') ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
-              } group-hover:text-[#1E3EF0]`}
-              strokeWidth={1}
-            />
-          </Link>
+                currentRoute.includes('trade') ? 'border-[#1E3EF0]' : 'border-[#252528]'
+              } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+            >
+              <BarChartBig
+                className={`${
+                  currentRoute.includes('trade') ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
+                } group-hover:text-[#1E3EF0]`}
+                strokeWidth={1}
+              />
+            </Link>
+          </Tooltip>
         </Center>
-        <Link
-          as={NextLink}
-          href="/"
-          className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
+        <Center
+          width={{ base: 'auto', lg: '100%' }}
+          borderRightWidth={{ base: '0', lg: '2px' }}
+          borderRight={{ base: 'none', lg: 'none' }}
         >
-          <TrendingUp className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
-        </Link>
-        <Link
-          as={NextLink}
-          href="/"
-          className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#9E9E9F] hover:border-[#1E3EF0] hover:shadow-iconShadow"
+          <Tooltip
+            hasArrow
+            label={
+              <Box p={4} color="white">
+                Pratice Trade
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
+          >
+            <Link
+              as={NextLink}
+              href="/trade/BTC-USD"
+              className="group flex h-8 w-8 items-center justify-center rounded-[10px] border border-[#252528] hover:border-[#1E3EF0] hover:shadow-iconShadow"
+            >
+              <TrendingUp className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
+            </Link>
+          </Tooltip>
+        </Center>
+        <Center
+          width={{ base: 'auto', lg: '100%' }}
+          borderRightWidth={{ base: '0', lg: '2px' }}
+          borderRight={{ base: 'none', lg: currentRoute.includes('leaderboard') ? '2px solid #1E3EF0' : 'none' }}
         >
-          <Trophy className="text-[#9E9E9F] group-hover:text-[#1E3EF0]" strokeWidth={1} />
-        </Link>
+          <Tooltip
+            hasArrow
+            label={
+              <Box p={4} color="white">
+                Leaderboard
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
+          >
+            <Link
+              as={NextLink}
+              href="/leaderboard"
+              className={`${
+                currentRoute === '/leaderboard' ? 'border-[#1E3EF0]' : 'border-[#252528]'
+              } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+            >
+              <Trophy
+                className={`${
+                  currentRoute === '/leaderboard' ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
+                } group-hover:text-[#1E3EF0]`}
+                strokeWidth={1}
+              />
+            </Link>
+          </Tooltip>
+        </Center>
         <Center
           width={{ base: 'auto', lg: '100%' }}
           borderRightWidth={{ base: '0', lg: '2px' }}
           borderRight={{ base: 'none', lg: currentRoute === '/referral' ? '2px solid #1E3EF0' : 'none' }}
         >
-          <Link
-            as={NextLink}
-            href="/referral"
-            className={`${
-              currentRoute === '/referral' ? 'border-[#1E3EF0]' : 'border-[#9E9E9F]'
-            } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+          <Tooltip
+            hasArrow
+            label={
+              <Box p={4} color="white">
+                Referral
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
           >
-            <Redo
+            <Link
+              as={NextLink}
+              href="/referral"
               className={`${
-                currentRoute === '/referral' ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
-              } group-hover:text-[#1E3EF0]`}
-              strokeWidth={1}
-            />
-          </Link>
+                currentRoute === '/referral' ? 'border-[#1E3EF0]' : 'border-[#252528]'
+              } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
+            >
+              <Redo
+                className={`${
+                  currentRoute === '/referral' ? 'text-[#1E3EF0]' : 'text-[#9E9E9F]'
+                } group-hover:text-[#1E3EF0]`}
+                strokeWidth={1}
+              />
+            </Link>
+          </Tooltip>
         </Center>
       </Flex>
     </Box>
