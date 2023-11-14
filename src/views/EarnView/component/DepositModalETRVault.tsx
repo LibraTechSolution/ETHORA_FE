@@ -323,7 +323,13 @@ const DepositModalETRVault = ({
                         Deposit
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {getMax !== undefined ? addComma(getMax, 2) : '0.00'} esETR
+                        Max:{' '}
+                        <Currency
+                          value={getMax !== undefined ? BigNumber(getMax).toFixed() : 0}
+                          decimal={2}
+                          unit="esETR"
+                        />{' '}
+                        esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -356,11 +362,12 @@ const DepositModalETRVault = ({
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={600}
+                        boxShadow={'0px 0px 3px -1px rgba(196,196,196,0.5)'}
                         _hover={{
                           background: '#252528',
                         }}
                         onClick={() => {
-                          if (getMax) {
+                          if (getMax !== undefined) {
                             formik.setFieldValue('amount', roundDown(+getMax, 6));
                             setAmoutBigNumer(parseEther(roundDown(+getMax, 6)?.toString()));
                             console.log(roundDown(+getMax, 6));

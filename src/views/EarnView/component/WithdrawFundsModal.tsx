@@ -237,7 +237,13 @@ const WithdrawFundsModal = ({
                         Pay
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {getMax !== undefined ? addComma(getMax, 2) : '0.00'} ELP
+                        Max:{' '}
+                        <Currency
+                          value={getMax !== undefined ? BigNumber(getMax).toFixed() : 0}
+                          decimal={2}
+                          unit="ETR"
+                        />{' '}
+                        ETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -268,11 +274,12 @@ const WithdrawFundsModal = ({
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={600}
+                        boxShadow={'0px 0px 3px -1px rgba(196,196,196,0.5)'}
                         _hover={{
                           background: '#252528',
                         }}
                         onClick={() => {
-                          if (getMax) {
+                          if (getMax !== undefined) {
                             formik.setFieldValue('amount', roundDown(getMax, 6));
                           }
                         }}
@@ -298,7 +305,13 @@ const WithdrawFundsModal = ({
                     Receive
                   </Text>{' '}
                   <Text as="span" fontSize={'16px'} color={'#1ED768'}>
-                    <Currency value={exchangeRate !== undefined ? BigNumber(formik.values.amount).multipliedBy(exchangeRate) : 0} decimal={2} unit="USDC" />
+                    <Currency
+                      value={
+                        exchangeRate !== undefined ? BigNumber(formik.values.amount).multipliedBy(exchangeRate) : 0
+                      }
+                      decimal={2}
+                      unit="USDC"
+                    />
                     {''} USDC
                   </Text>
                 </Flex>

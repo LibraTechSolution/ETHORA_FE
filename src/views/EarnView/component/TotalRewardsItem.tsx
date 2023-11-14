@@ -125,8 +125,8 @@ const TotalRewardsItem = ({
           </CustomConnectButton>
         </Box>
       </Box>
-      <ClaimModal isOpen={openClaimModal} onDismiss={() => setOpenClaimModal(false)} />
-      <CompoundRewardsModal isOpen={openCompoundRewardsModal} onDismiss={() => setOpenCompoundRewardsModal(false)} />
+      {openClaimModal && <ClaimModal isOpen={openClaimModal} onDismiss={() => setOpenClaimModal(false)} />}
+      {openCompoundRewardsModal && <CompoundRewardsModal isOpen={openCompoundRewardsModal} onDismiss={() => setOpenCompoundRewardsModal(false)} />}
     </>
   );
 };

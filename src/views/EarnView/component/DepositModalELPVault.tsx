@@ -38,6 +38,7 @@ import { formatUnits, BaseError, parseEther } from 'viem';
 import { addComma, roundDown } from '@/utils/number';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
+import Currency from '@/components/Currency';
 
 const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { address } = useAccount();
@@ -291,7 +292,13 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         Deposit
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {getMax !== undefined ? addComma(getMax, 2) : '0.00'} esETR
+                        Max:{' '}
+                        <Currency
+                          value={getMax !== undefined ? BigNumber(getMax).toFixed() : 0}
+                          decimal={2}
+                          unit="esETR"
+                        />{' '}
+                        esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -322,11 +329,12 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={600}
+                        boxShadow={'0px 0px 3px -1px rgba(196,196,196,0.5)'}
                         _hover={{
                           background: '#252528',
                         }}
                         onClick={() => {
-                          if (getMax) {
+                          if (getMax !== undefined) {
                             formik.setFieldValue('amount', roundDown(getMax, 6));
                           }
                         }}
