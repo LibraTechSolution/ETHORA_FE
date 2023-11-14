@@ -31,7 +31,14 @@ import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/
 import BigNumber from 'bignumber.js';
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import { TransactionExecutionError, UserRejectedRequestError, formatUnits, parseUnits, BaseError, parseEther } from 'viem';
+import {
+  TransactionExecutionError,
+  UserRejectedRequestError,
+  formatUnits,
+  parseUnits,
+  BaseError,
+  parseEther,
+} from 'viem';
 import {
   useAccount,
   useContractRead,
@@ -45,6 +52,7 @@ import * as Yup from 'yup';
 import { EarnContext } from '..';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
+import Currency from '@/components/Currency';
 
 const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { address } = useAccount();
@@ -157,7 +165,7 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
 
   const onStake = async (amount: string) => {
     const amoutBigint = parseEther(BigNumber(amount).toFixed());
-    
+
     try {
       setLoadingStake(true);
       const configStake = await prepareWriteContract({
@@ -275,19 +283,12 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
                         Max:{' '}
-                        <Tooltip
-                          hasArrow
-                          label={`${
-                            balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 6) : '0.00'
-                          } ETR`}
-                          color="white"
-                          placement="top"
-                          bg="black"
-                        >
-                          <span>
-                            {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '0.00'} ETR
-                          </span>
-                        </Tooltip>
+                        <Currency
+                          value={balance !== undefined ? BigNumber(formatUnits(balance as bigint, 18)).toFixed() : 0}
+                          decimal={2}
+                          unit="ETR"
+                        />{' '}
+                        ETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -317,12 +318,13 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={600}
+                        boxShadow={'0px 0px 3px -1px rgba(196,196,196,0.5)'}
                         _hover={{
                           background: '#252528',
                         }}
                         onClick={() => {
-                          if (balance) {
-                            formik.setFieldValue('amount', Number(balance) / 10 ** 18);
+                          if (balance !== undefined) {
+                            formik.setFieldValue('amount', roundDown(Number(balance) / 10 ** 18, 6));
                           }
                         }}
                       >
