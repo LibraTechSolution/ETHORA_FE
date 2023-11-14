@@ -129,16 +129,6 @@ export const Header = () => {
                 </Center>
               )}
               <Center>
-                <Link href="/dashboard" className={currentRoute.includes('/dashboard') ? activeStyle : nonActiveStyle}>
-                  Dashboard
-                </Link>
-              </Center>
-              <Center>
-                <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
-                  Token sale
-                </Link>
-              </Center>
-              <Center>
                 <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                   Leaderboard
                 </Link>
@@ -161,10 +151,34 @@ export const Header = () => {
                         </MenuItem>
                         <MenuItem background="transparent">
                           <Link
-                            href="/docs"
-                            className={`w-full text-center ${currentRoute === '/docs' ? 'text-[#fff]' : ''}`}
+                            href="/sale-token"
+                            className={`w-full text-center ${currentRoute === '/sale-token' ? 'text-[#fff]' : ''}`}
                           >
-                            Docs
+                            Token sale
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link
+                            href="/referral"
+                            className={`w-full text-center ${currentRoute === '/referral' ? 'text-[#fff]' : ''}`}
+                          >
+                            Referral
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link
+                            href="/trade/BTC-USD"
+                            className={`w-full text-center ${currentRoute === '/trade/BTC-USD' ? 'text-[#fff]' : ''}`}
+                          >
+                            Practice Trading
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link
+                            href="/dashboard"
+                            className={`w-full text-center ${currentRoute === '/dashboard' ? 'text-[#fff]' : ''}`}
+                          >
+                            Dashboard
                           </Link>
                         </MenuItem>
                         <MenuItem background="transparent">
@@ -177,30 +191,30 @@ export const Header = () => {
                         </MenuItem>
                         <MenuItem background="transparent">
                           <Link
-                            href="/profile"
-                            className={`w-full text-center ${currentRoute === '/profile' ? 'text-[#fff]' : ''}`}
+                            href="/docs"
+                            className={`w-full text-center ${currentRoute === '/docs' ? 'text-[#fff]' : ''}`}
                           >
-                            Profile
+                            Docs
                           </Link>
                         </MenuItem>
                         <MenuItem background="transparent">
-                          <Link href="https://twitter.com/home?lang=vi" target="_blank" className="w-full text-center">
+                          <Link href="https://twitter.com/" target="_blank" className="w-full text-center">
                             Twitter
-                          </Link>
-                        </MenuItem>
-                        <MenuItem background="transparent">
-                          <Link href="https://github.com" target="_blank" className="w-full text-center">
-                            Github
-                          </Link>
-                        </MenuItem>
-                        <MenuItem background="transparent">
-                          <Link href="https://web.telegram.org/" target="_blank" className="w-full text-center">
-                            Telegram
                           </Link>
                         </MenuItem>
                         <MenuItem background="transparent">
                           <Link href="https://discord.com/" target="_blank" className="w-full text-center">
                             Discord
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link href="https://medium.com/" target="_blank" className="w-full text-center">
+                            Medium
+                          </Link>
+                        </MenuItem>
+                        <MenuItem background="transparent">
+                          <Link href="https://www.instagram.com" target="_blank" className="w-full text-center">
+                            Instagram
                           </Link>
                         </MenuItem>
                       </MenuList>
@@ -473,27 +487,27 @@ export const Header = () => {
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
-                <Link
-                  href="https://twitter.com/home?lang=vi"
-                  target="_blank"
-                  className={`w-full text-left ${nonActiveStyle}`}
-                >
+                <Link href="https://twitter.com" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
                   Twitter
-                </Link>
-              </Center>
-              <Center justifyContent={'flex-start'}>
-                <Link href="https://github.com" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
-                  Github
-                </Link>
-              </Center>
-              <Center justifyContent={'flex-start'}>
-                <Link href="https://web.telegram.org/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
-                  Telegram
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
                 <Link href="https://discord.com/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
                   Discord
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="https://medium.com/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
+                  Medium
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link
+                  href="https://www.instagram.com/"
+                  target="_blank"
+                  className={`w-full text-left ${nonActiveStyle}`}
+                >
+                  Instagram
                 </Link>
               </Center>
             </DrawerBody>

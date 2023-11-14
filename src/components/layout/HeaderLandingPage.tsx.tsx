@@ -145,23 +145,23 @@ export const HeaderLanding = () => {
                         </Link>
                       </MenuItem>
                       <MenuItem background="transparent">
-                        <Link href="https://twitter.com/home?lang=vi" target="_blank" className="w-full text-center">
+                        <Link href="https://twitter.com/" target="_blank" className="w-full text-center">
                           Twitter
-                        </Link>
-                      </MenuItem>
-                      <MenuItem background="transparent">
-                        <Link href="https://github.com" target="_blank" className="w-full text-center">
-                          Github
-                        </Link>
-                      </MenuItem>
-                      <MenuItem background="transparent">
-                        <Link href="https://web.telegram.org/" target="_blank" className="w-full text-center">
-                          Telegram
                         </Link>
                       </MenuItem>
                       <MenuItem background="transparent">
                         <Link href="https://discord.com/" target="_blank" className="w-full text-center">
                           Discord
+                        </Link>
+                      </MenuItem>
+                      <MenuItem background="transparent">
+                        <Link href="https://medium.com/" target="_blank" className="w-full text-center">
+                          Medium
+                        </Link>
+                      </MenuItem>
+                      <MenuItem background="transparent">
+                        <Link href="https://www.instagram.com" target="_blank" className="w-full text-center">
+                          Instagram
                         </Link>
                       </MenuItem>
                     </MenuList>
@@ -246,27 +246,23 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link
-                href="https://twitter.com/home?lang=vi"
-                target="_blank"
-                className={`w-full text-left ${nonActiveStyle}`}
-              >
+              <Link href="https://twitter.com" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
                 Twitter
-              </Link>
-            </Center>
-            <Center justifyContent={'flex-start'}>
-              <Link href="https://github.com" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
-                Github
-              </Link>
-            </Center>
-            <Center justifyContent={'flex-start'}>
-              <Link href="https://web.telegram.org/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
-                Telegram
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
               <Link href="https://discord.com/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
                 Discord
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
+              <Link href="https://medium.com/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
+                Medium
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
+              <Link href="https://www.instagram.com/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
+                Instagram
               </Link>
             </Center>
           </DrawerBody>
