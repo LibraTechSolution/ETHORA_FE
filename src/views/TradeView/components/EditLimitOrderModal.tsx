@@ -160,14 +160,18 @@ const EditLimitOrderModal = (props: PropsType) => {
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Edit successfully" status={Status.SUCCESSS} close={onClose} />,
+        render: ({ onClose }) => (
+          <ToastLayout title="Edited limit order successfully." status={Status.SUCCESSS} close={onClose} />
+        ),
       });
       setIsLoading(false);
       onClose();
     } catch (error) {
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Edit Unsuccessfully" status={Status.ERROR} close={onClose} />,
+        render: ({ onClose }) => (
+          <ToastLayout title="Edited limit order unsuccessfully." status={Status.ERROR} close={onClose} />
+        ),
       });
       setIsLoading(false);
     }

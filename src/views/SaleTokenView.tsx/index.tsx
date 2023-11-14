@@ -13,11 +13,11 @@ const dataFAQ = [
   },
   {
     title: 'Which sale should I participate in? Can I participate in both?',
-    desc: 'You have the option to choose one or participate in both simultaneously!We suggest checking your eligibility for the Private Sale first. In the Public Sale, if the amount you commit is too small, you might not receive a significant number of IDO tokens.',
+    desc: 'You have the option to choose one or participate in both simultaneously! We suggest checking your eligibility for the Private Sale first. In the Public Sale, if the amount you commit is too small, you might not receive a significant number of IDO tokens.',
   },
   {
     title: 'How much is the participation fee?',
-    desc: 'There’s only a participation fee for the Public Sale: there’s no fee for the Private Sale. The participation fee decreases in cliffs, based on the percentage of overflow from the “Public Sale” portion of the IDO.',
+    desc: 'There is a participation fee only for the Public Sale; there is no participation fee for the Private Sale.',
   },
   {
     title: 'Where does the participation fee go?',

@@ -46,7 +46,7 @@ const ProfileView = () => {
   const isMounted = useIsMounted();
   // const [addrSSR, setAddrSSR] = useState<`0x${string}` | undefined>();
   const [defaultTabs, setDefaultTabs] = useState<TradingTabType>(TradingTabType.ActiveTab);
-  const router = useRouter()
+  const router = useRouter();
   const searchParams = useSearchParams();
   const addressURL = searchParams.get('address');
   const [profileInfoFilter, setProfileInfoFilter] = useState<IProfileParams>();
@@ -91,45 +91,43 @@ const ProfileView = () => {
           bgPosition="top -87px left 45px"
           padding={'20px'}
         >
-          {!addressURL && (
-            <Flex
-              direction={'column'}
-              w={'100%'}
-              maxW={'300px'}
-              p={4}
-              color="white"
-              marginX={'auto'}
-              display={'flex'}
-              alignItems={'center'}
-              gap={'27px'}
-            >
-              <Box w={'64px'} h={'64px'} borderRadius={'100%'} overflow={'hidden'} bg={'yellow'}>
-                <Image src="/images/profile/avatar.png" width={64} height={64} alt="Avata" />
-              </Box>
-              <Box>
-                {address ? (
-                  <Link
-                    href={`https://goerli.arbiscan.io/address/${address}`}
-                    isExternal
-                    fontSize={'20px'}
-                    fontWeight={600}
-                    color={'#1E3EF0'}
-                    display={'flex'}
-                    alignItems={'center'}
-                  >
-                    <Box as={'span'} marginRight={2}>
-                      {formatAddress(address)}
-                    </Box>
-                    <ExternalLink />
-                  </Link>
-                ) : (
-                  <Text fontSize={20} color={'#F03D3E'}>
-                    Wallet Not Connected.
-                  </Text>
-                )}
-              </Box>
-            </Flex>
-          )}
+          <Flex
+            direction={'column'}
+            w={'100%'}
+            maxW={'300px'}
+            p={4}
+            color="white"
+            marginX={'auto'}
+            display={'flex'}
+            alignItems={'center'}
+            gap={'27px'}
+          >
+            <Box w={'64px'} h={'64px'} borderRadius={'100%'} overflow={'hidden'} bg={'yellow'}>
+              <Image src="/images/profile/avatar.png" width={64} height={64} alt="Avata" />
+            </Box>
+            <Box>
+              {address ? (
+                <Link
+                  href={`https://goerli.arbiscan.io/address/${addressURL ?? address}`}
+                  isExternal
+                  fontSize={'20px'}
+                  fontWeight={600}
+                  color={'#1E3EF0'}
+                  display={'flex'}
+                  alignItems={'center'}
+                >
+                  <Box as={'span'} marginRight={2}>
+                    {formatAddress(addressURL ?? address)}
+                  </Box>
+                  <ExternalLink />
+                </Link>
+              ) : (
+                <Text fontSize={20} color={'#F03D3E'}>
+                  Wallet Not Connected.
+                </Text>
+              )}
+            </Box>
+          </Flex>
 
           <Grid
             w={'100%'}
@@ -512,7 +510,7 @@ const ProfileView = () => {
                 </Flex>
               </Box>
               {/* {addrSSR && ( */}
-              <div className="flex-1">
+              <div className="tradingTableTab flex-1">
                 {defaultTabs === TradingTabType.ActiveTab && <TradeTable isProfile={true} />}
 
                 {defaultTabs === TradingTabType.LimitOrderTab && <LimitOrdersTable isProfile={true} />}

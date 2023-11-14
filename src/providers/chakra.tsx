@@ -117,6 +117,7 @@ const customTheme = extendTheme({
     md: '48em', // ~768px
     lg: '62em', // ~992px
     xl: '80em', // ~1280px
+    '1.5xl': '82em', // ~1296px
     '2xl': '96em', // ~1536px
     '3xl': '105rem', // ~1680px
   },

@@ -86,7 +86,7 @@ const PlatformHistoryTable = () => {
           hasArrow
           label={
             <Box p={4} color="white">
-              {dayjs(value).utc().format('MM/DD/YYYY')} {dayjs(value).utc().format('HH:mm:ss')}
+              {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
           color="white"
@@ -126,7 +126,7 @@ const PlatformHistoryTable = () => {
             hasArrow
             label={
               <Box p={4} color="white">
-                {dayjs(closeTime).utc().format('MM/DD/YYYY')} {dayjs(closeTime).utc().format('HH:mm:ss')}
+                {dayjs(closeTime).utc().format('HH:mm:ss')} {dayjs(closeTime).utc().format('MM/DD/YYYY')} UTC
               </Box>
             }
             color="white"
@@ -186,7 +186,7 @@ const PlatformHistoryTable = () => {
       dataIndex: 'userAddress',
       key: 'userAddress',
       render: (value) => (
-        <Link href={`/profile?address=${address}`} target="_blank">
+        <Link href={`/profile?address=${value}`} target="_blank">
           <span>{formatAddress(value)}</span>
         </Link>
       ),

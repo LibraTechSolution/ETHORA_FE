@@ -10,7 +10,7 @@ import LimitOrdersTable from './components/LimitOrdersTable';
 import PlatformTradesTable from './components/PlatformTradesTable';
 import PlatformHistoryTable from './components/PlatformHistoryTable';
 import TradeLeftSide from './components/TradeLeftSide';
-import { createContext, useState } from 'react';
+import { createContext, useCallback, useEffect, useRef, useState } from 'react';
 
 const TradingViewChart = dynamic(
   () => import('@/components/TradingView/TradingView').then((mod) => mod.TradingViewChart),
@@ -36,6 +36,75 @@ export const TradeContext = createContext<createContextType>({
 const TradeView = () => {
   const [tradeSize, setTradeSize] = useState<number>(0);
   const [limitOrderSize, setLimitOrderSize] = useState<number>(0);
+  const [dragging, setDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>();
+  const [containerDim, setContainerDim] = useState<{
+    height?: number;
+    top?: number;
+  }>({});
+  const isFirstLoad = useRef<boolean>(true);
+  const onInitialLoad: React.LegacyRef<HTMLDivElement> = useCallback(async (ele: any) => {
+    containerRef.current = ele;
+    const d = ele?.getBoundingClientRect();
+    if (!d) return;
+    setContainerDim({ top: d.top, height: window.innerHeight - 400 });
+    isFirstLoad.current = false;
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('touchmove', onTouchMove);
+    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mouseleave', onMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+  });
+
+  const onMove = (clientY: number) => {
+    if (!clientY) return;
+    if (!containerDim?.height) return;
+    if (!dragging) return;
+    // y = 4
+    setContainerDim((currentChartContainerDim) => {
+      if (!currentChartContainerDim?.top) return {};
+
+      const updatedChartContainerDim: Partial<{ height: number; top: number }> = {};
+      const updatedHeight = clientY - currentChartContainerDim.top;
+      const bound = window.innerHeight - (currentChartContainerDim.top + 50);
+      updatedChartContainerDim.height = Math.min(updatedHeight, bound);
+      updatedChartContainerDim.top = currentChartContainerDim.top;
+
+      // since doccument.onmouseup doesn't get fired on TV area, we have to
+      // take an offset value while scrolling up
+      if (
+        containerRef.current &&
+        containerRef.current?.getBoundingClientRect().height - updatedChartContainerDim.height > 35
+      ) {
+        onMouseUp();
+      }
+
+      return updatedChartContainerDim;
+    });
+  };
+  const onMouseMove = (e: MouseEvent) => {
+    if (dragging) e.preventDefault();
+    onMove(e.clientY);
+  };
+
+  const onTouchMove = (e: TouchEvent) => {
+    onMove(e.touches[0].clientY);
+  };
+
+  const onMouseUp = () => {
+    setDragging(false);
+  };
+
+  const onMouseDown = () => {
+    setDragging(true);
+  };
   return (
     <TradeContext.Provider
       value={{
@@ -46,26 +115,41 @@ const TradeView = () => {
       }}
     >
       <Grid
-        templateColumns={{ base: '', xl: 'repeat(24, 1fr)' }}
+        templateColumns={{ base: '', '1.5xl': 'repeat(24, 1fr)' }}
         gap={4}
         paddingTop="20px"
         bg="rgba(28, 28, 30, 0.50)"
-        display={{ base: 'block', xl: 'grid' }}
+        display={{ base: 'block', '1.5xl': 'grid' }}
         marginX={{ base: '-12px', lg: '-80px' }}
         paddingRight={{ base: '0px', lg: '26px' }}
       >
-        <GridItem display={{ base: 'none', xl: 'block' }} colSpan={{ base: 24, xl: 5 }}>
+        <GridItem display={{ base: 'none', '1.5xl': 'block' }} colSpan={{ base: 24, xl: 5 }}>
           <TradeLeftSide />
         </GridItem>
-        <GridItem colSpan={{ base: 24, xl: 19 }}>
-          <>
+        <GridItem colSpan={{ base: 24, '1.5xl': 19 }}>
+          <Box
+            marginBottom={{ base: 5, '1.5xl': 3 }}
+            className="flex h-full  grow flex-col"
+            style={containerDim?.height ? { height: containerDim.height } : {}}
+            ref={onInitialLoad}
+          >
             <TradeViewHeader />
             <TradingViewChart />
-          </>
-          <Box display={{ base: 'block', xl: 'none' }} marginTop={'12px'}>
+          </Box>
+          <div
+            onMouseDown={onMouseDown}
+            onTouchStart={onMouseDown}
+            onMouseUp={onMouseUp}
+            onTouchEnd={onMouseUp}
+            // onMouseLeave={onMouseUp}
+            className={`h-[12px] w-full cursor-row-resize bg-[#252528]`}
+            // onDragStart={onDragStart}
+            // onDragEnd={onDragEnd}
+          ></div>
+          <Box display={{ base: 'block', '1.5xl': 'none' }} marginTop={'12px'}>
             <TradeLeftSide />
           </Box>
-          <Box marginTop="12px" display={{ base: 'none', xl: 'block' }}>
+          <Box marginTop="12px" display={{ base: 'none', '1.5xl': 'block' }}>
             <Tabs>
               <TabList
                 borderBottom="1px solid #1C1C1E"
@@ -85,7 +169,9 @@ const TradeView = () => {
                 >
                   <>
                     Trades{' '}
-                    <span className="ml-2 rounded-3xl bg-[#0C0C10] px-2 font-normal text-white">{tradeSize}</span>
+                    {tradeSize > 0 && (
+                      <span className="ml-2 rounded-3xl bg-[#0C0C10] px-2 font-normal text-white">{tradeSize}</span>
+                    )}
                   </>
                 </Tab>
                 <Tab
@@ -98,7 +184,9 @@ const TradeView = () => {
                   paddingY="8px"
                 >
                   Limit Orders{' '}
-                  <span className="ml-2 rounded-3xl bg-[#0C0C10] px-2 font-normal text-white">{limitOrderSize}</span>
+                  {limitOrderSize > 0 && (
+                    <span className="ml-2 rounded-3xl bg-[#0C0C10] px-2 font-normal text-white">{limitOrderSize}</span>
+                  )}
                 </Tab>
                 <Tab
                   color="#6D6D70"

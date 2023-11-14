@@ -362,7 +362,6 @@ const LeaderboardView = () => {
                   border={'1px solid #1E3EF0'}
                   backgroundColor={'transparent'}
                   color={'#1E3EF0'}
-                  w={'100px'}
                   _hover={{ bgColor: 'transparent', border: '1px solid #1E3EF0' }}
                   _active={{ bgColor: 'transparent', border: '1px solid #1E3EF0' }}
                 >
@@ -394,17 +393,19 @@ const LeaderboardView = () => {
             </CustomConnectButton>
           </Center>
           {mounted && (
-            <TableLeaderBoard
-              data={
-                defaultTabs === TableTabType.Winners
-                  ? leaderBoardData?.winners
-                  : defaultTabs === TableTabType.Losers
-                  ? leaderBoardData?.losers
-                  : leaderBoardData?.winnersWinrate
-              }
-              isWinnderByRate={defaultTabs === TableTabType.Rate}
-              loading={isLoading}
-            />
+            <Box className="tradingTableTab">
+              <TableLeaderBoard
+                data={
+                  defaultTabs === TableTabType.Winners
+                    ? leaderBoardData?.winners
+                    : defaultTabs === TableTabType.Losers
+                    ? leaderBoardData?.losers
+                    : leaderBoardData?.winnersWinrate
+                }
+                isWinnderByRate={defaultTabs === TableTabType.Rate}
+                loading={isLoading}
+              />
+            </Box>
           )}
         </div>
       </Box>
