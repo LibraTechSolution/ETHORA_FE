@@ -166,7 +166,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
           hasArrow
           label={
             <Box p={4} color="white">
-              {dayjs(value).utc().format('MM/DD/YYYY')} {dayjs(value).utc().format('HH:mm:ss')}
+              {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
           color="white"
@@ -199,8 +199,8 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
           hasArrow
           label={
             <Box p={4} color="white">
-              {dayjs(value.openDate).add(value.period, 'second').utc().format('MM/DD/YYYY')}{' '}
-              {dayjs(value.openDate).add(value.period, 'second').utc().format('HH:mm:ss')}
+              {dayjs(value.openDate).add(value.period, 'second').utc().format('HH:mm:ss')}{' '}
+              {dayjs(value.openDate).add(value.period, 'second').utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
           color="white"
@@ -273,7 +273,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   };
 
   const { data: tradingData, isInitialLoading } = useQuery({
-    queryKey: ['getActiveTrades'],
+    queryKey: ['getActiveTrades', filter],
     queryFn: () => getTrades(filter),
     onError: (error: any) => {
       console.log(error);
@@ -288,7 +288,9 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   });
 
   useEffect(() => {
-    isProfile && setFilter({ ...defaultParams, userAddress: addressURL ? addressURL : address });
+    if (!isProfile) return;
+    console.log(isProfile);
+    setFilter({ ...defaultParams, userAddress: addressURL ? addressURL : address });
   }, [address, addressURL, isProfile]);
 
   const handleChangePage = (pagination: TablePaginationConfig) => {

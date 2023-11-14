@@ -77,28 +77,28 @@ export const HeaderLanding = () => {
         ) : (
           <>
             <Center>
-              <Link href="trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
+              <Link href="/trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
                 Trade
               </Link>
             </Center>
             <Center>
-              <Link href="earn" className={currentRoute === '/earn' ? activeStyle : nonActiveStyle}>
+              <Link href="/earn" className={currentRoute === '/earn' ? activeStyle : nonActiveStyle}>
                 Earn
               </Link>
             </Center>
             <Center>
-              <Link href="leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
+              <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                 Leaderboard
               </Link>
             </Center>
             <Center>
-              <Link href="sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
+              <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
                 Token sale
               </Link>
             </Center>
             <Center>
               <Link
-                href="practice-trading"
+                href="/practice-trading"
                 className={currentRoute === '/practice-trading' ? activeStyle : nonActiveStyle}
               >
                 Practice Trading
@@ -114,7 +114,7 @@ export const HeaderLanding = () => {
                     <MenuList minWidth="107px" background="#252528" border="none" className="w-[107px]">
                       <MenuItem background="transparent">
                         <Link
-                          href="earn"
+                          href="/earn"
                           className={`w-full text-center ${currentRoute === '/earn' ? 'text-[#fff]' : ''}`}
                         >
                           Earn
@@ -122,7 +122,7 @@ export const HeaderLanding = () => {
                       </MenuItem>
                       <MenuItem background="transparent">
                         <Link
-                          href="docs"
+                          href="/docs"
                           className={`w-full text-center ${currentRoute === '/docs' ? 'text-[#fff]' : ''}`}
                         >
                           Docs
@@ -130,7 +130,7 @@ export const HeaderLanding = () => {
                       </MenuItem>
                       <MenuItem background="transparent">
                         <Link
-                          href="stats"
+                          href="/stats"
                           className={`w-full text-center ${currentRoute === '/stats' ? 'text-[#fff]' : ''}`}
                         >
                           Stats
@@ -138,7 +138,7 @@ export const HeaderLanding = () => {
                       </MenuItem>
                       <MenuItem background="transparent">
                         <Link
-                          href="profile"
+                          href="/profile"
                           className={`w-full text-center ${currentRoute === '/profile' ? 'text-[#fff]' : ''}`}
                         >
                           Profile
@@ -176,57 +176,54 @@ export const HeaderLanding = () => {
         <DrawerOverlay />
         <DrawerContent backgroundColor={'#1a1a22'}>
           <DrawerHeader>
+            <Image alt="ethora" src="/images/landingpage/logoText.svg" w="112px" h="32px" />
             <DrawerCloseButton color={'white'} />
           </DrawerHeader>
 
           <DrawerBody>
             <Center justifyContent={'flex-start'}>
-              <Link href="trade" className={currentRoute === '/' ? activeStyle : nonActiveStyle}>
+              <Link href="/dashboard" className={currentRoute === '/dashboard' ? activeStyle : nonActiveStyle}>
+                Dashboard
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
+              <Link href="/trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
                 Trade
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link href="Earn" className={currentRoute === '/Earn' ? activeStyle : nonActiveStyle}>
-                Earn
+              <Link href="/faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
+                Faucet
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link href="leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
+              <Link href="/trading" className={currentRoute === '/trading' ? activeStyle : nonActiveStyle}>
+                Practice Trading
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
+              <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                 Leaderboard
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link href="sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
+              <Link href="/referral" className={currentRoute === '/referral' ? activeStyle : nonActiveStyle}>
+                Referral
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
+              <Link href="/earn" className={currentRoute === 'earn' ? activeStyle : nonActiveStyle}>
+                Earn
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
+              <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
                 Token sale
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
               <Link
-                href="practice-trading"
-                className={currentRoute === '/practice-trading' ? activeStyle : nonActiveStyle}
-              >
-                Practice Trading
-              </Link>
-            </Center>
-            <Center justifyContent={'flex-start'}>
-              <Link
-                href="earn"
-                className={`w-full text-left ${currentRoute === '/earn' ? 'text-[#fff]' : nonActiveStyle}`}
-              >
-                Earn
-              </Link>
-            </Center>
-            <Center justifyContent={'flex-start'}>
-              <Link
-                href="docs"
-                className={`w-full text-left ${currentRoute === '/docs' ? 'text-[#fff]' : nonActiveStyle}`}
-              >
-                Docs
-              </Link>
-            </Center>
-            <Center justifyContent={'flex-start'}>
-              <Link
-                href="stats"
+                href="/stats"
                 className={`w-full text-left ${currentRoute === '/stats' ? 'text-[#fff]' : nonActiveStyle}`}
               >
                 Stats
@@ -234,7 +231,15 @@ export const HeaderLanding = () => {
             </Center>
             <Center justifyContent={'flex-start'}>
               <Link
-                href="profile"
+                href="/docs"
+                className={`w-full text-left ${currentRoute === '/docs' ? 'text-[#fff]' : nonActiveStyle}`}
+              >
+                Docs
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
+              <Link
+                href="/profile"
                 className={`w-full text-left ${currentRoute === '/profile' ? 'text-[#fff]' : nonActiveStyle}`}
               >
                 Profile

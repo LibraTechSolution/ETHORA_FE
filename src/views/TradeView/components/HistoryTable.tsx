@@ -99,7 +99,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
           hasArrow
           label={
             <Box p={4} color="white">
-              {dayjs(value).utc().format('MM/DD/YYYY')} {dayjs(value).utc().format('HH:mm:ss')}
+              {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
           color="white"
@@ -139,7 +139,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
             hasArrow
             label={
               <Box p={4} color="white">
-                {dayjs(closeTime).utc().format('MM/DD/YYYY')} {dayjs(closeTime).utc().format('HH:mm:ss')}
+                {dayjs(closeTime).utc().format('HH:mm:ss')} {dayjs(closeTime).utc().format('MM/DD/YYYY')} UTC
               </Box>
             }
             color="white"

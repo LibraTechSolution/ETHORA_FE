@@ -4,7 +4,7 @@ import { ILeaderBoardDetail } from '@/types/leaderboard.type';
 import { formatAddress } from '@/utils/address';
 import { addComma } from '@/utils/number';
 import { divide } from '@/utils/operationBigNumber';
-import { Flex, Image } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { Table, TablePaginationConfig } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -143,6 +143,23 @@ const TableLeaderBoard = (props: Props) => {
       onChange={handleChangePage}
       // total={85}
       // rowKey={(record) => record.id}
+      locale={{
+        emptyText: (
+          <Box
+            background="#0C0C10"
+            margin="-16px -16px"
+            padding="20px"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+          >
+            <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
+            <Text color={'#6D6D70'} fontSize={'14px'}>
+              No data at present.
+            </Text>
+          </Box>
+        ),
+      }}
     />
   );
 };

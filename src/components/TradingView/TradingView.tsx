@@ -392,7 +392,7 @@ export const TradingViewChart = () => {
   };
 
   return (
-    <div>
+    <div className="h-[calc(100%-100px)]">
       <Flex
         display={{ base: 'block', xl: 'flex' }}
         flexDirection={'row'}
@@ -450,7 +450,7 @@ export const TradingViewChart = () => {
           </Button>
         </Box>
       </Flex>
-      <div ref={chartContainerRef} id="chart-element" className="h-[655px]" />
+      <div ref={chartContainerRef} id="chart-element" className="h-[100%]" />
       {isOpenModal && (
         <EditLimitOrderModal
           item={selectedItem}
@@ -464,6 +464,3 @@ export const TradingViewChart = () => {
     </div>
   );
 };
-function convertToTimeStamp(time: any): number {
-  throw new Error('Function not implemented.');
-}

@@ -129,6 +129,16 @@ export const Header = () => {
                 </Center>
               )}
               <Center>
+                <Link href="/dashboard" className={currentRoute.includes('/dashboard') ? activeStyle : nonActiveStyle}>
+                  Dashboard
+                </Link>
+              </Center>
+              <Center>
+                <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
+                  Token sale
+                </Link>
+              </Center>
+              <Center>
                 <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
                   Leaderboard
                 </Link>
@@ -385,6 +395,7 @@ export const Header = () => {
           <DrawerOverlay />
           <DrawerContent backgroundColor={'#1a1a22'}>
             <DrawerHeader>
+              <Image alt="ethora" src="/images/landingpage/logoText.svg" w="112px" h="32px" />
               <DrawerCloseButton color={'white'} />
             </DrawerHeader>
 
@@ -394,6 +405,11 @@ export const Header = () => {
                   Trade
                 </Link>
               </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="/dashboard" className={currentRoute === '/dashboard' ? activeStyle : nonActiveStyle}>
+                  Dashboard
+                </Link>
+              </Center>
               {appConfig.includeTestnet && (
                 <Center justifyContent={'flex-start'}>
                   <Link href="/faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
@@ -401,16 +417,6 @@ export const Header = () => {
                   </Link>
                 </Center>
               )}
-              <Center justifyContent={'flex-start'}>
-                <Link href="/earn" className={currentRoute === '/earn' ? activeStyle : nonActiveStyle}>
-                  Earn
-                </Link>
-              </Center>
-              <Center justifyContent={'flex-start'}>
-                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
-                  Leaderboard
-                </Link>
-              </Center>
               <Center justifyContent={'flex-start'}>
                 <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
                   Token sale
@@ -425,6 +431,16 @@ export const Header = () => {
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
+                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
+                  Leaderboard
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="/referral" className={currentRoute === '/referral' ? activeStyle : nonActiveStyle}>
+                  Referral
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
                 <Link
                   href="/earn"
                   className={`w-full text-left ${currentRoute === '/earn' ? 'text-[#fff]' : nonActiveStyle}`}
@@ -434,18 +450,18 @@ export const Header = () => {
               </Center>
               <Center justifyContent={'flex-start'}>
                 <Link
-                  href="/docs"
-                  className={`w-full text-left ${currentRoute === '/docs' ? 'text-[#fff]' : nonActiveStyle}`}
-                >
-                  Docs
-                </Link>
-              </Center>
-              <Center justifyContent={'flex-start'}>
-                <Link
                   href="/stats"
                   className={`w-full text-left ${currentRoute === '/stats' ? 'text-[#fff]' : nonActiveStyle}`}
                 >
                   Stats
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link
+                  href="/docs"
+                  className={`w-full text-left ${currentRoute === '/docs' ? 'text-[#fff]' : nonActiveStyle}`}
+                >
+                  Docs
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
