@@ -260,7 +260,7 @@ const ETRVault = ({
           </CustomConnectButton>
         </Box>
       </Box>
-      {openDepositModal && <DepositModal isOpen={openDepositModal} onDismiss={() => setOpenDepositModal(false)} />}
+      {openDepositModal && <DepositModal isOpen={openDepositModal} onDismiss={() => setOpenDepositModal(false)} depositBalances={depositBalances} />}
     </>
   );
 };

@@ -36,6 +36,7 @@ import { addComma, roundDown } from '@/utils/number';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import BigNumber from 'bignumber.js';
+import Currency from '@/components/Currency';
 
 const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { onFetchData } = useContext(EarnContext);
@@ -176,9 +177,11 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
                         Max:{' '}
-                        {dataDepositBalances !== undefined
-                          ? addComma(formatUnits(dataDepositBalances as bigint, 18), 2)
-                          : '0.00'}{' '}
+                        <Currency
+                          value={dataDepositBalances !== undefined ? BigNumber(formatUnits(dataDepositBalances as bigint, 18)).toFixed() : 0}
+                          decimal={2}
+                          unit="esETR"
+                        />{' '}
                         esETR
                       </Text>
                     </Flex>
@@ -210,6 +213,7 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={600}
+                        boxShadow={'0px 0px 3px -1px rgba(196,196,196,0.5)'}
                         _hover={{
                           background: '#252528',
                         }}

@@ -40,7 +40,15 @@ import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import Currency from '@/components/Currency';
 
-const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
+const DepositModalETRVault = ({
+  isOpen,
+  depositBalances,
+  onDismiss,
+}: {
+  isOpen: boolean;
+  depositBalances: number;
+  onDismiss: () => void;
+}) => {
   const { address } = useAccount();
   const toast = useToast();
   const [isApproved, setIsApproved] = useState<boolean>(false);
@@ -48,6 +56,7 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
   const [loadingStake, setLoadingStake] = useState<boolean>(false);
   const validNumber = new RegExp(/^\d*\.?\d{0,6}$/);
   const { onFetchData } = useContext(EarnContext);
+  const [amoutBigNumer, setAmoutBigNumer] = useState<bigint>();
 
   const balance = useBalanceOf(appConfig.ESETR_SC as `0x${string}`);
   const validationSchema = Yup.object({
@@ -99,11 +108,10 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
   const getVestedAmount_VETR = data_VETR_SC && data_VETR_SC[1].result;
   const getCombinedAverageStakedAmount_VETR = data_VETR_SC && data_VETR_SC[2].result;
   const pairAmounts_VETR = data_VETR_SC && data_VETR_SC[3].result;
-
+  
   const SE = formatEther(balance as bigint);
-  const GW = BigNumber(formatEther(getMaxVestableAmount_VETR as bigint)).minus(
-    formatEther(getVestedAmount_VETR as bigint),
-  );
+  const GW = BigNumber(getMaxVestableAmount_VETR ? formatEther(getMaxVestableAmount_VETR as bigint) : 0).minus(
+    getVestedAmount_VETR ? formatEther(getVestedAmount_VETR as bigint) : 0);
   const getMax = BigNumber.minimum(SE, GW).toFixed();
 
   const deposited = Number(getVestedAmount_VETR) / 10 ** 18;
@@ -119,13 +127,24 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
     validationSchema: validationSchema,
   });
 
-  // function xSe(e, t, n, r, i) {
-  //   let a = i;
-  //   e && (a = e + i);
-  //   let o = r,
-  //     s = 0;
-  //   return e && t && n && n > 0 && ((o = (t * a) / n), o > r && (s = o - r)), r >= s ? r : s;
-  // }
+  const xSe = (e: any, t: any, n: any, r: any, i: any) => {
+    let a = i;
+    e && (a = e + i);
+    let o = r,
+      s = 0;
+    // eslint-disable-next-line no-sequences
+    return e && t && n && n > 0 && ((o = (t * a) / n), o > r && (s = o - r)), r >= s ? r : s;
+  };
+
+  const reserveFirst = xSe(
+    amoutBigNumer,
+    getCombinedAverageStakedAmount_VETR,
+    getMaxVestableAmount_VETR,
+    pairAmounts_VETR,
+    getVestedAmount_VETR,
+  );
+
+  console.log('reserveFirst', formatEther(reserveFirst));
 
   const onApprove = async () => {
     // if (!isApproved) {
@@ -274,7 +293,7 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
 
   useEffect(() => {
     console.log(getAllowance);
-    setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)));
+    setIsApproved(getAllowance !== undefined && BigNumber(getAllowance?.toString()).isGreaterThan(BigNumber(0)));
   }, [getAllowance]);
 
   return (
@@ -304,7 +323,13 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         Deposit
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {getMax !== undefined ? addComma(getMax, 2) : '0.00'} esETR
+                        Max:{' '}
+                        <Currency
+                          value={getMax !== undefined ? BigNumber(getMax).toFixed() : 0}
+                          decimal={2}
+                          unit="esETR"
+                        />{' '}
+                        esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -320,6 +345,8 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                       onChange={(e) => {
                         if (validNumber.test(e.target.value)) {
                           formik.handleChange(e);
+                          setAmoutBigNumer(e.target.value ? parseEther(e.target.value) : parseEther('0'));
+                          console.log(e.target.value);
                         } else {
                           console.log('field value change');
                           return;
@@ -335,12 +362,15 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={600}
+                        boxShadow={'0px 0px 3px -1px rgba(196,196,196,0.5)'}
                         _hover={{
                           background: '#252528',
                         }}
                         onClick={() => {
-                          if (getMax) {
+                          if (getMax !== undefined) {
                             formik.setFieldValue('amount', roundDown(+getMax, 6));
+                            setAmoutBigNumer(parseEther(roundDown(+getMax, 6)?.toString()));
+                            console.log(roundDown(+getMax, 6));
                           }
                         }}
                       >
@@ -399,7 +429,7 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                           color="white"
                           placement="top"
                           bg="#050506"
-                          minWidth="215px"
+                          minWidth="300px"
                         >
                           <Text as="u">
                             {BigNumber(formik?.values?.amount ? formik?.values?.amount : 0)
@@ -417,7 +447,44 @@ const DepositModalETRVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         Reserve Amount
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        0.00 / 0.00
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <Box w="100%" p={4} color="white">
+                              <Flex margin={'0 -8px'} alignItems={'center'}>
+                                <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                                  Current Reserved
+                                </Box>
+                                <Spacer />
+                                <Box padding={'0 8px'}>
+                                  {pairAmounts_VETR !== undefined
+                                    ? BigNumber(formatEther(pairAmounts_VETR as bigint)).toFormat(6)
+                                    : '0.000000'}
+                                </Box>
+                              </Flex>
+                              <Flex margin={'0 -8px'} alignItems={'center'}>
+                                <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                                  Additional Reserve Required
+                                </Box>
+                                <Spacer />
+                                <Box padding={'0 8px'}>
+                                  {pairAmounts_VETR !== undefined && reserveFirst !== undefined
+                                    ? BigNumber(+formatEther(reserveFirst as bigint) - +formatEther(pairAmounts_VETR as bigint)).toFormat(6)
+                                    : '0.000000'}
+                                </Box>
+                              </Flex>
+                            </Box>
+                          }
+                          color="white"
+                          placement="top"
+                          bg="#050506"
+                          minWidth="400px"
+                        >
+                          <Text as="u">
+                            {reserveFirst !== undefined ? addComma(formatEther(reserveFirst), 2) : '0.00'} /{' '}
+                            {depositBalances !== undefined ? addComma(depositBalances, 2) : '0.00'}
+                          </Text>
+                        </Tooltip>
                       </Text>
                     </Flex>
                   </FormLabel>

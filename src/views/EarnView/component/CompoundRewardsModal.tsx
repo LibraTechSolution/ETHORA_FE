@@ -53,7 +53,8 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
       clainUSDC: true,
     },
     onSubmit: (values) => {
-      console.log('onSubmit');
+      console.log('onSubmit',values);
+      return;
       onCompoundReward(values);
     },
     // validationSchema: validationSchema,
@@ -186,10 +187,10 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                   fontWeight={400}
                   fontSize={'14px'}
                   onChange={(e) => {
-                    setClaimETRValue(!claimETRValue);
-                    formik.setFieldValue('claimETR', !claimETRValue);
+                    formik.setFieldValue('claimETR', !formik.values.claimETR);
                   }}
-                  isChecked={claimETRValue}
+                  isChecked={formik.values.stakeETR || formik.values.claimETR}
+                  isDisabled={claimETRValue}
                 >
                   <Text as="span" fontSize={'14px'}>
                     Claim ETR Rewards
@@ -204,8 +205,8 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                   fontSize={'14px'}
                   onChange={(e) => {
                     console.log(e.target.checked);
+                    setClaimETRValue(!claimETRValue);
                     if (e.target.checked) {
-                      setClaimETRValue(true);
                       formik.setFieldValue('claimETR', true);
                     }
                     formik.setFieldValue('stakeETR', !formik.values.stakeETR);
@@ -223,10 +224,10 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                   fontWeight={400}
                   fontSize={'14px'}
                   onChange={(e) => {
-                    setClaimEsETRValue(!claimEsETRValue);
-                    formik.setFieldValue('claimEsETR', !claimEsETRValue);
+                    formik.setFieldValue('claimEsETR', !formik.values.claimEsETR);
                   }}
-                  isChecked={claimEsETRValue}
+                  isChecked={formik.values.stakeEsETR || formik.values.claimEsETR}
+                  isDisabled={claimEsETRValue}
                 >
                   <Text as="span" fontSize={'14px'}>
                     Claim esETR Rewards
@@ -240,8 +241,8 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                   fontWeight={400}
                   fontSize={'14px'}
                   onChange={(e) => {
+                    setClaimEsETRValue(!claimEsETRValue);
                     if (e.target.checked) {
-                      setClaimEsETRValue(true);
                       formik.setFieldValue('claimEsETR', true);
                     }
                     formik.setFieldValue('stakeEsETR', !formik.values.stakeEsETR);

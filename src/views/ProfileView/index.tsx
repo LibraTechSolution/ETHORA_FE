@@ -22,6 +22,8 @@ import { formatUnits } from 'viem';
 import TradeTable from '../TradeView/components/TradeTable';
 import LimitOrdersTable from '../TradeView/components/LimitOrdersTable';
 import HistoryTable from '../TradeView/components/HistoryTable';
+import Currency from '@/components/Currency';
+import BigNumber from 'bignumber.js';
 
 export type Person = {
   firstName: string;
@@ -80,7 +82,6 @@ const ProfileView = () => {
 
   return (
     <>
-      {' '}
       {isMounted && (
         <Flex
           marginX={'-20px'}
@@ -270,9 +271,11 @@ const ProfileView = () => {
                 h={'55px'}
                 borderRadius={'100%'}
                 overflow={'hidden'}
-                bg={'#1E3EF0'}
+                // bg={'#1E3EF0'}
                 marginX={{ base: 'auto', sm: 'initial' }}
-              />
+              >
+                <Image src="/images/icons/ethora-cicle.svg" width={55} height={55} alt="Avata" />
+              </Box>
               <Box>
                 <Heading as="h4" fontSize={20} lineHeight={'30px'} color={'white'}>
                   Invite your friends to join Ethora now!
@@ -329,9 +332,17 @@ const ProfileView = () => {
                         Total Referral Earnings
                       </Text>
                       <Text as="span" textColor={'white'}>
-                        {dataProfileInfo?.metrics?.referral?.totalRebateEarned
-                          ? addComma(formatUnits(dataProfileInfo?.metrics?.referral?.totalRebateEarned as bigint, 6), 2)
-                          : 0.0}{' '}
+                        <Currency
+                          value={
+                            dataProfileInfo?.metrics?.referral?.totalRebateEarned
+                              ? BigNumber(
+                                  formatUnits(dataProfileInfo?.metrics?.referral?.totalRebateEarned as bigint, 6),
+                                ).toFixed()
+                              : 0
+                          }
+                          decimal={2}
+                          unit="USDC"
+                        />{' '}
                         USDC
                       </Text>
                     </Box>
@@ -340,9 +351,17 @@ const ProfileView = () => {
                         Referral Trading Volume / week
                       </Text>
                       <Text as="span" textColor={'white'}>
-                        {dataProfileInfo?.metrics?.referral?.totalVolumeTrades
-                          ? addComma(formatUnits(dataProfileInfo?.metrics?.referral?.totalVolumeTrades as bigint, 6), 2)
-                          : 0.0}{' '}
+                        <Currency
+                          value={
+                            dataProfileInfo?.metrics?.referral?.totalVolumeTrades
+                              ? BigNumber(
+                                  formatUnits(dataProfileInfo?.metrics?.referral?.totalVolumeTrades as bigint, 6),
+                                ).toFixed()
+                              : 0
+                          }
+                          decimal={2}
+                          unit="USDC"
+                        />{' '}
                         USDC
                       </Text>
                     </Box>
@@ -394,9 +413,17 @@ const ProfileView = () => {
                         Total Payout
                       </Text>
                       <Text as="span" textColor={'white'}>
-                        {dataProfileInfo?.metrics?.USDC?.totalPayout
-                          ? addComma(formatUnits(dataProfileInfo?.metrics?.USDC?.totalPayout as bigint, 6), 2)
-                          : 0.0}{' '}
+                        <Currency
+                          value={
+                            dataProfileInfo?.metrics?.USDC?.totalPayout
+                              ? BigNumber(
+                                  formatUnits(dataProfileInfo?.metrics?.USDC?.totalPayout as bigint, 6),
+                                ).toFixed()
+                              : 0
+                          }
+                          decimal={2}
+                          unit="USDC"
+                        />{' '}
                         USDC
                       </Text>
                     </Box>
@@ -410,9 +437,15 @@ const ProfileView = () => {
                           dataProfileInfo && dataProfileInfo?.metrics?.USDC?.netPnl >= 0 ? '#1ED768' : '#F03D3E'
                         } `}
                       >
-                        {dataProfileInfo?.metrics?.USDC?.netPnl
-                          ? addComma(formatUnits(dataProfileInfo?.metrics?.USDC?.netPnl as bigint, 6), 2)
-                          : 0.0}{' '}
+                        <Currency
+                          value={
+                            dataProfileInfo?.metrics?.USDC?.netPnl
+                              ? BigNumber(formatUnits(dataProfileInfo?.metrics?.USDC?.netPnl as bigint, 6)).toFixed()
+                              : 0
+                          }
+                          decimal={2}
+                          unit="USDC"
+                        />{' '}
                         USDC
                       </Text>
                     </Box>
@@ -421,9 +454,17 @@ const ProfileView = () => {
                         Open Interest
                       </Text>
                       <Text as="span" textColor={'white'}>
-                        {dataProfileInfo?.metrics?.USDC?.openInterest
-                          ? addComma(formatUnits(dataProfileInfo?.metrics?.USDC?.openInterest as bigint, 6), 2)
-                          : 0.0}{' '}
+                        <Currency
+                          value={
+                            dataProfileInfo?.metrics?.USDC?.openInterest
+                              ? BigNumber(
+                                  formatUnits(dataProfileInfo?.metrics?.USDC?.openInterest as bigint, 6),
+                                ).toFixed()
+                              : 0
+                          }
+                          decimal={2}
+                          unit="USDC"
+                        />{' '}
                         USDC
                       </Text>
                     </Box>
@@ -432,9 +473,15 @@ const ProfileView = () => {
                         Volume
                       </Text>
                       <Text as="span" textColor={'white'}>
-                        {dataProfileInfo?.metrics?.USDC?.volume
-                          ? addComma(formatUnits(dataProfileInfo?.metrics?.USDC?.volume as bigint, 6), 2)
-                          : 0.0}{' '}
+                        <Currency
+                          value={
+                            dataProfileInfo?.metrics?.USDC?.volume
+                              ? BigNumber(formatUnits(dataProfileInfo?.metrics?.USDC?.volume as bigint, 6)).toFixed()
+                              : 0
+                          }
+                          decimal={2}
+                          unit="USDC"
+                        />{' '}
                         USDC
                       </Text>
                     </Box>

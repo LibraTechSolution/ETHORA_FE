@@ -37,6 +37,7 @@ import { EarnContext } from '..';
 import ESETR_ABI from '@/config/abi/ESETR_ABI';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
+import Currency from '@/components/Currency';
 
 const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { address } = useAccount();
@@ -251,7 +252,13 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                         Stake
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max: {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '0.00'} esETR
+                        Max:{' '}
+                        <Currency
+                          value={balance !== undefined ? BigNumber(formatUnits(balance as bigint, 18)).toFixed() : 0}
+                          decimal={2}
+                          unit="esETR"
+                        />{' '}
+                        esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -281,11 +288,12 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={600}
+                        boxShadow={'0px 0px 3px -1px rgba(196,196,196,0.5)'}
                         _hover={{
                           background: '#252528',
                         }}
                         onClick={() => {
-                          if (balance) {
+                          if (balance !== undefined) {
                             formik.setFieldValue('amount', roundDown(Number(balance) / 10 ** 18, 6));
                           }
                         }}

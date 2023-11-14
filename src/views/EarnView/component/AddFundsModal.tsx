@@ -38,6 +38,7 @@ import { addComma, roundDown } from '@/utils/number';
 import { formatUnits, BaseError, parseUnits } from 'viem';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
+import Currency from '@/components/Currency';
 
 const AddFundsModal = ({
   isOpen,
@@ -70,7 +71,7 @@ const AddFundsModal = ({
   const validationSchema = Yup.object({
     amount: Yup.string()
       .required('Amount is required')
-      .test('Is positive?', 'The number must be greater than 0!', (value) => +value > 0)
+      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
       .test('Greater amount?', 'Not enough funds!', (value) => +value <= +formatUnits(balance as bigint, 6)),
     rememberMe: Yup.boolean().equals([true]),
   });
@@ -264,7 +265,13 @@ const AddFundsModal = ({
                         Pay
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Balance: {balance !== undefined ? addComma(formatUnits(balance as bigint, 6), 2) : '0.00'} USDC
+                        Balance:{' '}
+                        <Currency
+                          value={balance !== undefined ? BigNumber(formatUnits(balance as bigint, 6)).toFixed() : 0}
+                          decimal={2}
+                          unit="USDC"
+                        />{' '}
+                        USDC
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -295,11 +302,12 @@ const AddFundsModal = ({
                         background={'#0C0C10'}
                         color="#ffffff"
                         fontWeight={600}
+                        boxShadow={'0px 0px 3px -1px rgba(196,196,196,0.5)'}
                         _hover={{
                           background: '#252528',
                         }}
                         onClick={() => {
-                          if (balance) {
+                          if (balance !== undefined) {
                             formik.setFieldValue('amount', roundDown(Number(balance) / 10 ** 6, 6));
                           }
                         }}
@@ -325,7 +333,12 @@ const AddFundsModal = ({
                     Receive
                   </Text>{' '}
                   <Text as="span" fontSize={'16px'} color={'#1ED768'}>
-                    {addComma(+formik.values.amount / +exchangeRate, 2)} ELP
+                    <Currency
+                      value={exchangeRate !== undefined ? BigNumber(formik.values.amount).dividedBy(exchangeRate) : 0}
+                      decimal={2}
+                      unit="ELP"
+                    />{' '}
+                    ELP
                   </Text>
                 </Flex>
                 <Checkbox
@@ -335,6 +348,7 @@ const AddFundsModal = ({
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
+                  // defaultChecked
                 >
                   <Text as="span" fontSize={'14px'}>
                     {' '}
