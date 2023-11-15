@@ -105,6 +105,7 @@ const TradeControl = () => {
     if (address) {
       resetListLine();
       queryClient.clear();
+      setIsShowWarning(false);
     }
   }, [address, queryClient, resetListLine]);
 
@@ -197,7 +198,7 @@ const TradeControl = () => {
 
   const handleApprove = async (permit: IPermit) => {
     try {
-      const res = await approveToken(permit, chain?.id as number);
+      const res = await approveToken(permit, chain?.id as number, true);
       toggleApprovedAccount(true);
       setIsLoadingApprove(false);
     } catch (error) {
@@ -305,6 +306,7 @@ const TradeControl = () => {
   }, [tradeType]);
 
   const handleCreateTrade = async (isAbove: boolean) => {
+    setIsShowWarning(false);
     let hasError = false;
     if (tradeType === TradeType.LIMIT) {
       if (!limitOrderPrice || +limitOrderPrice < 0.00000001) {
@@ -371,6 +373,7 @@ const TradeControl = () => {
       setListLines(res.data.data);
       toast({
         position: 'top',
+        duration: 10000000,
         render: ({ onClose }) => (
           <ToastLayout
             title="Trade order placed"
@@ -732,8 +735,8 @@ const TradeControl = () => {
                       {isClose && currentPair?.type === PairType.FOREX ? (
                         <Center>Trading is halted for this asset</Center>
                       ) : (
-                        <Grid templateColumns="repeat(2, 1fr)" gap="20px">
-                          <GridItem>
+                        <Grid templateColumns="repeat(2, 1fr)" gap={{ base: '5px', '2xl': '20px' }}>
+                          <GridItem colSpan={1}>
                             <Button
                               bgColor="#1ED768"
                               textColor="#fff"
@@ -748,7 +751,7 @@ const TradeControl = () => {
                               Up
                             </Button>
                           </GridItem>
-                          <GridItem>
+                          <GridItem colSpan={1}>
                             <Button
                               bgColor="#F03D3E"
                               textColor="#fff"

@@ -28,8 +28,14 @@ import { useCallback, useEffect, useState } from 'react';
 import useModalStore from '@/store/useModalStore';
 import registerABI from '@/config/abi/registerABI';
 import { Address, BaseError } from 'viem';
-import { register } from '@/services/auth';
+import { approveToken, register } from '@/services/auth';
 import { useQueryClient } from '@tanstack/react-query';
+import { IPermit } from '@/types/auth.type';
+import { getSVR } from '@/utils/helper';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import USDC_ABI from '@/config/abi/USDC_ABI';
+dayjs.extend(utc);
 
 interface ModalProp {
   isOpen: boolean;
@@ -44,14 +50,23 @@ const types = {
   ],
 } as const;
 
+const approveParamType = [
+  { name: 'owner', type: 'address' },
+  { name: 'spender', type: 'address' },
+  { name: 'value', type: 'uint256' },
+  { name: 'nonce', type: 'uint256' },
+  { name: 'deadline', type: 'uint256' },
+];
+
 export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
   const { address, isDisconnected } = useAccount();
   const toast = useToast();
-  const { user, toggleRegisteredAccount } = useUserStore();
+  const { user, toggleRegisteredAccount, toggleApprovedAccount } = useUserStore();
   const { onOpen } = useModalStore();
   const { chain } = useNetwork();
   const [isLoadingDeactive, setIsLoadingDeactive] = useState<boolean>(false);
   const queryClient = useQueryClient();
+  const [isLoadingRevokeApprove, setIsLoadingRevokeApprove] = useState<boolean>(false);
 
   const domain = {
     name: 'Validator',
@@ -207,6 +222,95 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
     // refetch();
   };
 
+  const handleApprove = async (permit: IPermit) => {
+    try {
+      const res = await approveToken(permit, chain?.id as number, false);
+      toggleApprovedAccount(false);
+      setIsLoadingRevokeApprove(false);
+    } catch (error) {
+      setIsLoadingRevokeApprove(false);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Approve account Unsuccessfully"
+            content={'Something went wrong. Please try again later.'}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+    }
+  };
+
+  const signTypedDataV4Revoke = async (nonce: bigint) => {
+    try {
+      const deadline = dayjs().utc().add(1, 'day').unix();
+      const approveMessage = {
+        nonce: nonce,
+        value: 0,
+        owner: address,
+        deadline,
+        spender: appConfig.bufferRouterSC as Address,
+      };
+      const signature = await signTypedData({
+        domain,
+        message: approveMessage,
+        types: {
+          Permit: approveParamType,
+        },
+        primaryType: 'Permit',
+      });
+
+      const permit = {
+        ...getSVR(signature),
+        deadline,
+      };
+      handleApprove(permit);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setIsLoadingRevokeApprove(false);
+      let msgContent = '';
+      if (error instanceof BaseError) {
+        if (error.shortMessage.includes('User rejected the request.')) {
+          msgContent = 'User rejected the request!';
+        } else if (error.shortMessage.includes('the balance of the account')) {
+          msgContent = 'Your account balance is insufficient for gas * gas price + value!';
+        } else {
+          msgContent = 'Something went wrong. Please try again later.';
+        }
+      }
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            title="Approve account Unsuccessfully"
+            content={msgContent}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+    }
+  };
+
+  const revokeApprove = async () => {
+    try {
+      setIsLoadingRevokeApprove(true);
+      const nonce = await readContract({
+        address: appConfig.USDC_SC as Address,
+        abi: USDC_ABI,
+        functionName: 'nonces',
+        args: [address as Address],
+      });
+      signTypedDataV4Revoke(nonce);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setIsLoadingRevokeApprove(false);
+    }
+  };
+
   return (
     <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -298,7 +402,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
               </Center>
               <Center width="100%">
                 <Button
-                  onClick={() => console.log('====')}
+                  onClick={revokeApprove}
                   type="button"
                   textColor="#1E3EF0"
                   bgColor="transparent"
@@ -308,6 +412,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
                   paddingX="12px"
                   paddingY="15px"
                   rounded="10px"
+                  isLoading={isLoadingRevokeApprove}
                 >
                   Revoke approval
                 </Button>

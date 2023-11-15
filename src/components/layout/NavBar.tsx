@@ -30,17 +30,7 @@ const NavBar = () => {
           borderRightWidth={{ base: '0', lg: '2px' }}
           borderRight={{ base: 'none', lg: currentRoute === '/dashboard' ? '2px solid #1E3EF0' : 'none' }}
         >
-          <Tooltip
-            hasArrow
-            label={
-              <Box p={4} color="white">
-                Dashboard
-              </Box>
-            }
-            color="white"
-            placement="top"
-            bg="#050506"
-          >
+          <Tooltip fontSize={'12px'} hasArrow label="Dashboard" color="white" placement="top" bg="#050506">
             <Link
               as={NextLink}
               href="/dashboard"
@@ -62,17 +52,7 @@ const NavBar = () => {
           borderRightWidth={{ base: '0', lg: '2px' }}
           borderRight={{ base: 'none', lg: currentRoute.includes('trade') ? '2px solid #1E3EF0' : 'none' }}
         >
-          <Tooltip
-            hasArrow
-            label={
-              <Box p={4} color="white">
-                Trade
-              </Box>
-            }
-            color="white"
-            placement="top"
-            bg="#050506"
-          >
+          <Tooltip fontSize={'12px'} hasArrow label="Trade" color="white" placement="top" bg="#050506">
             <Link
               as={NextLink}
               href="/trade/BTC-USD"
@@ -94,17 +74,7 @@ const NavBar = () => {
           borderRightWidth={{ base: '0', lg: '2px' }}
           borderRight={{ base: 'none', lg: 'none' }}
         >
-          <Tooltip
-            hasArrow
-            label={
-              <Box p={4} color="white">
-                Pratice Trade
-              </Box>
-            }
-            color="white"
-            placement="top"
-            bg="#050506"
-          >
+          <Tooltip fontSize={'12px'} hasArrow label="Pratice Trade" color="white" placement="top" bg="#050506">
             <Link
               as={NextLink}
               href="/trade/BTC-USD"
@@ -119,17 +89,7 @@ const NavBar = () => {
           borderRightWidth={{ base: '0', lg: '2px' }}
           borderRight={{ base: 'none', lg: currentRoute.includes('leaderboard') ? '2px solid #1E3EF0' : 'none' }}
         >
-          <Tooltip
-            hasArrow
-            label={
-              <Box p={4} color="white">
-                Leaderboard
-              </Box>
-            }
-            color="white"
-            placement="top"
-            bg="#050506"
-          >
+          <Tooltip fontSize={'12px'} hasArrow label="Leaderboard" color="white" placement="top" bg="#050506">
             <Link
               as={NextLink}
               href="/leaderboard"
@@ -151,17 +111,7 @@ const NavBar = () => {
           borderRightWidth={{ base: '0', lg: '2px' }}
           borderRight={{ base: 'none', lg: currentRoute === '/referral' ? '2px solid #1E3EF0' : 'none' }}
         >
-          <Tooltip
-            hasArrow
-            label={
-              <Box p={4} color="white">
-                Referral
-              </Box>
-            }
-            color="white"
-            placement="top"
-            bg="#050506"
-          >
+          <Tooltip fontSize={'12px'} hasArrow label="Referral" color="white" placement="top" bg="#050506">
             <Link
               as={NextLink}
               href="/referral"

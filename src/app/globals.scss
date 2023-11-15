@@ -377,3 +377,7 @@
     background: #0f0f11;
   }
 }
+
+.chakra-toast__inner {
+  max-width: calc(100% - 20px)!important;
+}
