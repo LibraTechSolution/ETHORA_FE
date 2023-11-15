@@ -34,13 +34,21 @@ import BigNumber from 'bignumber.js';
 import ESETR_ABI from '@/config/abi/ESETR_ABI';
 import VBLP_ABI from '@/config/abi/VBLP_ABI';
 import { useBalanceOf } from '@/hooks/useContractRead';
-import { formatUnits, BaseError, parseEther } from 'viem';
+import { formatUnits, BaseError, parseEther, formatEther } from 'viem';
 import { addComma, roundDown } from '@/utils/number';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import Currency from '@/components/Currency';
 
-const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
+const DepositModalELPVault = ({
+  isOpen,
+  depositBalances,
+  onDismiss,
+}: {
+  isOpen: boolean;
+  depositBalances: bigint;
+  onDismiss: () => void;
+}) => {
   const { address } = useAccount();
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [loadingApproved, setLoadingApproved] = useState<boolean>(false);
@@ -49,12 +57,7 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
   const { onFetchData } = useContext(EarnContext);
   const toast = useToast();
   const balance = useBalanceOf(appConfig.ESETR_SC as `0x${string}`);
-  const validationSchema = Yup.object({
-    amount: Yup.string()
-      .required('Amount is required')
-      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
-      .test('Greater amount?', 'Not enough funds!', (value) => +value <= +formatUnits(balance as bigint, 18)),
-  });
+  const [amoutBigNumer, setAmoutBigNumer] = useState<bigint>();
 
   const { data: getAllowance } = useContractRead({
     address: appConfig.ESETR_SC as `0x${string}`,
@@ -81,21 +84,23 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
         functionName: 'getVestedAmount',
         args: [address as `0x${string}`],
       },
+      {
+        ...VBLP_SC,
+        functionName: 'pairAmounts',
+        args: [address as `0x${string}`],
+      },
+      {
+        ...VBLP_SC,
+        functionName: 'getCombinedAverageStakedAmount',
+        args: [address as `0x${string}`],
+      },
     ],
   });
 
-  //   function xSe(e, t, n, r, i) {
-  //     let a = i;
-  //     e && (a = e + i);
-  //     let o = r
-  //       , s = 0;
-  //     return e && t && n && n > 0 && (o = t * a / n,
-  //     (o > r) && (s = o - r)),
-  //     (r >= s) ? r : s
-  // }
-
   const getMaxVestableAmount_VBLP = data_VBLP_SC && data_VBLP_SC[0].result;
   const getVestedAmount_VBLP = data_VBLP_SC && data_VBLP_SC[1].result;
+  const pairAmounts_VBLP = data_VBLP_SC && data_VBLP_SC[2].result;
+  const getCombinedAverageStakedAmount_VBLP = data_VBLP_SC && data_VBLP_SC[2].result;
 
   console.log('balance', balance);
   const SE = balance ? formatUnits(balance as bigint, 18) : 0;
@@ -104,6 +109,14 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
 
   const deposited = Number(getVestedAmount_VBLP) / 10 ** 18;
   const maxCapacity = Number(getMaxVestableAmount_VBLP) / 10 ** 18;
+
+  
+  const validationSchema = Yup.object({
+    amount: Yup.string()
+      .required('Amount is required')
+      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
+      .test('Greater amount?', 'Not enough funds!', (value) => +value <= +getMax),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -114,6 +127,22 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
     },
     validationSchema: validationSchema,
   });
+
+  function xSe(e: any, t: any, n: any, r: any, i: any) {
+    let a = i;
+    e && (a = e + i);
+    let o = r,
+      s = 0;
+    return e && t && n && n > 0 && ((o = (t * a) / n), o > r && (s = o - r)), r >= s ? r : s;
+  }
+
+  const reserveFirst = xSe(
+    amoutBigNumer,
+    getCombinedAverageStakedAmount_VBLP,
+    getMaxVestableAmount_VBLP,
+    pairAmounts_VBLP,
+    getVestedAmount_VBLP,
+  );
 
   const onApprove = async () => {
     // if (!isApproved) {
@@ -314,6 +343,7 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                       onChange={(e) => {
                         if (validNumber.test(e.target.value)) {
                           formik.handleChange(e);
+                          setAmoutBigNumer(e.target.value ? parseEther(e.target.value) : parseEther('0'));
                         } else {
                           console.log('field value change');
                           return;
@@ -336,6 +366,7 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         onClick={() => {
                           if (getMax !== undefined) {
                             formik.setFieldValue('amount', roundDown(getMax, 6));
+                            setAmoutBigNumer(parseEther(roundDown(+getMax, 6)?.toString()));
                           }
                         }}
                       >
@@ -345,7 +376,7 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         |
                       </Box>
                       <Text marginLeft={'4px'} fontSize={'14px'} fontWeight={400}>
-                        USDC
+                        esETR
                       </Text>
                     </InputRightElement>
                   </InputGroup>
@@ -404,7 +435,49 @@ const DepositModalELPVault = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                         Reserve Amount
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        0.00 / 0.00
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <Box w="100%" p={4} color="white">
+                              <Flex margin={'0 -8px'} alignItems={'center'}>
+                                <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                                  Current Reserved
+                                </Box>
+                                <Spacer />
+                                <Box padding={'0 8px'}>
+                                  {pairAmounts_VBLP !== undefined
+                                    ? BigNumber(formatEther(pairAmounts_VBLP as bigint)).toFormat(
+                                        6,
+                                        BigNumber.ROUND_DOWN,
+                                      )
+                                    : '0.000000'}
+                                </Box>
+                              </Flex>
+                              <Flex margin={'0 -8px'} alignItems={'center'}>
+                                <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
+                                  Additional Reserve Required
+                                </Box>
+                                <Spacer />
+                                <Box padding={'0 8px'}>
+                                  {pairAmounts_VBLP !== undefined && reserveFirst !== undefined
+                                    ? BigNumber(
+                                        +formatEther(reserveFirst as bigint) - +formatEther(pairAmounts_VBLP as bigint),
+                                      ).toFormat(6, BigNumber.ROUND_DOWN)
+                                    : '0.000000'}
+                                </Box>
+                              </Flex>
+                            </Box>
+                          }
+                          color="white"
+                          placement="top"
+                          bg="#050506"
+                          minWidth="400px"
+                        >
+                          <Text as="u">
+                            {reserveFirst !== undefined ? addComma(formatEther(reserveFirst), 2) : '0.00'} /{' '}
+                            {depositBalances !== undefined ? addComma(formatEther(depositBalances), 2) : '0.00'}
+                          </Text>
+                        </Tooltip>
                       </Text>
                     </Flex>
                   </FormLabel>

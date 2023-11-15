@@ -59,12 +59,6 @@ const DepositModalETRVault = ({
   const [amoutBigNumer, setAmoutBigNumer] = useState<bigint>();
 
   const balance = useBalanceOf(appConfig.ESETR_SC as `0x${string}`);
-  const validationSchema = Yup.object({
-    amount: Yup.string()
-      .required('Amount is required')
-      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
-      .test('Greater amount?', 'Not enough funds!', (value) => +value <= +formatUnits(balance as bigint, 18)),
-  });
 
   const { data: getAllowance } = useContractRead({
     address: appConfig.ESETR_SC as `0x${string}`,
@@ -108,14 +102,24 @@ const DepositModalETRVault = ({
   const getVestedAmount_VETR = data_VETR_SC && data_VETR_SC[1].result;
   const getCombinedAverageStakedAmount_VETR = data_VETR_SC && data_VETR_SC[2].result;
   const pairAmounts_VETR = data_VETR_SC && data_VETR_SC[3].result;
-  
-  const SE = formatEther(balance as bigint);
+  console.log('SE', balance )
+  console.log('SE', balance )
+
+  const SE = balance ? formatEther(balance as bigint) : 0;
   const GW = BigNumber(getMaxVestableAmount_VETR ? formatEther(getMaxVestableAmount_VETR as bigint) : 0).minus(
-    getVestedAmount_VETR ? formatEther(getVestedAmount_VETR as bigint) : 0);
+    getVestedAmount_VETR ? formatEther(getVestedAmount_VETR as bigint) : 0,
+  );
   const getMax = BigNumber.minimum(SE, GW).toFixed();
 
   const deposited = Number(getVestedAmount_VETR) / 10 ** 18;
   const maxCapacity = Number(getMaxVestableAmount_VETR) / 10 ** 18;
+
+  const validationSchema = Yup.object({
+    amount: Yup.string()
+      .required('Amount is required')
+      .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
+      .test('Greater amount?', 'Not enough funds!', (value) => +value <= +getMax),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -434,7 +438,7 @@ const DepositModalETRVault = ({
                           <Text as="u">
                             {BigNumber(formik?.values?.amount ? formik?.values?.amount : 0)
                               .plus(deposited)
-                              .toFormat(2)}{' '}
+                              .toFormat(2, BigNumber.ROUND_DOWN)}{' '}
                             / {addComma(maxCapacity, 2)}
                           </Text>
                         </Tooltip>
@@ -458,7 +462,10 @@ const DepositModalETRVault = ({
                                 <Spacer />
                                 <Box padding={'0 8px'}>
                                   {pairAmounts_VETR !== undefined
-                                    ? BigNumber(formatEther(pairAmounts_VETR as bigint)).toFormat(6)
+                                    ? BigNumber(formatEther(pairAmounts_VETR as bigint)).toFormat(
+                                        6,
+                                        BigNumber.ROUND_DOWN,
+                                      )
                                     : '0.000000'}
                                 </Box>
                               </Flex>
@@ -469,7 +476,9 @@ const DepositModalETRVault = ({
                                 <Spacer />
                                 <Box padding={'0 8px'}>
                                   {pairAmounts_VETR !== undefined && reserveFirst !== undefined
-                                    ? BigNumber(+formatEther(reserveFirst as bigint) - +formatEther(pairAmounts_VETR as bigint)).toFormat(6)
+                                    ? BigNumber(
+                                        +formatEther(reserveFirst as bigint) - +formatEther(pairAmounts_VETR as bigint),
+                                      ).toFormat(6, BigNumber.ROUND_DOWN)
                                     : '0.000000'}
                                 </Box>
                               </Flex>
