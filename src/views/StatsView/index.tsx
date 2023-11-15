@@ -509,9 +509,9 @@ const StatsView = () => {
                   data={dataVolume ? dataVolume : []}
                   filename={`VolumeCSV_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                   headers={[
+                    { label: 'Date', key: 'timestamp' },
                     { label: 'Cumulative', key: 'cumulative' },
                     { label: 'Volume USDC', key: 'VolumeUSDC' },
-                    { label: 'Timestamp', key: 'timestamp' },
                   ]}
                 />
               </Button>
@@ -585,9 +585,9 @@ const StatsView = () => {
                 <DownloadCSV
                   data={dataFees ? dataFees : []}
                   headers={[
+                    { label: 'Date', key: 'timestamp' },
                     { label: 'Cumulative', key: 'cumulative' },
                     { label: 'Fees', key: 'fee' },
-                    { label: 'Timestamp', key: 'timestamp' },
                   ]}
                   filename={`FeesCSV_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
@@ -663,9 +663,9 @@ const StatsView = () => {
                 <DownloadCSV
                   data={dataBurnStats ? dataBurnStats : []}
                   headers={[
+                    { label: 'Date', key: 'timestamp' },
                     { label: 'Cumulative', key: 'cumulative' },
                     { label: 'Amount', key: 'amount' },
-                    { label: 'Timestamp', key: 'timestamp' },
                   ]}
                   filename={`BurnedETR_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
@@ -741,8 +741,8 @@ const StatsView = () => {
                 <DownloadCSV
                   data={dataRate ? dataRate : []}
                   headers={[
+                    { label: 'Date', key: 'timestamp' },
                     { label: 'Exchange Rate', key: 'rate' },
-                    { label: 'Timestamp', key: 'timestamp' },
                   ]}
                   filename={`USD/ELP-rate_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
@@ -823,8 +823,8 @@ const StatsView = () => {
                 <DownloadCSV
                   data={dataELPPool ? dataELPPool : []}
                   headers={[
+                    { label: 'Date', key: 'timestamp' },
                     { label: 'Current USDC Balance', key: 'glpSupply' },
-                    { label: 'Timestamp', key: 'timestamp' },
                   ]}
                   filename={`ELPPool_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
@@ -905,10 +905,10 @@ const StatsView = () => {
                 <DownloadCSV
                   data={dataUserStats ? dataUserStats : []}
                   headers={[
+                    { label: 'Date', key: 'timestamp' },
                     { label: 'Existing Count', key: 'existingCount' },
                     { label: 'Unique Count', key: 'uniqueCount' },
                     { label: 'unique Count Cumulative', key: 'uniqueCountCumulative' },
-                    { label: 'Timestamp', key: 'timestamp' },
                   ]}
                   filename={`NewvsExistingUsers_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format(
                     'YYYY-MM-DD',
@@ -986,9 +986,9 @@ const StatsView = () => {
                 <DownloadCSV
                   data={dataTradersNetPnL ? dataTradersNetPnL : []}
                   headers={[
+                    { label: 'Date', key: 'timestamp' },
                     { label: 'PNL', key: 'pnl' },
                     { label: 'PNL Cumulative', key: 'pnlCumulative' },
-                    { label: 'Timestamp', key: 'timestamp' },
                   ]}
                   filename={`TradersNetPnL(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format(
                     'YYYY-MM-DD',
@@ -1071,11 +1071,11 @@ const StatsView = () => {
                 <DownloadCSV
                   data={dataTradersProfit ? dataTradersProfit : []}
                   headers={[
+                    { label: 'Date', key: 'timestamp' },
                     { label: 'Profit', key: 'profit' },
                     { label: 'Loss', key: 'loss' },
                     { label: 'Profit Cumulative', key: 'profitCumulative' },
                     { label: 'Loss Cumulative', key: 'lossCumulative' },
-                    { label: 'Timestamp', key: 'timestamp' },
                   ]}
                   filename={`TradersProfitvsLoss(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format(
                     'YYYY-MM-DD',

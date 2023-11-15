@@ -24,6 +24,7 @@ import LimitOrdersTable from '../TradeView/components/LimitOrdersTable';
 import HistoryTable from '../TradeView/components/HistoryTable';
 import Currency from '@/components/Currency';
 import BigNumber from 'bignumber.js';
+import { first } from 'lodash';
 
 export type Person = {
   firstName: string;
@@ -118,7 +119,7 @@ const ProfileView = () => {
                   alignItems={'center'}
                 >
                   <Box as={'span'} marginRight={2}>
-                    {formatAddress(addressURL ?? address)}
+                    {formatAddress(addressURL ?? address, 6, 6)}
                   </Box>
                   <ExternalLink />
                 </Link>

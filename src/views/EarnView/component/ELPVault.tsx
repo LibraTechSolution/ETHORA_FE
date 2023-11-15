@@ -201,7 +201,13 @@ const ELPVault = ({
           </CustomConnectButton>
         </Box>
       </Box>
-      <DepositModalELPVault isOpen={openDepositModal} onDismiss={() => setOpenDepositModal(false)} />
+      {openDepositModal && (
+        <DepositModalELPVault
+          isOpen={openDepositModal}
+          onDismiss={() => setOpenDepositModal(false)}
+          depositBalances={depositBalances_fBLP}
+        />
+      )}
     </>
   );
 };

@@ -6,7 +6,9 @@ const DateRangeStyle = styled.div`
     border-color: #38383a;
   }
   .ant-picker {
-    .ant-picker-clear {
+    .ant-picker-clear,
+    .ant-picker-suffix, 
+    .ant-picker-separator {
       background: transparent;
       color: #6052fb;
     }

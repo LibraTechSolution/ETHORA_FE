@@ -84,6 +84,7 @@ const ETRVault = ({
       setLoadingWithdraw(false);
       onFetchData();
     } catch (error) {
+      console.log('error', error);
       setLoadingWithdraw(false);
       let msgContent = '';
       if (error instanceof BaseError) {
