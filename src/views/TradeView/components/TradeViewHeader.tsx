@@ -155,7 +155,7 @@ const TradeViewHeader = () => {
             </Center>
             <SearchPair listChanged24h={listChanged24h?.data} isShow={isShow} />
           </Center>
-          <Center paddingX={10} display={{ base: 'none', xl: 'flex' }}>
+          <Center paddingX={{ base: 5, '2xl': 10 }} display={{ base: 'none', xl: 'flex' }}>
             {currentPair?.pair && (
               <p className="min-w-[190px] text-2xl font-normal text-[#fff]">
                 <ShowPrice /> {currentPair?.pair.split('/')[1].toUpperCase()}

@@ -86,7 +86,7 @@ const DashBoardView = () => {
             cursor={defaultTabs === TradingTabType.Markets ? 'default' : 'pointer'}
             color={defaultTabs === TradingTabType.Markets ? '#1E3EF0' : '#9E9E9F'}
           >
-            Markets Tab
+            Markets
           </Box>
         </Flex>
         <>

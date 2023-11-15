@@ -233,7 +233,9 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Cancel Successfully" status={Status.SUCCESSS} close={onClose} />,
+        render: ({ onClose }) => (
+          <ToastLayout title="Cancelled limit order successfully." status={Status.SUCCESSS} close={onClose} />
+        ),
       });
       const isRemove = listLines.some((line) => line._id === item._id);
       isRemove && setListLines(item);

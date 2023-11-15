@@ -41,6 +41,8 @@ const ReferralView = () => {
   const [isLoadingTraderRef, setIsLoadingTraderRef] = useState<boolean>(false);
   const [isCreatedUserRefCode, setIsCreatedUserRefCode] = useState<boolean>(false);
   const [isCreatedTraderRefCode, setIsCreatedTraderRefCode] = useState<boolean>(false);
+  const [isOpenRefCodeToolTip, setIsOpenRefCodeToolTip] = useState<boolean>(false);
+  const [isOpenAddCodeToolTip, setIsOpenAddCodeToolTip] = useState<boolean>(false);
 
   const getUserRefCode = useCallback(async () => {
     setIsLoadingUserRef(true);
@@ -363,8 +365,13 @@ const ReferralView = () => {
                   placement="bottom-start"
                   borderRadius={'4px'}
                   fontSize={'12px'}
+                  isOpen={isOpenRefCodeToolTip}
                 >
-                  <InfoIcon color={'#1E3EF0'} />
+                  <InfoIcon
+                    onClick={() => setIsOpenRefCodeToolTip(!isOpenRefCodeToolTip)}
+                    onMouseEnter={() => setIsOpenRefCodeToolTip(true)}
+                    onMouseLeave={() => setIsOpenRefCodeToolTip(false)}
+                  />
                 </Tooltip>
               </InputRightElement>
             </InputGroup>
@@ -420,15 +427,20 @@ const ReferralView = () => {
                   placement="bottom-start"
                   borderRadius={'4px'}
                   fontSize={'12px'}
+                  isOpen={isOpenAddCodeToolTip}
                 >
-                  <InfoIcon />
+                  <InfoIcon
+                    onClick={() => setIsOpenAddCodeToolTip(!isOpenAddCodeToolTip)}
+                    onMouseEnter={() => setIsOpenAddCodeToolTip(true)}
+                    onMouseLeave={() => setIsOpenAddCodeToolTip(false)}
+                  />
                 </Tooltip>
               </InputRightElement>
             </InputGroup>
             <p className="mt-1 text-xs font-normal text-[#F03D3E]">{errorMsgUserRefCode}</p>
             <CustomConnectButton isFullWidth={true}>
               {!isLoadingUserRef && isCreatedUserRefCode ? (
-                <Grid templateColumns="repeat(2, 1fr)" gap={2} marginTop={'20px'}>
+                <Grid templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }} gap={2} marginTop={'20px'}>
                   <Button
                     fontSize={'16px'}
                     size="md"
@@ -440,6 +452,8 @@ const ReferralView = () => {
                     _hover={{ borderColor: '#4B65F3', textColor: '#4B65F3' }}
                     _active={{ borderColor: '#122590', textColor: '#122590' }}
                     onClick={() => handleCopy(`${window.location.origin}/referral?code=${userRefCode}`)}
+                    wordBreak={'break-word'}
+                    whiteSpace={'inherit'}
                   >
                     Copy Your Referral Link
                   </Button>
@@ -449,6 +463,9 @@ const ReferralView = () => {
                     size="md"
                     width={'100%'}
                     onClick={() => handleCopy(userRefCode)}
+                    wordBreak={'break-word'}
+                    whiteSpace={'inherit'}
+                    paddingX="12px"
                   >
                     Copy Your Referral Code
                   </Button>

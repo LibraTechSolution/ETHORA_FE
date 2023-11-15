@@ -38,7 +38,7 @@ export const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOpenDraw, onOpen: onOpenDraw, onClose: onCloseDraw } = useDisclosure();
   const { address } = useAccount();
-  const { listWallets, setUser, setToken } = useUserStore();
+  const { listWallets, setUser, setToken, setCurrentWallet } = useUserStore();
   const { advanceSetting, setListAdvanceSetting } = useAdvanceSetting();
   const currentRoute = usePathname();
   const linkStyle = 'rounded-[10px] px-3 py-2 ';
@@ -49,6 +49,7 @@ export const Header = () => {
 
   useEffect(() => {
     if (address) {
+      setCurrentWallet(address.toLowerCase());
       if (listWallets && listWallets[address.toLowerCase()]) {
         setUser(listWallets[address.toLowerCase()].user);
         setToken(listWallets[address.toLowerCase()].tokens);
@@ -56,8 +57,6 @@ export const Header = () => {
         setUser(null);
         setToken(null);
       }
-      console.log(address);
-      console.log(advanceSetting);
       if (!advanceSetting || !(advanceSetting && advanceSetting[address])) {
         console.log(address);
         setListAdvanceSetting(address);
@@ -140,7 +139,7 @@ export const Header = () => {
                       <MenuButton className="text-[#6D6D70]">
                         More {isOpen ? <TriangleUpIcon w="20px" h="12px" /> : <TriangleDownIcon w="20px" h="12px" />}
                       </MenuButton>
-                      <MenuList minWidth="107px" background="#252528" border="none" className="w-[107px]">
+                      <MenuList minWidth="160px" background="#252528" border="none" className="w-[160px]">
                         <MenuItem background="transparent">
                           <Link
                             href="/earn"

@@ -143,7 +143,7 @@ const columns: ColumnsType<PairData> = [
           status="error"
           text={
             <Text as={'span'} color={'white'}>
-              OFF
+              Closed
             </Text>
           }
         />

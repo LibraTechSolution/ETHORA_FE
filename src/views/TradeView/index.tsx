@@ -115,20 +115,20 @@ const TradeView = () => {
       }}
     >
       <Grid
-        templateColumns={{ base: '', '1.5xl': 'repeat(24, 1fr)' }}
+        templateColumns={{ base: '', xl: 'repeat(24, 1fr)' }}
         gap={4}
         paddingTop="20px"
         bg="rgba(28, 28, 30, 0.50)"
-        display={{ base: 'block', '1.5xl': 'grid' }}
-        marginX={{ base: '-12px', lg: '-80px' }}
+        display={{ base: 'block', xl: 'grid' }}
+        marginX={{ base: '-0', lg: '-80px' }}
         paddingRight={{ base: '0px', lg: '26px' }}
       >
-        <GridItem display={{ base: 'none', '1.5xl': 'block' }} colSpan={{ base: 24, xl: 5 }}>
+        <GridItem display={{ base: 'none', xl: 'block' }} colSpan={{ base: 24, xl: 5 }}>
           <TradeLeftSide />
         </GridItem>
-        <GridItem colSpan={{ base: 24, '1.5xl': 19 }}>
+        <GridItem colSpan={{ base: 24, xl: 19 }}>
           <Box
-            marginBottom={{ base: 5, '1.5xl': 3 }}
+            marginBottom={{ base: 5, xl: 3 }}
             className="flex h-full  grow flex-col"
             style={containerDim?.height ? { height: containerDim.height } : {}}
             ref={onInitialLoad}
@@ -146,10 +146,10 @@ const TradeView = () => {
             // onDragStart={onDragStart}
             // onDragEnd={onDragEnd}
           ></div>
-          <Box display={{ base: 'block', '1.5xl': 'none' }} marginTop={'12px'}>
+          <Box display={{ base: 'block', xl: 'none' }} marginTop={'12px'}>
             <TradeLeftSide />
           </Box>
-          <Box marginTop="12px" display={{ base: 'none', '1.5xl': 'block' }}>
+          <Box marginTop="12px" display={{ base: 'none', xl: 'block' }}>
             <Tabs>
               <TabList
                 borderBottom="1px solid #1C1C1E"

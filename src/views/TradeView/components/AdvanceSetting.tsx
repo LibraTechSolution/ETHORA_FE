@@ -7,6 +7,7 @@ import {
   Image,
   Input,
   InputGroup,
+  InputRightAddon,
   InputRightElement,
   Select,
   Text,
@@ -249,18 +250,23 @@ const AdvanceSetting = (props: Props) => {
             {item}%
           </Button>
         ))}
-        <Input
-          pr="4.5rem"
-          placeholder="Enter"
-          border={slippageError ? '1px solid #F03D3E' : 'none'}
-          _hover={{ border: 'none' }}
-          _focusVisible={{ border: 'none' }}
-          bg="#0C0C10"
-          rounded={'10px'}
-          minWidth={'128px'}
-          onChange={handleOnChangeSlippage}
-          value={slippage}
-        />
+        <InputGroup size="md">
+          <Input
+            pr="4.5rem"
+            placeholder="Enter"
+            border={slippageError ? '1px solid #F03D3E' : 'none'}
+            _hover={{ border: 'none' }}
+            _focusVisible={{ border: 'none' }}
+            bg="#0C0C10"
+            rounded={'10px'}
+            minWidth={'128px'}
+            onChange={handleOnChangeSlippage}
+            value={slippage}
+          />
+          <InputRightAddon bg="#0C0C10" border="none" rounded={'10px'}>
+            %
+          </InputRightAddon>
+        </InputGroup>
       </Box>
       <Text textColor={'#F03D3E'} marginBottom={2}>
         {slippageError}

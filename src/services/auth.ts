@@ -14,6 +14,6 @@ export function register(signature: `0x${string}`, network: number, isRegister: 
   return axiosInstance.post<IResponData<ILoginRes>>('/auth/register', { signature, network, isRegister });
 }
 
-export function approveToken(permit: IPermit, network: number) {
-  return axiosInstance.post<IResponData<ILoginRes>>('/auth/approve', { permit, network });
+export function approveToken(permit: IPermit, network: number, isApprove: boolean) {
+  return axiosInstance.post<IResponData<ILoginRes>>('/auth/approve', { permit, network, isApprove });
 }

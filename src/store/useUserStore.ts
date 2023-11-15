@@ -47,34 +47,26 @@ const useUserStore = create<UserState>()(
         tokens: tokens ? tokens : state.tokens,
         currentWallet: user ? user?.address : state.currentWallet
       })),
-      toggleRegisteredAccount: (isRegistered) => set((state) => {
-        const tempUser = { ...state.user } as IUser;
-        tempUser.isRegistered = isRegistered
-        return {
-          listWallets: {
-            ...state.listWallets,
-            [state.currentWallet as string]: {
-              user: tempUser,
-              tokens: state.tokens,
-            }
-          },
-          user: tempUser,
-        }
-      }),
-      toggleApprovedAccount: (isApproved) => set((state) => {
-        const tempUser = { ...state.user } as IUser;
-        tempUser.isApproved = isApproved
-        return {
-          listWallets: {
-            ...state.listWallets,
-            [state.currentWallet as string]: {
-              user: tempUser,
-              tokens: state.tokens,
-            }
-          },
-          user: tempUser,
-        }
-      }),
+      toggleRegisteredAccount: (isRegistered) => set((state) => ({
+        listWallets: {
+          ...state.listWallets,
+          [state.currentWallet as string]: {
+            user: { ...state.user as IUser, isRegistered: isRegistered },
+            tokens: state.tokens,
+          }
+        },
+        user: { ...state.user as IUser, isRegistered: isRegistered },
+      })),
+      toggleApprovedAccount: (isApproved) => set((state) => ({
+        listWallets: {
+          ...state.listWallets,
+          [state.currentWallet as string]: {
+            user: { ...state.user as IUser, isApproved: isApproved },
+            tokens: state.tokens,
+          }
+        },
+        user: { ...state.user as IUser, isApproved: isApproved },
+      })),
       deactiveAccount: () => set((state) => {
         if (state?.listWallets && state.currentWallet) {
           delete state?.listWallets[state.currentWallet]

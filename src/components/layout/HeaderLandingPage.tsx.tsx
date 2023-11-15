@@ -111,7 +111,7 @@ export const HeaderLanding = () => {
                     <MenuButton className="text-[#6D6D70]">
                       More {isOpen ? <TriangleUpIcon w="20px" h="12px" /> : <TriangleDownIcon w="20px" h="12px" />}
                     </MenuButton>
-                    <MenuList minWidth="107px" background="#252528" border="none" className="w-[107px]">
+                    <MenuList minWidth="160px" background="#252528" border="none" className="w-[160px]">
                       <MenuItem background="transparent">
                         <Link
                           href="/earn"
