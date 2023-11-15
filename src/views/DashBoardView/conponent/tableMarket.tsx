@@ -34,7 +34,7 @@ const columns: ColumnsType<PairData> = [
             src={`/images/icons/${pair.replace('/', '-').toLowerCase()}.png`}
             w="20px"
             h="20px"
-            marginLeft={'12px'}
+            marginLeft={'0'}
             marginRight={'8px'}
           />
           {pair}
@@ -315,7 +315,7 @@ const TableMarket = () => {
   }, [dataDashboardMaret, isClose, listChanged24h, listPairData, listPriceShow]);
 
   return (
-    <Box>
+    <Box className="tradingTableTab">
       <CallSocket />
       <Table
         columns={columns}
