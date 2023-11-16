@@ -11,7 +11,6 @@ const NavBar = () => {
     <Box
       zIndex={1}
       width={{ base: '100%', lg: '70px' }}
-      background={{ base: '#050506', lg: 'rgba(28, 28, 30,.5)' }}
       padding={{ base: '20px', lg: '20px 0' }}
       position={{ base: 'fixed', lg: 'static' }}
       bottom={{ base: '0px', lg: 'auto' }}
@@ -35,7 +34,7 @@ const NavBar = () => {
               as={NextLink}
               href="/dashboard"
               className={`${
-                currentRoute === '/dashboard' ? 'border-[#1E3EF0]' : 'border-[#252528]'
+                currentRoute === '/dashboard' ? 'border-[#1E3EF0] shadow-iconShadow' : 'border-[#252528]'
               } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
             >
               <LayoutGrid
@@ -57,7 +56,7 @@ const NavBar = () => {
               as={NextLink}
               href="/trade/BTC-USD"
               className={`${
-                currentRoute.includes('trade') ? 'border-[#1E3EF0]' : 'border-[#252528]'
+                currentRoute.includes('trade') ? 'border-[#1E3EF0] shadow-iconShadow' : 'border-[#252528]'
               } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
             >
               <BarChartBig
@@ -94,7 +93,7 @@ const NavBar = () => {
               as={NextLink}
               href="/leaderboard"
               className={`${
-                currentRoute === '/leaderboard' ? 'border-[#1E3EF0]' : 'border-[#252528]'
+                currentRoute === '/leaderboard' ? 'border-[#1E3EF0] shadow-iconShadow' : 'border-[#252528]'
               } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
             >
               <Trophy
@@ -116,7 +115,7 @@ const NavBar = () => {
               as={NextLink}
               href="/referral"
               className={`${
-                currentRoute === '/referral' ? 'border-[#1E3EF0]' : 'border-[#252528]'
+                currentRoute === '/referral' ? 'border-[#1E3EF0] shadow-iconShadow' : 'border-[#252528]'
               } group flex h-8 w-8 items-center justify-center rounded-[10px] border hover:border-[#1E3EF0] hover:shadow-iconShadow`}
             >
               <Redo

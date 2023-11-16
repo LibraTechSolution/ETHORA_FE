@@ -228,7 +228,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
     ...(!isProfile
       ? [
           {
-            title: 'Action',
+            title: ' ',
             dataIndex: 'action',
             key: 'action',
             width: '150px',
