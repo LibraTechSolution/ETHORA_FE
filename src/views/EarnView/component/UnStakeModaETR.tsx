@@ -105,6 +105,7 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
         ),
       });
     } catch (error: any) {
+      console.log(error);
       let msgContent = '';
       if (error instanceof BaseError) {
         if (error.shortMessage.includes('User rejected the request.')) {

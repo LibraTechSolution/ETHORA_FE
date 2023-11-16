@@ -5,13 +5,15 @@ import CompoundRewardsModal from './CompoundRewardsModal';
 import { useState } from 'react';
 import { addComma } from '@/utils/number';
 import Currency from '@/components/Currency';
+import BigNumber from 'bignumber.js';
+import { formatUnits } from 'viem';
 
 const TotalRewardsItem = ({
   claimable_sbfETR,
   claimable_fBLP,
   claimable_vETR,
   claimable_vBLP,
-  claimables_ETR,
+  claimables_sETR,
   claimable_fsBLP,
   claimable_sbETR,
   depositBalances_bnETR,
@@ -21,7 +23,7 @@ const TotalRewardsItem = ({
   claimable_fBLP: bigint;
   claimable_vETR: bigint;
   claimable_vBLP: bigint;
-  claimables_ETR: bigint;
+  claimables_sETR: bigint;
   claimable_fsBLP: bigint;
   claimable_sbETR: bigint;
   depositBalances_bnETR: bigint;
@@ -32,9 +34,18 @@ const TotalRewardsItem = ({
 
   const USDC = (Number(claimable_sbfETR) + Number(claimable_fBLP)) / 10 ** 6;
   const ETR = (Number(claimable_vETR) + Number(claimable_vBLP)) / 10 ** 18;
-  const esETR = (Number(claimables_ETR) + Number(claimable_fsBLP)) / 10 ** 18;
+  const esETR = (Number(claimables_sETR) + Number(claimable_fsBLP)) / 10 ** 18;
   const multiplierPoints = Number(claimable_sbETR) / 10 ** 18;
   const stakedMultiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
+  const total = BigNumber(claimable_sbfETR ? formatUnits(claimable_sbfETR, 6) : 0)
+    .plus(claimable_fBLP ? formatUnits(claimable_fBLP, 6) : 0)
+    .plus(claimable_vETR ? formatUnits(claimable_vETR, 18) : 0)
+    .plus(claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0)
+    .plus(claimables_sETR ? formatUnits(claimables_sETR, 18) : 0)
+    .plus(claimable_fsBLP ? formatUnits(claimable_fsBLP, 18) : 0)
+
+  console.log('total=========', total.toFixed())
+
 
   return (
     <>
@@ -94,7 +105,7 @@ const TotalRewardsItem = ({
             Total
           </Text>
           <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            $0.00
+            $<Currency value={total !== undefined ? total : 0} decimal={2} unit='$' />
           </Text>
         </Box>
         <hr className="border-[#242428]" />
@@ -126,7 +137,9 @@ const TotalRewardsItem = ({
         </Box>
       </Box>
       {openClaimModal && <ClaimModal isOpen={openClaimModal} onDismiss={() => setOpenClaimModal(false)} />}
-      {openCompoundRewardsModal && <CompoundRewardsModal isOpen={openCompoundRewardsModal} onDismiss={() => setOpenCompoundRewardsModal(false)} />}
+      {openCompoundRewardsModal && (
+        <CompoundRewardsModal isOpen={openCompoundRewardsModal} onDismiss={() => setOpenCompoundRewardsModal(false)} />
+      )}
     </>
   );
 };

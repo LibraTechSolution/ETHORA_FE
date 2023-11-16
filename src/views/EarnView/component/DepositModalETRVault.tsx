@@ -102,8 +102,8 @@ const DepositModalETRVault = ({
   const getVestedAmount_VETR = data_VETR_SC && data_VETR_SC[1].result;
   const getCombinedAverageStakedAmount_VETR = data_VETR_SC && data_VETR_SC[2].result;
   const pairAmounts_VETR = data_VETR_SC && data_VETR_SC[3].result;
-  console.log('SE', balance )
-  console.log('SE', balance )
+  console.log('SE', balance);
+  console.log('SE', balance);
 
   const SE = balance ? formatEther(balance as bigint) : 0;
   const GW = BigNumber(getMaxVestableAmount_VETR ? formatEther(getMaxVestableAmount_VETR as bigint) : 0).minus(
@@ -419,14 +419,18 @@ const DepositModalETRVault = ({
                                   Deposited
                                 </Box>
                                 <Spacer />
-                                <Box padding={'0 8px'}>{addComma(deposited, 6)} esETR</Box>
+                                <Box padding={'0 8px'}>
+                                  {deposited ? BigNumber(deposited).toFormat(6, BigNumber.ROUND_DOWN) : BigNumber(0).toFormat(2, BigNumber.ROUND_DOWN)} esETR
+                                </Box>
                               </Flex>
                               <Flex margin={'0 -8px'} alignItems={'center'}>
                                 <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                                   Max Capacity
                                 </Box>
                                 <Spacer />
-                                <Box padding={'0 8px'}>{addComma(maxCapacity, 6)} esETR</Box>
+                                <Box padding={'0 8px'}>
+                                  {maxCapacity ? BigNumber(maxCapacity).toFormat(6, BigNumber.ROUND_DOWN) : BigNumber(0).toFormat(2, BigNumber.ROUND_DOWN)} esETR
+                                </Box>
                               </Flex>
                             </Box>
                           }
@@ -437,9 +441,12 @@ const DepositModalETRVault = ({
                         >
                           <Text as="u">
                             {BigNumber(formik?.values?.amount ? formik?.values?.amount : 0)
-                              .plus(deposited)
+                              .plus(deposited ? deposited : 0)
                               .toFormat(2, BigNumber.ROUND_DOWN)}{' '}
-                            / {addComma(maxCapacity, 2)}
+                            /{' '}
+                            {maxCapacity
+                              ? BigNumber(maxCapacity).toFormat(2, BigNumber.ROUND_DOWN)
+                              : BigNumber(0).toFormat(2, BigNumber.ROUND_DOWN)}
                           </Text>
                         </Tooltip>
                       </Text>
@@ -490,8 +497,13 @@ const DepositModalETRVault = ({
                           minWidth="400px"
                         >
                           <Text as="u">
-                            {reserveFirst !== undefined ? addComma(formatEther(reserveFirst), 2) : '0.00'} /{' '}
-                            {depositBalances !== undefined ? addComma(depositBalances, 2) : '0.00'}
+                            {reserveFirst !== undefined
+                              ? BigNumber(formatEther(reserveFirst)).toFormat(2, BigNumber.ROUND_DOWN)
+                              : '0.00'}{' '}
+                            /{' '}
+                            {depositBalances !== undefined
+                              ? BigNumber(depositBalances).toFormat(2, BigNumber.ROUND_DOWN)
+                              : '0.00'}
                           </Text>
                         </Tooltip>
                       </Text>

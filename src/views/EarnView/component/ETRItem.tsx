@@ -21,7 +21,7 @@ const ETRItem = ({
   depositBalances_ETR,
   tokensPerInterval_sETR,
   totalSupply_sETR,
-  claimables_ETR,
+  claimables_sETR,
   tokensPerInterval_sbfETR,
   totalSupply_sbfETR,
   depositBalances_bnETR,
@@ -35,7 +35,7 @@ const ETRItem = ({
   depositBalances_ETR: bigint;
   tokensPerInterval_sETR: bigint;
   totalSupply_sETR: bigint;
-  claimables_ETR: bigint;
+  claimables_sETR: bigint;
   tokensPerInterval_sbfETR: bigint;
   totalSupply_sbfETR: bigint;
   depositBalances_bnETR: bigint;
@@ -47,8 +47,8 @@ const ETRItem = ({
   const [openUnStakeModal, setOpenUnStakeModal] = useState<boolean>(false);
 
   const USDC_Rewards = Number(claimable_sbfETR) / 10 ** 6;
-  const esETR_Rewards = Number(claimables_ETR) / 10 ** 18;
-  const esETR_USD_Rewards = (Number(claimables_ETR) * price) / 10 ** 18;
+  const esETR_Rewards = Number(claimables_sETR) / 10 ** 18;
+  const esETR_USD_Rewards = (Number(claimables_sETR) * price) / 10 ** 18;
   const rewards = USDC_Rewards + esETR_USD_Rewards;
 
   const esETR_APR = (100 * 31536000 * Number(tokensPerInterval_sETR)) / Number(totalSupply_sETR);

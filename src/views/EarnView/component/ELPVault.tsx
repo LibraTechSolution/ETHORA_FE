@@ -68,6 +68,7 @@ const ELPVault = ({
       setLoadingWithdraw(false);
       onFetchData();
     } catch (error) {
+      console.log(error)
       setLoadingWithdraw(false);
       console.log(error);
       let msgContent = '';
