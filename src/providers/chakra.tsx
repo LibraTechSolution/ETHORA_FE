@@ -120,6 +120,7 @@ const customTheme = extendTheme({
     '1.5xl': '82em', // ~1296px
     '2xl': '96em', // ~1536px
     '3xl': '105rem', // ~1680px
+    '4xl': '110rem', // ~1760px
   },
   textStyles: {
     shadowBlack: {

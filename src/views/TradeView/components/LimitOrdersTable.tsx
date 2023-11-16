@@ -234,7 +234,16 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       toast({
         position: 'top',
         render: ({ onClose }) => (
-          <ToastLayout title="Cancelled limit order successfully." status={Status.SUCCESSS} close={onClose} />
+          <ToastLayout status={Status.SUCCESSS} close={onClose}>
+            <p className="font-semibold text-[#fff]">Order cancelled</p>
+            <p className="text-[#9E9E9F]">
+              <span className="text-[#fff]">{item.pair.toUpperCase()}</span> to go{' '}
+              <span className="text-[#fff]">{item.isAbove ? 'Upper' : 'Lower'}</span>
+            </p>
+            <p className="text-[#9E9E9F]">
+              Total amount: <span className="text-[#fff]">{addComma(divide(item.tradeSize, 6), 2)}</span> USDC
+            </p>
+          </ToastLayout>
         ),
       });
       const isRemove = listLines.some((line) => line._id === item._id);

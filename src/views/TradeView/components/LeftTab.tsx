@@ -32,10 +32,10 @@ const LeftTab = () => {
       <TabIndicator mt="-1.5px" height="2px" bg="#1E3EF0" borderRadius="1px" />
 
       <TabPanels>
-        <TabPanel padding="0" height={'600px'} overflow="auto">
+        <TabPanel padding="0" height={{ base: '300px', xl: '600px' }} overflow="auto">
           <TraderTab />
         </TabPanel>
-        <TabPanel padding="0" height={'600px'} overflow="auto">
+        <TabPanel padding="0" height={{ base: '300px', xl: '600px' }} overflow="auto">
           <LimitOrderTab />
         </TabPanel>
       </TabPanels>

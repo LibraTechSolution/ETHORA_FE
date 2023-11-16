@@ -309,7 +309,7 @@ export const Header = () => {
                             bgColor="#252528"
                             textColor="#ffffff"
                             rightIcon={<TriangleDownIcon w="20px" h="12px" />}
-                            width={`${!isMobile && '200px'}`}
+                            width={`${isMobile ? '70px' : '200px'}`}
                             _hover={{ bg: '#252528' }}
                             rounded="10px"
                             size={`${isMobile ? 'sm' : 'md'}`}
@@ -324,7 +324,6 @@ export const Header = () => {
                                       height: 14,
                                       borderRadius: 999,
                                       overflow: 'hidden',
-                                      marginRight: 8,
                                     }}
                                   >
                                     {chain.iconUrl && (
@@ -360,7 +359,7 @@ export const Header = () => {
                             rightIcon={<TriangleDownIcon w="20px" h="12px" />}
                             borderColor="#1E3EF0"
                             textColor="#1E3EF0"
-                            paddingX="12px"
+                            paddingX={`${isMobile ? '4px' : '12px'}`}
                             variant="outline"
                             _hover={{ borderColor: '#4B65F3', textColor: '#4B65F3' }}
                             _active={{ borderColor: '#122590', textColor: '#122590' }}
@@ -385,7 +384,7 @@ export const Header = () => {
               textColor="#1E3EF0"
               variant="outline"
               _hover={{ bg: 'transparent' }}
-              padding="10px"
+              padding={isMobile ? '5px' : '10px'}
               size={`${isMobile ? 'sm' : 'md'}`}
               onClick={() => address && setIsShow(!isShow)}
             >
