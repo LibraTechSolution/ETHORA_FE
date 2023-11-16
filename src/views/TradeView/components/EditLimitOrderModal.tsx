@@ -122,8 +122,16 @@ const EditLimitOrderModal = (props: PropsType) => {
       setTimeError('Minimum duration is 3 minutes');
       hasError = true;
     }
+    if (convertToTimeStamp(time) > 14400) {
+      setTimeError('Maximum duration is 4 hours');
+      hasError = true;
+    }
     if (convertToTimeStamp(expiryTimeNumber + expiryTimeType) < 120) {
       setExpiryTimeError('Min limit order expiry time is 2 minutes');
+      hasError = true;
+    }
+    if (convertToTimeStamp(expiryTimeNumber + expiryTimeType) > 86400) {
+      setExpiryTimeError('Max limit order expiry time is 24 hours');
       hasError = true;
     }
     if (!limitOrderPrice || +limitOrderPrice < 0.00000001) {
