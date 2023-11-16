@@ -373,7 +373,6 @@ const TradeControl = () => {
       setListLines(res.data.data);
       toast({
         position: 'top',
-        duration: 10000000,
         render: ({ onClose }) => (
           <ToastLayout
             title="Trade order placed"

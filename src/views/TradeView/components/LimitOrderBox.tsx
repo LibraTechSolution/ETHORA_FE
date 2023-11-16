@@ -83,8 +83,8 @@ const LimitOrderBox = (props: PropsType) => {
   return (
     <>
       <Box bg="#0c0c10" padding="20px" marginBottom={2} rounded={'10px'}>
-        <Flex alignItems="center" justifyContent="space-between" display={{ base: 'flex', xl: 'block', '3xl': 'flex' }}>
-          <Center>
+        <Flex alignItems="center" justifyContent="space-between" display={{ base: 'flex', xl: 'block', '2xl': 'flex' }}>
+          <Center justifyContent={'initial'}>
             <Image alt="" src={`/images/icons/${item.pair}.png`} w="20px" h="20px" />
             <p className="px-2 text-sm font-normal text-[#fff]">{item.pair && item.pair.toUpperCase()}</p>
             {item.isAbove ? (
