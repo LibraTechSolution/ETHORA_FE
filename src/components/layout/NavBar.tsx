@@ -73,7 +73,7 @@ const NavBar = () => {
           borderRightWidth={{ base: '0', lg: '2px' }}
           borderRight={{ base: 'none', lg: 'none' }}
         >
-          <Tooltip fontSize={'12px'} hasArrow label="Pratice Tradiing" color="white" placement="top" bg="#050506">
+          <Tooltip fontSize={'12px'} hasArrow label="Pratice Trading" color="white" placement="top" bg="#050506">
             <Link
               as={NextLink}
               href="/trade/BTC-USD"
