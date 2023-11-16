@@ -21,6 +21,7 @@ const USDCVaultItem = ({
   lockupPeriod_BLP,
   getUnlockedLiquidity_BLP,
   balanceOf_fBLP_BLP,
+  maxLiquidity_BLP,
 }: {
   price: number;
   totalTokenXBalance_BLP: bigint;
@@ -34,14 +35,10 @@ const USDCVaultItem = ({
   lockupPeriod_BLP: number;
   getUnlockedLiquidity_BLP: bigint;
   balanceOf_fBLP_BLP: bigint;
+  maxLiquidity_BLP: bigint;
 }) => {
   const [openAddFundModal, setOpenAddFundModal] = useState<boolean>(false);
   const [openWithdrawFundModal, setOpenWithdrawFundModal] = useState<boolean>(false);
-
-  // const exchangeRate = totalTokenXBalance_BLP / totalSupply_BLP;
-  console.log('totalTokenXBalance_BLP',totalTokenXBalance_BLP);
-  console.log('totalSupply_BLP',totalSupply_BLP);
-  console.log(totalTokenXBalance_BLP/totalTokenXBalance_BLP)
 
   const exchangeRate = BigNumber(totalTokenXBalance_BLP?.toString()).dividedBy(totalSupply_BLP?.toString());
   const wallet = Number(stakedAmounts_fsBLP) / 10 ** 6;
@@ -49,10 +46,6 @@ const USDCVaultItem = ({
   const esETR_APR =
     (100 * 31536000 * Number(tokensPerInterval_fsBLP) * price) / (Number(balanceOf_BLP_USDC) * 10 ** 12);
   const Total_APR = USDC_APR + esETR_APR;
-
-  // console.log(Number(exchangeRate) * 10 ** 6)
-  // console.log(parseUnits(exchangeRate.toFixed(), 6))
-  // console.log(Number(exchangeRate.dividedBy(claimable_fsBLP.toString())) / 10 ** 18)
 
   const USDC_Rewards = Number(claimable_fBLP) / 10 ** 6;
   const esETR_Rewards = Number(claimable_fsBLP) / 10 ** 18;
@@ -63,6 +56,7 @@ const USDCVaultItem = ({
   const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP?.toString())) / 10 ** 6;
   const totalSupply_USD = Number(balanceOf_BLP_USDC) / 10 ** 6;
   const totalSupply = Number(balanceOf_BLP_USDC) / (Number(exchangeRate) * 10 ** 6);
+  const getDataY = BigNumber(maxLiquidity_BLP ? formatUnits(maxLiquidity_BLP, 6) : 0).minus(totalTokenXBalance_BLP ? formatUnits(totalTokenXBalance_BLP, 6) : 0);
 
   return (
     <>
@@ -90,7 +84,7 @@ const USDCVaultItem = ({
           <Text>USDC Vault (ELP Token)</Text>
         </Tooltip>
         <Text as="span" textColor={'#6D6D70'} fontWeight={400} fontSize={'14px'} marginTop={'8px'}>
-          Max Capacity : 10,000,000 USDC
+          Max Capacity : {maxLiquidity_BLP ? BigNumber(formatUnits(maxLiquidity_BLP, 6)).toFormat() : '0.00'} USDC
         </Text>
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
@@ -288,6 +282,7 @@ const USDCVaultItem = ({
           isOpen={openAddFundModal}
           onDismiss={() => setOpenAddFundModal(false)}
           exchangeRate={exchangeRate.toString()}
+          getDataY={getDataY}
         />
       )}
 

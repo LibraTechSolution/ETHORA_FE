@@ -326,6 +326,10 @@ const EarnView = () => {
         functionName: 'balanceOf',
         args: [appConfig.FBLP_SC as `0x${string}`],
       },
+      {
+        ...BLP_SC,
+        functionName: 'maxLiquidity',
+      },
     ],
   });
 
@@ -352,7 +356,7 @@ const EarnView = () => {
   const depositBalances_ETR = data_sETR_SC && data_sETR_SC[0].result;
   const tokensPerInterval_sETR = data_sETR_SC && data_sETR_SC[1].result;
   const totalSupply_sETR = data_sETR_SC && data_sETR_SC[2].result;
-  const claimables_ETR = data_sETR_SC && data_sETR_SC[3].result;
+  const claimables_sETR = data_sETR_SC && data_sETR_SC[3].result;
   const depositBalances_esETR = data_sETR_SC && data_sETR_SC[4].result;
 
   const tokensPerInterval_sbfETR = data_sbfETR_SC && data_sbfETR_SC[0].result;
@@ -393,6 +397,7 @@ const EarnView = () => {
   const lockupPeriod_BLP = data_BLP_SC && data_BLP_SC[2].result;
   const getUnlockedLiquidity_BLP = data_BLP_SC && data_BLP_SC[3].result;
   const balanceOf_fBLP_BLP = data_BLP_SC && data_BLP_SC[4].result;
+  const maxLiquidity_BLP = data_BLP_SC && data_BLP_SC[5].result;
 
   // console.log('totalSupply_sETR', totalSupply_sETR);
   const onFetch = () => {
@@ -448,7 +453,7 @@ const EarnView = () => {
                   depositBalances_ETR={depositBalances_ETR as bigint}
                   tokensPerInterval_sETR={tokensPerInterval_sETR as bigint}
                   totalSupply_sETR={totalSupply_sETR as bigint}
-                  claimables_ETR={claimables_ETR as bigint}
+                  claimables_sETR={claimables_sETR as bigint}
                   tokensPerInterval_sbfETR={tokensPerInterval_sbfETR as bigint}
                   totalSupply_sbfETR={totalSupply_sbfETR as bigint}
                   depositBalances_bnETR={depositBalances_bnETR as bigint}
@@ -467,7 +472,7 @@ const EarnView = () => {
                   claimable_fBLP={claimable_fBLP as bigint}
                   claimable_vETR={claimable_vETR as bigint}
                   claimable_vBLP={claimable_vBLP as bigint}
-                  claimables_ETR={claimables_ETR as bigint}
+                  claimables_sETR={claimables_sETR as bigint}
                   claimable_fsBLP={claimable_fsBLP as bigint}
                   claimable_sbETR={claimable_sbETR as bigint}
                   depositBalances_bnETR={depositBalances_bnETR as bigint}
@@ -515,6 +520,7 @@ const EarnView = () => {
                   lockupPeriod_BLP={lockupPeriod_BLP as number}
                   getUnlockedLiquidity_BLP={getUnlockedLiquidity_BLP as bigint}
                   balanceOf_fBLP_BLP={balanceOf_fBLP_BLP as bigint}
+                  maxLiquidity_BLP={maxLiquidity_BLP as bigint}
                 />
               )}
             </CardEarn>

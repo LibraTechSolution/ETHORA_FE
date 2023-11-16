@@ -110,7 +110,6 @@ const DepositModalELPVault = ({
   const deposited = Number(getVestedAmount_VBLP) / 10 ** 18;
   const maxCapacity = Number(getMaxVestableAmount_VBLP) / 10 ** 18;
 
-  
   const validationSchema = Yup.object({
     amount: Yup.string()
       .required('Amount is required')
@@ -387,7 +386,12 @@ const DepositModalELPVault = ({
                         Wallet
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        {balance !== undefined ? addComma(formatUnits(balance as bigint, 18), 2) : '0.00'} esETR
+                        <Currency
+                          value={balance !== undefined ? formatUnits(balance as bigint, 18) : 0}
+                          decimal={2}
+                          unit="esETR"
+                        />{' '}
+                        esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -406,14 +410,24 @@ const DepositModalELPVault = ({
                                   Deposited
                                 </Box>
                                 <Spacer />
-                                <Box padding={'0 8px'}>{addComma(deposited, 6)} esETR</Box>
+                                <Box padding={'0 8px'}>
+                                  {deposited
+                                    ? BigNumber(deposited).toFormat(6, BigNumber.ROUND_DOWN)
+                                    : BigNumber(0).toFormat(6, BigNumber.ROUND_DOWN)}{' '}
+                                  esETR
+                                </Box>
                               </Flex>
                               <Flex margin={'0 -8px'} alignItems={'center'}>
                                 <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                                   Max Capacity
                                 </Box>
                                 <Spacer />
-                                <Box padding={'0 8px'}>{addComma(maxCapacity, 6)} esETR</Box>
+                                <Box padding={'0 8px'}>
+                                  {maxCapacity
+                                    ? BigNumber(maxCapacity).toFormat(6, BigNumber.ROUND_DOWN)
+                                    : BigNumber(0).toFormat(6, BigNumber.ROUND_DOWN)}{' '}
+                                  esETR
+                                </Box>
                               </Flex>
                             </Box>
                           }
@@ -423,7 +437,13 @@ const DepositModalELPVault = ({
                           minWidth="215px"
                         >
                           <Text as="u">
-                            {+formik.values.amount + deposited} / {addComma(maxCapacity, 2)}
+                            {BigNumber(formik?.values?.amount ? formik?.values?.amount : 0)
+                              .plus(deposited ? deposited : 0)
+                              .toFormat(2, BigNumber.ROUND_DOWN)}{' '}
+                            /{' '}
+                            {maxCapacity
+                              ? BigNumber(maxCapacity).toFormat(2, BigNumber.ROUND_DOWN)
+                              : BigNumber(0).toFormat(2, BigNumber.ROUND_DOWN)}
                           </Text>
                         </Tooltip>
                       </Text>
@@ -474,8 +494,8 @@ const DepositModalELPVault = ({
                           minWidth="400px"
                         >
                           <Text as="u">
-                            {reserveFirst !== undefined ? addComma(formatEther(reserveFirst), 2) : '0.00'} /{' '}
-                            {depositBalances !== undefined ? addComma(formatEther(depositBalances), 2) : '0.00'}
+                            {reserveFirst !== undefined ? BigNumber(formatEther(reserveFirst)).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'} /{' '}
+                            {depositBalances !== undefined ?BigNumber(formatEther(depositBalances)).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}
                           </Text>
                         </Tooltip>
                       </Text>

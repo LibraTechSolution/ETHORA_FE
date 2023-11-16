@@ -195,7 +195,7 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
         ),
       });
     } catch (error: any) {
-      // console.log(error.shortMessage);
+      console.log(error);
       // let errString = '';
       // if (error instanceof ConnectorNotFoundError) {
       //   errString = error.message;

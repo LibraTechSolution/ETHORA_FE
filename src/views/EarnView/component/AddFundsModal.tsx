@@ -43,10 +43,12 @@ import Currency from '@/components/Currency';
 const AddFundsModal = ({
   isOpen,
   exchangeRate,
+  getDataY,
   onDismiss,
 }: {
   isOpen: boolean;
   exchangeRate: string;
+  getDataY: BigNumber;
   onDismiss: () => void;
 }) => {
   // const { isOpen, onOpen, onClose } = useDisclosure();
@@ -67,6 +69,8 @@ const AddFundsModal = ({
   });
 
   const balance = useBalanceOf(appConfig.USDC_SC as `0x${string}`);
+  const balanceFixed = BigNumber(balance ? formatUnits(balance, 6) : 0).toFixed();
+  const max = BigNumber.minimum(getDataY.toFixed(), balanceFixed).toFixed()
 
   const validationSchema = Yup.object({
     amount: Yup.string()
@@ -161,6 +165,20 @@ const AddFundsModal = ({
 
   const onAddFund = async (amount: string) => {
     const amoutBigint = parseUnits(BigNumber(amount).toFixed(), 6);
+    if (+amount > +max) {
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout
+            // title="Approve account Unsuccessfully"
+            content={' Entered amount exceeds deposit limit of the pool.'}
+            status={Status.ERROR}
+            close={onClose}
+          />
+        ),
+      });
+      return;
+    }
     try {
       setLoadingDeposit(true);
       const configStake = await prepareWriteContract({
