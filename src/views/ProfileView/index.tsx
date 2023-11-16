@@ -25,6 +25,7 @@ import HistoryTable from '../TradeView/components/HistoryTable';
 import Currency from '@/components/Currency';
 import BigNumber from 'bignumber.js';
 import { first } from 'lodash';
+import { CallSocket } from '../TradeView/components/SearchPair';
 
 export type Person = {
   firstName: string;
@@ -570,6 +571,7 @@ const ProfileView = () => {
           </div>
         </Flex>
       )}
+      <CallSocket />
     </>
   );
 };

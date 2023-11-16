@@ -149,7 +149,7 @@ const TradeView = () => {
           <Box display={{ base: 'block', xl: 'none' }} marginTop={'12px'}>
             <TradeLeftSide />
           </Box>
-          <Box marginTop="12px" display={{ base: 'none', xl: 'block' }}>
+          <Box marginTop="12px" marginBottom="12px" maxW={'calc(100vw - 32px)'}>
             <Tabs>
               <TabList
                 borderBottom="1px solid #1C1C1E"
@@ -157,6 +157,8 @@ const TradeView = () => {
                 roundedTop="10px"
                 backdropFilter={'blur(7px)'}
                 boxShadow={'0px 4px 20px 0px rgba(0, 0, 0, 0.30)'}
+                maxW={'calc(100vw - 24px)'}
+                overflow="auto hidden"
               >
                 <Tab
                   color="#6D6D70"
@@ -167,12 +169,10 @@ const TradeView = () => {
                   paddingX="12px"
                   paddingY="8px"
                 >
-                  <>
-                    Trades{' '}
-                    {tradeSize > 0 && (
-                      <span className="ml-2 rounded-3xl bg-[#0C0C10] px-2 font-normal text-white">{tradeSize}</span>
-                    )}
-                  </>
+                  Trades{' '}
+                  {tradeSize > 0 && (
+                    <span className="ml-2 rounded-3xl bg-[#0C0C10] px-2 font-normal text-white">{tradeSize}</span>
+                  )}
                 </Tab>
                 <Tab
                   color="#6D6D70"

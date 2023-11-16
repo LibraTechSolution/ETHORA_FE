@@ -82,24 +82,24 @@ const LimitOrderBox = (props: PropsType) => {
 
   return (
     <>
-      <Box bg="#0c0c10" padding="20px" marginBottom={2} rounded={'10px'}>
-        <Flex alignItems="center" justifyContent="space-between" display={{ base: 'flex', xl: 'block', '2xl': 'flex' }}>
+      <Box bg="#0c0c10" padding={{ base: '10px', '2xl': '20px' }} marginBottom={2} rounded={'10px'}>
+        <Flex alignItems="center" justifyContent="space-between" display={{ base: 'flex', xl: 'block', '4xl': 'flex' }}>
           <Center justifyContent={'initial'}>
             <Image alt="" src={`/images/icons/${item.pair}.png`} w="20px" h="20px" />
             <p className="px-2 text-sm font-normal text-[#fff]">{item.pair && item.pair.toUpperCase()}</p>
             {item.isAbove ? (
-              <span className="h-6 rounded border border-[#1ED768] px-[6px] text-sm font-normal text-[#1ED768]">
+              <span className="flex h-6 items-center rounded border border-[#1ED768] px-[6px] text-sm font-normal text-[#1ED768]">
                 <TriangleUpIcon color={'#1ED768'} marginRight="4px" />
                 Up
               </span>
             ) : (
-              <span className="h-6 rounded border border-[#F03D3E] px-[6px] text-sm font-normal text-[#F03D3E]">
+              <span className="flex h-6 items-center rounded border border-[#F03D3E] px-[6px] text-sm font-normal text-[#F03D3E]">
                 <TriangleDownIcon color={'#F03D3E'} marginRight="4px" />
                 Down
               </span>
             )}
           </Center>
-          <Center>
+          <Center justifyContent={{ base: 'initial', '4xl': 'end' }}>
             <span className="rounded bg-[#252528] px-2 text-[#9E9E9F]">Limit Order</span>
           </Center>
         </Flex>
