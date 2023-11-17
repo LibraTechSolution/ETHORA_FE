@@ -98,7 +98,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
         <Tooltip
           hasArrow
           label={
-            <Box p={4} color="white">
+            <Box p={1} color="white">
               {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
@@ -138,7 +138,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
           <Tooltip
             hasArrow
             label={
-              <Box p={4} color="white">
+              <Box p={1} color="white">
                 {dayjs(closeTime).utc().format('HH:mm:ss')} {dayjs(closeTime).utc().format('MM/DD/YYYY')} UTC
               </Box>
             }
@@ -166,9 +166,27 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
       key: 'payout',
       render: (value, record) => (
         <div>
-          <p>{addComma(divide(record.profit, 6), 6)} USDC</p>
+          <Tooltip
+            label={`${addComma(divide(record.profit, 6), 6)} USDC`}
+            hasArrow
+            color="white"
+            placement="top"
+            bg="#050506"
+          >
+            <span>{addComma(divide(record.profit, 6), 2)} USDC</span>
+          </Tooltip>
+
           <Text textColor={record.status === TRADE_STATUS.WIN ? '#1ED768' : '#F03D3E'}>
-            Net PnL: {addComma(divide(record.pnl, 6), 6)} USDC
+            Net PnL:{' '}
+            <Tooltip
+              label={`${addComma(divide(record.pnl, 6), 6)} USDC`}
+              hasArrow
+              color="white"
+              placement="top"
+              bg="#050506"
+            >
+              <span>{addComma(divide(record.pnl, 6), 2)} USDC</span>
+            </Tooltip>
           </Text>
         </div>
       ),

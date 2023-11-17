@@ -149,7 +149,7 @@ const TradeView = () => {
           <Box display={{ base: 'block', xl: 'none' }} marginTop={'12px'}>
             <TradeLeftSide />
           </Box>
-          <Box marginTop="12px" marginBottom="12px" maxW={'calc(100vw - 32px)'}>
+          <Box marginTop="12px" marginBottom="12px" maxW={{ base: 'calc(100vw - 32px)', md: 'calc(100vw - 64px)' }}>
             <Tabs>
               <TabList
                 borderBottom="1px solid #1C1C1E"

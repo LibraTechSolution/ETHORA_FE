@@ -469,35 +469,60 @@ const TradeControl = () => {
   return (
     <>
       <p className="mb-3 text-xs font-normal text-[#9E9E9F]">Time</p>
-      <Box display={{ base: 'flex', xl: 'block', '3xl': 'flex' }}>
-        {listTimes.map((item) => (
-          <Button
-            key={item}
-            border={time === item ? '1px solid #1E3EF0' : ''}
-            bgColor="#0C0C10"
-            rounded="10px"
-            textColor={time === item ? '#fff' : '#6D6D70'}
-            fontSize="sm"
-            fontWeight="normal"
-            width="48px"
-            marginRight="4px"
-            _hover={{
-              border: '1px solid #1E3EF0',
-              textColor: '#fff',
-            }}
-            _active={{
-              border: '1px solid #1E3EF0',
-              textColor: '#fff',
-            }}
-            onClick={() => {
-              setTimeNumber('');
-              setTimeError('');
-              setTime(item);
-            }}
-          >
-            {item}
-          </Button>
-        ))}
+      <Box display={{ base: 'flex' }}>
+        <Box display={{ base: 'flex', xl: 'none', '4xl': 'flex' }}>
+          {listTimes.map((item) => (
+            <Button
+              key={item}
+              border={time === item ? '1px solid #1E3EF0' : ''}
+              bgColor="#0C0C10"
+              rounded="10px"
+              textColor={time === item ? '#fff' : '#6D6D70'}
+              fontSize="sm"
+              fontWeight="normal"
+              width="48px"
+              marginRight="4px"
+              _hover={{
+                border: '1px solid #1E3EF0',
+                textColor: '#fff',
+              }}
+              _active={{
+                border: '1px solid #1E3EF0',
+                textColor: '#fff',
+              }}
+              onClick={() => {
+                setTimeNumber('');
+                setTimeError('');
+                setTime(item);
+              }}
+            >
+              {item}
+            </Button>
+          ))}
+        </Box>
+        <Select
+          display={{ base: 'none', xl: 'block', '4xl': 'none' }}
+          value={time}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) => setTime(e.target.value)}
+          border={'none'}
+          _focusVisible={{ border: 'none' }}
+          bgColor={'#0C0C10'}
+          marginRight={1}
+          width={'130px'}
+        >
+          <option value="3m" className="!bg-black">
+            3m
+          </option>
+          <option value="5m" className="!bg-black">
+            5m
+          </option>
+          <option value="15m" className="!bg-black">
+            15m
+          </option>
+          <option value="1h" className="!bg-black">
+            1h
+          </option>
+        </Select>
         <InputGroup size="md">
           <Input
             pr="4.5rem"
