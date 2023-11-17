@@ -40,7 +40,7 @@ const LimitOrderBox = (props: PropsType) => {
             <p className="font-semibold text-[#fff]">Order cancelled</p>
             <p className="text-[#9E9E9F]">
               <span className="text-[#fff]">{res.data.data.pair.toUpperCase()}</span> to go{' '}
-              <span className="text-[#fff]">{res.data.data.isAbove ? 'Upper' : 'Lower'}</span>
+              <span className="text-[#fff]">{res.data.data.isAbove ? 'Higher' : 'Lower'}</span>
             </p>
             <p className="text-[#9E9E9F]">
               Total amount: <span className="text-[#fff]">{addComma(divide(res.data.data.tradeSize, 6), 2)}</span> USDC

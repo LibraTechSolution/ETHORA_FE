@@ -182,18 +182,23 @@ export const HeaderLanding = () => {
 
           <DrawerBody>
             <Center justifyContent={'flex-start'}>
-              <Link href="/dashboard" className={currentRoute === '/dashboard' ? activeStyle : nonActiveStyle}>
-                Dashboard
-              </Link>
-            </Center>
-            <Center justifyContent={'flex-start'}>
               <Link href="/trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
                 Trade
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
+              <Link href="/dashboard" className={currentRoute === '/dashboard' ? activeStyle : nonActiveStyle}>
+                Dashboard
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
               <Link href="/faucet" className={currentRoute === '/faucet' ? activeStyle : nonActiveStyle}>
                 Faucet
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
+              <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
+                Token sale
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
@@ -214,11 +219,6 @@ export const HeaderLanding = () => {
             <Center justifyContent={'flex-start'}>
               <Link href="/earn" className={currentRoute === 'earn' ? activeStyle : nonActiveStyle}>
                 Earn
-              </Link>
-            </Center>
-            <Center justifyContent={'flex-start'}>
-              <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
-                Token sale
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
