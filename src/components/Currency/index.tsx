@@ -40,7 +40,7 @@ const getValue = (
       if (valueBig.isNaN()) {
         throw new Error();
       }
-      const valueStr = valueBig.toFormat(decimal, BigNumber.ROUND_FLOOR);
+      const valueStr = valueBig.toFormat(decimal, BigNumber.ROUND_DOWN);
       // valueShow = BigNumber(valueStr).toFormat();
       valueShow = valueStr;
       fullValue = valueBig.toFormat(6);

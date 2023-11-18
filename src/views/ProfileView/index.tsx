@@ -180,7 +180,7 @@ const ProfileView = () => {
                 </Text>
                 {profileInfoFilter?.userAddress ? (
                   <Text fontSize={'2xl'}>
-                    {dataProfileInfo && dataProfileInfo?.stats?.daily >= 0 ? dataProfileInfo?.stats?.daily + 1 : '--'}
+                    {dataProfileInfo && dataProfileInfo?.stats?.daily >= 0 ? dataProfileInfo?.stats?.daily : '--'}
                   </Text>
                 ) : (
                   <Text fontSize={'2xl'}>--</Text>

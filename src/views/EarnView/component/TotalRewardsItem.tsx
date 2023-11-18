@@ -37,12 +37,15 @@ const TotalRewardsItem = ({
   const esETR = (Number(claimables_sETR) + Number(claimable_fsBLP)) / 10 ** 18;
   const multiplierPoints = Number(claimable_sbETR) / 10 ** 18;
   const stakedMultiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
-  const total = BigNumber(claimable_sbfETR ? formatUnits(claimable_sbfETR, 6) : 0)
-    .plus(claimable_fBLP ? formatUnits(claimable_fBLP, 6) : 0)
-    .plus(claimable_vETR ? formatUnits(claimable_vETR, 18) : 0)
-    .plus(claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0)
-    .plus(claimables_sETR ? formatUnits(claimables_sETR, 18) : 0)
-    .plus(claimable_fsBLP ? formatUnits(claimable_fsBLP, 18) : 0)
+  const total1 =  BigNumber(claimable_sbfETR ? formatUnits(claimable_sbfETR, 6) : 0).plus(claimable_fBLP ? formatUnits(claimable_fBLP, 6) : 0)
+
+  const total2 =  BigNumber(claimable_vETR ? formatUnits(claimable_vETR, 18) : 0).plus(claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0)
+  const total2USD =  total2.multipliedBy(price);
+
+  const total3 = BigNumber(claimables_sETR ? formatUnits(claimables_sETR, 18) : 0).plus(claimable_fsBLP ? formatUnits(claimable_fsBLP, 18) : 0)
+  const total3USD =  total3.multipliedBy(price);
+
+  const total = total1.plus(total2USD).plus(total3USD)
 
   console.log('total=========', total.toFixed())
 
