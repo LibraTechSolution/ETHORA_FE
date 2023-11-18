@@ -401,18 +401,25 @@ const EarnView = () => {
 
   // console.log('totalSupply_sETR', totalSupply_sETR);
   const onFetch = () => {
-    console.log('onFetch');
-    refetchETR_SC();
-    refetchSETR_SC();
-    refetchSBFETR_SC();
-    refetchFBLP_SC();
-    refetchVETR_SC();
-    refetchVBLP_SC();
-    refetchFSBLP_SC();
-    refetchSBETR_SC();
-    refetchESETR_SC();
-    refetchBLP_SC();
-    refetchUSDC_SC();
+    let timesRun = 0;
+    const interval = setInterval(function () {
+      timesRun += 1;
+      if (timesRun === 12) {
+        clearInterval(interval);
+      }
+      console.log('onFetch', timesRun);
+      refetchETR_SC();
+      refetchSETR_SC();
+      refetchSBFETR_SC();
+      refetchFBLP_SC();
+      refetchVETR_SC();
+      refetchVBLP_SC();
+      refetchFSBLP_SC();
+      refetchSBETR_SC();
+      refetchESETR_SC();
+      refetchBLP_SC();
+      refetchUSDC_SC();
+    }, 5000);
   };
 
   // console.log('depositBalances_ETR', depositBalances_ETR)
@@ -547,28 +554,32 @@ const EarnView = () => {
         <Grid templateColumns={{ md: 'repeat(2, 1fr)' }} gap={'20px'}>
           <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
             <CardEarn>
-              <ETRVault
-                depositBalances_ETR={depositBalances_ETR as bigint}
-                depositBalances_esETR={depositBalances_esETR as bigint}
-                depositBalances_bnETR={depositBalances_bnETR as bigint}
-                pairAmounts_vETR={pairAmounts_vETR as bigint}
-                depositBalances_sbETR={depositBalances_sbETR as bigint}
-                claimedAmounts_vETR={claimedAmounts_vETR as bigint}
-                claimable_vETR={claimable_vETR as bigint}
-                getVestedAmount_vETR={getVestedAmount_vETR as bigint}
-              />
+              {isMounted && (
+                <ETRVault
+                  depositBalances_ETR={depositBalances_ETR as bigint}
+                  depositBalances_esETR={depositBalances_esETR as bigint}
+                  depositBalances_bnETR={depositBalances_bnETR as bigint}
+                  pairAmounts_vETR={pairAmounts_vETR as bigint}
+                  depositBalances_sbETR={depositBalances_sbETR as bigint}
+                  claimedAmounts_vETR={claimedAmounts_vETR as bigint}
+                  claimable_vETR={claimable_vETR as bigint}
+                  getVestedAmount_vETR={getVestedAmount_vETR as bigint}
+                />
+              )}
             </CardEarn>
           </GridItem>
 
           <GridItem w="100%" colSpan={{ md: 2, lg: 1 }}>
             <CardEarn>
-              <ELPVault
-                depositBalances_fBLP={depositBalances_fBLP as bigint}
-                pairAmounts_vBLP={pairAmounts_vBLP as bigint}
-                claimedAmounts_vBLP={claimedAmounts_vBLP as bigint}
-                claimable_vBLP={claimable_vBLP as bigint}
-                getVestedAmount_vBLP={getVestedAmount_vBLP as bigint}
-              />
+              {isMounted && (
+                <ELPVault
+                  depositBalances_fBLP={depositBalances_fBLP as bigint}
+                  pairAmounts_vBLP={pairAmounts_vBLP as bigint}
+                  claimedAmounts_vBLP={claimedAmounts_vBLP as bigint}
+                  claimable_vBLP={claimable_vBLP as bigint}
+                  getVestedAmount_vBLP={getVestedAmount_vBLP as bigint}
+                />
+              )}
             </CardEarn>
           </GridItem>
         </Grid>

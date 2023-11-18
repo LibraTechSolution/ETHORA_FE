@@ -1,6 +1,6 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
 import { addComma } from '@/utils/number';
-import { Heading, Box, Text, Flex, Button, Tooltip, useToast } from '@chakra-ui/react';
+import { Heading, Box, Text, Flex, Button, Tooltip, useToast, Link } from '@chakra-ui/react';
 import DepositModalELPVault from './DepositModalELPVault';
 import { useContext, useState } from 'react';
 import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
@@ -64,6 +64,17 @@ const ELPVault = ({
       const { hash } = await writeContract(configUnStake);
       const data = await waitForTransaction({
         hash,
+      });
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Successful transaction" status={Status.SUCCESSS} close={onClose}>
+            <p className="text-[14px] font-medium text-white">{'Successful transaction'}</p>
+            <Link href={`https://goerli.arbiscan.io/tx/${hash}`} isExternal color="#3396FF" fontSize={'12px'}>
+              View on explorer
+            </Link>
+          </ToastLayout>
+        ),
       });
       setLoadingWithdraw(false);
       onFetchData();
