@@ -89,13 +89,27 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       render: (value, record) => (
         <>
           <p>
-            {addComma(divide(value, 8), 2)} {record.pair && record.pair.split('-')[1].toUpperCase()}
+            <Tooltip
+              hasArrow
+              label={
+                <Box p={1} color="white">
+                  {addComma(divide(value, 8), 2)} {record.pair && record.pair.split('-')[1].toUpperCase()}
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+            >
+              <span>
+                {addComma(divide(value, 8), 2)} {record.pair && record.pair.split('-')[1].toUpperCase()}
+              </span>
+            </Tooltip>
           </p>
 
           <Tooltip
             hasArrow
             label={
-              <Box w="100%" p={4} color="white">
+              <Box w="100%" p={1} color="white">
                 The strike price will vary from{' '}
                 {addComma(
                   divide(
@@ -160,7 +174,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
         <Tooltip
           hasArrow
           label={
-            <Box p={4} color="white">
+            <Box p={1} color="white">
               {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
@@ -179,7 +193,21 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
+      render: (value) => (
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value, 6), 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>{addComma(divide(value, 6), 2)} USDC</span>
+        </Tooltip>
+      ),
     },
     ...(!isProfile
       ? [

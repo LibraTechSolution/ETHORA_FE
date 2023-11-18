@@ -4,8 +4,9 @@ import { ILeaderBoardDetail } from '@/types/leaderboard.type';
 import { formatAddress } from '@/utils/address';
 import { addComma } from '@/utils/number';
 import { divide } from '@/utils/operationBigNumber';
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text, Tooltip } from '@chakra-ui/react';
 import { Table, TablePaginationConfig } from 'antd';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -41,13 +42,31 @@ const TableLeaderBoard = (props: Props) => {
       title: 'User Address',
       dataIndex: 'user',
       key: 'user',
-      render: (value: string) => formatAddress(value, 7, 7),
+      render: (value: string) => (
+        <Link href={`/profile?address=${value}`} target="_blank">
+          {formatAddress(value, 7, 7)}
+        </Link>
+      ),
     },
     {
       title: 'Volume',
       dataIndex: 'volume',
       key: 'volume',
-      render: (value: string) => <span>{addComma(divide(value as string, 6), 2)} USDC</span>,
+      render: (value: string) => (
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value as string, 6), 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>{addComma(divide(value as string, 6), 2)} USDC</span>
+        </Tooltip>
+      ),
     },
     {
       title: 'Trades',
@@ -59,9 +78,21 @@ const TableLeaderBoard = (props: Props) => {
       dataIndex: 'netPnL',
       key: 'netPnL',
       render: (value: string, record: ILeaderBoardDetail) => (
-        <span className={+value < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>
-          {addComma((+record.netPnL / +record.volume) * 100, 2)} %
-        </span>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma((+record.netPnL / +record.volume) * 100, 6)} %
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span className={+value < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>
+            {addComma((+record.netPnL / +record.volume) * 100, 2)} %
+          </span>
+        </Tooltip>
       ),
     },
     {
@@ -69,7 +100,19 @@ const TableLeaderBoard = (props: Props) => {
       dataIndex: 'netPnL',
       key: 'netPnL',
       render: (value: string) => (
-        <span className={+value < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>{addComma(divide(value, 6), 2)} USDC</span>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value as string, 6), 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span className={+value < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>{addComma(divide(value, 6), 2)} USDC</span>
+        </Tooltip>
       ),
     },
   ];
@@ -97,7 +140,21 @@ const TableLeaderBoard = (props: Props) => {
       title: 'Volume',
       dataIndex: 'volume',
       key: 'volume',
-      render: (value: string) => <span>{addComma(divide(value as string, 6), 2)} USDC</span>,
+      render: (value: string) => (
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value as string, 6), 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>{addComma(divide(value as string, 6), 2)} USDC</span>
+        </Tooltip>
+      ),
     },
     {
       title: 'Total Trades',
@@ -114,7 +171,21 @@ const TableLeaderBoard = (props: Props) => {
       title: 'Win rate',
       dataIndex: 'winRate',
       key: 'winRate',
-      render: (value: string) => <span>{addComma(+value / 1000, 2)}%</span>,
+      render: (value: string) => (
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(+value / 1000, 6)}%
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>{addComma(+value / 1000, 2)}%</span>
+        </Tooltip>
+      ),
     },
   ];
 

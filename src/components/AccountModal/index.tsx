@@ -17,6 +17,7 @@ import {
   Grid,
   GridItem,
   useToast,
+  Box,
 } from '@chakra-ui/react';
 import { disconnect, readContract, signTypedData } from '@wagmi/core';
 import { CopyIcon, ExternalLink, LogOut } from 'lucide-react';
@@ -119,7 +120,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
       toast({
         position: 'top',
         render: ({ onClose }) => (
-          <ToastLayout title="Deactive account successfully" status={Status.SUCCESSS} close={onClose} />
+          <ToastLayout title="Deactivated account successfully" status={Status.SUCCESSS} close={onClose} />
         ),
       });
       setIsLoadingDeactive(false);
@@ -331,10 +332,20 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
             </Center>
             <Center color="#1E3EF0" paddingTop="27px" fontSize="20px" fontWeight="600">
               {formatAddress(address?.toLocaleLowerCase(), 4, 9)}
+              <Box marginLeft={3} display={{ base: 'block', md: 'none' }}>
+                <CopyIcon color="#1E3EF0" onClick={handleCopy} />
+              </Box>
             </Center>
           </Flex>
-          <Grid templateColumns="repeat(3, 1fr)" paddingY="20px">
-            <GridItem w="100%" paddingRight="2.5" cursor="pointer" onClick={handleCopy}>
+          <Grid templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }} paddingY="20px">
+            <GridItem
+              display={{ base: 'none', md: 'block' }}
+              w="100%"
+              paddingRight="2.5"
+              cursor="pointer"
+              borderRight="1px solid #38383A"
+              onClick={handleCopy}
+            >
               <Center>
                 <CopyIcon color="#1E3EF0" />
               </Center>
@@ -342,7 +353,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
                 Copy address
               </Center>
             </GridItem>
-            <GridItem w="100%" paddingX="2.5" borderX="1px solid #38383A" cursor="pointer">
+            <GridItem w="100%" paddingX="2.5" borderRight="1px solid #38383A" cursor="pointer">
               <Link href={`${appConfig.arbiscan}/address/${address}`} target="_blank">
                 <Center>
                   <ExternalLink color="#1E3EF0" />

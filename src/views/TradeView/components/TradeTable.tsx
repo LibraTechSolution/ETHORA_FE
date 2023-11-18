@@ -36,10 +36,38 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
   const { earlycloseAmount, probability } = earlyPnl;
   return (
     <Box>
-      <p className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
-        {(+earlycloseAmount).toFixed(2)} USDC
-      </p>
-      <p className="text-[ #9E9E9F] text-xs font-normal">{probability.toFixed(2)}%</p>
+      <Box>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(+earlycloseAmount, 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
+            {(+earlycloseAmount).toFixed(2)} USDC
+          </span>
+        </Tooltip>
+      </Box>
+      <Box>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(probability, 6)}%
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span className="text-[ #9E9E9F] text-xs font-normal">{probability.toFixed(2)}%</span>
+        </Tooltip>
+      </Box>
     </Box>
   );
 };
@@ -141,9 +169,21 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       dataIndex: 'strike',
       key: 'strike',
       render: (value, record) => (
-        <span>
-          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-        </span>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value, 8), 6)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>
+            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+          </span>
+        </Tooltip>
       ),
     },
     {
@@ -165,7 +205,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
         <Tooltip
           hasArrow
           label={
-            <Box p={4} color="white">
+            <Box p={1} color="white">
               {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
@@ -198,7 +238,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
         <Tooltip
           hasArrow
           label={
-            <Box p={4} color="white">
+            <Box p={1} color="white">
               {dayjs(value.openDate).add(value.period, 'second').utc().format('HH:mm:ss')}{' '}
               {dayjs(value.openDate).add(value.period, 'second').utc().format('MM/DD/YYYY')} UTC
             </Box>
@@ -218,7 +258,21 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
+      render: (value) => (
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value, 6), 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>{addComma(divide(value, 6), 2)} USDC</span>
+        </Tooltip>
+      ),
     },
     {
       title: 'PnL | Probability',

@@ -39,25 +39,25 @@ export const ToastLayout = (toastProp: ToastProp) => {
   }, [status]);
 
   return (
-    <Flex bgColor={bgColor} paddingX="16px" paddingY="8px" rounded="4px">
+    <Flex bgColor={bgColor} paddingX="16px" paddingY="8px" rounded="4px" justifyContent={'space-between'}>
       <Center>
         <Image alt="icon" src={toastIcon} width="20px" height="20px" />
+        {children ? (
+          <Flex flexDirection="column" ml="16px" minW={{ xl: '340px' }} maxW={{ xl: '500px' }} justifyContent="center">
+            {children}
+          </Flex>
+        ) : (
+          <Flex flexDirection="column" ml="16px" minW={{ xl: '340px' }} maxW={{ xl: '500px' }} justifyContent="center">
+            <p className="text-[14px] font-medium text-white">{title}</p>
+            {content && (
+              <p className={`text-[14px] font-normal ${status === Status.SUCCESSS ? 'text-[#9E9E9F]' : 'text-white'}`}>
+                {content}
+              </p>
+            )}
+          </Flex>
+        )}
       </Center>
-      {children ? (
-        <Flex flexDirection="column" ml="16px" minW={{ xl: '340px' }} maxW={{ xl: '500px' }} justifyContent="center">
-          {children}
-        </Flex>
-      ) : (
-        <Flex flexDirection="column" ml="16px" minW={{ xl: '340px' }} maxW={{ xl: '500px' }} justifyContent="center">
-          <p className="text-[14px] font-medium text-white">{title}</p>
-          {content && (
-            <p className={`text-[14px] font-normal ${status === Status.SUCCESSS ? 'text-[#9E9E9F]' : 'text-white'}`}>
-              {content}
-            </p>
-          )}
-        </Flex>
-      )}
-      <Center>
+      <Center w="16px">
         <Button
           onClick={close}
           type="button"

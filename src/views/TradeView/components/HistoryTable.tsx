@@ -75,9 +75,17 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
       dataIndex: 'strike',
       key: 'strike',
       render: (value, record) => (
-        <span>
-          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-        </span>
+        <Tooltip
+          label={`${addComma(divide(value, 8), 6)} ${record?.pair && record.pair.split('-')[1].toUpperCase()}`}
+          hasArrow
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>
+            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+          </span>
+        </Tooltip>
       ),
     },
     {
@@ -85,9 +93,17 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
       dataIndex: 'expiryPrice',
       key: 'expiryPrice',
       render: (value, record) => (
-        <span>
-          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-        </span>
+        <Tooltip
+          label={`${addComma(divide(value, 8), 6)} ${record?.pair && record.pair.split('-')[1].toUpperCase()}`}
+          hasArrow
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>
+            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+          </span>
+        </Tooltip>
       ),
     },
     {
@@ -158,7 +174,11 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
+      render: (value) => (
+        <Tooltip label={`${addComma(divide(value, 6), 6)} USDC`} hasArrow color="white" placement="top" bg="#050506">
+          <span>{addComma(divide(value, 6), 2)} USDC</span>
+        </Tooltip>
+      ),
     },
     {
       title: 'Payout',

@@ -11,7 +11,7 @@ import {
   MenuList,
   Stack,
   Text,
-  useMediaQuery,
+  Tooltip,
 } from '@chakra-ui/react';
 import { Select } from 'antd';
 import Image from 'next/image';
@@ -23,11 +23,11 @@ import { ILeaderBoardParams } from '@/types/leaderboard.type';
 import { useQuery } from '@tanstack/react-query';
 import { addComma } from '@/utils/number';
 import { divide } from '@/utils/operationBigNumber';
-import CountDown from '../TradeView/components/CountDown';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import TableLeaderBoard from './conponent/tableLeaderBoard';
 import CustomConnectButton from '@/components/CustomConnectButton';
+import CountDownWithDay from './conponent/CountDownWithDay';
 dayjs.extend(utc);
 // import { Flex } from "@chakra-ui/react";
 
@@ -41,7 +41,7 @@ export enum TableTabType {
 }
 
 const defaultParams: ILeaderBoardParams = {
-  offset: 256,
+  offset: 0,
   type: 'daily',
   network: 421613,
 };
@@ -87,6 +87,8 @@ const LeaderboardView = () => {
     setSelectedOffset(offset);
   };
 
+  console.log('isSuccess', isSuccess);
+
   const {
     data: leaderBoardData,
     isLoading,
@@ -98,7 +100,7 @@ const LeaderboardView = () => {
       // notification.error({ message: error.message });
       console.log(error);
     },
-    enabled: isSuccess,
+    enabled: !!filter.offset,
     cacheTime: 0,
     refetchInterval: false,
     refetchOnWindowFocus: false,
@@ -107,6 +109,13 @@ const LeaderboardView = () => {
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
   };
+
+  useEffect(() => {
+    console.log(leaderBoardData);
+    console.log(leaderBoardData?.summary?.endDate);
+    console.log(dayjs().utc().unix());
+    console.log(dayjs(leaderBoardData?.summary?.endDate).unix());
+  }, [leaderBoardData]);
 
   useEffect(() => {
     setMounted(isConnected);
@@ -133,7 +142,7 @@ const LeaderboardView = () => {
           alignItems={'center'}
         >
           <Image alt="avatar" src="/images/icons/thunder.svg" width={24} height={24} className="mr-2" /> The competition
-          ends on MM/DD/YYYY - hh:mm UTC
+          ends on {dayjs(leaderBoardData?.summary?.endDate).format('MM/DD/YYYY - hh:mm')} UTC
         </Box>
         <Flex justifyContent={'start'} alignItems={'center'} marginBottom={'28px'}>
           <Heading as="h3" textAlign={'center'} fontSize={'24px'} lineHeight={'36px'} fontWeight={'400'}>
@@ -226,9 +235,21 @@ const LeaderboardView = () => {
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
                 Reward pool
               </Text>
-              <Text fontSize={'2xl'}>
-                {addComma(divide(leaderBoardData?.summary?.totalRewardPool ?? 0, 6), 0)} USDC
-              </Text>
+              <Tooltip
+                hasArrow
+                label={
+                  <Box p={1} color="white">
+                    {addComma(divide(leaderBoardData?.summary?.totalRewardPool ?? 0, 6), 6)} USDC
+                  </Box>
+                }
+                color="white"
+                placement="top"
+                bg="#050506"
+              >
+                <Text fontSize={'2xl'}>
+                  {addComma(divide(leaderBoardData?.summary?.totalRewardPool ?? 0, 6), 2)} USDC
+                </Text>
+              </Tooltip>
             </Flex>
           </Center>
           <Center
@@ -240,18 +261,14 @@ const LeaderboardView = () => {
             flexBasis={'200px'}
           >
             <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
-              <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
+              <Text fontSize={'sm'} color={'#9E9E9F'} marginBottom={'12px'}>
                 Time Left
               </Text>
-              <Text fontSize={'2xl'}>
-                <CountDown
-                  endTime={dayjs(leaderBoardData?.summary?.endDate)
-                    .utc()
-                    .unix()}
-                  period={0}
-                  hideBar={true}
-                />
-              </Text>
+              {leaderBoardData?.summary?.endDate ? (
+                <CountDownWithDay endTime={dayjs(leaderBoardData?.summary?.endDate).unix()} />
+              ) : (
+                '---'
+              )}
             </Flex>
           </Center>
           <Center
@@ -266,7 +283,7 @@ const LeaderboardView = () => {
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
                 Participants
               </Text>
-              <Text fontSize={'2xl'}>{leaderBoardData?.summary?.totalUserTrades}</Text>
+              <Text fontSize={'2xl'}>{leaderBoardData?.summary?.totalUserTrades ?? 0}</Text>
             </Flex>
           </Center>
           <Center
@@ -281,7 +298,7 @@ const LeaderboardView = () => {
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
                 No. of trades
               </Text>
-              <Text fontSize={'2xl'}>{addComma(leaderBoardData?.summary?.totalTrades ?? 0, 0)}</Text>
+              <Text fontSize={'2xl'}>{addComma(leaderBoardData?.summary?.totalTrades ?? 0, 2)}</Text>
             </Flex>
           </Center>
           <Center textAlign={'center'} padding={3} flexShrink={1} flexGrow={1} flexBasis={'200px'}>
@@ -289,11 +306,23 @@ const LeaderboardView = () => {
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
                 Volume
               </Text>
-              <Text fontSize={'2xl'}>{addComma(divide(leaderBoardData?.summary?.totalVolume ?? 0, 6), 0)} USDC</Text>
+              <Tooltip
+                hasArrow
+                label={
+                  <Box p={1} color="white">
+                    {addComma(divide(leaderBoardData?.summary?.totalVolume ?? 0, 6), 6)} USDC
+                  </Box>
+                }
+                color="white"
+                placement="top"
+                bg="#050506"
+              >
+                <Text fontSize={'2xl'}>{addComma(divide(leaderBoardData?.summary?.totalVolume ?? 0, 6), 2)} USDC</Text>
+              </Tooltip>
             </Flex>
           </Center>
         </Flex>
-        <div>
+        <Box maxW={{ base: 'calc(100vw - 12px)', md: 'calc(100vw - 64px)' }} marginBottom="12px">
           <Box
             width={'100%'}
             overflow={'overflow-auto'}
@@ -407,7 +436,7 @@ const LeaderboardView = () => {
               />
             </Box>
           )}
-        </div>
+        </Box>
       </Box>
     </Flex>
   );

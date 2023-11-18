@@ -62,9 +62,21 @@ const PlatformHistoryTable = () => {
       dataIndex: 'strike',
       key: 'strike',
       render: (value, record) => (
-        <span>
-          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-        </span>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value, 8), 6)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>
+            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+          </span>
+        </Tooltip>
       ),
     },
     {
@@ -72,9 +84,21 @@ const PlatformHistoryTable = () => {
       dataIndex: 'expiryPrice',
       key: 'expiryPrice',
       render: (value, record) => (
-        <span>
-          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-        </span>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value, 8), 6)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>
+            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+          </span>
+        </Tooltip>
       ),
     },
     {
@@ -85,7 +109,7 @@ const PlatformHistoryTable = () => {
         <Tooltip
           hasArrow
           label={
-            <Box p={4} color="white">
+            <Box p={1} color="white">
               {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
@@ -125,7 +149,7 @@ const PlatformHistoryTable = () => {
           <Tooltip
             hasArrow
             label={
-              <Box p={4} color="white">
+              <Box p={1} color="white">
                 {dayjs(closeTime).utc().format('HH:mm:ss')} {dayjs(closeTime).utc().format('MM/DD/YYYY')} UTC
               </Box>
             }
@@ -145,13 +169,41 @@ const PlatformHistoryTable = () => {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
+      render: (value) => (
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value, 6), 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>{addComma(divide(value, 6), 2)} USDC</span>
+        </Tooltip>
+      ),
     },
     {
       title: 'Payout',
       dataIndex: 'payout',
       key: 'payout',
-      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
+      render: (value) => (
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value, 6), 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>{addComma(divide(value, 6), 2)} USDC</span>
+        </Tooltip>
+      ),
     },
     {
       title: 'Status',
@@ -239,7 +291,7 @@ const PlatformHistoryTable = () => {
           >
             <Image src="/images/icons/empty.svg" width={'60px'} height={'50px'} alt="empty" />
             <Text color={'#6D6D70'} fontSize={'14px'}>
-              No active platform history.
+              No platform history.
             </Text>
           </Box>
         ),

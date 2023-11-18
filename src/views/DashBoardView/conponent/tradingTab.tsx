@@ -45,6 +45,10 @@ const TradingTab = () => {
             divide(dataDashboardOverviews?.totalStats?.totalSettlementFees ?? 0, 6),
             2,
           )} USDC / ${addComma(divide(dataDashboardOverviews?.totalStats.totalVolume ?? 0, 6), 2)} USDC`}
+          tooltip={`${addComma(
+            divide(dataDashboardOverviews?.totalStats?.totalSettlementFees ?? 0, 6),
+            6,
+          )} USDC / ${addComma(divide(dataDashboardOverviews?.totalStats.totalVolume ?? 0, 6), 6)} USDC`}
         />
         <ItemCardTab
           title={'Fees / Volume (24h)'}
@@ -54,6 +58,13 @@ const TradingTab = () => {
           )} USDC/ ${addComma(
             divide(dataDashboardOverviews?.total24stats?.reduce((acc, item) => acc + +item.amount, 0) ?? 0, 6),
             2,
+          )} USDC`}
+          tooltip={`${addComma(
+            divide(dataDashboardOverviews?.total24stats?.reduce((acc, item) => acc + +item.settlementFee, 0) ?? 0, 6),
+            6,
+          )} USDC/ ${addComma(
+            divide(dataDashboardOverviews?.total24stats?.reduce((acc, item) => acc + +item.amount, 0) ?? 0, 6),
+            6,
           )} USDC`}
         />
         <ItemCardTab
@@ -74,6 +85,22 @@ const TradingTab = () => {
                 )
               : 0
           } USDC`}
+          tooltip={`${
+            dataDashboardOverviews
+              ? addComma(
+                  divide(
+                    divide(
+                      dataDashboardOverviews?.totalStats?.totalVolume ?? 0,
+                      dayjs()
+                        .diff(dataDashboardOverviews?.tradingStartDate, 'd')
+                        .toString(),
+                    ),
+                    6,
+                  ),
+                  6,
+                )
+              : 0
+          } USDC`}
         />
         <ItemCardTab
           title={'Average Trade size'}
@@ -84,18 +111,28 @@ const TradingTab = () => {
             ),
             2,
           )} USDC`}
+          tooltip={`${addComma(
+            divide(
+              divide(dataDashboardOverviews?.totalStats?.totalVolume ?? 0, 6),
+              (dataDashboardOverviews?.totalStats?.totalTrades ?? 1).toString(),
+            ),
+            6,
+          )} USDC`}
         />
         <ItemCardTab
           title={'Total Trades'}
           value={`${addComma(dataDashboardOverviews?.totalStats?.totalTrades ?? 0, 2)}`}
+          tooltip={`${addComma(dataDashboardOverviews?.totalStats?.totalTrades ?? 0, 6)}`}
         />
         <ItemCardTab
           title={'Open Interest (USDC)'}
-          value={`${addComma(dataDashboardOverviews?.OIstats?.totalVolume ?? 0, 2)} USDC`}
+          value={`${addComma(divide(dataDashboardOverviews?.OIstats?.totalVolume ?? 0, 6), 2)} USDC`}
+          tooltip={`${addComma(divide(dataDashboardOverviews?.OIstats?.totalVolume ?? 0, 6), 6)} USDC`}
         />
         <ItemCardTab
           title={'Total Traders'}
           value={`${addComma(dataDashboardOverviews?.totalTraders[0].uniqueCountCumulative ?? 0, 2)}`}
+          tooltip={`${addComma(dataDashboardOverviews?.totalTraders[0].uniqueCountCumulative ?? 0, 6)}`}
         />
       </Flex>
     </Box>

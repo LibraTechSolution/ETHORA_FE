@@ -323,7 +323,7 @@ const ReferralView = () => {
               borderColor={defaultTabs === ReferralTabType.Tab2 ? '#1E3EF0' : 'transparent'}
               pointerEvents={defaultTabs === ReferralTabType.Tab2 ? 'none' : 'auto'}
               cursor={defaultTabs === ReferralTabType.Tab2 ? 'default' : 'pointer'}
-              color={defaultTabs === ReferralTabType.Tab2 ? '#1E3EF0' : '#9E9E9F'}
+              color={defaultTabs === ReferralTabType.Tab2 ? '#1E3EF0' : '#6D6D70'}
               padding={'13px 0'}
             >
               Become a Referrer
@@ -371,6 +371,7 @@ const ReferralView = () => {
                     onClick={() => setIsOpenRefCodeToolTip(!isOpenRefCodeToolTip)}
                     onMouseEnter={() => setIsOpenRefCodeToolTip(true)}
                     onMouseLeave={() => setIsOpenRefCodeToolTip(false)}
+                    color={'#1E3EF0'}
                   />
                 </Tooltip>
               </InputRightElement>
@@ -397,7 +398,7 @@ const ReferralView = () => {
             <Text fontSize={'24px'} fontWeight={600} marginBottom={'20px'}>
               Invite with Referral Code
             </Text>
-            <Text fontSize={'14px'} fontWeight={400} marginBottom={'20px'}>
+            <Text fontSize={'14px'} fontWeight={400} marginBottom={'20px'} color={'#D0D0D2'}>
               Create a Referral Code and start earning now.
             </Text>
 
@@ -433,6 +434,7 @@ const ReferralView = () => {
                     onClick={() => setIsOpenAddCodeToolTip(!isOpenAddCodeToolTip)}
                     onMouseEnter={() => setIsOpenAddCodeToolTip(true)}
                     onMouseLeave={() => setIsOpenAddCodeToolTip(false)}
+                    color={'#1E3EF0'}
                   />
                 </Tooltip>
               </InputRightElement>
