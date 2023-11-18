@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 
-const useCountdown = (targetDate: number) => {
+export const useCountdown = (targetDate: number) => {
 
   const [countDown, setCountDown] = useState(
     targetDate - dayjs().utc().unix()
@@ -33,5 +33,3 @@ const getReturnValues = (countDown: number) => {
 
   return { days, hours, minutes, seconds, countDown };
 };
-
-export { useCountdown };

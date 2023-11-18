@@ -84,7 +84,7 @@ const PlatformTradesTable = () => {
         <Tooltip
           hasArrow
           label={
-            <Box p={4} color="white">
+            <Box p={1} color="white">
               {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
@@ -111,7 +111,7 @@ const PlatformTradesTable = () => {
         <Tooltip
           hasArrow
           label={
-            <Box p={4} color="white">
+            <Box p={1} color="white">
               {dayjs(value.openDate).add(value.period, 'second').utc().format('HH:mm:ss')}{' '}
               {dayjs(value.openDate).add(value.period, 'second').utc().format('MM/DD/YYYY')} UTC
             </Box>

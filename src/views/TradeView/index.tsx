@@ -67,6 +67,7 @@ const TradeView = () => {
     if (!clientY) return;
     if (!containerDim?.height) return;
     if (!dragging) return;
+    if (clientY < 300) return;
     // y = 4
     setContainerDim((currentChartContainerDim) => {
       if (!currentChartContainerDim?.top) return {};

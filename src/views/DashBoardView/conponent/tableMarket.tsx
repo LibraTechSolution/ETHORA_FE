@@ -10,7 +10,7 @@ import { addComma } from '@/utils/number';
 import { add, divide } from '@/utils/operationBigNumber';
 import { CallSocket } from '@/views/TradeView/components/SearchPair';
 import { ShowPrice } from '@/views/TradeView/components/ShowPrice';
-import { Box, Flex, Image, Stat, StatArrow, StatHelpText, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Stat, StatArrow, StatHelpText, Text, Tooltip } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Address, readContract } from '@wagmi/core';
 import { Badge, Progress, Table, notification } from 'antd';
@@ -65,14 +65,42 @@ const columns: ColumnsType<PairData> = [
     dataIndex: 'currentOL',
     key: 'Open Interest',
     sorter: (a, b) => a.currentOL - b.currentOL,
-    render: (value) => `${addComma(value, 2)} USDC`,
+    render: (value) => (
+      <Tooltip
+        hasArrow
+        label={
+          <Box p={1} color="white">
+            {addComma(value, 6)} USDC
+          </Box>
+        }
+        color="white"
+        placement="top"
+        bg="#050506"
+      >
+        <span>{addComma(value, 2)} USDC</span>
+      </Tooltip>
+    ),
   },
   {
     title: '24h Volume',
     dataIndex: 'dailyVol',
     key: 'volume',
     sorter: (a, b) => +a.dailyVol - +b.dailyVol,
-    render: (value) => `${addComma(divide(value, 6), 2)} USDC`,
+    render: (value) => (
+      <Tooltip
+        hasArrow
+        label={
+          <Box p={1} color="white">
+            {addComma(divide(value, 6), 6)} USDC
+          </Box>
+        }
+        color="white"
+        placement="top"
+        bg="#050506"
+      >
+        <span>{addComma(divide(value, 6), 2)} USDC</span>
+      </Tooltip>
+    ),
   },
   {
     title: 'Utilization',
@@ -93,7 +121,21 @@ const columns: ColumnsType<PairData> = [
     dataIndex: 'maxTradeSize',
     key: 'maxTradeSize',
     render: (value) => {
-      return <Text>{value} USDC</Text>;
+      return (
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(value, 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>{addComma(value, 2)} USDC</span>
+        </Tooltip>
+      );
     },
   },
   {

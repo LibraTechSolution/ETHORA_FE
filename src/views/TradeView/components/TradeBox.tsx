@@ -214,21 +214,11 @@ const TradeBox = (props: PropsType) => {
         <ShowPnL item={item} />
         <GridItem>
           <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Current Price</p>
-          <Tooltip
-            hasArrow
-            label={price}
-            bg="#050506"
-            color={'white'}
-            placement="bottom-start"
-            borderRadius={'4px'}
-            fontSize={'12px'}
-          >
-            {item?.pair && (
-              <p className="text-sm font-normal text-[#FFFFFF]">
-                <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} /> {item.pair.split('-')[1].toUpperCase()}
-              </p>
-            )}
-          </Tooltip>
+          {item?.pair && (
+            <p className="text-sm font-normal text-[#FFFFFF]">
+              <ShowPrice pair={item.pair.replace('-', '').toUpperCase()} /> {item.pair.split('-')[1].toUpperCase()}
+            </p>
+          )}
         </GridItem>
       </Grid>
       <Grid templateColumns="repeat(2, 1fr)" marginBottom="3">

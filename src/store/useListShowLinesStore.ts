@@ -30,9 +30,9 @@ const useListShowLinesStore = create<ListLinesState>()(
         }
       }
 
-      return { listLines: [...tempList] }
+      return ({ listLines: [...tempList] })
     }),
-    resetListLine: () => set(() => { return { listLines: [] } })
+    resetListLine: () => set(() => ({ listLines: [] }))
   })
 );
 

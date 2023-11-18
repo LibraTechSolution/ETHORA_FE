@@ -59,16 +59,42 @@ const CancelTable = () => {
       dataIndex: 'strike',
       key: 'strike',
       render: (value, record) => (
-        <span>
-          {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-        </span>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value, 8), 6)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>
+            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
+          </span>
+        </Tooltip>
       ),
     },
     {
       title: 'Trade Size',
       dataIndex: 'tradeSize',
       key: 'tradeSize',
-      render: (value) => <span>{addComma(divide(value, 6), 2)} USDC</span>,
+      render: (value) => (
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(divide(value, 6), 6)} USDC
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span>{addComma(divide(value, 6), 2)} USDC</span>
+        </Tooltip>
+      ),
     },
     {
       title: 'Queue',
@@ -78,7 +104,7 @@ const CancelTable = () => {
         <Tooltip
           hasArrow
           label={
-            <Box p={4} color="white">
+            <Box p={1} color="white">
               {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
             </Box>
           }
@@ -102,7 +128,7 @@ const CancelTable = () => {
           <Tooltip
             hasArrow
             label={
-              <Box p={4} color="white">
+              <Box p={1} color="white">
                 {dayjs(value).utc().format('HH:mm:ss')} {dayjs(value).utc().format('MM/DD/YYYY')} UTC
               </Box>
             }

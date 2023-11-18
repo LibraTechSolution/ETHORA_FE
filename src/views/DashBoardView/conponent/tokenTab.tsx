@@ -37,10 +37,10 @@ const TokenTab = () => {
       args: ['0x000000000000000000000000000000000000dEaD'],
     });
     const totalStake = await readContract({
-      address: appConfig.SETR_SC as `0x${string}`,
+      address: appConfig.ETR_SC as `0x${string}`,
       abi: ETR_ABI,
       functionName: 'balanceOf',
-      args: ['0x5B5cB70E334888A485BD410F1fb87Aa81D3ceE3e'],
+      args: [appConfig.SETR_SC as Address],
     });
     const totalTokenXBalance = await readContract({
       address: appConfig.BLP_SC as `0x${string}`,
@@ -68,19 +68,16 @@ const TokenTab = () => {
       abi: FBLP_ABI,
       functionName: 'tokensPerInterval',
     });
-    setTotalSupplyETR(addComma(divide(subtract(totalSupplyETR.toString(), balanceOf.toString()), 18), 2));
-    setTotalSupplyETRMC(addComma(divide(multiply(totalSupplyETR.toString(), price.toString()), 18), 2));
-    setTotalStake(addComma(divide(totalStake.toString(), 18), 2));
-    setTotalStakeUSDC(addComma(divide(multiply(totalStake.toString(), price.toString()), 18), 2));
-    setExchangeRate(addComma(divide(totalTokenXBalance.toString(), totalSupplyBLP.toString()), 2));
-    setTotalUSDCAmount(addComma(divide(balanceOfBLP.toString(), 6), 2));
+    setTotalSupplyETR(divide(subtract(totalSupplyETR.toString(), balanceOf.toString()), 18));
+    setTotalSupplyETRMC(divide(multiply(totalSupplyETR.toString(), price.toString()), 18));
+    setTotalStake(divide(totalStake.toString(), 18));
+    setTotalStakeUSDC(divide(multiply(totalStake.toString(), price.toString()), 18));
+    setExchangeRate(divide(totalTokenXBalance.toString(), totalSupplyBLP.toString()));
+    setTotalUSDCAmount(divide(balanceOfBLP.toString(), 6));
     setTotalSupplyBLP(
-      addComma(
-        divide(
-          balanceOfBLP.toString(),
-          multiply(divide(totalTokenXBalance.toString(), totalSupplyBLP.toString()).toString(), 6),
-        ),
-        2,
+      divide(
+        balanceOfBLP.toString(),
+        multiply(divide(totalTokenXBalance.toString(), totalSupplyBLP.toString()).toString(), 6),
       ),
     );
     setEscrowedBFRAPR(
@@ -160,11 +157,19 @@ const TokenTab = () => {
             ETR
           </Text>
           <Flex flexDirection={'column'} flex={['none', 'none', 1, 1]}>
-            <ItemCardTab title={'Price'} value={`$${price}`} />
-            <ItemCardTab title={'Circulating Supply / Circulating MC'} value={'0 ETR / $0'} />
-            <ItemCardTab title={'Total Supply / MC'} value={`${totalSupplyETR} ETR / $${totalSupplyETRMC}`} />
-            <ItemCardTab title={'Total Staked'} value={`${totalStake} ETR / $${totalStakeUSDC}`} />
-            <ItemCardTab title={'Tokens In Liquidity Pool'} value={'TODO ETR'} />
+            <ItemCardTab title={'Price'} value={`$${price}`} tooltip={price.toString()} />
+            <ItemCardTab title={'Circulating Supply / Circulating MC'} value={'0 ETR / $0'} tooltip={'0 ETR / $0'} />
+            <ItemCardTab
+              title={'Total Supply / MC'}
+              value={`${addComma(totalSupplyETR, 2)} ETR / $${addComma(totalSupplyETRMC, 2)}`}
+              tooltip={`${addComma(totalSupplyETR, 6)} ETR / $${addComma(totalSupplyETRMC, 6)}`}
+            />
+            <ItemCardTab
+              title={'Total Staked'}
+              value={`${addComma(totalStake, 2)} ETR / $${addComma(totalStakeUSDC, 2)}`}
+              tooltip={`${addComma(totalStake, 6)} ETR / $${addComma(totalStakeUSDC, 6)}`}
+            />
+            <ItemCardTab title={'Tokens In Liquidity Pool'} value={'TODO ETR'} tooltip={'TODO ETR'} />
           </Flex>
         </Box>
         <Box
@@ -185,9 +190,21 @@ const TokenTab = () => {
             ELP
           </Text>
           <Flex flexDirection={'column'} flex={['none', 'none', 1, 1]}>
-            <ItemCardTab title={'Exchange Rate'} value={`${exChangeRate} USDC`} />
-            <ItemCardTab title={'Total Supply'} value={`${totalSupplyBLP} ELP`} />
-            <ItemCardTab title={'Total USDC Amount'} value={`${totalUSDCAmount} USDC`} />
+            <ItemCardTab
+              title={'Exchange Rate'}
+              value={`${addComma(exChangeRate, 2)} USDC`}
+              tooltip={`${addComma(exChangeRate, 6)} USDC`}
+            />
+            <ItemCardTab
+              title={'Total Supply'}
+              value={`${addComma(totalSupplyBLP, 2)} ELP`}
+              tooltip={`${addComma(totalSupplyBLP, 6)} ELP`}
+            />
+            <ItemCardTab
+              title={'Total USDC Amount'}
+              value={`${addComma(totalUSDCAmount, 2)} USDC`}
+              tooltip={`${addComma(totalUSDCAmount, 6)} USDC`}
+            />
             <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} gap={'20px'}>
               <Text as="span" fontSize={'xs'} textColor={'#9E9E9F'}>
                 APR
