@@ -49,7 +49,7 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
           bg="#050506"
         >
           <span className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
-            {(+earlycloseAmount).toFixed(2)} USDC
+            {addComma(earlycloseAmount, 2)} USDC
           </span>
         </Tooltip>
       </Box>
@@ -65,7 +65,7 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
           placement="top"
           bg="#050506"
         >
-          <span className="text-[ #9E9E9F] text-xs font-normal">{probability.toFixed(2)}%</span>
+          <span className="text-[ #9E9E9F] text-xs font-normal">{addComma(probability, 2)}%</span>
         </Tooltip>
       </Box>
     </Box>

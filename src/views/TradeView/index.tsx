@@ -47,7 +47,7 @@ const TradeView = () => {
     containerRef.current = ele;
     const d = ele?.getBoundingClientRect();
     if (!d) return;
-    setContainerDim({ top: d.top, height: window.innerHeight - 400 });
+    setContainerDim({ top: d.top, height: window.innerHeight - 300 });
     isFirstLoad.current = false;
   }, []);
 

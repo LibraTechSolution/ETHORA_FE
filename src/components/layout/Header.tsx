@@ -413,13 +413,13 @@ export const Header = () => {
 
             <DrawerBody>
               <Center justifyContent={'flex-start'}>
-                <Link href="/trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
-                  Trade
+                <Link href="/dashboard" className={currentRoute === '/dashboard' ? activeStyle : nonActiveStyle}>
+                  Dashboard
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
-                <Link href="/dashboard" className={currentRoute === '/dashboard' ? activeStyle : nonActiveStyle}>
-                  Dashboard
+                <Link href="/trade/BTC-USD" className={currentRoute.includes('/trade') ? activeStyle : nonActiveStyle}>
+                  Trade
                 </Link>
               </Center>
               {appConfig.includeTestnet && (

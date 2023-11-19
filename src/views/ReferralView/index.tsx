@@ -371,7 +371,8 @@ const ReferralView = () => {
                     onClick={() => setIsOpenRefCodeToolTip(!isOpenRefCodeToolTip)}
                     onMouseEnter={() => setIsOpenRefCodeToolTip(true)}
                     onMouseLeave={() => setIsOpenRefCodeToolTip(false)}
-                    color={'#1E3EF0'}
+                    color={'#6D6D70'}
+                    _hover={{ color: '#1E3EF0' }}
                   />
                 </Tooltip>
               </InputRightElement>
@@ -434,7 +435,8 @@ const ReferralView = () => {
                     onClick={() => setIsOpenAddCodeToolTip(!isOpenAddCodeToolTip)}
                     onMouseEnter={() => setIsOpenAddCodeToolTip(true)}
                     onMouseLeave={() => setIsOpenAddCodeToolTip(false)}
-                    color={'#1E3EF0'}
+                    color={'#6D6D70'}
+                    _hover={{ color: '#1E3EF0' }}
                   />
                 </Tooltip>
               </InputRightElement>
