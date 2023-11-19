@@ -96,7 +96,7 @@ const ShowPnL = (props: PropsType) => {
           hasArrow
           label={
             <Box p={1} color="white">
-              {addComma(+earlycloseAmount, 6)}%
+              {addComma(+earlycloseAmount, 6)}
             </Box>
           }
           color="white"
@@ -250,21 +250,35 @@ const TradeBox = (props: PropsType) => {
       <Grid templateColumns="repeat(2, 1fr)" marginBottom="3">
         <GridItem>
           <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Trade Size</p>
-          <Tooltip
-            hasArrow
-            label={divide(item.tradeSize, 6)}
-            bg="#050506"
-            color={'white'}
-            placement="bottom-start"
-            borderRadius={'4px'}
-            fontSize={'12px'}
-          >
-            <p className="text-sm font-normal text-[#FFFFFF]">{addComma(divide(item.tradeSize, 6), 2)} USDC</p>
-          </Tooltip>
+          <p className="text-sm font-normal text-[#FFFFFF]">
+            <Tooltip
+              hasArrow
+              label={divide(item.tradeSize, 6)}
+              bg="#050506"
+              color={'white'}
+              placement="bottom-start"
+              borderRadius={'4px'}
+              fontSize={'12px'}
+            >
+              <span>{addComma(divide(item.tradeSize, 6), 2)} USDC</span>
+            </Tooltip>
+          </p>
         </GridItem>
         <GridItem>
           <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Max Payout</p>
-          <p className="text-sm font-normal text-[#FFFFFF]">{addComma(divide(item.payout ?? 0, 6), 2)} USDC</p>
+          <p className="text-sm font-normal text-[#FFFFFF]">
+            <Tooltip
+              hasArrow
+              label={addComma(divide(item.payout ?? 0, 6), 6)}
+              bg="#050506"
+              color={'white'}
+              placement="bottom-start"
+              borderRadius={'4px'}
+              fontSize={'12px'}
+            >
+              <span>{addComma(divide(item.payout ?? 0, 6), 2)} USDC</span>
+            </Tooltip>
+          </p>
         </GridItem>
       </Grid>
       <CloseButton item={item} handleCloseTrade={handleCloseTrade} isDisabled={isDisabled} />
