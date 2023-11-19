@@ -54,7 +54,6 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
     },
     onSubmit: (values) => {
       console.log('onSubmit',values);
-      return;
       onCompoundReward(values);
     },
     // validationSchema: validationSchema,
