@@ -236,7 +236,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
               {value}
             </Text>
           </Box>
-          {address && advanceSetting && advanceSetting[address] && advanceSetting[address]?.isShowSharePopup && (
+          {!isProfile && address && advanceSetting && advanceSetting[address] && advanceSetting[address]?.isShowSharePopup && (
             <Text
               color={'#1677FF'}
               fontWeight={400}

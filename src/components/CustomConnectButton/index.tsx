@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-const CustomConnectButton = ({ children, isFullWidth }: { children: React.ReactNode; isFullWidth?: boolean }) => {
+const CustomConnectButton = ({ children, isFullWidth }: { children?: React.ReactNode; isFullWidth?: boolean }) => {
   return (
     <ConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {

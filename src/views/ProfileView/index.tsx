@@ -26,6 +26,7 @@ import Currency from '@/components/Currency';
 import BigNumber from 'bignumber.js';
 import { first } from 'lodash';
 import { CallSocket } from '../TradeView/components/SearchPair';
+import CustomConnectButton from '@/components/CustomConnectButton';
 
 export type Person = {
   firstName: string;
@@ -106,7 +107,7 @@ const ProfileView = () => {
             gap={'27px'}
           >
             <Box w={'64px'} h={'64px'} borderRadius={'100%'} overflow={'hidden'} bg={'yellow'}>
-              <Image src="/images/profile/avatar.png" width={64} height={64} alt="Avata" />
+              <Image src="/images/profile/avatar.svg" width={64} height={64} alt="Avata" />
             </Box>
             <Box>
               {address ? (
@@ -136,7 +137,7 @@ const ProfileView = () => {
             w={'100%'}
             maxW={'1104px'}
             templateColumns={{
-              base: 'repeat(1, 1fr)',
+              base: 'repeat(2, 1fr)',
               sm: 'repeat(2, 1fr)',
               md: 'repeat(3, 1fr)',
               lg: 'repeat(6, 1fr)',
@@ -155,7 +156,7 @@ const ProfileView = () => {
                     <Option value="china" label="China">
                       <div className="flex items-center">
                         <Image
-                          src="/images/networks/base.png"
+                          src="/images/networks/base.svg"
                           width={14}
                           height={14}
                           alt="Avata"
@@ -180,7 +181,7 @@ const ProfileView = () => {
                 </Text>
                 {profileInfoFilter?.userAddress ? (
                   <Text fontSize={'2xl'}>
-                    {dataProfileInfo && dataProfileInfo?.stats?.daily >= 0 ? dataProfileInfo?.stats?.daily : '--'}
+                    {dataProfileInfo && dataProfileInfo?.stats?.daily >= 0 ? `#${dataProfileInfo?.stats?.daily}` : '--'}
                   </Text>
                 ) : (
                   <Text fontSize={'2xl'}>--</Text>
@@ -198,7 +199,7 @@ const ProfileView = () => {
                 </Text>
                 {profileInfoFilter?.userAddress ? (
                   <Text fontSize={'2xl'}>
-                    {dataProfileInfo && dataProfileInfo?.stats?.weekly >= 0 ? dataProfileInfo?.stats?.weekly + 1 : '--'}
+                    {dataProfileInfo && dataProfileInfo?.stats?.weekly >= 0 ? `#${dataProfileInfo?.stats?.weekly}` : '--'}
                   </Text>
                 ) : (
                   <Text fontSize={'2xl'}>--</Text>
@@ -282,7 +283,7 @@ const ProfileView = () => {
                 <Heading as="h4" fontSize={20} lineHeight={'30px'} color={'white'}>
                   Invite your friends to join Ethora now!
                 </Heading>
-                <Text>Get fee discounts and rebates!</Text>
+                <Text>Get rewards by leveraging community network.</Text>
               </Box>
 
               {address ? (
@@ -304,7 +305,7 @@ const ProfileView = () => {
                   flexBasis={{ base: '142px', sm: '142px', md: 'auto' }}
                   justifyContent={{ base: 'center' }}
                 >
-                  <ConnectButton />
+                  <CustomConnectButton />
                 </Box>
               )}
             </Flex>
@@ -324,7 +325,7 @@ const ProfileView = () => {
               gap="25px"
             >
               <GridItem padding={5} borderRadius={'20px'} backgroundColor={'#242428'} minH={'200px'}>
-                <Text fontSize={'sm'} color={'white'} fontWeight={600} marginBottom={'20px'}>
+                <Text fontSize={'20px'} color={'white'} fontWeight={600} marginBottom={'20px'}>
                   Referral Metrics
                 </Text>
                 {profileInfoFilter?.userAddress ? (
@@ -397,7 +398,7 @@ const ProfileView = () => {
                       marginX={{ base: 'auto', sm: 'initial' }}
                       marginBottom={'8px'}
                     >
-                      <Image src="/images/profile/notConnectWallet.png" width={80} height={80} alt="Avata" />
+                      <Image src="/images/profile/notConnectWallet.svg" width={80} height={80} alt="Avata" />
                     </Box>
                     <Text size={'sm'}>Wallet not connected.</Text>
                   </Flex>
@@ -405,7 +406,7 @@ const ProfileView = () => {
               </GridItem>
 
               <GridItem padding={5} borderRadius={'20px'} backgroundColor={'#242428'} minH={'200px'}>
-                <Text fontSize={'sm'} color={'white'} fontWeight={600} marginBottom={'20px'}>
+                <Text fontSize={'20px'} color={'white'} fontWeight={600} marginBottom={'20px'}>
                   USDC Trading Metrics
                 </Text>
                 {profileInfoFilter?.userAddress ? (
@@ -498,7 +499,7 @@ const ProfileView = () => {
                       marginX={{ base: 'auto', sm: 'initial' }}
                       marginBottom={'8px'}
                     >
-                      <Image src="/images/profile/notConnectWallet.png" width={80} height={80} alt="Avata" />
+                      <Image src="/images/profile/notConnectWallet.svg" width={80} height={80} alt="Avata" />
                     </Box>
                     <Text size={'sm'}>Wallet not connected.</Text>
                   </Flex>
