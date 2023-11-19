@@ -83,10 +83,7 @@ const TokenTab = () => {
     setEscrowedBFRAPR(
       addComma(
         divide(
-          multiply(
-            multiply(tokensPerInternalFSBLP.toString(), (31536000 * 100).toString()),
-            divide(totalTokenXBalance.toString(), totalSupplyBLP.toString()),
-          ),
+          multiply(multiply(tokensPerInternalFSBLP.toString(), (31536000 * 100).toString()), price.toString()),
           multiply(balanceOfBLP.toString(), 12),
         ).toString(),
         6,
@@ -105,10 +102,7 @@ const TokenTab = () => {
       addComma(
         add(
           divide(
-            multiply(
-              multiply(tokensPerInternalFSBLP.toString(), (31536000 * 100).toString()),
-              divide(totalTokenXBalance.toString(), totalSupplyBLP.toString()),
-            ),
+            multiply(multiply(tokensPerInternalFSBLP.toString(), (31536000 * 100).toString()), price.toString()),
             multiply(balanceOfBLP.toString(), 12),
           ).toString(),
           divide(
