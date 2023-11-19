@@ -11,7 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { getProbability } from '@/utils/helper';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { divide, subtract, multiply, gte } from '@/utils/operationBigNumber';
 import { Address, useContractRead } from 'wagmi';
 import optionsConfigABI from '@/config/abi/optionsConfigABI';
@@ -21,6 +21,7 @@ import { ShowPrice } from './ShowPrice';
 import { RotateCw } from 'lucide-react';
 import { useGetTradeContract } from '@/hooks/useGetTradeContract';
 import { ToastCloseTrade } from './ToastCloseTrade';
+import useListPairPrice from '@/store/useListPairPrice';
 
 interface PropsType {
   item: ITradingData;
@@ -33,8 +34,9 @@ interface CloseBtnPropsType {
 }
 
 export const useEarlyPnl = ({ trade, lockedAmmount }: { trade: ITradingData; lockedAmmount?: string }) => {
-  const { price } = useTradeStore();
-  const { optionConfigSC } = useGetTradeContract();
+  const { listPairPrice } = useListPairPrice();
+  const pair = trade.pair.replace('-', '').toUpperCase();
+  const { optionConfigSC } = useGetTradeContract(pair);
   const { data: iv } = useContractRead({
     address: optionConfigSC as Address,
     abi: optionsConfigABI,
@@ -42,8 +44,8 @@ export const useEarlyPnl = ({ trade, lockedAmmount }: { trade: ITradingData; loc
   });
 
   let probability = useMemo(
-    () => getProbability(trade, +price, new BigNumber(iv?.toString() ?? '0').toNumber()),
-    [trade, price, iv],
+    () => getProbability(trade, +listPairPrice[pair], new BigNumber(iv?.toString() ?? '0').toNumber()),
+    [trade, listPairPrice, iv],
   );
   if (!probability) probability = 0;
   return {

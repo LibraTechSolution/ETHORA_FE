@@ -134,7 +134,11 @@ const TableLeaderBoard = (props: Props) => {
       title: 'User Address',
       dataIndex: 'user',
       key: 'user',
-      render: (value: string) => formatAddress(value, 7, 7),
+      render: (value: string) => (
+        <Link href={`/profile?address=${value}`} target="_blank">
+          {formatAddress(value, 7, 7)}
+        </Link>
+      ),
     },
     {
       title: 'Volume',
