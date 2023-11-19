@@ -81,7 +81,7 @@ const TokenTab = () => {
       ),
     );
     setEscrowedBFRAPR(
-      toFixed(
+      addComma(
         divide(
           multiply(
             multiply(tokensPerInternalFSBLP.toString(), (31536000 * 100).toString()),
@@ -89,21 +89,21 @@ const TokenTab = () => {
           ),
           multiply(balanceOfBLP.toString(), 12),
         ).toString(),
-        2,
+        6,
       ),
     );
     setUsdcApr(
-      toFixed(
+      addComma(
         divide(
           multiply(tokensPerInternalFBLP.toString(), (31536000 * 100).toString()),
           balanceOfBLP.toString(),
         ).toString(),
-        2,
+        6,
       ),
     );
     setTotalApr(
-      add(
-        toFixed(
+      addComma(
+        add(
           divide(
             multiply(
               multiply(tokensPerInternalFSBLP.toString(), (31536000 * 100).toString()),
@@ -111,15 +111,12 @@ const TokenTab = () => {
             ),
             multiply(balanceOfBLP.toString(), 12),
           ).toString(),
-          2,
-        ),
-        toFixed(
           divide(
             multiply(tokensPerInternalFBLP.toString(), (31536000 * 100).toString()),
             balanceOfBLP.toString(),
           ).toString(),
-          2,
         ),
+        2,
       ),
     );
   };

@@ -169,7 +169,7 @@ const TradeControl = () => {
     if (inputName === InputName.LIMIT_ORDER_PRICE) {
       setLimitOrderPriceError('');
     }
-    const numberRegex = /^[0-9]*([.])?([0-9]{1,8})?$/;
+    const numberRegex = /^[0-9]*([.])?([0-9]{1,6})?$/;
     let numberValue = e.target.value;
     if (!numberRegex.test(numberValue)) {
       numberValue = inputName === InputName.TRADE_SIZE ? tradeSize.toString() : limitOrderPrice.toString();
@@ -201,6 +201,10 @@ const TradeControl = () => {
       const res = await approveToken(permit, chain?.id as number, true);
       toggleApprovedAccount(true);
       setIsLoadingApprove(false);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => <ToastLayout title="Approved successfully" status={Status.SUCCESSS} close={onClose} />,
+      });
     } catch (error) {
       setIsLoadingApprove(false);
       toast({

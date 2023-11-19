@@ -228,6 +228,12 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
       const res = await approveToken(permit, chain?.id as number, false);
       toggleApprovedAccount(false);
       setIsLoadingRevokeApprove(false);
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="Revoke approval successfully" status={Status.SUCCESSS} close={onClose} />
+        ),
+      });
     } catch (error) {
       setIsLoadingRevokeApprove(false);
       toast({
@@ -411,23 +417,25 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
                   Deactivate account
                 </Button>
               </Center>
-              <Center width="100%">
-                <Button
-                  onClick={revokeApprove}
-                  type="button"
-                  textColor="#1E3EF0"
-                  bgColor="transparent"
-                  _hover={{ textColor: '#4B65F3', bgColor: 'transparent' }}
-                  _active={{ textColor: '#122590', bgColor: 'transparent' }}
-                  fontSize="16px"
-                  paddingX="12px"
-                  paddingY="15px"
-                  rounded="10px"
-                  isLoading={isLoadingRevokeApprove}
-                >
-                  Revoke approval
-                </Button>
-              </Center>
+              {user && user?.isApproved && (
+                <Center width="100%">
+                  <Button
+                    onClick={revokeApprove}
+                    type="button"
+                    textColor="#1E3EF0"
+                    bgColor="transparent"
+                    _hover={{ textColor: '#4B65F3', bgColor: 'transparent' }}
+                    _active={{ textColor: '#122590', bgColor: 'transparent' }}
+                    fontSize="16px"
+                    paddingX="12px"
+                    paddingY="15px"
+                    rounded="10px"
+                    isLoading={isLoadingRevokeApprove}
+                  >
+                    Revoke approval
+                  </Button>
+                </Center>
+              )}
             </Flex>
           )}
         </ModalFooter>

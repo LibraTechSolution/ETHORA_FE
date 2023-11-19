@@ -90,10 +90,34 @@ const ShowPnL = (props: PropsType) => {
     <GridItem>
       <p className="mb-2 text-xs font-normal text-[#9E9E9F]">PnL|Probability</p>
       <p>
-        <span className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
-          {(+earlycloseAmount).toFixed(2)}
-        </span>
-        <span className="text-xs font-normal text-[#38383A]">{probability.toFixed(2)}%</span>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(+earlycloseAmount, 6)}%
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
+            {addComma(+earlycloseAmount, 2)}
+          </span>
+        </Tooltip>
+        <Tooltip
+          hasArrow
+          label={
+            <Box p={1} color="white">
+              {addComma(probability, 6)}%
+            </Box>
+          }
+          color="white"
+          placement="top"
+          bg="#050506"
+        >
+          <span className="text-xs font-normal text-[#38383A]">{addComma(probability, 2)}%</span>
+        </Tooltip>
       </p>
     </GridItem>
   );

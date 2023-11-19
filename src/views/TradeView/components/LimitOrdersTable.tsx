@@ -119,7 +119,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
                     ),
                     8,
                   ),
-                  2,
+                  6,
                 )}{' '}
                 to{' '}
                 {addComma(
@@ -130,7 +130,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
                     ),
                     8,
                   ),
-                  2,
+                  6,
                 )}
               </Box>
             }

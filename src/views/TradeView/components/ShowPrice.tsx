@@ -14,9 +14,7 @@ export const ShowPrice = ({ pair }: { pair?: string }) => {
       placement="top"
       bg="#050506"
     >
-      <span>
-        {pair && listPairPrice[pair] ? addComma(listPairPrice[pair].toFixed(2), 2) : addComma(price.toFixed(2), 2)}
-      </span>
+      <span>{pair && listPairPrice[pair] ? addComma(listPairPrice[pair], 2) : addComma(price, 2)}</span>
     </Tooltip>
   );
 };
