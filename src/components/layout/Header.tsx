@@ -430,11 +430,6 @@ export const Header = () => {
                 </Center>
               )}
               <Center justifyContent={'flex-start'}>
-                <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
-                  Token sale
-                </Link>
-              </Center>
-              <Center justifyContent={'flex-start'}>
                 <Link
                   href="/practice-trading"
                   className={currentRoute === '/practice-trading' ? activeStyle : nonActiveStyle}
@@ -458,6 +453,11 @@ export const Header = () => {
                   className={`w-full text-left ${currentRoute === '/earn' ? 'text-[#fff]' : nonActiveStyle}`}
                 >
                   Earn
+                </Link>
+              </Center>
+              <Center justifyContent={'flex-start'}>
+                <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
+                  Token sale
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>

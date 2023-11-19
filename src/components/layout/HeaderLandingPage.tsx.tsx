@@ -197,11 +197,6 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
-                Token sale
-              </Link>
-            </Center>
-            <Center justifyContent={'flex-start'}>
               <Link href="/trading" className={currentRoute === '/trading' ? activeStyle : nonActiveStyle}>
                 Practice Trading
               </Link>
@@ -219,6 +214,11 @@ export const HeaderLanding = () => {
             <Center justifyContent={'flex-start'}>
               <Link href="/earn" className={currentRoute === 'earn' ? activeStyle : nonActiveStyle}>
                 Earn
+              </Link>
+            </Center>
+            <Center justifyContent={'flex-start'}>
+              <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
+                Token sale
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
