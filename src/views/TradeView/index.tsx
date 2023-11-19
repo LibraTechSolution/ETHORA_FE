@@ -129,7 +129,7 @@ const TradeView = () => {
         </GridItem>
         <GridItem colSpan={{ base: 24, xl: 19 }}>
           <Box
-            marginBottom={{ base: 5, xl: 3 }}
+            marginBottom={{ base: 7, xl: 3 }}
             className="flex h-full  grow flex-col"
             style={containerDim?.height ? { height: containerDim.height } : {}}
             ref={onInitialLoad}
