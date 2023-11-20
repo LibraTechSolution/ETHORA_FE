@@ -57,7 +57,7 @@ const Button = defineStyleConfig({
   // Two variants: outline and solid
   variants: {
     outline: {
-      border: '2px solid',
+      border: '1px solid',
       borderColor: 'primary.500',
       color: 'primary.500',
       _hover: {

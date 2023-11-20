@@ -20,6 +20,7 @@ import {
   MenuList,
   useDisclosure,
   useMediaQuery,
+  Text
 } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
@@ -32,6 +33,8 @@ import { AccountModal } from '../AccountModal';
 import { appConfig } from '@/config';
 import AdvanceSetting from '@/views/TradeView/components/AdvanceSetting';
 import useAdvanceSetting from '@/store/useAdvanceSetting';
+import BigNumber from 'bignumber.js';
+import { addComma } from '@/utils/number';
 
 export const Header = () => {
   const [isMobile] = useMediaQuery('(max-width: 992px)');
@@ -86,7 +89,7 @@ export const Header = () => {
       <Flex
         as="header"
         role="menu"
-        padding={'8px 20px 8px 20px'}
+        padding={'8px 12px 8px 12px'}
         justifyContent="space-between"
         alignItems="center"
         fontSize={14}
@@ -224,7 +227,7 @@ export const Header = () => {
             </>
           )}
         </Flex>
-        <Flex gap={3} width={'100%'} justifyContent={'flex-end'}>
+        <Flex gap={isMobile ? 1 : 3} width={'100%'} justifyContent={'flex-end'}>
           <Center>
             <ConnectButton.Custom>
               {({
@@ -280,6 +283,7 @@ export const Header = () => {
                             _hover={{ borderColor: '#4B65F3', textColor: '#4B65F3' }}
                             _active={{ borderColor: '#122590', textColor: '#122590' }}
                             onClick={openConnectModal}
+                            size={`${isMobile ? 'sm' : 'md'}`}
                           >
                             Connect Wallet
                           </Button>
@@ -301,7 +305,7 @@ export const Header = () => {
                       }
 
                       return (
-                        <div style={{ display: 'flex', gap: 12 }}>
+                        <Flex gap={isMobile ? 1 : 3}>
                           <Button
                             onClick={openChainModal}
                             style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
@@ -309,10 +313,11 @@ export const Header = () => {
                             bgColor="#252528"
                             textColor="#ffffff"
                             rightIcon={<TriangleDownIcon w="20px" h="12px" />}
-                            width={`${isMobile ? '70px' : '200px'}`}
+                            width={`${isMobile ? '60px' : '200px'}`}
                             _hover={{ bg: '#252528' }}
                             rounded="10px"
                             size={`${isMobile ? 'sm' : 'md'}`}
+                            padding={isMobile ? '4px 12px' : '4px 16px'}
                           >
                             <Flex>
                               <Center>
@@ -366,11 +371,19 @@ export const Header = () => {
                             rounded="10px"
                             size={`${isMobile ? 'sm' : 'md'}`}
                             onClick={onOpen}
+                            minWidth={'114px'}
                           >
-                            {/* {account.displayName} */}
-                            {account.displayBalance ? ` ${account.displayBalance}` : ''}
+                            <Text 
+                            style={{
+                              textOverflow: 'ellipsis',
+                              overflow: 'hidden',
+                              width:' calc(100% - 60px)',
+                            }}>
+                              {account.displayBalance ? ` ${addComma(account.displayBalance, 2)}` : ''}{' '}
+                              {!isMobile && account?.balanceSymbol}
+                            </Text>
                           </Button>
-                        </div>
+                        </Flex>
                       );
                     })()}
                   </div>
@@ -392,7 +405,7 @@ export const Header = () => {
             </Button>
             <AdvanceSetting isShow={isShow} onClose={setIsShow} />
           </Center>
-          <Center>
+          <Center flex="none">
             <Link href={'/profile'}>
               <Image
                 alt="avatar"
