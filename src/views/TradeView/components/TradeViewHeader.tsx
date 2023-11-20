@@ -213,9 +213,9 @@ const TradeViewHeader = () => {
             </Box>
           </Center>
         </Flex>
-        <Box display={{ base: 'none', xl: 'block' }}>
+        {/* <Box display={{ base: 'none', xl: 'block' }}>
           <Image alt="bitcoin" src="/images/icons/apps.svg" w="20x" h="20x" />
-        </Box>
+        </Box> */}
       </Flex>
     </>
   );

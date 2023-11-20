@@ -296,17 +296,17 @@ export const SaleTokenView = () => {
           <ItemCardPublicSale
             title="Mark Your Calendar"
             desc="Get ready to participate in ETR IDO"
-            image="/images/saleToken/calendar.png"
+            image="/images/saleToken/calendar.svg"
           />
           <ItemCardPublicSale
             title="Enable ETH"
             desc="Connect your wallet and approve the contract to use your ETH"
-            image="/images/saleToken/enable-eth.png"
+            image="/images/saleToken/enable-eth.svg"
           />
           <ItemCardPublicSale
             title="Commit ETH"
             desc="Enter the number of ETH you intend to commit in the sale"
-            image="/images/saleToken/commit-eth.png"
+            image="/images/saleToken/commit-eth.svg"
           />
         </Grid>
         <Grid
@@ -323,12 +323,12 @@ export const SaleTokenView = () => {
           <ItemCardPublicSale
             title="Claim Your Tokens"
             desc="Claim your ETR tokens and unused ETH after the sale ended"
-            image="/images/saleToken/claim-token.png"
+            image="/images/saleToken/claim-token.svg"
           />
           <ItemCardPublicSale
             title="Vesting"
             desc="Each round comes with different vesting schedule. Come back to claim ETR when tokens get unlocked."
-            image="/images/saleToken/vesting.png"
+            image="/images/saleToken/vesting.svg"
           />
         </Grid>
       </Box>
