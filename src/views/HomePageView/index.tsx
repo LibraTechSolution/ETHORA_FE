@@ -10,25 +10,25 @@ import FooterLadingPage from '@/components/layout/FooterLandingPage';
 const dataCardEthora = [
   {
     alt: 'Trading',
-    image: '/images/landingpage/iconTrading.png',
+    image: '/images/landingpage/iconTrading.svg',
     title: 'Predetermined Outcome Trading Experience',
     desc: 'Engage in trading with a clearly defined risk-reward ratio, free from the risk of liquidation.',
   },
   {
     alt: 'Easy',
-    image: '/images/landingpage/iconEasy.png',
+    image: '/images/landingpage/iconEasy.svg',
     title: 'Easy and Fun',
     desc: 'User-friendly approach to effortlessly trade short-term market volatility by choosing up/down option',
   },
   {
     alt: 'Wallet',
-    image: '/images/landingpage/iconWallet.png',
+    image: '/images/landingpage/iconWallet.svg',
     title: 'Your Wallet, Your Control',
     desc: 'Trade directly from your wallet with trust in a decentralized price feed, free from scam wicks.',
   },
   {
     alt: 'Access',
-    image: '/images/landingpage/iconAccess.png',
+    image: '/images/landingpage/iconAccess.svg',
     title: 'Access Various Markets',
     desc: 'Seamlessly trade the market volatility of cryptocurrencies, forex on-chain.',
   },
