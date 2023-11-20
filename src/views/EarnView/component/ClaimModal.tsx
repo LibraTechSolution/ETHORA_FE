@@ -65,6 +65,7 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
     //     bool _shouldClaimUsdc
     // )
     try {
+      setLoadingClaim(true)
       const configStake = await prepareWriteContract({
         address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
         abi: RewardRouterV2_ABI,

@@ -56,6 +56,12 @@ export interface IuserStats {
   uniqueCount: number;
   uniqueCountCumulative: number;
 }
+export interface IuserStatsMap {
+  timestamp: string |number;
+  new: number;
+  existing: number;
+  percentage: number;
+}
 
 export interface IBurnStats {
   timestamp: number;
