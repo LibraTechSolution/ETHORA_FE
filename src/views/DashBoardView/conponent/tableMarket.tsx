@@ -324,6 +324,17 @@ const TableMarket = () => {
     } catch (error) {}
   };
 
+  const getMaxTradeSize = async (bufferBOSC: `0x${string}`) => {
+    try {
+      const maxOI = await readContract({
+        address: bufferBOSC as `0x${string}`,
+        abi: bufferBOABI,
+        functionName: 'getMaxTradeSize',
+      });
+      return divide(maxOI.toString(), 6);
+    } catch (error) {}
+  };
+
   const listPairShow = useMemo<PairData[]>(() => {
     const tempChanged24h = listChanged24h?.data?.data;
     if (!listChanged24h) {
@@ -351,6 +362,10 @@ const TableMarket = () => {
       }
       getCurrentOI(configPair[tempListPairData[i].pair.replace('/', '') as string].bufferBOSC as Address).then(
         (item) => (tempListPairData[i].currentOL = item ? +item : 0),
+      );
+
+      getMaxTradeSize(configPair[tempListPairData[i].pair.replace('/', '') as string].bufferBOSC as Address).then(
+        (item) => (tempListPairData[i].maxTradeSize = item ? +item : 0),
       );
     }
     return tempListPairData;
