@@ -295,7 +295,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       ? !!checkAddress
       : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 10000,
+    refetchInterval: 5000,
     refetchOnWindowFocus: false,
   });
 

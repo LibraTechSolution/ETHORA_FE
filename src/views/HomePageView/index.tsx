@@ -96,17 +96,35 @@ export const HomeView = () => {
               justifyContent={{ base: 'center', md: 'start' }}
             >
               <Link href={'/trade/BTC-USD'}>
-                <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
+                <Text
+                  as="span"
+                  fontSize={{ base: '13px', md: '16px' }}
+                  textColor={'#0052FF'}
+                  cursor={'pointer'}
+                  fontWeight={600}
+                >
                   Trade <ExternalLinkIcon />
                 </Text>
               </Link>
               <Link href={'/earn'}>
-                <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
+                <Text
+                  as="span"
+                  fontSize={{ base: '13px', md: '16px' }}
+                  textColor={'#0052FF'}
+                  cursor={'pointer'}
+                  fontWeight={600}
+                >
                   Earn Real Yield <ExternalLinkIcon />
                 </Text>
               </Link>
               <Link href={'/sale-token'}>
-                <Text as="span" fontSize={'16px'} textColor={'#0052FF'} cursor={'pointer'} fontWeight={600}>
+                <Text
+                  as="span"
+                  fontSize={{ base: '13px', md: '16px' }}
+                  textColor={'#0052FF'}
+                  cursor={'pointer'}
+                  fontWeight={600}
+                >
                   Buy token <ExternalLinkIcon />
                 </Text>
               </Link>

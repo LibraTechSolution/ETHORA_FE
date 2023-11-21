@@ -29,17 +29,28 @@ export interface ISummary {
   totalVolume: string
 }
 
+export interface IConfig {
+  createdAt: string,
+  dailyEnd: string,
+  dailyStart: string,
+  updatedAt: string,
+  weeklyEnd: string,
+  weeklyStart: string,
+  _id: string
+}
+
 export interface ILeaderBoard {
   summary: ISummary,
   winners: ILeaderBoardDetail[],
   winnersWinrate: ILeaderBoardDetail[],
   losers: ILeaderBoardDetail[],
+  config: IConfig
 }
 
 export interface ILeaderBoardParams {
   network: number,
   type: string,
-  offset: number
+  offset?: number
 }
 
 export interface ILeaderBoardOffset {

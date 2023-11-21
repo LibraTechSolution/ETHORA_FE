@@ -1,13 +1,15 @@
 'use client';
 import { Flex, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getTrades } from '@/services/trade';
 import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import TradeBox from './TradeBox';
 import useUserStore from '@/store/useUserStore';
 import React from 'react';
+import { IPaginationResponse } from '@/types/api.type';
+import useListShowLinesStore from '@/store/useListShowLinesStore';
 
 const defaultParams: ITradingParams = {
   limit: 30,
@@ -20,6 +22,8 @@ const TraderTab = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { tokens, user } = useUserStore();
+  const queryClient = useQueryClient();
+  const { updateListLine, listLines } = useListShowLinesStore();
 
   useEffect(() => {
     if (chain) {
@@ -39,9 +43,29 @@ const TraderTab = () => {
     },
     enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 10000,
+    refetchInterval: 5000,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    const listActiceTrade: ITradingData[] = dataActiveTrades?.docs ? [...dataActiveTrades?.docs] : [];
+    const listLimit: ITradingData[] =
+      queryClient &&
+      queryClient?.getQueryData(['getLimitOrders']) &&
+      (queryClient.getQueryData(['getLimitOrders']) as IPaginationResponse<ITradingData>).docs
+        ? [...(queryClient.getQueryData(['getLimitOrders']) as IPaginationResponse<ITradingData>).docs]
+        : [];
+    const listData: ITradingData[] = [...listActiceTrade, ...listLimit];
+    const tempList = [];
+    for (let i = 0; i < listLines.length; i++) {
+      for (let j = 0; j < listData.length; j++) {
+        if (listLines[i]._id === listData[j]._id) {
+          tempList.push(listLines[i]);
+        }
+      }
+    }
+    updateListLine(tempList);
+  }, [dataActiveTrades, queryClient, updateListLine]);
 
   return (
     <>

@@ -478,7 +478,7 @@ const TradeControl = () => {
           {listTimes.map((item) => (
             <Button
               key={item}
-              border={time === item ? '1px solid #1E3EF0' : ''}
+              border={time === item ? '1px solid #1E3EF0' : '1px solid #0C0C10'}
               bgColor="#0C0C10"
               rounded="10px"
               textColor={time === item ? '#fff' : '#6D6D70'}
@@ -504,7 +504,7 @@ const TradeControl = () => {
             </Button>
           ))}
         </Box>
-        <Select
+        {/* <Select
           display={{ base: 'none', xl: 'block', '4xl': 'none' }}
           value={time}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => setTime(e.target.value)}
@@ -526,7 +526,7 @@ const TradeControl = () => {
           <option value="1h" className="!bg-black">
             1h
           </option>
-        </Select>
+        </Select> */}
         <InputGroup size="md">
           <Input
             pr="4.5rem"

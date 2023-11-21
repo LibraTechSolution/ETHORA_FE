@@ -19,10 +19,14 @@ import {
   DrawerHeader,
   DrawerBody,
   DrawerCloseButton,
+  Text,
 } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getLeaderboards } from '@/services/leaderboard';
+import dayjs from 'dayjs';
 
 export const HeaderLanding = () => {
   const [isMobile] = useMediaQuery('(max-width: 768px)');
@@ -32,6 +36,7 @@ export const HeaderLanding = () => {
   const nonActiveStyle = linkStyle + ' text-[#6D6D70]';
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [scrolled, setScrolled] = useState(false);
+  const [isDisabledLeaderBoard, setIsDisabledLeaderBoard] = useState<boolean>(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,6 +53,31 @@ export const HeaderLanding = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const { data: leaderBoardData, isSuccess } = useQuery({
+    queryKey: ['getLeaderBoard'],
+    queryFn: () => getLeaderboards({ type: 'daily', network: 421613 }),
+    onError: (error: any) => {
+      // notification.error({ message: error.message });
+      console.log(error);
+    },
+    cacheTime: 0,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (
+      leaderBoardData &&
+      leaderBoardData?.config?.dailyStart &&
+      leaderBoardData?.config?.weeklyStart &&
+      (dayjs().unix() < dayjs(leaderBoardData?.config?.dailyStart).unix() ||
+        dayjs().unix() < dayjs(leaderBoardData?.config?.weeklyStart).unix())
+    ) {
+      setIsDisabledLeaderBoard(true);
+    }
+  }, [leaderBoardData]);
+
   return (
     <Flex
       as="header"
@@ -87,9 +117,23 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center>
-              <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
-                Leaderboard
-              </Link>
+              {isSuccess && isDisabledLeaderBoard ? (
+                <Box bgColor={'#3D3D40'} textColor={'#6D6D70'} className="cursor-not-allowed rounded-[10px] px-3 py-2">
+                  Leaderboard
+                  <Text
+                    className="ml-2 inline-block rounded px-2 font-normal"
+                    background={'rgba(255, 190, 0, 0.10)'}
+                    textColor={'#FFA500'}
+                    fontSize={'12px'}
+                  >
+                    Coming soon
+                  </Text>
+                </Box>
+              ) : (
+                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
+                  Leaderboard
+                </Link>
+              )}
             </Center>
             <Center>
               <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
@@ -202,9 +246,23 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
-                Leaderboard
-              </Link>
+              {!isDisabledLeaderBoard ? (
+                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
+                  Leaderboard
+                </Link>
+              ) : (
+                <Box bgColor={'#3D3D40'} textColor={'#6D6D70'} className="cursor-not-allowed rounded-[10px] px-3 py-2">
+                  Leaderboard
+                  <Text
+                    className="ml-2 inline-block rounded px-2 font-normal"
+                    background={'rgba(255, 190, 0, 0.10)'}
+                    textColor={'#FFA500'}
+                    fontSize={'12px'}
+                  >
+                    Coming soon
+                  </Text>
+                </Box>
+              )}
             </Center>
             <Center justifyContent={'flex-start'}>
               <Link href="/referral" className={currentRoute === '/referral' ? activeStyle : nonActiveStyle}>

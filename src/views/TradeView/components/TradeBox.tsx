@@ -180,6 +180,7 @@ const TradeBox = (props: PropsType) => {
     queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
     const isRemove = listLines.some((line) => line._id === item._id);
     isRemove && setListLines(item);
+    setIsDisabled(true);
   };
 
   const reloadData = () => {

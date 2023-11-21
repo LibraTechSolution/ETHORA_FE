@@ -31,6 +31,7 @@ export enum ReferralTabType {
 const ReferralView = () => {
   const [defaultTabs, setDefaultTabs] = useState<ReferralTabType>(ReferralTabType.Tab1);
   const params = useSearchParams();
+  const [userRefCodeFromSC, setUserRefCodeFromSC] = useState<string>('');
   const [userRefCode, setUserRefCode] = useState<string>('');
   const [traderRefCode, setTraderRefCode] = useState<string>('');
   const [errorMsgUserRefCode, setErrorMsgUserRefCode] = useState<string>('');
@@ -55,6 +56,7 @@ const ReferralView = () => {
       });
       setIsCreatedUserRefCode(!!data);
       setUserRefCode(data ? data : '');
+      setUserRefCodeFromSC(data ? data : '');
       setIsLoadingUserRef(false);
     } catch (error) {
       setUserRefCode('');
@@ -109,7 +111,7 @@ const ReferralView = () => {
       setErrorMsgTraderRefCode('Referral code cannot be empty');
       return;
     }
-    if (traderRefCode === userRefCode) {
+    if (traderRefCode === userRefCodeFromSC) {
       setErrorMsgTraderRefCode('You cannot use your own referral code');
       return;
     }
@@ -131,6 +133,7 @@ const ReferralView = () => {
       setIsCreatedTraderRefCode(true);
       setIsLoadingTraderRef(false);
     } catch (error) {
+      setIsLoadingTraderRef(false);
       let msgContent = '';
       if (error instanceof BaseError) {
         setIsLoadingUserRef(false);
@@ -157,7 +160,6 @@ const ReferralView = () => {
         }
       }
 
-      setIsLoadingTraderRef(false);
       setErrorMsgTraderRefCode(msgContent);
     }
   };

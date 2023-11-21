@@ -106,6 +106,66 @@ const CloseButton = (props: CloseBtnPropsType) => {
     </Button>
   );
 };
+
+const ActionCell = ({
+  item,
+  handleCloseTrade,
+}: {
+  item: ITradingData;
+  handleCloseTrade: (item: ITradingData) => void;
+}) => {
+  const { setListLines, listLines } = useListShowLinesStore();
+  const [isTimeOut, setIsTimeOut] = useState<boolean>(false);
+
+  const timeOutCallBack = () => {
+    setIsTimeOut(true);
+  };
+
+  const showAndHideLine = (item: ITradingData) => {
+    setListLines(item);
+  };
+
+  return (
+    <>
+      {!isTimeOut ? (
+        <Flex>
+          <Button
+            colorScheme="blackAlpha"
+            size={'sm'}
+            onClick={() => {
+              showAndHideLine(item);
+            }}
+            marginRight={'12px'}
+          >
+            {listLines.some((item) => item._id === item._id) ? 'Hide' : 'View'}
+          </Button>
+          <CloseButton item={item} handleCloseTrade={handleCloseTrade} />
+        </Flex>
+      ) : (
+        <Box display="inline-block">
+          <Text
+            className="inline-block rounded border px-2 font-normal"
+            background={'rgba(46, 96, 255, 0.10)'}
+            borderColor={'#2E60FF'}
+            textColor={'#2E60FF'}
+            display="flex"
+            alignItems={'center'}
+          >
+            <RotateCw color="#1E3EF0" size={12} className="mr-1" /> Processing
+          </Text>
+        </Box>
+      )}
+      <CountDown
+        endTime={dayjs(item.openDate).utc().unix() + item.period}
+        period={item.period}
+        hideBar={true}
+        timeOutCallBack={timeOutCallBack}
+        hideCount={true}
+      />
+    </>
+  );
+};
+
 const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -113,6 +173,11 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { updateTradeSize } = useContext(TradeContext);
   const addressURL = searchParams.get('address');
   const checkAddress = addressURL ? addressURL : address;
+  const [isTimeOut, setIsTimeOut] = useState<boolean>(false);
+
+  const timeOutCallBack = () => {
+    setIsTimeOut(true);
+  };
 
   const defaultParams: ITradingParams = {
     limit: 10,
@@ -132,10 +197,6 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       setFilter({ ...defaultParams, network: chain.id.toString() });
     }
   }, [chain]);
-
-  const showAndHideLine = (item: ITradingData) => {
-    setListLines(item);
-  };
 
   const reloadData = () => {
     queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
@@ -224,7 +285,12 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Time Left',
       render: (value: ITradingData) =>
         value.state === State.OPENED ? (
-          <CountDown endTime={dayjs(value.openDate).utc().unix() + value.period} period={value.period} hideBar={true} />
+          <CountDown
+            endTime={dayjs(value.openDate).utc().unix() + value.period}
+            period={value.period}
+            hideBar={true}
+            timeOutCallBack={timeOutCallBack}
+          />
         ) : (
           <span className="flex items-center text-xs font-normal text-[#9E9E9F]">
             <span className="mr-1">{value.state === State.QUEUED ? 'In queue' : 'Processing...'}</span>
@@ -286,21 +352,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
             dataIndex: 'action',
             key: 'action',
             width: '150px',
-            render: (_: any, record: ITradingData) => (
-              <Flex>
-                <Button
-                  colorScheme="blackAlpha"
-                  size={'sm'}
-                  onClick={() => {
-                    showAndHideLine(record);
-                  }}
-                  marginRight={'12px'}
-                >
-                  {listLines.some((item) => item._id === record._id) ? 'Hide' : 'View'}
-                </Button>
-                <CloseButton item={record} handleCloseTrade={handleCloseTrade} />
-              </Flex>
-            ),
+            render: (_: any, record: ITradingData) => <ActionCell item={record} handleCloseTrade={handleCloseTrade} />,
           },
         ]
       : []),
@@ -337,7 +389,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       ? !!checkAddress
       : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 10000,
+    refetchInterval: 5000,
     refetchOnWindowFocus: false,
   });
 

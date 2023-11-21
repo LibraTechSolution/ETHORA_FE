@@ -3,6 +3,7 @@ import { create } from 'zustand';
 
 interface ListLinesState {
   listLines: ITradingData[];
+  updateListLine(listLines: ITradingData[]): void;
   setListLines(line: ITradingData, isUpdated?: boolean): void;
   resetListLine(): void;
 }
@@ -32,6 +33,7 @@ const useListShowLinesStore = create<ListLinesState>()(
 
       return ({ listLines: [...tempList] })
     }),
+    updateListLine: (listLines) => set(() => ({ listLines })),
     resetListLine: () => set(() => ({ listLines: [] }))
   })
 );
