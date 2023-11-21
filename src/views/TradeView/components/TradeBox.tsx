@@ -149,7 +149,6 @@ const CloseButton = (props: CloseBtnPropsType) => {
 
 const TradeBox = (props: PropsType) => {
   const { item } = props;
-  const { price } = useTradeStore();
   const queryClient = useQueryClient();
   const toast = useToast();
   const { setListLines, listLines } = useListShowLinesStore();
@@ -158,7 +157,7 @@ const TradeBox = (props: PropsType) => {
   const handleCloseTrade = async () => {
     try {
       const closingTime = dayjs().utc().unix();
-      await closeTrade(item._id, closingTime.toString());
+      await closeTrade(item._id);
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       queryClient.invalidateQueries({ queryKey: ['getTradingHistory'] });
       queryClient.invalidateQueries({ queryKey: ['getTradeCancel'] });

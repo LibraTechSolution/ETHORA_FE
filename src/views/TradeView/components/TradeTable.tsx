@@ -309,7 +309,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   const handleCloseTrade = async (item: ITradingData) => {
     try {
       const closingTime = dayjs().utc().unix();
-      await closeTrade(item._id, closingTime.toString());
+      await closeTrade(item._id);
       queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
       toast({
         position: 'top',

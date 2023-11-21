@@ -97,7 +97,7 @@ export const SaleTokenView = () => {
         alignItems={'center'}
         justifyItems={'center'}
         flexWrap={'wrap'}
-        margin={{ base: '50px 12px', sm: '50px 12px', md: '50px', lg: '67px 242px' }}
+        margin={{ base: '100px 12px', sm: '50px 12px', md: '50px', lg: '67px 242px' }}
       >
         <Box flex={1}>
           <Image alt="base" src="/images/saleToken/logo-token.png" w="87.74" h="87.74" />
@@ -133,17 +133,18 @@ export const SaleTokenView = () => {
         bgRepeat="no-repeat"
         bgPosition={'center'}
         bgSize={{ base: '400% 370%', sm: '400% 370%', md: '195% 295%', lg: '125% 250%' }}
-        paddingTop={'20%'}
+        paddingTop={{ base: '50px', md: '20%' }}
         position={'relative'}
         flexDirection={'column'}
       >
         <Box maxWidth={'1150px'} margin={'0 auto'}>
           <Text
-            fontSize={{ base: '28px', md: '56px' }}
+            fontSize={{ base: '32px', md: '56px' }}
             textColor={'white'}
-            lineHeight={'120px'}
+            lineHeight={{ base: '38px', md: '67px' }}
             fontWeight={600}
             textAlign={'center'}
+            marginBottom={{ base: '40px', md: '80px' }}
           >
             Sale Finished!
           </Text>
@@ -253,13 +254,13 @@ export const SaleTokenView = () => {
         </Grid>
       </Box>
       <Box
-        margin={{ base: '30px 12px 0px', sm: '30px 12px 0px', md: '160px 20px 0px', lg: '160px 240px 24px' }}
+        margin={{ base: '100px 12px 0px', sm: '30px 12px 0px', md: '160px 20px 0px', lg: '160px 240px 24px' }}
         ref={faqRef}
       >
         <Text
-          fontSize={{ base: '28px', md: '56px' }}
+          fontSize={{ base: '32px', md: '56px' }}
           textColor={'white'}
-          lineHeight={{ base: '40px', md: '67px' }}
+          lineHeight={{ base: '38px', md: '67px' }}
           fontWeight={600}
           textAlign={'center'}
           marginBottom={{ base: '40px', md: '80px' }}
@@ -338,7 +339,7 @@ export const SaleTokenView = () => {
         bgPosition={'100% 57%'}
         bgSize={'cover'}
       >
-        <Box margin={{ base: '30px 12px 0px', sm: '30px 12px 0px', md: '160px 20px 0px', lg: '160px 240px 0px' }}>
+        <Box margin={{ base: '100px 12px 0px', sm: '30px 12px 0px', md: '160px 20px 0px', lg: '160px 240px 0px' }}>
           <Image
             src="/images/saleToken/logo-token.png"
             alt="landingpage"
@@ -351,12 +352,12 @@ export const SaleTokenView = () => {
             display={{ base: 'none', sm: 'none', md: 'block', lg: 'block' }}
           />
           <Text
-            fontSize={{ base: '28px', md: '56px' }}
+            fontSize={{ base: '32px', md: '56px' }}
             textColor={'white'}
-            lineHeight={'67px'}
+            lineHeight={{ base: '38px', md: '67px' }}
             fontWeight={600}
             textAlign={'center'}
-            marginBottom={'80px'}
+            marginBottom={{ base: '40px', md: '80px' }}
           >
             FAQ
           </Text>

@@ -15,12 +15,14 @@ import { notFound, useParams } from 'next/navigation';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { EditTradeReq, ITradingData, State } from '@/types/trade.type';
 import { divide } from '@/utils/operationBigNumber';
-import { closeTrade, editLimitOrder } from '@/services/trade';
+import { cancelTrade, closeTrade, editLimitOrder } from '@/services/trade';
 import { Status } from '@/types/faucet.type';
 import { ToastLayout } from '../ToastLayout';
 import { useQueryClient } from '@tanstack/react-query';
 import EditLimitOrderModal from '@/views/TradeView/components/EditLimitOrderModal';
 import dayjs from 'dayjs';
+import { addComma } from '@/utils/number';
+import { ToastCloseTrade } from '@/views/TradeView/components/ToastCloseTrade';
 
 export const supported_resolutions = [
   // '1S' as ResolutionString,
@@ -156,13 +158,16 @@ export const TradingViewChart = () => {
     async (item: ITradingData) => {
       try {
         const closingTime = dayjs().utc().unix();
-        await closeTrade(item._id, closingTime.toString());
+        await closeTrade(item._id);
         queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
+        queryClient.invalidateQueries({ queryKey: ['getTradingHistory'] });
+        queryClient.invalidateQueries({ queryKey: ['getTradeCancel'] });
         toast({
           position: 'top',
-          render: ({ onClose }) => <ToastLayout title="Close Successfully" status={Status.SUCCESSS} close={onClose} />,
+          render: ({ onClose }) => <ToastCloseTrade item={item} onClose={onClose} closeTime={closingTime} />,
         });
-        setListLines(item);
+        const isRemove = listLines.some((line) => line._id === item._id);
+        isRemove && setListLines(item);
       } catch (error) {
         console.log(error);
         toast({
@@ -171,7 +176,43 @@ export const TradingViewChart = () => {
         });
       }
     },
-    [queryClient, setListLines, toast],
+    [listLines, queryClient, setListLines, toast],
+  );
+
+  const handleCancelTrade = useCallback(
+    async (item: ITradingData) => {
+      try {
+        const res = await cancelTrade(item._id);
+
+        toast({
+          position: 'top',
+          render: ({ onClose }) => (
+            <ToastLayout status={Status.SUCCESSS} close={onClose}>
+              <p className="font-semibold text-[#fff]">Order cancelled</p>
+              <p className="text-[#9E9E9F]">
+                <span className="text-[#fff]">{res.data.data.pair.toUpperCase()}</span> to go{' '}
+                <span className="text-[#fff]">{res.data.data.isAbove ? 'Higher' : 'Lower'}</span>
+              </p>
+              <p className="text-[#9E9E9F]">
+                Total amount: <span className="text-[#fff]">{addComma(divide(res.data.data.tradeSize, 6), 2)}</span>{' '}
+                USDC
+              </p>
+            </ToastLayout>
+          ),
+        });
+        queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
+        queryClient.invalidateQueries({ queryKey: ['getTradingHistory'] });
+        queryClient.invalidateQueries({ queryKey: ['getTradeCancel'] });
+        const isRemove = listLines.some((line) => line._id === item._id);
+        isRemove && setListLines(item);
+      } catch (error) {
+        toast({
+          position: 'top',
+          render: ({ onClose }) => <ToastLayout title="Cancel Unsuccessfully" status={Status.ERROR} close={onClose} />,
+        });
+      }
+    },
+    [listLines, queryClient, setListLines, toast],
   );
 
   const handleEditStrikePrice = async (item: ITradingData) => {
@@ -241,8 +282,7 @@ export const TradingViewChart = () => {
           .setBodyBorderColor('rgb(48, 48, 68)')
           .setLineColor(item.isAbove ? '#1ED768' : '#F03D3E')
           .onCancel('modify', function () {
-            console.log('===', item);
-            handleClose(item);
+            handleCancelTrade(item);
           })
           .onMove(function () {
             handleEditStrikePrice(item);
@@ -278,12 +318,11 @@ export const TradingViewChart = () => {
         .setBodyBorderColor('rgb(48, 48, 68)')
         .setLineColor(item.isAbove ? '#1ED768' : '#F03D3E')
         .onCancel('modify', function () {
-          console.log('===', item);
           handleClose(item);
         })
         .setPrice(+divide(item.strike, 8)) as IOrderLineAdapter;
     },
-    [handleClose],
+    [handleCancelTrade, handleClose],
   );
 
   useEffect(() => {
@@ -350,14 +389,12 @@ export const TradingViewChart = () => {
   }, [currentPair]);
 
   useEffect(() => {
-    console.log(listLines);
     removeLine();
     listLinesRef.current = [];
     if (listLines.length === 0 || !isChartReady) return;
     listLines.forEach((item) => {
       listLinesRef.current?.push({ line: addLine(item), tradeData: item });
     });
-    console.log(listLinesRef.current);
     if (listLinesRef.current.length > 0) {
       listLinesRef.current.forEach((item) => {
         item.line.setPrice(+divide(item.tradeData.strike, 8));
