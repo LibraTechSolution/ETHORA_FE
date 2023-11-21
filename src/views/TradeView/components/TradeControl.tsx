@@ -49,6 +49,7 @@ import { useGetMinMaxTradeSize, useGetTradeContract } from '@/hooks/useGetTradeC
 import bufferBOABI from '@/config/abi/bufferBOABI';
 import { divide, subtract } from '@/utils/operationBigNumber';
 import useAdvanceSetting from '@/store/useAdvanceSetting';
+import { ShowPrice } from './ShowPrice';
 dayjs.extend(utc);
 
 const approveParamType = [
@@ -631,7 +632,9 @@ const TradeControl = () => {
         </Box>
         <Box>
           {tradeType === 'market' ? (
-            <span className="text-base font-normal text-[#ffffff]">{addComma(price.toFixed(2), 2)}</span>
+            <span className="text-base font-normal text-[#ffffff]">
+              <ShowPrice pair={currentPair.pair.replace('/', '').toUpperCase()} />
+            </span>
           ) : (
             <>
               <Input

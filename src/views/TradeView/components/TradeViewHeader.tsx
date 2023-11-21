@@ -158,7 +158,8 @@ const TradeViewHeader = () => {
           <Center paddingX={{ base: 5, '2xl': 10 }} display={{ base: 'none', xl: 'flex' }}>
             {currentPair?.pair && (
               <p className="min-w-[190px] text-2xl font-normal text-[#fff]">
-                <ShowPrice /> {currentPair?.pair.split('/')[1].toUpperCase()}
+                <ShowPrice pair={currentPair.pair.replace('/', '').toUpperCase()} />{' '}
+                {currentPair?.pair.split('/')[1].toUpperCase()}
               </p>
             )}
           </Center>
@@ -171,7 +172,8 @@ const TradeViewHeader = () => {
             >
               {currentPair?.pair && (
                 <p className="mr-3 block text-sm font-semibold text-[#fff] xl:hidden">
-                  <ShowPrice /> {currentPair?.pair.split('/')[1].toUpperCase()}
+                  <ShowPrice pair={currentPair.pair.replace('/', '').toUpperCase()} />{' '}
+                  {currentPair?.pair.split('/')[1].toUpperCase()}
                 </p>
               )}
               <p className="hidden pb-2 text-xs font-normal text-[#9E9E9F] xl:block ">24h Change</p>

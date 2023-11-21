@@ -30,6 +30,7 @@ interface PropsType {
 interface CloseBtnPropsType {
   item: ITradingData;
   isDisabled: boolean;
+  isTimeOut: boolean;
   handleCloseTrade: () => void;
 }
 
@@ -126,7 +127,7 @@ const ShowPnL = (props: PropsType) => {
 };
 
 const CloseButton = (props: CloseBtnPropsType) => {
-  const { item, handleCloseTrade, isDisabled } = props;
+  const { item, handleCloseTrade, isDisabled, isTimeOut } = props;
   const { pnl: earlyPnl } = useEarlyPnl({
     trade: item,
   });
@@ -140,9 +141,9 @@ const CloseButton = (props: CloseBtnPropsType) => {
       _active={{ bgColor: +earlycloseAmount < 0 ? '#F03D3E' : '#1ED768', textColor: '#fff' }}
       rounded="md"
       onClick={handleCloseTrade}
-      isDisabled={isDisabled}
+      isDisabled={isDisabled || isTimeOut}
     >
-      Close at {(+earlycloseAmount).toFixed(2)}
+      {isTimeOut ? 'Processing' : `Close at ${(+earlycloseAmount).toFixed(2)}`}
     </Button>
   );
 };
@@ -153,6 +154,7 @@ const TradeBox = (props: PropsType) => {
   const toast = useToast();
   const { setListLines, listLines } = useListShowLinesStore();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [isTimeOut, setIsTimeOut] = useState<boolean>(false);
 
   const handleCloseTrade = async () => {
     try {
@@ -180,7 +182,7 @@ const TradeBox = (props: PropsType) => {
     queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
     const isRemove = listLines.some((line) => line._id === item._id);
     isRemove && setListLines(item);
-    setIsDisabled(true);
+    setIsTimeOut(true);
   };
 
   const reloadData = () => {
@@ -281,7 +283,7 @@ const TradeBox = (props: PropsType) => {
           </p>
         </GridItem>
       </Grid>
-      <CloseButton item={item} handleCloseTrade={handleCloseTrade} isDisabled={isDisabled} />
+      <CloseButton item={item} handleCloseTrade={handleCloseTrade} isDisabled={isDisabled} isTimeOut={isTimeOut} />
     </Box>
   );
 };
