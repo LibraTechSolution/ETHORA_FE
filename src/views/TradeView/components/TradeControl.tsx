@@ -85,7 +85,7 @@ const TradeControl = () => {
   const listTimes = ['3m', '5m', '15m', '1h'];
   const [time, setTime] = useState<string>('15m');
   const [timeType, setTimeType] = useState<string>('m');
-  const [timeNumber, setTimeNumber] = useState<string>('');
+  const [timeNumber, setTimeNumber] = useState<string>('15');
   const { chain } = useNetwork();
   const [isLoadingApprove, setIsLoadingApprove] = useState<boolean>(false);
   const params = useParams();
@@ -495,7 +495,8 @@ const TradeControl = () => {
                 textColor: '#fff',
               }}
               onClick={() => {
-                setTimeNumber('');
+                setTimeType(item.substring(1));
+                setTimeNumber(item.slice(0, -1));
                 setTimeError('');
                 setTime(item);
               }}
