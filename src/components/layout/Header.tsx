@@ -33,8 +33,10 @@ import { AccountModal } from '../AccountModal';
 import { appConfig } from '@/config';
 import AdvanceSetting from '@/views/TradeView/components/AdvanceSetting';
 import useAdvanceSetting from '@/store/useAdvanceSetting';
-import BigNumber from 'bignumber.js';
 import { addComma } from '@/utils/number';
+import { useQuery } from '@tanstack/react-query';
+import { getLeaderboards } from '@/services/leaderboard';
+import dayjs from 'dayjs';
 
 export const Header = () => {
   const [isMobile] = useMediaQuery('(max-width: 992px)');
@@ -49,6 +51,7 @@ export const Header = () => {
   const nonActiveStyle = linkStyle + ' text-[#6D6D70]';
   const [isShow, setIsShow] = useState<boolean>(false);
   const settingRef = useRef<HTMLDivElement>(null);
+  const [isDisabledLeaderBoard, setIsDisabledLeaderBoard] = useState<boolean>(false);
 
   useEffect(() => {
     if (address) {
@@ -83,6 +86,30 @@ export const Header = () => {
       document.removeEventListener('mousedown', handleOutSideClick);
     };
   }, [settingRef]);
+
+  const { data: leaderBoardData, isSuccess } = useQuery({
+    queryKey: ['getLeaderBoard', { type: 'daily', network: 421613 }],
+    queryFn: () => getLeaderboards({ type: 'daily', network: 421613 }),
+    onError: (error: any) => {
+      // notification.error({ message: error.message });
+      console.log(error);
+    },
+    cacheTime: 0,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (
+      leaderBoardData &&
+      leaderBoardData?.config?.dailyStart &&
+      leaderBoardData?.config?.weeklyStart &&
+      (dayjs().unix() < dayjs(leaderBoardData?.config?.dailyStart).unix() ||
+        dayjs().unix() < dayjs(leaderBoardData?.config?.weeklyStart).unix())
+    ) {
+      setIsDisabledLeaderBoard(true);
+    }
+  }, [leaderBoardData]);
 
   return (
     <>
@@ -131,9 +158,27 @@ export const Header = () => {
                 </Center>
               )}
               <Center>
-                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
-                  Leaderboard
-                </Link>
+                {isSuccess && isDisabledLeaderBoard ? (
+                  <Box
+                    bgColor={'#3D3D40'}
+                    textColor={'#6D6D70'}
+                    className="cursor-not-allowed rounded-[10px] px-3 py-2"
+                  >
+                    Leaderboard
+                    <Text
+                      className="ml-2 inline-block rounded px-2 font-normal"
+                      background={'rgba(255, 190, 0, 0.10)'}
+                      textColor={'#FFA500'}
+                      fontSize={'12px'}
+                    >
+                      Coming soon
+                    </Text>
+                  </Box>
+                ) : (
+                  <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
+                    Leaderboard
+                  </Link>
+                )}
               </Center>
               <Center>
                 <Menu>
@@ -453,9 +498,27 @@ export const Header = () => {
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
-                <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
-                  Leaderboard
-                </Link>
+                {!isDisabledLeaderBoard ? (
+                  <Link href="/leaderboard" className={currentRoute === '/leaderboard' ? activeStyle : nonActiveStyle}>
+                    Leaderboard
+                  </Link>
+                ) : (
+                  <Box
+                    bgColor={'#3D3D40'}
+                    textColor={'#6D6D70'}
+                    className="cursor-not-allowed rounded-[10px] px-3 py-2"
+                  >
+                    Leaderboard
+                    <Text
+                      className="ml-2 inline-block rounded px-2 font-normal"
+                      background={'rgba(255, 190, 0, 0.10)'}
+                      textColor={'#FFA500'}
+                      fontSize={'12px'}
+                    >
+                      Coming soon
+                    </Text>
+                  </Box>
+                )}
               </Center>
               <Center justifyContent={'flex-start'}>
                 <Link href="/referral" className={currentRoute === '/referral' ? activeStyle : nonActiveStyle}>
