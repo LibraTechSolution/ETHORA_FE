@@ -12,6 +12,7 @@ import {
   Stack,
   Text,
   Tooltip,
+  useMediaQuery,
 } from '@chakra-ui/react';
 import { Select } from 'antd';
 import Image from 'next/image';
@@ -57,6 +58,7 @@ const LeaderboardView = () => {
   const [filter, setFilter] = useState<ILeaderBoardParams>(defaultParams);
   const [listOffet, setListOffset] = useState<Array<string | number>>([]);
   const [selectedOffset, setSelectedOffset] = useState<number>();
+  const [isMobile] = useMediaQuery('(max-width: 768px)');
 
   const { data: leaderBoardOffset, isSuccess } = useQuery({
     queryKey: ['getLeaderBoardOffset'],
@@ -124,7 +126,7 @@ const LeaderboardView = () => {
   return (
     <Flex
       color="white"
-      marginX={'-20px'}
+      marginX={'-12px'}
       height={'100%'}
       flex={1}
       bgImage="url('/images/profile/bg-item.png')"
@@ -144,7 +146,75 @@ const LeaderboardView = () => {
           <Image alt="avatar" src="/images/icons/thunder.svg" width={24} height={24} className="mr-2" /> The competition
           ends on {dayjs(leaderBoardData?.summary?.endDate).format('MM/DD/YYYY - hh:mm')} UTC
         </Box>
-        <Flex justifyContent={'start'} alignItems={'center'} marginBottom={'28px'}>
+        {isMobile && (
+          <Stack
+            direction="row"
+            spacing={0}
+            align="center"
+            display="flex"
+            justifyContent={'start'}
+            margin={'0 auto 20px'}
+            background={'#050506'}
+            rounded={'10px'}
+            width={'300px'}
+          >
+            <Button
+              // borderBottom={isDaily ? '2px solid #1E3EF0' : 'none'}
+              bgColor={isDaily ? '#1E3EF0' : 'transparent'}
+              color={isDaily ? '#ffffff' : '#1E3EF0'}
+              fontWeight="600"
+              fontSize={'16px'}
+              paddingX="7px"
+              paddingY={'14px'}
+              rounded={'10px'}
+              onClick={() => setIsDaily(true)}
+              type="button"
+              height={'50px'}
+              // _hover={{
+              //   borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
+              //   bgColor: 'transparent',
+              // }}
+              // _active={{
+              //   borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
+              //   bgColor: 'transparent',
+              // }}
+              flex={1}
+            >
+              Daily{' '}
+              {/* <span className="ml-2 inline-block rounded border border-[#2E60FF] px-2 py-1 font-normal text-[#2E60FF]">
+              In Progress
+            </span> */}
+            </Button>
+            <Button
+              // borderBottom={!isDaily ? '2px solid #1E3EF0' : 'none'}
+              bgColor={!isDaily ? '#1E3EF0' : 'transparent'}
+              color={!isDaily ? '#ffffff' : '#1E3EF0'}
+              fontWeight="600"
+              fontSize={'16px'}
+              paddingX="7px"
+              paddingY={'14px'}
+              rounded={'10px'}
+              onClick={() => setIsDaily(false)}
+              type="button"
+              height={'50px'}
+              // _hover={{
+              //   borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
+              //   bgColor: 'transparent',
+              // }}
+              // _active={{
+              //   borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
+              //   bgColor: 'transparent',
+              // }}
+              flex={1}
+            >
+              Weekly
+              {/* <span className="ml-2 inline-block rounded border border-[#9E9E9F] px-2 py-1 font-normal text-[#9E9E9F]">
+              Ended
+            </span> */}
+            </Button>
+          </Stack>
+        )}
+        <Flex justifyContent={{base:'center', md:'flex-start'}} alignItems={'center'} marginBottom={'28px'}>
           <Heading as="h3" textAlign={'center'} fontSize={'24px'} lineHeight={'36px'} fontWeight={'400'}>
             Leaderboard
           </Heading>
@@ -163,65 +233,73 @@ const LeaderboardView = () => {
             </Option>
           </Select>
         </Flex>
-        <Box display={'flex'} alignItems={'center'} justifyContent={'start'} marginBottom={'28px'}>
+        <Box display={'flex'} alignItems={'center'} justifyContent={{base:'center', md:'flex-start'}} marginBottom={'28px'}>
           <Box display={'flex'} alignItems={'center'}>
             Read the competition rules here!
             <ArrowForwardIcon boxSize={5} marginLeft={'12px'} />
           </Box>
         </Box>
-
-        <Stack direction="row" spacing={4} align="center" display="flex" justifyContent={'start'} marginBottom={'20px'}>
-          <Button
-            borderBottom={isDaily ? '2px solid #1E3EF0' : 'none'}
-            bgColor="transparent"
-            color={isDaily ? '#1E3EF0' : '#6D6D70'}
-            fontWeight="400"
-            paddingX="12px"
-            paddingY={'14px'}
-            rounded={0}
-            onClick={() => setIsDaily(true)}
-            type="button"
-            height={'50px'}
-            _hover={{
-              borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
-              bgColor: 'transparent',
-            }}
-            _active={{
-              borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
-              bgColor: 'transparent',
-            }}
+        {!isMobile && (
+          <Stack
+            direction="row"
+            spacing={4}
+            align="center"
+            display="flex"
+            justifyContent={'start'}
+            marginBottom={'20px'}
           >
-            Daily{' '}
-            <span className="ml-2 inline-block rounded border border-[#2E60FF] px-2 py-1 font-normal text-[#2E60FF]">
-              In Progress
-            </span>
-          </Button>
-          <Button
-            borderBottom={!isDaily ? '2px solid #1E3EF0' : 'none'}
-            bgColor="transparent"
-            color={!isDaily ? '#1E3EF0' : '#6D6D70'}
-            fontWeight="400"
-            paddingX="12px"
-            paddingY={'14px'}
-            rounded={0}
-            onClick={() => setIsDaily(false)}
-            type="button"
-            height={'50px'}
-            _hover={{
-              borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
-              bgColor: 'transparent',
-            }}
-            _active={{
-              borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
-              bgColor: 'transparent',
-            }}
-          >
-            Weekly
-            <span className="ml-2 inline-block rounded border border-[#9E9E9F] px-2 py-1 font-normal text-[#9E9E9F]">
-              Ended
-            </span>
-          </Button>
-        </Stack>
+            <Button
+              borderBottom={isDaily ? '2px solid #1E3EF0' : 'none'}
+              bgColor="transparent"
+              color={isDaily ? '#1E3EF0' : '#6D6D70'}
+              fontWeight="400"
+              paddingX="12px"
+              paddingY={'14px'}
+              rounded={0}
+              onClick={() => setIsDaily(true)}
+              type="button"
+              height={'50px'}
+              _hover={{
+                borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
+                bgColor: 'transparent',
+              }}
+              _active={{
+                borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
+                bgColor: 'transparent',
+              }}
+            >
+              Daily{' '}
+              <span className="ml-2 inline-block rounded border border-[#2E60FF] px-2 py-1 font-normal text-[#2E60FF]">
+                In Progress
+              </span>
+            </Button>
+            <Button
+              borderBottom={!isDaily ? '2px solid #1E3EF0' : 'none'}
+              bgColor="transparent"
+              color={!isDaily ? '#1E3EF0' : '#6D6D70'}
+              fontWeight="400"
+              paddingX="12px"
+              paddingY={'14px'}
+              rounded={0}
+              onClick={() => setIsDaily(false)}
+              type="button"
+              height={'50px'}
+              _hover={{
+                borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
+                bgColor: 'transparent',
+              }}
+              _active={{
+                borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
+                bgColor: 'transparent',
+              }}
+            >
+              Weekly
+              <span className="ml-2 inline-block rounded border border-[#9E9E9F] px-2 py-1 font-normal text-[#9E9E9F]">
+                Ended
+              </span>
+            </Button>
+          </Stack>
+        )}
         <Flex w={'100%'} maxW={'1104px'} mx={'auto'} rowGap={3} flexWrap={'wrap'} marginBottom={'28px'}>
           <Center
             textAlign={'center'}
@@ -229,7 +307,7 @@ const LeaderboardView = () => {
             borderRight={'1px solid #242428'}
             flexShrink={1}
             flexGrow={1}
-            flexBasis={'200px'}
+            flexBasis={{base: '50%', md: '25%', lg:'20%'}}
           >
             <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
@@ -255,10 +333,10 @@ const LeaderboardView = () => {
           <Center
             textAlign={'center'}
             padding={3}
-            borderRight={{ base: 'none', lg: '1px solid #242428' }}
+            borderRight={{ base: 'none', md: '1px solid #242428' }}
             flexShrink={1}
             flexGrow={1}
-            flexBasis={'200px'}
+            flexBasis={{base: '50%', md: '25%', lg:'20%'}}
           >
             <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
               <Text fontSize={'sm'} color={'#9E9E9F'} marginBottom={'12px'}>
@@ -277,7 +355,7 @@ const LeaderboardView = () => {
             borderRight={'1px solid #242428'}
             flexShrink={1}
             flexGrow={1}
-            flexBasis={'200px'}
+            flexBasis={{base: '50%', md: '25%', lg:'20%'}}
           >
             <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
@@ -292,7 +370,7 @@ const LeaderboardView = () => {
             borderRight={{ base: 'none', lg: '1px solid #242428' }}
             flexShrink={1}
             flexGrow={1}
-            flexBasis={'200px'}
+            flexBasis={{base: '50%', md: '25%', lg:'20%'}}
           >
             <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
@@ -301,7 +379,7 @@ const LeaderboardView = () => {
               <Text fontSize={'2xl'}>{addComma(leaderBoardData?.summary?.totalTrades ?? 0, 2)}</Text>
             </Flex>
           </Center>
-          <Center textAlign={'center'} padding={3} flexShrink={1} flexGrow={1} flexBasis={'200px'}>
+          <Center textAlign={'center'} padding={3} flexShrink={1} flexGrow={1} flexBasis={{base: '50%', md: '25%', lg:'20%'}}>
             <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
               <Text fontSize={'sm'} marginBottom={'12px'} color={'#9E9E9F'}>
                 Volume
@@ -322,7 +400,39 @@ const LeaderboardView = () => {
             </Flex>
           </Center>
         </Flex>
-        <Box maxW={{ base: 'calc(100vw - 12px)', md: 'calc(100vw - 64px)' }} marginBottom="12px">
+        <Box float={'right'} marginBottom={'8px'} display={{ base: 'block', sm: 'none' }}>
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<CalendarIcon />}
+              border={'1px solid #1E3EF0'}
+              backgroundColor={'transparent'}
+              color={'#1E3EF0'}
+              _hover={{ bgColor: 'transparent', border: '1px solid #1E3EF0' }}
+              _active={{ bgColor: 'transparent', border: '1px solid #1E3EF0' }}
+            >
+              #{selectedOffset}
+            </MenuButton>
+            <MenuList
+              backgroundColor={'#252528'}
+              boxShadow={'0px 3px 20px 0px rgba(0, 0, 0, 0.65)'}
+              border={'none'}
+              h="200px"
+              overflow="auto"
+            >
+              {listOffet.map((item: string | number, index: number) => (
+                <MenuItem
+                  key={`${index}-offset`}
+                  backgroundColor={'#252528'}
+                  onClick={() => selecOffet(listOffet.length - index)}
+                >
+                  #{listOffet.length - index}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+        </Box>
+        <Box maxW={{ base: 'calc(100vw - 30px)', lg: 'calc(100vw - 64px)' }} marginBottom="12px">
           <Box
             width={'100%'}
             overflow={'overflow-auto'}
@@ -383,7 +493,7 @@ const LeaderboardView = () => {
                 </Box>
               )}
             </Flex>
-            <Box>
+            <Box display={{ base: 'none', sm: 'block' }}>
               <Menu>
                 <MenuButton
                   as={Button}

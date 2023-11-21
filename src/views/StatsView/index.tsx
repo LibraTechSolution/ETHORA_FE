@@ -511,7 +511,7 @@ const StatsView = () => {
               >
                 <DownloadCSV
                   data={dataVolume ? dataVolume : []}
-                  filename={`Volume_${dateRange[0].format('YYYY-MM-DD')}-${dateRange[1].format('YYYY-MM-DD')}`}
+                  filename={`Volume_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                   headers={[
                     { label: 'Date', key: 'timestamp' },
                     { label: 'Cumulative', key: 'cumulative' },
@@ -593,7 +593,7 @@ const StatsView = () => {
                     { label: 'Cumulative', key: 'cumulative' },
                     { label: 'USDC Fees', key: 'fee' },
                   ]}
-                  filename={`Fees_${dateRange[0].format('YYYY-MM-DD')}-${dateRange[1].format('YYYY-MM-DD')}`}
+                  filename={`Fees_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
               </Button>
             </Box>
@@ -671,7 +671,7 @@ const StatsView = () => {
                     { label: 'Cumulative', key: 'cumulative' },
                     { label: 'Burned ETR', key: 'amount' },
                   ]}
-                  filename={`BurnedETR_${dateRange[0].format('YYYY-MM-DD')}-${dateRange[1].format('YYYY-MM-DD')}`}
+                  filename={`BurnedETR_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
               </Button>
             </Box>
@@ -748,7 +748,7 @@ const StatsView = () => {
                     { label: 'Date', key: 'timestamp' },
                     { label: 'Exchange Rate', key: 'rate' },
                   ]}
-                  filename={`USD/ELPRate_${dateRange[0].format('YYYY-MM-DD')}-${dateRange[1].format('YYYY-MM-DD')}`}
+                  filename={`USD/ELPRate_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
               </Button>
             </Box>
@@ -830,7 +830,7 @@ const StatsView = () => {
                     { label: 'Date', key: 'timestamp' },
                     { label: 'Current USDC Balance', key: 'glpSupply' },
                   ]}
-                  filename={`ELPPool_${dateRange[0].format('YYYY-MM-DD')}-${dateRange[1].format('YYYY-MM-DD')}`}
+                  filename={`ELPPool_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}`}
                 />
               </Button>
             </Box>
@@ -914,7 +914,7 @@ const StatsView = () => {
                     { label: 'Existing', key: 'existing' },
                     { label: 'Existing %', key: 'percentage' },
                   ]}
-                  filename={`NewvsExistingUsers_${dateRange[0].format('YYYY-MM-DD')}-${dateRange[1].format(
+                  filename={`NewvsExistingUsers_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format(
                     'YYYY-MM-DD',
                   )}`}
                 />
@@ -994,7 +994,7 @@ const StatsView = () => {
                     { label: 'Net PnL', key: 'pnl' },
                     { label: 'Cumulative PnL', key: 'pnlCumulative' },
                   ]}
-                  filename={`TradersNetPnL(USDC)_${dateRange[0].format('YYYY-MM-DD')}-${dateRange[1].format(
+                  filename={`TradersNetPnL(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format(
                     'YYYY-MM-DD',
                   )}`}
                 />
@@ -1081,7 +1081,7 @@ const StatsView = () => {
                     { label: 'Cumulative Profit', key: 'profitCumulative' },
                     { label: 'Cumulative Loss', key: 'lossCumulative' },
                   ]}
-                  filename={`TradersProfitvsLoss(USDC)_${dateRange[0].format('YYYY-MM-DD')}-${dateRange[1].format(
+                  filename={`TradersProfitvsLoss(USDC)_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format(
                     'YYYY-MM-DD',
                   )}`}
                 />

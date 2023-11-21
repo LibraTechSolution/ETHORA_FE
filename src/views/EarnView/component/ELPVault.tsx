@@ -9,7 +9,7 @@ import { EarnContext } from '..';
 import VBLP_ABI from '@/config/abi/VBLP_ABI';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
-import { BaseError } from 'viem';
+import { BaseError, formatUnits } from 'viem';
 import Currency from '@/components/Currency';
 
 const ELPVault = ({
@@ -30,13 +30,16 @@ const ELPVault = ({
   const { onFetchData } = useContext(EarnContext);
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
 
-  const stakedTokens = Number(depositBalances_fBLP) / 10 ** 18;
-  const pairAmounts = Number(pairAmounts_vBLP) / 10 ** 18;
+  const stakedTokens =  depositBalances_fBLP ? formatUnits(depositBalances_fBLP, 6) : 0;
+  const pairAmounts = pairAmounts_vBLP ? formatUnits(pairAmounts_vBLP, 6) : 0;
   // const pairAmounts = +(claimedAmounts_vBLP as bigint)?.toString() / 10 ** 18;
-  const claimed = (Number(claimedAmounts_vBLP) + Number(claimable_vBLP)) / 10 ** 18;
-  const vested = Number(getVestedAmount_vBLP) / 10 ** 18;
+  const claimed = Number(claimedAmounts_vBLP ? formatUnits(claimedAmounts_vBLP, 18) : 0) + Number(claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0) 
+  // (Number(claimedAmounts_vBLP) + Number(claimable_vBLP)) / 10 ** 18;
+  const vested =  getVestedAmount_vBLP ? formatUnits(getVestedAmount_vBLP, 18) : 0
+  // Number(getVestedAmount_vBLP) / 10 ** 18;
 
-  const claimable = Number(claimable_vBLP) / 10 ** 18;
+  const claimable = claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0
+  // Number(claimable_vBLP) / 10 ** 18;
 
   const onWithdraw = async () => {
     if (claimable === 0) {
