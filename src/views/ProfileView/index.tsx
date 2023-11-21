@@ -106,7 +106,7 @@ const ProfileView = () => {
             alignItems={'center'}
             gap={'27px'}
           >
-            <Box w={'64px'} h={'64px'} borderRadius={'100%'} overflow={'hidden'} bg={'yellow'}>
+            <Box w={'64px'} h={'64px'} borderRadius={'100%'} overflow={'hidden'}>
               <Image src="/images/profile/avatar.svg" width={64} height={64} alt="Avata" />
             </Box>
             <Box>
@@ -151,7 +151,6 @@ const ProfileView = () => {
                   Chain
                 </Text>
                 <Box>
-                  {/* {address && ( */}
                   <Select defaultValue="china" style={{ width: 120 }} onChange={handleChange} className="customSelect">
                     <Option value="china" label="China">
                       <div className="flex items-center">
@@ -166,7 +165,6 @@ const ProfileView = () => {
                       </div>
                     </Option>
                   </Select>
-                  {/* )} */}
                 </Box>
               </Flex>
             </GridItem>

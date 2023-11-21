@@ -329,6 +329,7 @@ export const Header = () => {
                                       height: 14,
                                       borderRadius: 999,
                                       overflow: 'hidden',
+                                      marginRight: '4px',
                                     }}
                                   >
                                     {chain.iconUrl && (
