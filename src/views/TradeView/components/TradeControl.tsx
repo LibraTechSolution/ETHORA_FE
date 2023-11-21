@@ -631,7 +631,7 @@ const TradeControl = () => {
           <p className="text-xs font-normal text-[#9E9E9F]">Price</p>
         </Box>
         <Box>
-          {tradeType === 'market' ? (
+          {currentPair?.pair && tradeType === 'market' ? (
             <span className="text-base font-normal text-[#ffffff]">
               <ShowPrice pair={currentPair.pair.replace('/', '').toUpperCase()} />
             </span>

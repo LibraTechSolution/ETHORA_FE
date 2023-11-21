@@ -24,8 +24,6 @@ import LimitOrdersTable from '../TradeView/components/LimitOrdersTable';
 import HistoryTable from '../TradeView/components/HistoryTable';
 import Currency from '@/components/Currency';
 import BigNumber from 'bignumber.js';
-import { first } from 'lodash';
-import { CallSocket } from '../TradeView/components/SearchPair';
 import CustomConnectButton from '@/components/CustomConnectButton';
 
 export type Person = {
@@ -197,7 +195,9 @@ const ProfileView = () => {
                 </Text>
                 {profileInfoFilter?.userAddress ? (
                   <Text fontSize={'2xl'}>
-                    {dataProfileInfo && dataProfileInfo?.stats?.weekly >= 0 ? `#${dataProfileInfo?.stats?.weekly}` : '--'}
+                    {dataProfileInfo && dataProfileInfo?.stats?.weekly >= 0
+                      ? `#${dataProfileInfo?.stats?.weekly}`
+                      : '--'}
                   </Text>
                 ) : (
                   <Text fontSize={'2xl'}>--</Text>
@@ -570,7 +570,6 @@ const ProfileView = () => {
           </div>
         </Flex>
       )}
-      <CallSocket />
     </>
   );
 };
