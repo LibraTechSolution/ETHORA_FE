@@ -34,7 +34,7 @@ const datafeed = {
         .json()
         .then((symbolInfo) => {
           console.log('symbolInfo', symbolInfo)
-          onSymbolResolvedCallback({...symbolInfo, pricescale: 100})
+          onSymbolResolvedCallback({...symbolInfo, pricescale: 100}) // config number of decimals
         })
         .catch((error) => {
           console.log('[resolveSymbol]: Cannot resolve symbol', symbolName)

@@ -45,7 +45,7 @@ enum Tab {
   Forex = 'forex',
 }
 
-const MaxOICell = ({ pair }: { pair: string }) => {
+export const MaxOICell = ({ pair }: { pair: string }) => {
   const { bufferBOSC } = useGetTradeContract(pair);
   const [maxOI, setMaxOI] = useState(1000);
 
@@ -500,7 +500,9 @@ const SearchPair = (props: Props) => {
                   >
                     <Flex direction={'column'} alignItems={'center'} paddingY="60px">
                       <Image alt="" src="/images/icons/pack.png" w="60px" h="50px" />
-                      <p className="text-sm font-normal text-[#6D6D70]">There are no placed trades</p>
+                      <p className="text-sm font-normal text-[#6D6D70]">
+                        {tab === Tab.Favourites ? 'No favourite asset pairs' : 'There are no placed trades'}
+                      </p>
                     </Flex>
                   </Td>
                 </Tr>
