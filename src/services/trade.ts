@@ -19,8 +19,8 @@ export function cancelTrade(_id: string) {
   return axiosInstance.post<IResponData<ITradingData>>('/trades/cancel', { _id });
 }
 
-export function closeTrade(_id: string, closingTime: string) {
-  return axiosInstance.post<IResponData<ITradingData>>('/trades/close', { _id, closingTime });
+export function closeTrade(_id: string) {
+  return axiosInstance.post<IResponData<ITradingData>>('/trades/close', { _id });
 }
 
 export const getTrades = async (params?: ITradingParams): Promise<IPaginationResponse<ITradingData>> => {

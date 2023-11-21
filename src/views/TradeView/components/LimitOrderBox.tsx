@@ -49,6 +49,8 @@ const LimitOrderBox = (props: PropsType) => {
         ),
       });
       queryClient.invalidateQueries({ queryKey: ['getLimitOrders'] });
+      queryClient.invalidateQueries({ queryKey: ['getTradingHistory'] });
+      queryClient.invalidateQueries({ queryKey: ['getTradeCancel'] });
       const isRemove = listLines.some((line) => line._id === item._id);
       isRemove && setListLines(item);
     } catch (error) {

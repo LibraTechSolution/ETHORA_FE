@@ -238,14 +238,6 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link
-                href="/profile"
-                className={`w-full text-left ${currentRoute === '/profile' ? 'text-[#fff]' : nonActiveStyle}`}
-              >
-                Profile
-              </Link>
-            </Center>
-            <Center justifyContent={'flex-start'}>
               <Link href="https://twitter.com" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
                 Twitter
               </Link>

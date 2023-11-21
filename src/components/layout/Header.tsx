@@ -20,7 +20,7 @@ import {
   MenuList,
   useDisclosure,
   useMediaQuery,
-  Text
+  Text,
 } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
@@ -373,12 +373,13 @@ export const Header = () => {
                             onClick={onOpen}
                             minWidth={'114px'}
                           >
-                            <Text 
-                            style={{
-                              textOverflow: 'ellipsis',
-                              overflow: 'hidden',
-                              width:' calc(100% - 60px)',
-                            }}>
+                            <Text
+                              style={{
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                width: ' calc(100% - 60px)',
+                              }}
+                            >
                               {account.displayBalance ? ` ${addComma(account.displayBalance, 2)}` : ''}{' '}
                               {!isMobile && account?.balanceSymbol}
                             </Text>
@@ -487,14 +488,6 @@ export const Header = () => {
                   className={`w-full text-left ${currentRoute === '/docs' ? 'text-[#fff]' : nonActiveStyle}`}
                 >
                   Docs
-                </Link>
-              </Center>
-              <Center justifyContent={'flex-start'}>
-                <Link
-                  href="/profile"
-                  className={`w-full text-left ${currentRoute === '/profile' ? 'text-[#fff]' : nonActiveStyle}`}
-                >
-                  Profile
                 </Link>
               </Center>
               <Center justifyContent={'flex-start'}>
