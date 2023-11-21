@@ -37,6 +37,7 @@ import { addComma } from '@/utils/number';
 import { useQuery } from '@tanstack/react-query';
 import { getLeaderboards } from '@/services/leaderboard';
 import dayjs from 'dayjs';
+import { startStreaming } from '../TradingView/streaming';
 
 export const Header = () => {
   const [isMobile] = useMediaQuery('(max-width: 992px)');
@@ -78,6 +79,10 @@ export const Header = () => {
       setIsShow(false);
     }
   };
+
+  useEffect(() => {
+    startStreaming();
+  }, []);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutSideClick);

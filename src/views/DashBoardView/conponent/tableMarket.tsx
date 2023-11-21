@@ -8,7 +8,6 @@ import { IDashboardMarketData } from '@/types/dashboard.type';
 import { PairData, PairType } from '@/types/trade.type';
 import { addComma } from '@/utils/number';
 import { add, divide } from '@/utils/operationBigNumber';
-import { CallSocket } from '@/views/TradeView/components/SearchPair';
 import { ShowPrice } from '@/views/TradeView/components/ShowPrice';
 import { Box, Flex, Image, Stat, StatArrow, StatHelpText, Text, Tooltip } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
@@ -373,7 +372,6 @@ const TableMarket = () => {
 
   return (
     <Box className="tradingTableTab">
-      <CallSocket />
       <Table
         columns={columns}
         dataSource={listPairShow}

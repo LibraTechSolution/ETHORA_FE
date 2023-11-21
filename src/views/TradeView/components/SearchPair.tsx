@@ -116,74 +116,6 @@ export const FEED_IDS: { [key: string]: string } = {
   '84c2dde9633d93d1bcad84e7dc41c9d56578b7ec52fabedc1f335d673df0a7c1': 'GBPUSD',
 };
 
-export const CallSocket = () => {
-  const [pairPrice, setPairPrice] = useState<{ [key: string]: number }>({});
-  const { setListPairPrice } = useListPairPrice();
-  const { setListPairPriceSlow } = useListPairPriceSlow();
-
-  useEffect(() => {
-    const socket = new WebSocket('wss://hermes.pyth.network/ws');
-    socket.addEventListener('open', (event) => {
-      const request = {
-        type: 'subscribe',
-        ids: Object.values({
-          // crypto
-          BTCUSD: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
-          ETHUSD: '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
-          LINKUSD: '0x8ac0c70fff57e9aefdf5edf44b51d62c2d433653cbb2cf5cc06bb115af04d221',
-          TONUSD: '0x8963217838ab4cf5cadc172203c1f0b763fbaa45f346d8ee50ba994bbcac3026',
-          ARBUSD: '0x3fa4252848f9f0a1480be62745a4629d9eb1322aebab8a791e344b3b9c1adcf5',
-          XRPUSD: '0xec5d399846a9209f3fe5881d70aae9268c94339ff9817e8d18ff19fa05eea1c8',
-          SOLUSD: '0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d',
-          BNBUSD: '0x2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f',
-          // BOGEUSD: "",
-          // forex
-          XAUUSD: '0x765d2ba906dbc32ca17cc11f5310a89e9ee1f6420508c63861f2f8ba4ee34bb2',
-          XAGUSD: '0xf2fb02c32b055c805e7238d628e5e9dadef274376114eb1f012337cabe93871e',
-          EURUSD: '0xa995d00bb36a63cef7fd2c287dc105fc8f3d93779f062f09551b0af3e81ec30b',
-          GBPUSD: '0x84c2dde9633d93d1bcad84e7dc41c9d56578b7ec52fabedc1f335d673df0a7c1',
-        }),
-      };
-      socket.send(JSON.stringify(request));
-    });
-
-    socket.addEventListener('message', (event) => {
-      try {
-        const json = JSON.parse(event.data);
-        if (json.type === 'price_update') {
-          updatePairPriceToMem(json);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
-
-    return () => {
-      socket.close(1000, 'remove');
-    };
-  }, []);
-
-  const count = useRef(0);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const updatePairPriceToMem = (json: any) => {
-    count.current = count.current + 1;
-    const {
-      id,
-      price: { price },
-    } = json.price_feed;
-    pairPrice[FEED_IDS[id as string]] = +divide(price, 8);
-
-    setPairPrice({ ...pairPrice });
-    setListPairPrice({ ...pairPrice });
-
-    if (count.current === 1 || count.current % 150 === 0) {
-      setListPairPriceSlow({ ...pairPrice });
-    }
-  };
-  return <></>;
-};
-
 const SearchPair = (props: Props) => {
   const { listChanged24h, isShow } = props;
   const { listPairData, setListPairData } = usePairStore();
@@ -280,7 +212,6 @@ const SearchPair = (props: Props) => {
           onChange={handleOnChange}
         />
       </InputGroup>
-      <CallSocket />
 
       <Box marginTop="12px">
         <Flex>
