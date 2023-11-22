@@ -308,7 +308,7 @@ const LeaderboardView = () => {
             <Option value="china" label="China">
               <div className="flex items-center">
                 <Image
-                  src="/images/networks/base.png"
+                  src="/images/networks/base.svg"
                   width={14}
                   height={14}
                   alt="Avata"

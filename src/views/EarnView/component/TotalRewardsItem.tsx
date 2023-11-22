@@ -37,18 +37,23 @@ const TotalRewardsItem = ({
   const esETR = (Number(claimables_sETR) + Number(claimable_fsBLP)) / 10 ** 18;
   const multiplierPoints = Number(claimable_sbETR) / 10 ** 18;
   const stakedMultiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
-  const total1 =  BigNumber(claimable_sbfETR ? formatUnits(claimable_sbfETR, 6) : 0).plus(claimable_fBLP ? formatUnits(claimable_fBLP, 6) : 0)
+  const total1 = BigNumber(claimable_sbfETR ? formatUnits(claimable_sbfETR, 6) : 0).plus(
+    claimable_fBLP ? formatUnits(claimable_fBLP, 6) : 0,
+  );
 
-  const total2 =  BigNumber(claimable_vETR ? formatUnits(claimable_vETR, 18) : 0).plus(claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0)
-  const total2USD =  total2.multipliedBy(price);
+  const total2 = BigNumber(claimable_vETR ? formatUnits(claimable_vETR, 18) : 0).plus(
+    claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0,
+  );
+  const total2USD = total2.multipliedBy(price);
 
-  const total3 = BigNumber(claimables_sETR ? formatUnits(claimables_sETR, 18) : 0).plus(claimable_fsBLP ? formatUnits(claimable_fsBLP, 18) : 0)
-  const total3USD =  total3.multipliedBy(price);
+  const total3 = BigNumber(claimables_sETR ? formatUnits(claimables_sETR, 18) : 0).plus(
+    claimable_fsBLP ? formatUnits(claimable_fsBLP, 18) : 0,
+  );
+  const total3USD = total3.multipliedBy(price);
 
-  const total = total1.plus(total2USD).plus(total3USD)
+  const total = total1.plus(total2USD).plus(total3USD);
 
-  console.log('total=========', total.toFixed())
-
+  console.log('total=========', total.toFixed());
 
   return (
     <>
@@ -57,58 +62,62 @@ const TotalRewardsItem = ({
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             USDC
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Currency value={USDC !== undefined ? USDC : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             ETR
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Currency value={ETR !== undefined ? ETR : 0} decimal={2} />
-            {'($'}
-            <Currency value={ETR !== undefined ? +ETR * price : 0} decimal={2} />
-            {')'}
+            <span>
+              {' ($'}
+              <Currency value={ETR !== undefined ? +ETR * price : 0} decimal={2} />
+              {')'}
+            </span>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Escrowed ETR
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Currency value={esETR !== undefined ? esETR : 0} decimal={2} />
-            {'($'}
-            <Currency value={esETR !== undefined ? +esETR * price : 0} decimal={2} />
-            {')'}
+            <span>
+              {' ($'}
+              <Currency value={esETR !== undefined ? +esETR * price : 0} decimal={2} />
+              {')'}
+            </span>
           </Text>
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Multiplier Points
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Currency value={multiplierPoints !== undefined ? multiplierPoints : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked Multiplier Points
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Currency value={stakedMultiplierPoints !== undefined ? stakedMultiplierPoints : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            $<Currency value={total !== undefined ? total : 0} decimal={2} unit='$' />
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            $<Currency value={total !== undefined ? total : 0} decimal={2} unit="$" />
           </Text>
         </Box>
         <hr className="border-[#242428]" />

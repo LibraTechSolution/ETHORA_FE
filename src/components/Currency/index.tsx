@@ -1,10 +1,11 @@
 'use client';
+import { Tooltip } from 'antd';
 import BigNumber from 'bignumber.js';
 import { isNil } from 'lodash';
 import { FC, PropsWithChildren } from 'react';
 import { formatEther } from 'viem';
 
-import { Tooltip } from '@chakra-ui/react';
+// import { Tooltip } from '@chakra-ui/react';/
 
 export type Value = string | number | undefined | BigNumber | bigint;
 
@@ -70,8 +71,11 @@ const Currency: FC<Props> = ({ value, isWei, rounded, decimal, decimalNumber, un
   const { value: valueShow, isRounded, fullValue } = getValue(value, isWei, rounded, decimal, decimalNumber);
   // if (!isRounded) return <>{valueShow}</>;
   return (
-    <Tooltip hasArrow label={`${unit === '$' ? unit : ''}${fullValue} ${!unit ? '' : unit !== '$' ? unit : ''}`}>
-      {valueShow}
+    // <Tooltip hasArrow label={`${unit === '$' ? unit : ''}${fullValue} ${!unit ? '' : unit !== '$' ? unit : ''}`}>
+    //   {valueShow}
+    // </Tooltip>
+    <Tooltip title={`${unit === '$' ? unit : ''}${fullValue} ${!unit ? '' : unit !== '$' ? unit : ''}`} color='#050506' overlayStyle={{fontSize: '12px'}}>
+      <span>{valueShow}</span>
     </Tooltip>
   );
 };

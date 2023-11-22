@@ -3,7 +3,7 @@ import CustomConnectButton from '@/components/CustomConnectButton';
 import { appConfig } from '@/config';
 import { useBalanceOf } from '@/hooks/useContractRead';
 import { addComma } from '@/utils/number';
-import { Flex, Heading, Text, Box, Button, Tooltip, Spacer } from '@chakra-ui/react';
+import { Flex, Heading, Text, Box, Button, Spacer } from '@chakra-ui/react';
 import { formatEther, formatUnits, parseUnits } from 'viem';
 import { useState } from 'react';
 import StakeModalETR from './StakeModalETR';
@@ -12,6 +12,7 @@ import BigNumber from 'bignumber.js';
 // import { Currency } from '@/components/Currency';
 import Link from 'next/link';
 import Currency from '@/components/Currency';
+import { Tooltip } from 'antd';
 
 const ETRItem = ({
   price,
@@ -88,75 +89,86 @@ const ETRItem = ({
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Price
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            $<Currency value={0.055} decimal={2} />
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              $<Currency value={0.055} decimal={2} />
+            </span>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Wallet
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            <Currency
-              value={balance !== undefined ? BigNumber(formatEther(balance as bigint)).toFixed() : 0}
-              decimal={2}
-              unit="ETR"
-            />
-            {' ETR '}
-            {'($'}
-            <Currency
-              value={
-                balance !== undefined
-                  ? BigNumber(formatEther(balance as bigint))
-                      .multipliedBy(price)
-                      .toFixed()
-                  : 0
-              }
-              decimal={2}
-            />
-            {')'}
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              <Currency
+                value={balance !== undefined ? BigNumber(formatEther(balance as bigint)).toFixed() : 0}
+                decimal={2}
+                unit="ETR"
+              />
+              {' ETR '}
+            </span>
+            <span>
+              {'($'}
+              <Currency
+                value={
+                  balance !== undefined
+                    ? BigNumber(formatEther(balance as bigint))
+                        .multipliedBy(price)
+                        .toFixed()
+                    : 0
+                }
+                decimal={2}
+              />
+              {')'}
+            </span>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            {/* {depositBalances_ETR !== undefined ? addComma(BigNumber(formatEther(depositBalances_ETR as bigint)).toFixed(), 2) : '0.00'} */}
-            <Currency
-              value={
-                depositBalances_ETR !== undefined ? BigNumber(formatEther(depositBalances_ETR as bigint)).toFixed() : 0
-              }
-              decimal={2}
-              unit="ETR"
-            />
-            {' ETR'}
-            {'($'}
-            <Currency
-              value={
-                depositBalances_ETR !== undefined
-                  ? BigNumber(formatEther(depositBalances_ETR as bigint))
-                      .multipliedBy(price)
-                      .toFixed()
-                  : 0
-              }
-              decimal={2}
-            />
-            {')'}
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              <Currency
+                value={
+                  depositBalances_ETR !== undefined
+                    ? BigNumber(formatEther(depositBalances_ETR as bigint)).toFixed()
+                    : 0
+                }
+                decimal={2}
+                unit="ETR"
+              />
+              {' ETR'}
+            </span>
+            <span>
+              {' ($'}
+              <Currency
+                value={
+                  depositBalances_ETR !== undefined
+                    ? BigNumber(formatEther(depositBalances_ETR as bigint))
+                        .multipliedBy(price)
+                        .toFixed()
+                    : 0
+                }
+                decimal={2}
+              />
+              {')'}
+            </span>
           </Text>
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             APR
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={
+              // hasArrow
+              title={
                 <Box w="100%" p={4} color="white">
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -192,23 +204,24 @@ const ETRItem = ({
                   </Text>
                 </Box>
               }
-              color="white"
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="450px"
+              // bg="#050506"
+              // minWidth="450px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '350px' }}
             >
               <Text as="u"> {Total_APR !== undefined ? addComma(Total_APR, 2) : '0.00'}%</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Rewards
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={
+              // hasArrow
+              title={
                 <Box w="100%" p={4} color="white">
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -228,40 +241,42 @@ const ETRItem = ({
                   </Flex>
                 </Box>
               }
-              color="white"
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="215px"
+              // bg="#050506"
+              // minWidth="215px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '250px' }}
             >
               <Text as="u"> ${rewards !== undefined ? addComma(rewards, 2) : '0.00'}</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Multiplier Points APR
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={<Text fontSize={'12px'}>Boost your rewards with Multiplier Points.</Text>}
-              color="white"
+              // hasArrow
+              title={<Text fontSize={'12px'}>Boost your rewards with Multiplier Points.</Text>}
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="215px"
+              // bg="#050506"
+              // minWidth="215px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '280px' }}
             >
               <Text as="u">100.00%</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Boost Percentage
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={
+              // hasArrow
+              title={
                 <>
                   <Text fontSize={'12px'} marginBottom={'16px'}>{`You are earning  ${addComma(
                     boosted_Percentage,
@@ -272,10 +287,11 @@ const ETRItem = ({
                   <Text fontSize={'12px'}>Use the &quot;Compound&ldquo; button to stake your Multiplier Points.</Text>
                 </>
               }
-              color="white"
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="215px"
+              // bg="#050506"
+              // minWidth="215px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '215px' }}
             >
               <Text as="u">{boosted_Percentage !== undefined ? addComma(boosted_Percentage, 2) : '0.00'}%</Text>
             </Tooltip>
@@ -283,45 +299,53 @@ const ETRItem = ({
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Staked
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            <Currency
-              value={totalStaked_ETR !== undefined ? BigNumber(formatEther(totalStaked_ETR as bigint)).toFixed() : 0}
-              decimal={2}
-              unit="ETR"
-            />
-            {' ETR'}
-            {'($'}
-            <Currency
-              value={
-                totalStaked_ETR !== undefined
-                  ? BigNumber(formatEther(totalStaked_ETR as bigint))
-                      .multipliedBy(price)
-                      .toFixed()
-                  : 0
-              }
-              decimal={2}
-            />
-            {')'}
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              <Currency
+                value={totalStaked_ETR !== undefined ? BigNumber(formatEther(totalStaked_ETR as bigint)).toFixed() : 0}
+                decimal={2}
+                unit="ETR"
+              />
+              {' ETR'}
+            </span>
+            <span>
+              {' ($'}
+              <Currency
+                value={
+                  totalStaked_ETR !== undefined
+                    ? BigNumber(formatEther(totalStaked_ETR as bigint))
+                        .multipliedBy(price)
+                        .toFixed()
+                    : 0
+                }
+                decimal={2}
+              />
+              {')'}
+            </span>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Supply
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="ETR" />
-            {' ETR'}
-            {'($'}
-            <Currency
-              value={
-                totalSupply_ETR !== undefined && balanceOf_addressDead_ETR !== undefined ? +totalSupply * price : 0
-              }
-              decimal={2}
-            />
-            {')'}
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="ETR" />
+              {' ETR '}
+            </span>
+            <span>
+              {'($'}
+              <Currency
+                value={
+                  totalSupply_ETR !== undefined && balanceOf_addressDead_ETR !== undefined ? +totalSupply * price : 0
+                }
+                decimal={2}
+              />
+              {')'}
+            </span>
           </Text>
         </Box>
         <hr className="border-[#242428]" />
