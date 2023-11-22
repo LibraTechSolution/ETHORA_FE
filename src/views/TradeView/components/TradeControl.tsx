@@ -106,7 +106,7 @@ const TradeControl = () => {
 
   useEffect(() => {
     const listBreakPoints = ['xl', '1.5xl', '2xl', '3xl'];
-    if (listBreakPoints && !timeNumber) {
+    if (listBreakPoints.includes(breakpoint) && !timeNumber) {
       setTime('');
     }
   }, [breakpoint]);

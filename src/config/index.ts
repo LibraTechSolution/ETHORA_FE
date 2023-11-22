@@ -25,7 +25,8 @@ export const appConfig = {
   ESETR_SC: process.env.NEXT_PUBLIC_ESETR_SC,
   BLP_SC: process.env.NEXT_PUBLIC_BLP_SC,
   USDC_SC: process.env.NEXT_PUBLIC_USDC_SC,
-  REWARD_ROUTER_V2_SC: process.env.NEXT_PUBLIC_REWARD_ROUTER_V2_SC
+  REWARD_ROUTER_V2_SC: process.env.NEXT_PUBLIC_REWARD_ROUTER_V2_SC,
+  TOKEN_SALE_SC: process.env.NEXT_PUBLIC_TOKEN_SALE_SC
 };
 
 export const targetChainId = appConfig.chainId;
