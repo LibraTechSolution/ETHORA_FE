@@ -157,6 +157,7 @@ const TradeBox = (props: PropsType) => {
   const [isTimeOut, setIsTimeOut] = useState<boolean>(false);
 
   const handleCloseTrade = async () => {
+    setIsDisabled(true);
     try {
       const closingTime = dayjs().utc().unix();
       await closeTrade(item._id);
@@ -170,7 +171,9 @@ const TradeBox = (props: PropsType) => {
       });
       const isRemove = listLines.some((line) => line._id === item._id);
       isRemove && setListLines(item);
+      setIsDisabled(true);
     } catch (error) {
+      setIsDisabled(false);
       toast({
         position: 'top',
         render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,

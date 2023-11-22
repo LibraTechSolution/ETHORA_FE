@@ -137,7 +137,7 @@ const ActionCell = ({
             }}
             marginRight={'12px'}
           >
-            {listLines.some((item) => item._id === item._id) ? 'Hide' : 'View'}
+            {listLines.some((line) => line._id === item._id) ? 'Hide' : 'View'}
           </Button>
           <CloseButton item={item} handleCloseTrade={handleCloseTrade} />
         </Flex>

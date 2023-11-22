@@ -18,6 +18,7 @@ import {
   InputGroup,
   InputRightElement,
   Select,
+  useBreakpoint,
   useToast,
 } from '@chakra-ui/react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -86,7 +87,7 @@ const TradeControl = () => {
   const listTimes = ['3m', '5m', '15m', '1h'];
   const [time, setTime] = useState<string>('15m');
   const [timeType, setTimeType] = useState<string>('m');
-  const [timeNumber, setTimeNumber] = useState<string>('15');
+  const [timeNumber, setTimeNumber] = useState<string>('');
   const { chain } = useNetwork();
   const [isLoadingApprove, setIsLoadingApprove] = useState<boolean>(false);
   const params = useParams();
@@ -101,6 +102,14 @@ const TradeControl = () => {
   const [isPendingDown, setIsPendingDown] = useState<boolean>(false);
   const { advanceSetting } = useAdvanceSetting();
   const { minTradeSize, maxTradeSize } = useGetMinMaxTradeSize();
+  const breakpoint = useBreakpoint({ ssr: false });
+
+  useEffect(() => {
+    const listBreakPoints = ['xl', '1.5xl', '2xl', '3xl'];
+    if (listBreakPoints && !timeNumber) {
+      setTime('');
+    }
+  }, [breakpoint]);
 
   useEffect(() => {
     if (address) {
@@ -496,8 +505,7 @@ const TradeControl = () => {
                 textColor: '#fff',
               }}
               onClick={() => {
-                setTimeType(item.substring(1));
-                setTimeNumber(item.slice(0, -1));
+                setTimeNumber('');
                 setTimeError('');
                 setTime(item);
               }}
