@@ -18,7 +18,6 @@ export const ToastCloseTrade = (props: ToastUIType) => {
     trade: item,
   });
   const { earlycloseAmount } = earlyPnl;
-  console.log(item);
   return (
     <ToastLayout status={Status.SUCCESSS} close={onClose}>
       <p className="text-[#9E9E9F]">

@@ -107,7 +107,6 @@ const ActiveTab = () => {
 
   const transformDataTradingActive = (data: ITradingActiveData[]): any =>
     data?.map((item: ITradingActiveData) => {
-      console.log(item);
       // const categoryNum = Number(item?.id) % 100;
       return {
         id: item._id,

@@ -11,7 +11,7 @@ import { cancelTrade } from '@/services/trade';
 import { useQueryClient } from '@tanstack/react-query';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { divide } from '@/utils/operationBigNumber';
 import { convertDurationToHourAndMinutes } from '@/utils/time';
 import { ShowPrice } from './ShowPrice';
@@ -28,8 +28,10 @@ const LimitOrderBox = (props: PropsType) => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { setListLines, listLines } = useListShowLinesStore();
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   const handleCancelTrade = async () => {
+    setIsDisabled(true);
     try {
       const res = await cancelTrade(item._id);
 
@@ -54,6 +56,7 @@ const LimitOrderBox = (props: PropsType) => {
       const isRemove = listLines.some((line) => line._id === item._id);
       isRemove && setListLines(item);
     } catch (error) {
+      setIsDisabled(false);
       toast({
         position: 'top',
         render: ({ onClose }) => <ToastLayout title="Cancel Unsuccessfully" status={Status.ERROR} close={onClose} />,
@@ -190,6 +193,7 @@ const LimitOrderBox = (props: PropsType) => {
               _active={{ bgColor: '#252528', textColor: '#fff' }}
               rounded="md"
               onClick={handleCancelTrade}
+              isDisabled={isDisabled}
             >
               Cancel
             </Button>
