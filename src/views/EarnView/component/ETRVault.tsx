@@ -1,5 +1,5 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
-import { Heading, Box, Text, Flex, Button, Tooltip, Spacer, useToast, Link } from '@chakra-ui/react';
+import { Heading, Box, Text, Flex, Button, Spacer, useToast, Link } from '@chakra-ui/react';
 import DepositModal from './DepositModalETRVault';
 import { useContext, useState } from 'react';
 import { addComma } from '@/utils/number';
@@ -13,6 +13,7 @@ import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { BaseError, formatUnits } from 'viem';
 import Currency from '@/components/Currency';
+import { Tooltip } from 'antd';
 
 const ETRVault = ({
   depositBalances_ETR,
@@ -37,7 +38,7 @@ const ETRVault = ({
   const [openDepositModal, setOpenDepositModal] = useState<boolean>(false);
   const { onFetchData } = useContext(EarnContext);
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
-  console.log('depositBalances_ETR', depositBalances_ETR)
+  console.log('depositBalances_ETR', depositBalances_ETR);
   const stakedTokensETR = depositBalances_ETR ? formatUnits(depositBalances_ETR, 18) : 0;
   const stakedTokens_esETR = depositBalances_esETR ? formatUnits(depositBalances_esETR, 18) : 0;
   const multiplierPoints = depositBalances_bnETR ? formatUnits(depositBalances_bnETR, 18) : 0;
@@ -45,13 +46,17 @@ const ETRVault = ({
   const stakedTokens = Number(stakedTokensETR) + Number(stakedTokens_esETR) + Number(multiplierPoints);
 
   const pairAmounts = pairAmounts_vETR ? formatUnits(pairAmounts_vETR, 18) : 0;
-  const depositBalances = Number(depositBalances_bnETR ? formatUnits(depositBalances_bnETR, 18) : 0) + Number(depositBalances_sbETR ? formatUnits(depositBalances_sbETR, 18) : 0);
+  const depositBalances =
+    Number(depositBalances_bnETR ? formatUnits(depositBalances_bnETR, 18) : 0) +
+    Number(depositBalances_sbETR ? formatUnits(depositBalances_sbETR, 18) : 0);
 
-  const claimed = Number(claimedAmounts_vETR ? formatUnits(claimedAmounts_vETR, 18) : 0) + Number(claimable_vETR ? formatUnits(claimable_vETR, 18) : 0);
-  const vested = getVestedAmount_vETR ? formatUnits(getVestedAmount_vETR, 18) : 0
-  const claimable = claimable_vETR ? formatUnits(claimable_vETR, 18) : 0
+  const claimed =
+    Number(claimedAmounts_vETR ? formatUnits(claimedAmounts_vETR, 18) : 0) +
+    Number(claimable_vETR ? formatUnits(claimable_vETR, 18) : 0);
+  const vested = getVestedAmount_vETR ? formatUnits(getVestedAmount_vETR, 18) : 0;
+  const claimable = claimable_vETR ? formatUnits(claimable_vETR, 18) : 0;
 
-  console.log('stakedTokensETR', stakedTokensETR)
+  console.log('stakedTokensETR', stakedTokensETR);
 
   const onWithdraw = async () => {
     if (+claimable === 0) {
@@ -140,13 +145,12 @@ const ETRVault = ({
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked Tokens
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={
+              title={
                 <Box w="100%" p={4} color="white">
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -175,32 +179,33 @@ const ETRVault = ({
                   </Flex>
                 </Box>
               }
-              color="white"
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="215px"
+              // bg="#050506"
+              // minWidth="215px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '215px' }}
             >
               <Text as="u">{stakedTokens !== undefined ? addComma(stakedTokens, 2) : '0.00'}</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Reserved for Vesting
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            <Currency value={pairAmounts !== undefined ? pairAmounts : 0.00} decimal={2} /> /{' '}
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <Currency value={pairAmounts !== undefined ? pairAmounts : 0.0} decimal={2} /> /{' '}
             <Currency value={depositBalances !== undefined ? depositBalances : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Vesting Status
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={
+              // hasArrow
+              title={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
                     {claimed !== undefined ? addComma(claimed, 6) : '0.00'} esETR tokens have been converted to ETR from
@@ -208,10 +213,11 @@ const ETRVault = ({
                   </Text>
                 </Box>
               }
-              color="white"
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="288px"
+              // bg="#050506"
+              // minWidth="288px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
               <Text as="u">
                 {claimed !== undefined ? addComma(claimed, 2) : '0.00'} /{' '}
@@ -221,13 +227,13 @@ const ETRVault = ({
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Claimable
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={
+              // hasArrow
+              title={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
                     {claimable !== undefined ? addComma(claimable, 6) : '0.00'} ETR tokens can be claimed, use the
@@ -235,10 +241,11 @@ const ETRVault = ({
                   </Text>
                 </Box>
               }
-              color="white"
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="288px"
+              // bg="#050506"
+              // minWidth="288px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
               <Text as="u">{claimable !== undefined ? addComma(claimable, 2) : '0.00'} ETR</Text>
             </Tooltip>
@@ -272,7 +279,13 @@ const ETRVault = ({
           </CustomConnectButton>
         </Box>
       </Box>
-      {openDepositModal && <DepositModal isOpen={openDepositModal} onDismiss={() => setOpenDepositModal(false)} depositBalances={depositBalances} />}
+      {openDepositModal && (
+        <DepositModal
+          isOpen={openDepositModal}
+          onDismiss={() => setOpenDepositModal(false)}
+          depositBalances={depositBalances}
+        />
+      )}
     </>
   );
 };

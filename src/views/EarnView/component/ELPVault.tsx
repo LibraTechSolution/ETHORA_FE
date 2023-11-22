@@ -1,6 +1,6 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
 import { addComma } from '@/utils/number';
-import { Heading, Box, Text, Flex, Button, Tooltip, useToast, Link } from '@chakra-ui/react';
+import { Heading, Box, Text, Flex, Button, useToast, Link } from '@chakra-ui/react';
 import DepositModalELPVault from './DepositModalELPVault';
 import { useContext, useState } from 'react';
 import { prepareWriteContract, waitForTransaction, writeContract } from '@wagmi/core';
@@ -11,6 +11,7 @@ import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import { BaseError, formatUnits } from 'viem';
 import Currency from '@/components/Currency';
+import { Tooltip } from 'antd';
 
 const ELPVault = ({
   depositBalances_fBLP,
@@ -30,15 +31,17 @@ const ELPVault = ({
   const { onFetchData } = useContext(EarnContext);
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
 
-  const stakedTokens =  depositBalances_fBLP ? formatUnits(depositBalances_fBLP, 6) : 0;
+  const stakedTokens = depositBalances_fBLP ? formatUnits(depositBalances_fBLP, 6) : 0;
   const pairAmounts = pairAmounts_vBLP ? formatUnits(pairAmounts_vBLP, 6) : 0;
   // const pairAmounts = +(claimedAmounts_vBLP as bigint)?.toString() / 10 ** 18;
-  const claimed = Number(claimedAmounts_vBLP ? formatUnits(claimedAmounts_vBLP, 18) : 0) + Number(claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0) 
+  const claimed =
+    Number(claimedAmounts_vBLP ? formatUnits(claimedAmounts_vBLP, 18) : 0) +
+    Number(claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0);
   // (Number(claimedAmounts_vBLP) + Number(claimable_vBLP)) / 10 ** 18;
-  const vested =  getVestedAmount_vBLP ? formatUnits(getVestedAmount_vBLP, 18) : 0
+  const vested = getVestedAmount_vBLP ? formatUnits(getVestedAmount_vBLP, 18) : 0;
   // Number(getVestedAmount_vBLP) / 10 ** 18;
 
-  const claimable = claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0
+  const claimable = claimable_vBLP ? formatUnits(claimable_vBLP, 18) : 0;
   // Number(claimable_vBLP) / 10 ** 18;
 
   const onWithdraw = async () => {
@@ -82,7 +85,7 @@ const ELPVault = ({
       setLoadingWithdraw(false);
       onFetchData();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setLoadingWithdraw(false);
       console.log(error);
       let msgContent = '';
@@ -128,30 +131,30 @@ const ELPVault = ({
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked Tokens
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Currency value={stakedTokens !== undefined ? stakedTokens : 0} decimal={2} /> ELP
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Reserved for Vesting
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Currency value={pairAmounts !== undefined ? pairAmounts : 0} decimal={2} /> /{' '}
             <Currency value={stakedTokens !== undefined ? stakedTokens : 0} decimal={2} />
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Vesting Status
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={
+              // hasArrow
+              title={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
                     {claimed !== undefined ? addComma(claimed, 6) : '0.00'} esETR tokens have been converted to ETR from
@@ -159,10 +162,11 @@ const ELPVault = ({
                   </Text>
                 </Box>
               }
-              color="white"
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="288px"
+              // bg="#050506"
+              // minWidth="288px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
               <Text as="u">
                 {claimed !== undefined ? addComma(claimed, 2) : '0.00'} /{' '}
@@ -172,13 +176,13 @@ const ELPVault = ({
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Claimable
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={
+              // hasArrow
+              title={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
                     {addComma(claimable, 6)} ETR tokens can be claimed, use the options under the Total Rewards section
@@ -186,10 +190,11 @@ const ELPVault = ({
                   </Text>
                 </Box>
               }
-              color="white"
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="288px"
+              // bg="#050506"
+              // minWidth="288px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
               <Text as="u">{claimable !== undefined ? addComma(claimable, 2) : '0.00'} ETR</Text>
             </Tooltip>

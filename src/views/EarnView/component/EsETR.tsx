@@ -1,12 +1,13 @@
 import CustomConnectButton from '@/components/CustomConnectButton';
 import { addComma } from '@/utils/number';
-import { Heading, Box, Text, Flex, Button, Tooltip, Spacer } from '@chakra-ui/react';
+import { Heading, Box, Text, Flex, Button, Spacer } from '@chakra-ui/react';
 import { formatEther, formatUnits } from 'viem';
 import UnStakeModaEsETR from './UnStakeModaEsETR';
 import StakeModalEsETR from './StakeModalEsETR';
 import { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import Currency from '@/components/Currency';
+import { Tooltip } from 'antd';
 
 const EsETR = ({
   price,
@@ -61,78 +62,88 @@ const EsETR = ({
       </Heading>
       <Box display={'flex'} flexDirection={'column'} gap={'8px'}>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Price
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            $<Currency value={price !== undefined ? price : 0} decimal={2} />
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              $<Currency value={price !== undefined ? price : 0} decimal={2} />
+            </span>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Wallet
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            <Currency
-              value={balanceOf_esETR !== undefined ? BigNumber(formatEther(balanceOf_esETR as bigint)).toFixed() : 0}
-              decimal={2}
-              unit="esETR"
-            />
-            {' esETR '}
-            {'('}
-            <Currency
-              value={
-                balanceOf_esETR !== undefined
-                  ? BigNumber(formatEther(balanceOf_esETR as bigint))
-                      .multipliedBy(price)
-                      .toFixed()
-                  : 0
-              }
-              decimal={2}
-              unit="USDC"
-            />
-            {'USDC)'}
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              <Currency
+                value={balanceOf_esETR !== undefined ? BigNumber(formatEther(balanceOf_esETR as bigint)).toFixed() : 0}
+                decimal={2}
+                unit="esETR"
+              />
+              {' esETR'}
+            </span>
+            <span>
+              {' ('}
+              <Currency
+                value={
+                  balanceOf_esETR !== undefined
+                    ? BigNumber(formatEther(balanceOf_esETR as bigint))
+                        .multipliedBy(price)
+                        .toFixed()
+                    : 0
+                }
+                decimal={2}
+                unit="USDC"
+              />
+              {' USDC)'}
+            </span>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Staked
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            <Currency
-              value={
-                depositBalances_esETR !== undefined
-                  ? BigNumber(formatEther(depositBalances_esETR as bigint)).toFixed()
-                  : 0
-              }
-              decimal={2}
-              unit="esETR"
-            />
-            {' esETR '}
-            {'('}
-            <Currency
-              value={
-                depositBalances_esETR !== undefined
-                  ? BigNumber(formatEther(depositBalances_esETR as bigint))
-                      .multipliedBy(price)
-                      .toFixed()
-                  : 0
-              }
-              decimal={2}
-              unit="USDC"
-            />
-            {' USDC)'}
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              <Currency
+                value={
+                  depositBalances_esETR !== undefined
+                    ? BigNumber(formatEther(depositBalances_esETR as bigint)).toFixed()
+                    : 0
+                }
+                decimal={2}
+                unit="esETR"
+              />
+              {' esETR'}
+            </span>
+            <span>
+              {' ('}
+              <Currency
+                value={
+                  depositBalances_esETR !== undefined
+                    ? BigNumber(formatEther(depositBalances_esETR as bigint))
+                        .multipliedBy(price)
+                        .toFixed()
+                    : 0
+                }
+                decimal={2}
+                unit="USDC"
+              />
+              {' USDC)'}
+            </span>
           </Text>
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             APR
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={
+              // hasArrow
+              title={
                 <Box w="100%" p={4} color="white">
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -157,27 +168,29 @@ const EsETR = ({
                   </Flex>
                 </Box>
               }
-              color="white"
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="215px"
+              // bg="#050506"
+              // minWidth="215px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '280px' }}
             >
               <Text as="u">{total_APR !== undefined ? addComma(total_APR, 2) : '0.00'}%</Text>
             </Tooltip>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Multiplier Points APR
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <Tooltip
-              hasArrow
-              label={<Text fontSize={'12px'}>Boost your rewards with Multiplier Points.</Text>}
-              color="white"
+              // hasArrow
+              title={<Text fontSize={'12px'}>Boost your rewards with Multiplier Points.</Text>}
+              // color="white"
               placement="top"
-              bg="#050506"
-              minWidth="215px"
+              // bg="#050506"
+              // minWidth="215px"
+              overlayStyle={{ color: 'white', background: '#050506', maxWidth: '280px' }}
             >
               <Text as="u">100.00%</Text>
             </Tooltip>
@@ -185,28 +198,38 @@ const EsETR = ({
         </Box>
         <hr className="border-[#242428]" />
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Staked
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            <Currency value={totalStaked !== undefined ? totalStaked : 0} decimal={2} unit="esETR" />
-            {' esETR '}
-            {'('}
-            <Currency value={totalStaked !== undefined ? +totalStaked * price : 0} decimal={2} unit='USDC'/>
-            {' USDC)'}
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              {' '}
+              <Currency value={totalStaked !== undefined ? totalStaked : 0} decimal={2} unit="esETR" />
+              {' esETR'}
+            </span>
+            <span>
+              {' '}
+              {' ('}
+              <Currency value={totalStaked !== undefined ? +totalStaked * price : 0} decimal={2} unit="USDC" />
+              {' USDC)'}
+            </span>
           </Text>
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
-          <Text as="span" fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
+          <Text fontSize={'12px'} fontWeight={400} color={'#9E9E9F'}>
             Total Supply
           </Text>
-          <Text as="span" fontSize={'14px'} fontWeight={500} color={'#fffff'}>
-            <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="esETR" />
-            {' esETR '}
-            {'('}
-            <Currency value={totalSupply !== undefined ? +totalSupply * price : 0} decimal={2} unit='USDC'/>
-            {' USDC)'}
-
+          <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
+            <span>
+              {' '}
+              <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="esETR" />
+              {' esETR'}
+            </span>
+            <span>
+              {' ('}
+              <Currency value={totalSupply !== undefined ? +totalSupply * price : 0} decimal={2} unit="USDC" />
+              {' USDC)'}
+            </span>
           </Text>
         </Box>
         <hr className="border-[#242428]" />
