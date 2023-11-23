@@ -184,7 +184,7 @@ const AddFundsModal = ({
       const configStake = await prepareWriteContract({
         address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
         abi: RewardRouterV2_ABI,
-        functionName: 'mintAndStakeBlp',
+        functionName: 'mintAndStakeElp',
         args: [amoutBigint, BigInt(0)],
       });
 

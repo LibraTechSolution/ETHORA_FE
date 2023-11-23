@@ -379,6 +379,13 @@ export default [
     type: 'function',
   },
   {
+    inputs: [{ internalType: 'uint32', name: 'period_', type: 'uint32' }],
+    name: 'setLockupPeriod',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [{ internalType: 'uint256', name: '_maxLiquidity', type: 'uint256' }],
     name: 'setMaxLiquidity',
     outputs: [],

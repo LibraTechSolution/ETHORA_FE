@@ -144,7 +144,7 @@ const WithdrawFundsModal = ({
       const configUnStake = await prepareWriteContract({
         address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
         abi: RewardRouterV2_ABI,
-        functionName: 'unstakeAndRedeemBlp',
+        functionName: 'unstakeAndRedeemElp',
         args: [amoutBigint],
       });
 

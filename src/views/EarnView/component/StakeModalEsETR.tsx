@@ -154,7 +154,7 @@ const StakeModalEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: ()
       const configStake = await prepareWriteContract({
         address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
         abi: RewardRouterV2_ABI,
-        functionName: 'stakeEsBfr',
+        functionName: 'stakeEsEtr',
         args: [amoutBigint],
       });
 
