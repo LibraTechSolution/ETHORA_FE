@@ -173,11 +173,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { updateTradeSize } = useContext(TradeContext);
   const addressURL = searchParams.get('address');
   const checkAddress = addressURL ? addressURL : address;
-  const [isTimeOut, setIsTimeOut] = useState<boolean>(false);
-
-  const timeOutCallBack = () => {
-    setIsTimeOut(true);
-  };
+  const [refetchInterval, setRefetchInterval] = useState(5000);
 
   const defaultParams: ITradingParams = {
     limit: 10,
@@ -285,12 +281,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Time Left',
       render: (value: ITradingData) =>
         value.state === State.OPENED ? (
-          <CountDown
-            endTime={dayjs(value.openDate).utc().unix() + value.period}
-            period={value.period}
-            hideBar={true}
-            timeOutCallBack={timeOutCallBack}
-          />
+          <CountDown endTime={dayjs(value.openDate).utc().unix() + value.period} period={value.period} hideBar={true} />
         ) : (
           <span className="flex items-center text-xs font-normal text-[#9E9E9F]">
             <span className="mr-1">{value.state === State.QUEUED ? 'In queue' : 'Processing...'}</span>
@@ -378,20 +369,31 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
     }
   };
 
-  const { data: tradingData, isInitialLoading } = useQuery({
+  const {
+    data: tradingData,
+    isError,
+    isSuccess,
+    isInitialLoading,
+  } = useQuery({
     queryKey: ['getActiveTrades', filter],
     queryFn: () => getTrades(filter),
-    onError: (error: any) => {
-      console.log(error);
-    },
     // select: transformData,
     enabled: isProfile
       ? !!checkAddress
       : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 5000,
+    refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (isError) {
+      setRefetchInterval(0);
+    }
+    if (isSuccess) {
+      setRefetchInterval(5000);
+    }
+  }, [isError, isSuccess]);
 
   useEffect(() => {
     if (!isProfile) return;

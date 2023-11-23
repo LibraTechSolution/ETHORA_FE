@@ -24,6 +24,7 @@ const CancelTable = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { tokens, user } = useUserStore();
+  const [refetchInterval, setRefetchInterval] = useState(5000);
 
   useEffect(() => {
     if (chain) {
@@ -175,18 +176,28 @@ const CancelTable = () => {
     },
   ];
 
-  const { data: tradingData, isInitialLoading } = useQuery({
+  const {
+    data: tradingData,
+    isInitialLoading,
+    isError,
+    isSuccess,
+  } = useQuery({
     queryKey: ['getTradeCancel', filter],
     queryFn: () => getTradeCancel(filter),
-    onError: (error: any) => {
-      // notification.error({ message: error.message });
-      console.log(error);
-    },
     enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 5000,
+    refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (isError) {
+      setRefetchInterval(0);
+    }
+    if (isSuccess) {
+      setRefetchInterval(5000);
+    }
+  }, [isError, isSuccess]);
 
   const handleChangePage = (pagination: TablePaginationConfig) => {
     setFilter({ ...defaultParams, page: pagination.current ?? 1, limit: pagination.pageSize ?? 10 });

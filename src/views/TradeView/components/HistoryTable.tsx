@@ -36,6 +36,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
   const { advanceSetting } = useAdvanceSetting();
+  const [refetchInterval, setRefetchInterval] = useState(5000);
 
   useEffect(() => {
     if (chain) {
@@ -236,18 +237,22 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
               {value}
             </Text>
           </Box>
-          {!isProfile && address && advanceSetting && advanceSetting[address] && advanceSetting[address]?.isShowSharePopup && (
-            <Text
-              color={'#1677FF'}
-              fontWeight={400}
-              fontSize={'14px'}
-              ml={'45px'}
-              onClick={() => openShareModal(record)}
-              cursor={'pointer'}
-            >
-              Share
-            </Text>
-          )}
+          {!isProfile &&
+            address &&
+            advanceSetting &&
+            advanceSetting[address] &&
+            advanceSetting[address]?.isShowSharePopup && (
+              <Text
+                color={'#1677FF'}
+                fontWeight={400}
+                fontSize={'14px'}
+                ml={'45px'}
+                onClick={() => openShareModal(record)}
+                cursor={'pointer'}
+              >
+                Share
+              </Text>
+            )}
         </Box>
       ),
     },
@@ -258,20 +263,30 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
     setSelectedItem(item);
   };
 
-  const { data: tradingData, isInitialLoading } = useQuery({
+  const {
+    data: tradingData,
+    isError,
+    isSuccess,
+    isInitialLoading,
+  } = useQuery({
     queryKey: ['getTradingHistory', filter],
     queryFn: () => getTradeHistory(filter),
-    onError: (error: any) => {
-      // notification.error({ message: error.message });
-      console.log(error);
-    },
     enabled: isProfile
       ? !!checkAddress
       : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 5000,
+    refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (isError) {
+      setRefetchInterval(0);
+    }
+    if (isSuccess) {
+      setRefetchInterval(5000);
+    }
+  }, [isError, isSuccess]);
 
   const handleChangePage = (pagination: TablePaginationConfig) => {
     setFilter({ ...defaultParams, page: pagination.current ?? 1, limit: pagination.pageSize ?? 10 });
