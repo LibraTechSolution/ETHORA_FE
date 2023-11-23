@@ -44,6 +44,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { tokens, user } = useUserStore();
   const { updateLimitOrderSize } = useContext(TradeContext);
   const { setListLines, listLines } = useListShowLinesStore();
+  const [refetchInterval, setRefetchInterval] = useState(5000);
 
   useEffect(() => {
     if (chain) {
@@ -284,20 +285,31 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
     }
   };
 
-  const { data: tradingData, isInitialLoading } = useQuery({
+  const {
+    data: tradingData,
+    isInitialLoading,
+    isError,
+    isSuccess,
+  } = useQuery({
     queryKey: ['getLimitOrders', filter],
     queryFn: () => getLimitOrders(filter),
-    onError: (error: any) => {
-      console.log(error);
-    },
     // select: transformData,
     enabled: isProfile
       ? !!checkAddress
       : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 5000,
+    refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (isError) {
+      setRefetchInterval(0);
+    }
+    if (isSuccess) {
+      setRefetchInterval(5000);
+    }
+  }, [isError, isSuccess]);
 
   const handleChangePage = (pagination: TablePaginationConfig) => {
     setFilter({ ...defaultParams, page: pagination.current ?? 1 });

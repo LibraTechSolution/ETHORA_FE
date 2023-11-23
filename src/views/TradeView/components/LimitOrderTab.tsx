@@ -20,6 +20,7 @@ const LimitOrderTab = () => {
   const { chain } = useNetwork();
   const [filter, setFilter] = useState<ITradingParams>(defaultParams);
   const { tokens, user } = useUserStore();
+  const [refetchInterval, setRefetchInterval] = useState(5000);
 
   useEffect(() => {
     if (chain) {
@@ -32,18 +33,25 @@ const LimitOrderTab = () => {
   const {
     data: dataLimitOrders,
     isError,
+    isSuccess,
     isInitialLoading,
   } = useQuery({
     queryKey: ['getLimitOrders'],
     queryFn: () => getLimitOrders(filter),
-    onError: (error: any) => {
-      console.log(error);
-    },
     enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 5000,
+    refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (isError) {
+      setRefetchInterval(0);
+    }
+    if (isSuccess) {
+      setRefetchInterval(5000);
+    }
+  }, [isError, isSuccess]);
 
   const openEditModal = (item: ITradingData) => {
     if (item) {

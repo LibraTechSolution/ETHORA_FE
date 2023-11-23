@@ -24,6 +24,7 @@ const TraderTab = () => {
   const { tokens, user } = useUserStore();
   const queryClient = useQueryClient();
   const { updateListLine, listLines } = useListShowLinesStore();
+  const [refetchInterval, setRefetchInterval] = useState(5000);
 
   useEffect(() => {
     if (chain) {
@@ -35,17 +36,24 @@ const TraderTab = () => {
     data: dataActiveTrades,
     isError,
     isInitialLoading,
+    isSuccess,
   } = useQuery({
     queryKey: ['getActiveTrades'],
     queryFn: () => getTrades(filter),
-    onError: (error: any) => {
-      console.log(error);
-    },
     enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
     cacheTime: 0,
-    refetchInterval: 5000,
+    refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (isError) {
+      setRefetchInterval(0);
+    }
+    if (isSuccess) {
+      setRefetchInterval(5000);
+    }
+  }, [isError, isSuccess]);
 
   useEffect(() => {
     const listActiceTrade: ITradingData[] = dataActiveTrades?.docs ? [...dataActiveTrades?.docs] : [];
@@ -60,7 +68,7 @@ const TraderTab = () => {
     for (let i = 0; i < listLines.length; i++) {
       for (let j = 0; j < listData.length; j++) {
         if (listLines[i]._id === listData[j]._id) {
-          tempList.push(listLines[i]);
+          tempList.push(listData[j]);
         }
       }
     }

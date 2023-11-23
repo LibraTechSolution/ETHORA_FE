@@ -59,6 +59,7 @@ export const ToastLayout = (toastProp: ToastProp) => {
       </Center>
       <Center w="16px">
         <Button
+          marginLeft={2}
           onClick={close}
           type="button"
           bgColor="transparent"

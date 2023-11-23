@@ -217,7 +217,7 @@ const TableLeaderBoard = (props: Props) => {
       className="customTable no-radius"
       onChange={handleChangePage}
       // total={85}
-      // rowKey={(record) => record.id}
+      rowKey={(record) => record.user}
       locale={{
         emptyText: (
           <Box
