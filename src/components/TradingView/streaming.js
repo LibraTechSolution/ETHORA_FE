@@ -27,13 +27,16 @@ export const FEED_IDS = {
   '84c2dde9633d93d1bcad84e7dc41c9d56578b7ec52fabedc1f335d673df0a7c1': 'GBPUSD',
 };
 
+const listIdsForex = ['a995d00bb36a63cef7fd2c287dc105fc8f3d93779f062f09551b0af3e81ec30b', '84c2dde9633d93d1bcad84e7dc41c9d56578b7ec52fabedc1f335d673df0a7c1', 'f2fb02c32b055c805e7238d628e5e9dadef274376114eb1f012337cabe93871e']
+const listIdsOther = ['765d2ba906dbc32ca17cc11f5310a89e9ee1f6420508c63861f2f8ba4ee34bb2']
+
 const updatePairPriceToMem = (json) => {
   count = count + 1;
   const {
     id,
     price: { price },
   } = json.price_feed;
-  pairPrice[FEED_IDS[id]] = +divide(price, 8);
+  pairPrice[FEED_IDS[id]] = listIdsForex.includes(id) ? +divide(price, 5) : listIdsOther.includes(id) ? +divide(price, 3) : +divide(price, 8);
 
   useListPairPrice.getState().setListPairPrice({ ...pairPrice });
 
@@ -42,10 +45,11 @@ const updatePairPriceToMem = (json) => {
   }
 };
 
+
 function handleStreamingData(data) {
   const { id, price: { price: p, publish_time: t } } = data.price_feed;
-
-  const tradePrice = +divide(p, 8)
+  
+  const tradePrice = listIdsForex.includes(id) ? +divide(p, 5) : listIdsOther.includes(id) ? +divide(p, 3) : +divide(p, 8)
   const tradeTime = t * 1000 // Multiplying by 1000 to get milliseconds
 
   const channelString = id

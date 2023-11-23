@@ -14,6 +14,7 @@ import CountDown from './CountDown';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import useUserStore from '@/store/useUserStore';
 import { ShowPrice } from './ShowPrice';
+import { configDecimal } from './TradeTable';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -60,23 +61,28 @@ const PlatformTradesTable = () => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value, record: ITradingData) => (
-        <Tooltip
-          hasArrow
-          label={
-            <Box p={1} color="white">
-              {addComma(divide(value, 8), 6)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-            </Box>
-          }
-          color="white"
-          placement="top"
-          bg="#050506"
-        >
-          <span>
-            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-          </span>
-        </Tooltip>
-      ),
+      render: (value, record: ITradingData) =>
+        record && record?.pair ? (
+          <Tooltip
+            hasArrow
+            label={
+              <Box p={1} color="white">
+                {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 6)}{' '}
+                {record?.pair && record.pair.split('-')[1].toUpperCase()}
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
+          >
+            <span>
+              {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 2)}{' '}
+              {record?.pair && record.pair.split('-')[1].toUpperCase()}
+            </span>
+          </Tooltip>
+        ) : (
+          <></>
+        ),
     },
     {
       title: 'Current Price',

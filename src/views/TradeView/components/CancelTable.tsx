@@ -12,6 +12,7 @@ import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import useUserStore from '@/store/useUserStore';
 import dayjs from 'dayjs';
+import { configDecimal } from './TradeTable';
 
 const defaultParams: ITradingParams = {
   limit: 10,
@@ -59,23 +60,28 @@ const CancelTable = () => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value, record) => (
-        <Tooltip
-          hasArrow
-          label={
-            <Box p={1} color="white">
-              {addComma(divide(value, 8), 6)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-            </Box>
-          }
-          color="white"
-          placement="top"
-          bg="#050506"
-        >
-          <span>
-            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-          </span>
-        </Tooltip>
-      ),
+      render: (value, record) =>
+        record && record?.pair ? (
+          <Tooltip
+            hasArrow
+            label={
+              <Box p={1} color="white">
+                {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 6)}{' '}
+                {record?.pair.split('-')[1].toUpperCase()}
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
+          >
+            <span>
+              {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 2)}{' '}
+              {record?.pair.split('-')[1].toUpperCase()}
+            </span>
+          </Tooltip>
+        ) : (
+          <></>
+        ),
     },
     {
       title: 'Trade Size',

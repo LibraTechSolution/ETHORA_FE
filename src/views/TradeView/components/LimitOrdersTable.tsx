@@ -21,6 +21,7 @@ import { ShowPrice } from './ShowPrice';
 import { useSearchParams } from 'next/navigation';
 import { convertDurationToHourAndMinutes, convertDurationToHourMinutesSeconds } from '@/utils/time';
 import { TradeContext } from '..';
+import { configDecimal } from './TradeTable';
 
 const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
@@ -90,63 +91,69 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
       render: (value, record) => (
         <>
           <p>
+            {record?.pair && (
+              <Tooltip
+                hasArrow
+                label={
+                  <Box p={1} color="white">
+                    {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 2)}{' '}
+                    {record.pair.split('-')[1].toUpperCase()}
+                  </Box>
+                }
+                color="white"
+                placement="top"
+                bg="#050506"
+              >
+                <span>
+                  {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 2)}{' '}
+                  {record.pair.split('-')[1].toUpperCase()}
+                </span>
+              </Tooltip>
+            )}
+          </p>
+
+          {record?.pair && (
             <Tooltip
               hasArrow
               label={
-                <Box p={1} color="white">
-                  {addComma(divide(value, 8), 2)} {record.pair && record.pair.split('-')[1].toUpperCase()}
+                <Box w="100%" p={1} color="white">
+                  The strike price will vary from{' '}
+                  {addComma(
+                    divide(
+                      subtract(
+                        record.strike.toString(),
+                        multiply(record.strike.toString(), ((record.slippage ?? 0) / 10000).toString()),
+                      ),
+                      configDecimal[record?.pair.replace('-', '').toUpperCase()],
+                    ),
+                    6,
+                  )}{' '}
+                  to{' '}
+                  {addComma(
+                    divide(
+                      add(
+                        record.strike.toString(),
+                        multiply(record.strike.toString(), ((record.slippage ?? 0) / 10000).toString()),
+                      ),
+                      configDecimal[record?.pair.replace('-', '').toUpperCase()],
+                    ),
+                    6,
+                  )}
                 </Box>
               }
               color="white"
               placement="top"
               bg="#050506"
+              minWidth="215px"
             >
-              <span>
-                {addComma(divide(value, 8), 2)} {record.pair && record.pair.split('-')[1].toUpperCase()}
-              </span>
-            </Tooltip>
-          </p>
-
-          <Tooltip
-            hasArrow
-            label={
-              <Box w="100%" p={1} color="white">
-                The strike price will vary from{' '}
-                {addComma(
-                  divide(
-                    subtract(
-                      record.strike.toString(),
-                      multiply(record.strike.toString(), ((record.slippage ?? 0) / 10000).toString()),
-                    ),
-                    8,
-                  ),
-                  6,
-                )}{' '}
-                to{' '}
-                {addComma(
-                  divide(
-                    add(
-                      record.strike.toString(),
-                      multiply(record.strike.toString(), ((record.slippage ?? 0) / 10000).toString()),
-                    ),
-                    8,
-                  ),
-                  6,
-                )}
+              <Box className="inline-block text-[#9E9E9F]">
+                <Flex className="items-center">
+                  <Image alt="warning" src={`/images/icons/warning-grey.svg`} w="12px" h="12px" marginRight={'6px'} />
+                  Slippage - {record.slippage / 100}%
+                </Flex>
               </Box>
-            }
-            color="white"
-            placement="top"
-            bg="#050506"
-            minWidth="215px"
-          >
-            <Box className="inline-block text-[#9E9E9F]">
-              <Flex className="items-center">
-                <Image alt="warning" src={`/images/icons/warning-grey.svg`} w="12px" h="12px" marginRight={'6px'} />
-                Slippage - {record.slippage / 100}%
-              </Flex>
-            </Box>
-          </Tooltip>
+            </Tooltip>
+          )}
         </>
       ),
     },

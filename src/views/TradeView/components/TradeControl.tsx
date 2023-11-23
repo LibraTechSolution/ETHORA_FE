@@ -48,7 +48,7 @@ import referralABI from '@/config/abi/referralABI';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
 import { useGetMinMaxTradeSize, useGetTradeContract } from '@/hooks/useGetTradeContract';
 import bufferBOABI from '@/config/abi/bufferBOABI';
-import { divide, subtract } from '@/utils/operationBigNumber';
+import { divide, multiply, subtract } from '@/utils/operationBigNumber';
 import useAdvanceSetting from '@/store/useAdvanceSetting';
 import { ShowPrice } from './ShowPrice';
 import { useCheckForexClose } from '@/hooks/useCheckForexClose';
@@ -310,6 +310,19 @@ const TradeControl = () => {
     }
   }, [tradeType]);
 
+  const getRoundPrice = (number: string) => {
+    let pow = 8;
+    if (currentPair?.pair) {
+      if (['XAU/USD'].includes(currentPair?.pair)) {
+        pow = 3;
+      } else if (['XAG/USD', 'EUR/USD', 'GBP/USD'].includes(currentPair?.pair)) {
+        pow = 5;
+      }
+    }
+
+    return +multiply(number.toString(), pow);
+  };
+
   const handleCreateTrade = async (isAbove: boolean) => {
     setIsShowWarning(false);
     let hasError = false;
@@ -356,7 +369,7 @@ const TradeControl = () => {
       const currentDate = dayjs().utc().format();
       const data = {
         network: chain?.id ?? 5,
-        strike: tradeType === TradeType.LIMIT ? +limitOrderPrice * 100000000 : Math.round(+price * 100000000),
+        strike: tradeType === TradeType.LIMIT ? getRoundPrice(limitOrderPrice) : getRoundPrice(price.toString()),
         strikeDate: currentDate,
         period: convertToTimeStamp(time),
         targetContract: bufferBOSC as string,
