@@ -267,4 +267,22 @@ export default [
     stateMutability: 'nonpayable',
     type: 'function',
   },
+  {
+    inputs: [
+      { internalType: 'address', name: 'owner', type: 'address' },
+      { internalType: 'address', name: 'spender', type: 'address' },
+      { internalType: 'uint256', name: 'value', type: 'uint256' },
+      { internalType: 'uint256', name: 'deadline', type: 'uint256' },
+      { internalType: 'uint8', name: 'v', type: 'uint8' },
+      { internalType: 'bytes32', name: 'r', type: 'bytes32' },
+      { internalType: 'bytes32', name: 's', type: 'bytes32' },
+    ],
+    name: 'verifyPermit',
+    outputs: [
+      { internalType: 'bool', name: '', type: 'bool' },
+      { internalType: 'bytes32', name: '', type: 'bytes32' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
 ] as const;

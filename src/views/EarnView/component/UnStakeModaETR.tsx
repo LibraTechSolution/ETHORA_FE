@@ -83,7 +83,7 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
       const configUnStake = await prepareWriteContract({
         address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
         abi: RewardRouterV2_ABI,
-        functionName: 'unstakeBfr',
+        functionName: 'unstakeEtr',
         args: [amoutBigint],
       });
       const { hash } = await writeContract(configUnStake);

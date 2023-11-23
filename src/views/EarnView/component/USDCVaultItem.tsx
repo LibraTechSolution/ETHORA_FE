@@ -41,8 +41,12 @@ const USDCVaultItem = ({
   const [openAddFundModal, setOpenAddFundModal] = useState<boolean>(false);
   const [openWithdrawFundModal, setOpenWithdrawFundModal] = useState<boolean>(false);
 
-  const exchangeRate = BigNumber(totalTokenXBalance_BLP?.toString()).dividedBy(totalSupply_BLP?.toString());
-  console.log('exchangeRate', !!exchangeRate.toFixed())
+  // console.log('exchangeRate', totalTokenXBalance_BLP , totalSupply_BLP , !totalTokenXBalance_BLP,!totalSupply_BLP)
+  const exchangeRate =
+    !totalTokenXBalance_BLP || !totalSupply_BLP
+      ? BigNumber(0)
+      : BigNumber(totalTokenXBalance_BLP?.toString()).dividedBy(totalSupply_BLP?.toString());
+
   const wallet = Number(stakedAmounts_fsBLP) / 10 ** 6;
   const USDC_APR = (100 * 31536000 * Number(tokensPerInterval_fBLP)) / Number(balanceOf_BLP_USDC);
   const esETR_APR =
@@ -57,7 +61,8 @@ const USDCVaultItem = ({
   const totalStaked = Number(balanceOf_fBLP_BLP) / 10 ** 6;
   const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP?.toString())) / 10 ** 6;
   const totalSupply_USD = Number(balanceOf_BLP_USDC) / 10 ** 6;
-  const totalSupply = Number(balanceOf_BLP_USDC) / (Number(exchangeRate) * 10 ** 6);
+  const totalSupply =
+    !Number(exchangeRate) || !balanceOf_BLP_USDC ? 0 : Number(balanceOf_BLP_USDC) / (Number(exchangeRate) * 10 ** 6);
   const getDataY = BigNumber(maxLiquidity_BLP ? formatUnits(maxLiquidity_BLP, 6) : 0).minus(
     totalTokenXBalance_BLP ? formatUnits(totalTokenXBalance_BLP, 6) : 0,
   );
@@ -85,7 +90,6 @@ const USDCVaultItem = ({
           // bg="#050506"
           // minWidth="288px"
           overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
-
         >
           <Text>USDC Vault (ELP Token)</Text>
         </Tooltip>
@@ -113,7 +117,9 @@ const USDCVaultItem = ({
               // minWidth="288px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
-              <Text as="u">1.00 ELP = {!exchangeRate.toFixed() ? addComma(exchangeRate.toString(), 2) : '0.00'} USDC</Text>
+              <Text as="u">
+                1.00 ELP = {!exchangeRate.toFixed() ? addComma(exchangeRate.toString(), 2) : '0.00'} USDC
+              </Text>
             </Tooltip>
           </Text>
         </Box>
@@ -191,7 +197,6 @@ const USDCVaultItem = ({
               // bg="#050506"
               // minWidth="450px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
-
             >
               <Text as="u">{Total_APR !== undefined && addComma(Total_APR, 2)}%</Text>
             </Tooltip>
@@ -229,7 +234,6 @@ const USDCVaultItem = ({
               // bg="#050506"
               // minWidth="350px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '350px' }}
-
             >
               <Text as="u">${rewards !== undefined ? addComma(rewards, 2) : '0.00'}</Text>
             </Tooltip>
@@ -274,13 +278,13 @@ const USDCVaultItem = ({
           </Text>
           <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <span>
-              <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="ELP" />
+              <Currency value={totalSupply_USD !== undefined ? totalSupply_USD : 0} decimal={2} unit="ELP" />
               {' ELP  '}
             </span>
             <span>
               {' '}
               {'('}
-              <Currency value={totalSupply_USD !== undefined ? totalSupply_USD : 0} decimal={2} unit="USDC" />
+              <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="USDC" />
               {' USDC)'}
             </span>
           </Text>

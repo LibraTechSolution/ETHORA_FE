@@ -83,7 +83,7 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
       const configUnStake = await prepareWriteContract({
         address: appConfig.REWARD_ROUTER_V2_SC as `0x${string}`,
         abi: RewardRouterV2_ABI,
-        functionName: 'unstakeEsBfr',
+        functionName: 'unstakeEsEtr',
         args: [amoutBigint],
       });
 
