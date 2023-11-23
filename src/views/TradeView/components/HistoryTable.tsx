@@ -16,6 +16,7 @@ import useUserStore from '@/store/useUserStore';
 import ShareModal from './ShareModal';
 import useAdvanceSetting from '@/store/useAdvanceSetting';
 import { useSearchParams } from 'next/navigation';
+import { configDecimal } from './TradeTable';
 
 const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
@@ -75,37 +76,51 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value, record) => (
-        <Tooltip
-          label={`${addComma(divide(value, 8), 6)} ${record?.pair && record.pair.split('-')[1].toUpperCase()}`}
-          hasArrow
-          color="white"
-          placement="top"
-          bg="#050506"
-        >
-          <span>
-            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-          </span>
-        </Tooltip>
-      ),
+      render: (value, record) =>
+        record && record?.pair ? (
+          <Tooltip
+            label={`${addComma(
+              divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]),
+              6,
+            )} ${record.pair.split('-')[1].toUpperCase()}`}
+            hasArrow
+            color="white"
+            placement="top"
+            bg="#050506"
+          >
+            <span>
+              {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 2)}{' '}
+              {record.pair.split('-')[1].toUpperCase()}
+            </span>
+          </Tooltip>
+        ) : (
+          <></>
+        ),
     },
     {
       title: 'Expiry Price',
       dataIndex: 'expiryPrice',
       key: 'expiryPrice',
-      render: (value, record) => (
-        <Tooltip
-          label={`${addComma(divide(value, 8), 6)} ${record?.pair && record.pair.split('-')[1].toUpperCase()}`}
-          hasArrow
-          color="white"
-          placement="top"
-          bg="#050506"
-        >
-          <span>
-            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-          </span>
-        </Tooltip>
-      ),
+      render: (value, record) =>
+        record && record?.pair ? (
+          <Tooltip
+            label={`${addComma(
+              divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]),
+              6,
+            )} ${record.pair.split('-')[1].toUpperCase()}`}
+            hasArrow
+            color="white"
+            placement="top"
+            bg="#050506"
+          >
+            <span>
+              {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 2)}{' '}
+              {record.pair.split('-')[1].toUpperCase()}
+            </span>
+          </Tooltip>
+        ) : (
+          <></>
+        ),
     },
     {
       title: 'Open Time',

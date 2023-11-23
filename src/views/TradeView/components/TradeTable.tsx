@@ -23,6 +23,21 @@ import { ToastCloseTrade } from './ToastCloseTrade';
 import { useSearchParams } from 'next/navigation';
 import { TradeContext } from '..';
 
+export const configDecimal: { [key: string]: number } = {
+  BTCUSD: 8,
+  ETHUSD: 8,
+  LINKUSD: 8,
+  TONUSD: 8,
+  ARBUSD: 8,
+  XRPUSD: 8,
+  SOLUSD: 8,
+  BNBUSD: 8,
+  XAUUSD: 3,
+  XAGUSD: 5,
+  EURUSD: 5,
+  GBPUSD: 5,
+};
+
 const PnLCell = ({ trade }: { trade: ITradingData }) => {
   const { pnl: earlyPnl } = useEarlyPnl({
     trade,
@@ -219,23 +234,28 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Strike Price',
       dataIndex: 'strike',
       key: 'strike',
-      render: (value, record) => (
-        <Tooltip
-          hasArrow
-          label={
-            <Box p={1} color="white">
-              {addComma(divide(value, 8), 6)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-            </Box>
-          }
-          color="white"
-          placement="top"
-          bg="#050506"
-        >
-          <span>
-            {addComma(divide(value, 8), 2)} {record?.pair && record.pair.split('-')[1].toUpperCase()}
-          </span>
-        </Tooltip>
-      ),
+      render: (value, record) =>
+        record && record?.pair ? (
+          <Tooltip
+            hasArrow
+            label={
+              <Box p={1} color="white">
+                {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 6)}{' '}
+                {record.pair.split('-')[1].toUpperCase()}
+              </Box>
+            }
+            color="white"
+            placement="top"
+            bg="#050506"
+          >
+            <span>
+              {addComma(divide(value, configDecimal[record?.pair.replace('-', '').toUpperCase()]), 2)}{' '}
+              {record.pair.split('-')[1].toUpperCase()}
+            </span>
+          </Tooltip>
+        ) : (
+          <></>
+        ),
     },
     {
       title: 'Current Price',
