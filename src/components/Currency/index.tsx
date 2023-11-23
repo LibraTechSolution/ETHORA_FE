@@ -74,7 +74,7 @@ const Currency: FC<Props> = ({ value, isWei, rounded, decimal, decimalNumber, un
     // <Tooltip hasArrow label={`${unit === '$' ? unit : ''}${fullValue} ${!unit ? '' : unit !== '$' ? unit : ''}`}>
     //   {valueShow}
     // </Tooltip>
-    <Tooltip title={`${unit === '$' ? unit : ''}${fullValue} ${!unit ? '' : unit !== '$' ? unit : ''}`} color='#050506' overlayStyle={{fontSize: '12px'}}>
+    <Tooltip title={`${unit === '$' ? unit : ''}${fullValue} ${!unit ? '' : unit !== '$' ? unit : ''}`} color='#050506' overlayStyle={{fontSize: '12px'}} zIndex={99999}>
       <span>{valueShow}</span>
     </Tooltip>
   );

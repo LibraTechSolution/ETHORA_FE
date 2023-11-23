@@ -326,7 +326,7 @@ const AddFundsModal = ({
                         }}
                         onClick={() => {
                           if (balance !== undefined) {
-                            formik.setFieldValue('amount', roundDown(Number(balance) / 10 ** 6, 6));
+                            formik.setFieldValue('amount', BigNumber(Number(balance) / 10 ** 6).toFixed(6, BigNumber.ROUND_DOWN));
                           }
                         }}
                       >
