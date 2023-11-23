@@ -252,7 +252,7 @@ const PlatformHistoryTable = () => {
       // notification.error({ message: error.message });
       console.log(error);
     },
-    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
+    enabled: !!tokens && !!user && !!tokens?.access?.token && !!user?.isApproved && !!user?.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: 5000,
     refetchOnWindowFocus: false,

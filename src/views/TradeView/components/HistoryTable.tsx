@@ -273,7 +273,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
     queryFn: () => getTradeHistory(filter),
     enabled: isProfile
       ? !!checkAddress
-      : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
+      : !!tokens && !!user && !!tokens?.access?.token && !!user?.isApproved && !!user?.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,

@@ -16,44 +16,44 @@ import { divide } from '@/utils/operationBigNumber';
 import bufferBOABI from '@/config/abi/bufferBOABI';
 import SearchPair from './SearchPair';
 
-const ListFavoritePairs = () => {
-  const { listPairData } = usePairStore();
-  const isShow = listPairData.some((item) => item.isFavorite);
+// const ListFavoritePairs = () => {
+//   const { listPairData } = usePairStore();
+//   const isShow = listPairData.some((item) => item.isFavorite);
 
-  return (
-    isShow && (
-      <Box borderBottom={'1px solid #38383A'} marginBottom={2} className="marquee">
-        {listPairData.map(
-          (item) =>
-            item.isFavorite && (
-              <Box
-                display={'inline-block'}
-                key={`${item.pair}`}
-                _first={{ borderLeft: '1px solid #38383A' }}
-                borderRight={'1px solid #38383A'}
-              >
-                <Flex px={3} py={2}>
-                  <Image alt="" src={'/images/icons/star-solid.svg'} w="18px" h="18px" />
-                  <Image
-                    alt=""
-                    src={`/images/icons/${item.pair.replace('/', '-').toLowerCase()}.png`}
-                    w="20px"
-                    h="20px"
-                    marginLeft={'12px'}
-                    marginRight={'8px'}
-                  />
-                  <Text fontSize={'14px'} fontWeight={400} marginRight={3}>
-                    {item.pair.replace('/', '-')}
-                  </Text>{' '}
-                  <ShowPrice pair={item.pair.replace('/', '')} />
-                </Flex>
-              </Box>
-            ),
-        )}
-      </Box>
-    )
-  );
-};
+//   return (
+//     isShow && (
+//       <Box borderBottom={'1px solid #38383A'} marginBottom={2} className="marquee">
+//         {listPairData.map(
+//           (item) =>
+//             item.isFavorite && (
+//               <Box
+//                 display={'inline-block'}
+//                 key={`${item.pair}`}
+//                 _first={{ borderLeft: '1px solid #38383A' }}
+//                 borderRight={'1px solid #38383A'}
+//               >
+//                 <Flex px={3} py={2}>
+//                   <Image alt="" src={'/images/icons/star-solid.svg'} w="18px" h="18px" />
+//                   <Image
+//                     alt=""
+//                     src={`/images/icons/${item.pair.replace('/', '-').toLowerCase()}.png`}
+//                     w="20px"
+//                     h="20px"
+//                     marginLeft={'12px'}
+//                     marginRight={'8px'}
+//                   />
+//                   <Text fontSize={'14px'} fontWeight={400} marginRight={3}>
+//                     {item.pair.replace('/', '-')}
+//                   </Text>{' '}
+//                   <ShowPrice pair={item.pair.replace('/', '')} />
+//                 </Flex>
+//               </Box>
+//             ),
+//         )}
+//       </Box>
+//     )
+//   );
+// };
 
 const TradeViewHeader = () => {
   const pairRef = useRef<HTMLDivElement>(null);

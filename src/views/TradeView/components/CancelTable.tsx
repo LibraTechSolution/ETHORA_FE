@@ -6,7 +6,7 @@ import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { getTradeCancel } from '@/services/trade';
-import { ITradingData, ITradingParams, TRADE_STATUS } from '@/types/trade.type';
+import { ITradingData, ITradingParams } from '@/types/trade.type';
 import { Box, Flex, Image, Text, Tooltip } from '@chakra-ui/react';
 import { divide } from '@/utils/operationBigNumber';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
@@ -184,7 +184,7 @@ const CancelTable = () => {
   } = useQuery({
     queryKey: ['getTradeCancel', filter],
     queryFn: () => getTradeCancel(filter),
-    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
+    enabled: !!tokens && !!user && !!tokens?.access?.token && !!user?.isApproved && !!user?.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,

@@ -153,10 +153,14 @@ export const TradingViewChart = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<ITradingData | null>(null);
   const { setListLines, listLines } = useListShowLinesStore();
+  const isDisabledLimit = useRef(false);
+  const isDisabledTrade = useRef(false);
 
   const handleClose = useCallback(
     async (item: ITradingData) => {
       try {
+        if (isDisabledTrade.current) return;
+        isDisabledTrade.current = true;
         const closingTime = dayjs().utc().unix();
         await closeTrade(item._id);
         queryClient.invalidateQueries({ queryKey: ['getActiveTrades'] });
@@ -168,8 +172,9 @@ export const TradingViewChart = () => {
         });
         const isRemove = listLines.some((line) => line._id === item._id);
         isRemove && setListLines(item);
+        isDisabledTrade.current = false;
       } catch (error) {
-        console.log(error);
+        isDisabledTrade.current = false;
         toast({
           position: 'top',
           render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,
@@ -182,6 +187,8 @@ export const TradingViewChart = () => {
   const handleCancelTrade = useCallback(
     async (item: ITradingData) => {
       try {
+        if (isDisabledLimit.current) return;
+        isDisabledLimit.current = true;
         const res = await cancelTrade(item._id);
 
         toast({
@@ -205,7 +212,10 @@ export const TradingViewChart = () => {
         queryClient.invalidateQueries({ queryKey: ['getTradeCancel'] });
         const isRemove = listLines.some((line) => line._id === item._id);
         isRemove && setListLines(item);
+
+        isDisabledLimit.current = false;
       } catch (error) {
+        isDisabledLimit.current = false;
         toast({
           position: 'top',
           render: ({ onClose }) => <ToastLayout title="Cancel Unsuccessfully" status={Status.ERROR} close={onClose} />,
@@ -288,7 +298,6 @@ export const TradingViewChart = () => {
             handleEditStrikePrice(item);
           })
           .onModify('modify', function () {
-            console.log('modify');
             setSelectedItem(item);
             setIsOpenModal(true);
           })
