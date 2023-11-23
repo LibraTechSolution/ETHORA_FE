@@ -47,9 +47,9 @@ const ETRItem = ({
   const [openStakeModal, setOpenStakeModal] = useState<boolean>(false);
   const [openUnStakeModal, setOpenUnStakeModal] = useState<boolean>(false);
 
-  const USDC_Rewards = Number(claimable_sbfETR) / 10 ** 6;
-  const esETR_Rewards = Number(claimables_sETR) / 10 ** 18;
-  const esETR_USD_Rewards = (Number(claimables_sETR) * price) / 10 ** 18;
+  const USDC_Rewards = formatUnits(claimable_sbfETR, 6); //Number(claimable_sbfETR) / 10 ** 6;
+  const esETR_Rewards = formatUnits(claimables_sETR, 18); //Number(claimables_sETR) / 10 ** 18;
+  const esETR_USD_Rewards = BigNumber(claimables_sETR ? formatUnits(claimables_sETR, 18) : 0).multipliedBy(price); //(Number(claimables_sETR) * price) / 10 ** 18;
   const rewards = USDC_Rewards + esETR_USD_Rewards;
 
   const esETR_APR = (100 * 31536000 * Number(tokensPerInterval_sETR)) / Number(totalSupply_sETR);
@@ -61,27 +61,6 @@ const ETRItem = ({
 
   const totalSupply = formatUnits((totalSupply_ETR - balanceOf_addressDead_ETR) as bigint, 18);
   const stakedMultiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
-
-  // console.log('stakedMultiplierPoints', stakedMultiplierPoints);
-  // const a = balance && balance * parseUnits(price.toString(), 6);
-  // const b = balance ? balance?.toString() : '0'
-  // const a = BigNumber(formatEther(balance as bigint))
-  // console.log(addComma(BigNumber(formatEther(balance as bigint)).toFixed(),2))
-  // console.log(new BigNumber(formatEther(balance as bigint)).decimalPlaces(6).toFixed())
-  // console.log(BigNumber(formatEther(balance as bigint)).decimalPlaces(6).toFixed())
-  // console.log('balance',BigNumber(formatEther(balance as bigint)).multipliedBy(price))
-  // console.log('balance',BigNumber(formatEther(balance as bigint)).multipliedBy(price).toFixed())
-  // console.log('balance',BigNumber(formatEther(balance as bigint)).decimalPlaces(6))
-
-  // console.log(new BigNumber(b).multipliedBy(price).toFixed(6));
-  // console.log(formatEther(BigInt(balance)));
-  // console.log(new BigNumber(formatEther(BigInt(balance))).toFixed(18));
-  // console.log(new BigNumber(formatEther(BigInt(balance))).multipliedBy(price).toFixed(18));
-  // console.log(BigNumber(balance.toString()).multipliedBy(price));
-  // console.log(+BigNumber(balance.toString()).multipliedBy(price));
-  // console.log(+formatUnits(balance as bigint, 18) * price);
-  // console.log(new BigNumber(formatEther(balance)).multipliedBy(price).toString());
-
   return (
     <>
       <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>
@@ -236,7 +215,7 @@ const ETRItem = ({
                     </Box>
                     <Spacer />
                     <Box padding={'0 8px'}>{`${esETR_Rewards !== undefined ? addComma(esETR_Rewards, 6) : '0.00'}($${
-                      esETR_USD_Rewards !== undefined ? addComma(esETR_USD_Rewards, 2) : '0.00'
+                      esETR_USD_Rewards !== undefined ? esETR_USD_Rewards.toFormat(2, BigNumber.ROUND_DOWN) : '0.00'
                     })`}</Box>
                   </Flex>
                 </Box>
