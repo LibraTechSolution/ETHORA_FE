@@ -60,9 +60,10 @@ const USDCVaultItem = ({
   const withdrawableAmount = Number(getUnlockedLiquidity_BLP) / 10 ** 6;
   const totalStaked = Number(balanceOf_fBLP_BLP) / 10 ** 6;
   const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP?.toString())) / 10 ** 6;
-  const totalSupply_USD = Number(balanceOf_BLP_USDC) / 10 ** 6;
   const totalSupply =
     !Number(exchangeRate) || !balanceOf_BLP_USDC ? 0 : Number(balanceOf_BLP_USDC) / (Number(exchangeRate) * 10 ** 6);
+  const totalSupply_USD = !Number(exchangeRate) ? 0 : Number(balanceOf_BLP_USDC) / 10 ** 6;
+
   const getDataY = BigNumber(maxLiquidity_BLP ? formatUnits(maxLiquidity_BLP, 6) : 0).minus(
     totalTokenXBalance_BLP ? formatUnits(totalTokenXBalance_BLP, 6) : 0,
   );
@@ -278,13 +279,13 @@ const USDCVaultItem = ({
           </Text>
           <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <span>
-              <Currency value={totalSupply_USD !== undefined ? totalSupply_USD : 0} decimal={2} unit="ELP" />
+              <Currency value={totalSupply  !== undefined ? totalSupply : 0} decimal={2} unit="ELP" />
               {' ELP  '}
             </span>
             <span>
               {' '}
               {'('}
-              <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="USDC" />
+              <Currency value={ totalSupply_USD !== undefined ? totalSupply_USD : 0} decimal={2} unit="USDC" />
               {' USDC)'}
             </span>
           </Text>
