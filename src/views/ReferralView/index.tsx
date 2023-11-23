@@ -177,7 +177,7 @@ const ReferralView = () => {
         functionName: 'registerCode',
         args: [userRefCode],
       });
-
+      setUserRefCodeFromSC(userRefCode);
       setIsCreatedUserRefCode(true);
 
       toast({
