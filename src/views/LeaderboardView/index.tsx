@@ -452,7 +452,11 @@ const LeaderboardView = () => {
                   <Text fontSize={'sm'} color={'#9E9E9F'} marginBottom={'12px'}>
                     Time Left
                   </Text>
-                  {endTime ? <CountDownWithDay endTime={dayjs(endTime).unix()} /> : '---'}
+                  {leaderBoardData?.summary?.endDate ? (
+                    <CountDownWithDay showDay={!isDaily} endTime={dayjs(leaderBoardData?.summary?.endDate).unix()} />
+                  ) : (
+                    '---'
+                  )}
                 </Flex>
               </Center>
               <Center

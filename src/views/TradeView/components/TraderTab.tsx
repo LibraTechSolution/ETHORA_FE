@@ -40,7 +40,7 @@ const TraderTab = () => {
   } = useQuery({
     queryKey: ['getActiveTrades'],
     queryFn: () => getTrades(filter),
-    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
+    enabled: !!tokens && !!user && !!tokens?.access?.token && !!user?.isApproved && !!user?.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,

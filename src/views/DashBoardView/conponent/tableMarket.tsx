@@ -18,6 +18,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import { appConfig } from '@/config';
+import { useCheckForexClose } from '@/hooks/useCheckForexClose';
 dayjs.extend(utc);
 
 const columns: ColumnsType<PairData> = [
@@ -268,6 +269,7 @@ const TableMarket = () => {
     refetchInterval: false,
     refetchOnWindowFocus: false,
   });
+  const isClosed = useCheckForexClose();
   const [listPriceShow, setListPriceShow] = useState<{ [key: string]: number }>();
   const { listPairData } = usePairStore();
   const { listPairPriceSlow } = useListPairPriceSlow();
@@ -300,17 +302,6 @@ const TableMarket = () => {
   useEffect(() => {
     setListPriceShow(listPairPriceSlow);
   }, [listPairPriceSlow]);
-
-  const isClose = useMemo(() => {
-    if (dayjs().utc().day() === 0 || dayjs().utc().day() === 6) {
-      return true;
-    } else {
-      if (dayjs().utc().hour() < 6 || dayjs().utc().hour() >= 16) {
-        return true;
-      }
-    }
-    return false;
-  }, []);
 
   const getCurrentOI = async (bufferBOSC: `0x${string}`) => {
     try {
@@ -351,7 +342,7 @@ const TableMarket = () => {
         tempListPairData[i].currentPrice = listPriceShow[tempListPairData[i].pair.replace('/', '') as string];
       }
       if (tempListPairData[i].type === PairType.FOREX) {
-        tempListPairData[i].status = !isClose;
+        tempListPairData[i].status = !isClosed;
       }
       if (tempListPairData[i].type === PairType.CRYPTO) {
         tempListPairData[i].status = true;
@@ -368,7 +359,7 @@ const TableMarket = () => {
       );
     }
     return tempListPairData;
-  }, [dataDashboardMaret, isClose, listChanged24h, listPairData, listPriceShow]);
+  }, [dataDashboardMaret, isClosed, listChanged24h, listPairData, listPriceShow]);
 
   return (
     <Box className="tradingTableTab">

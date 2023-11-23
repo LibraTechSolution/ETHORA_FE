@@ -1,5 +1,4 @@
 'use client';
-import useTradeStore from '@/store/useTradeStore';
 import { addComma } from '@/utils/number';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import { Flex, Center, GridItem, Button, Box, Grid, Image, useToast, Tooltip } from '@chakra-ui/react';

@@ -1,7 +1,7 @@
 'use client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useContext, useEffect, useState } from 'react';
-import { Empty, Table } from 'antd';
+import { Table } from 'antd';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { Box, Button, Flex, Image, useToast, Text, Tooltip } from '@chakra-ui/react';
 import { addComma } from '@/utils/number';
@@ -22,12 +22,6 @@ import { ShowPrice } from './ShowPrice';
 import { ToastCloseTrade } from './ToastCloseTrade';
 import { useSearchParams } from 'next/navigation';
 import { TradeContext } from '..';
-
-const defaultParams: ITradingParams = {
-  limit: 10,
-  page: 1,
-  network: '421613',
-};
 
 const PnLCell = ({ trade }: { trade: ITradingData }) => {
   const { pnl: earlyPnl } = useEarlyPnl({
@@ -380,7 +374,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
     // select: transformData,
     enabled: isProfile
       ? !!checkAddress
-      : !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
+      : !!tokens && !!user && !!tokens?.access?.token && !!user?.isApproved && !!user?.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: refetchInterval,
     refetchOnWindowFocus: false,
@@ -397,7 +391,6 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
 
   useEffect(() => {
     if (!isProfile) return;
-    console.log(isProfile);
     setFilter({ ...defaultParams, userAddress: addressURL ? addressURL : address });
   }, [address, addressURL, isProfile]);
 

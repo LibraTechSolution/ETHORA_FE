@@ -51,6 +51,7 @@ import bufferBOABI from '@/config/abi/bufferBOABI';
 import { divide, subtract } from '@/utils/operationBigNumber';
 import useAdvanceSetting from '@/store/useAdvanceSetting';
 import { ShowPrice } from './ShowPrice';
+import { useCheckForexClose } from '@/hooks/useCheckForexClose';
 dayjs.extend(utc);
 
 const approveParamType = [
@@ -103,6 +104,7 @@ const TradeControl = () => {
   const { advanceSetting } = useAdvanceSetting();
   const { minTradeSize, maxTradeSize } = useGetMinMaxTradeSize();
   const breakpoint = useBreakpoint({ ssr: false });
+  const isClosed = useCheckForexClose();
 
   useEffect(() => {
     const listBreakPoints = ['xl', '1.5xl', '2xl', '3xl'];
@@ -127,17 +129,6 @@ const TradeControl = () => {
       ) ?? null
     );
   }, [listPairData, params?.pair]);
-
-  const isClose = useMemo(() => {
-    if (dayjs().utc().day() === 0 || dayjs().utc().day() === 6) {
-      return true;
-    } else {
-      if (dayjs().utc().hour() < 6 || dayjs().utc().hour() > 16) {
-        return true;
-      }
-    }
-    return false;
-  }, []);
 
   const isRegisterd = useMemo(() => {
     if (user && address && user.isRegistered) {
@@ -772,7 +763,7 @@ const TradeControl = () => {
 
                   return (
                     <>
-                      {isClose && currentPair?.type === PairType.FOREX ? (
+                      {isClosed && currentPair?.type === PairType.FOREX ? (
                         <Center>Trading is halted for this asset</Center>
                       ) : (
                         <Grid templateColumns="repeat(2, 1fr)" gap={{ base: '5px', '2xl': '20px' }}>

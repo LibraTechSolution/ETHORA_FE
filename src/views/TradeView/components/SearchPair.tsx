@@ -20,18 +20,16 @@ import {
 import _ from 'lodash';
 import { SearchIcon } from 'lucide-react';
 import Link from 'next/link';
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useGetMinMaxTradeSize, useGetTradeContract } from '@/hooks/useGetTradeContract';
 import { readContract } from '@wagmi/core';
 import { divide } from '@/utils/operationBigNumber';
 import bufferBOABI from '@/config/abi/bufferBOABI';
 import { IResponData } from '@/types/api.type';
 import { addComma } from '@/utils/number';
-import useListPairPrice from '@/store/useListPairPrice';
 import { ShowPrice } from './ShowPrice';
-import dayjs from 'dayjs';
 import ForexTradingTimeModal from './ForexTradingTimeModal';
-import useListPairPriceSlow from '@/store/useListPairPriceSlow';
+import { useCheckForexClose } from '@/hooks/useCheckForexClose';
 
 interface Props {
   listChanged24h: IResponData<Changed24h> | undefined;
@@ -122,17 +120,7 @@ const SearchPair = (props: Props) => {
   const [search, setSearch] = useState<string>('');
   const [tab, setTab] = useState<Tab>(Tab.All);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-
-  const isClose = useMemo(() => {
-    if (dayjs().utc().day() === 0 || dayjs().utc().day() === 6) {
-      return true;
-    } else {
-      if (dayjs().utc().hour() < 6 || dayjs().utc().hour() >= 16) {
-        return true;
-      }
-    }
-    return false;
-  }, []);
+  const isClosed = useCheckForexClose();
 
   const listPairShow = useMemo<PairData[]>(() => {
     const tempList = [];
@@ -333,7 +321,7 @@ const SearchPair = (props: Props) => {
                     </Box>
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
-                    {item.type === PairType.CRYPTO ? `${item.payout}%` : !isClose ? `${item.payout}%` : '--'}
+                    {item.type === PairType.CRYPTO ? `${item.payout}%` : !isClosed ? `${item.payout}%` : '--'}
                   </Td>
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
                     {item.type === PairType.CRYPTO ? (
@@ -352,7 +340,7 @@ const SearchPair = (props: Props) => {
                           <span className="pl-2">{item.changed24hPercent}%</span>
                         </p>
                       </div>
-                    ) : isClose ? (
+                    ) : isClosed ? (
                       <Flex py={'9px'} alignItems={'center'}>
                         <Text textDecoration={'underline'} marginRight={2} onClick={() => setIsOpenModal(true)}>
                           Schedule
@@ -393,7 +381,7 @@ const SearchPair = (props: Props) => {
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
                     {item.type === PairType.CRYPTO ? (
                       <MaxTradeSize pair={item.pair.replace('/', '').toUpperCase()} />
-                    ) : !isClose ? (
+                    ) : !isClosed ? (
                       <MaxTradeSize pair={item.pair.replace('/', '').toUpperCase()} />
                     ) : (
                       '--'
@@ -402,7 +390,7 @@ const SearchPair = (props: Props) => {
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
                     {item.type === PairType.CRYPTO ? (
                       <CurrentOICell pair={item.pair.replace('/', '').toUpperCase()} />
-                    ) : !isClose ? (
+                    ) : !isClosed ? (
                       <CurrentOICell pair={item.pair.replace('/', '').toUpperCase()} />
                     ) : (
                       '--'
@@ -411,7 +399,7 @@ const SearchPair = (props: Props) => {
                   <Td borderColor={'#38383A'} fontWeight={'400'} fontSize={'14px'} textColor={'#fff'} paddingY="8px">
                     {item.type === PairType.CRYPTO ? (
                       <MaxOICell pair={item.pair.replace('/', '').toUpperCase()} />
-                    ) : !isClose ? (
+                    ) : !isClosed ? (
                       <MaxOICell pair={item.pair.replace('/', '').toUpperCase()} />
                     ) : (
                       '--'

@@ -8,7 +8,6 @@ import { addComma } from '@/utils/number';
 import { useAccount, useNetwork } from 'wagmi';
 import { ITradingData, ITradingParams } from '@/types/trade.type';
 import { getPlatformsTrades } from '@/services/trade';
-import useTradeStore from '@/store/useTradeStore';
 import { divide } from '@/utils/operationBigNumber';
 import dayjs from 'dayjs';
 import CountDown from './CountDown';
@@ -161,18 +160,14 @@ const PlatformTradesTable = () => {
     },
   ];
 
-  const {
-    data: tradingData,
-    isInitialLoading,
-    isError,
-  } = useQuery({
+  const { data: tradingData, isInitialLoading } = useQuery({
     queryKey: ['getPlatformTrades', filter],
     queryFn: () => getPlatformsTrades(filter),
     onError: (error: any) => {
       console.log(error);
     },
     // select: transformData,
-    enabled: !!tokens?.access?.token && !!user?.isApproved && !!user.isRegistered && !!address,
+    enabled: !!tokens && !!user && !!tokens?.access?.token && !!user?.isApproved && !!user?.isRegistered && !!address,
     cacheTime: 0,
     refetchInterval: 5000,
     refetchOnWindowFocus: false,
