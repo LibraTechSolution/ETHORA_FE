@@ -131,7 +131,6 @@ const WithdrawFundsModal = ({
       // rememberMe: true,
     },
     onSubmit: (values) => {
-      console.log('onSubmit');
       onWithdrawfund(values.amount);
     },
     validationSchema: validationSchema,
@@ -241,9 +240,9 @@ const WithdrawFundsModal = ({
                         <Currency
                           value={getMax !== undefined ? BigNumber(getMax).toFixed() : 0}
                           decimal={2}
-                          unit="ETR"
+                          unit="ELP"
                         />{' '}
-                        ETR
+                        ELP
                       </Text>
                     </Flex>
                   </FormLabel>

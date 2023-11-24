@@ -55,12 +55,13 @@ const ETRItem = ({
   const esETR_APR = (100 * 31536000 * Number(tokensPerInterval_sETR)) / Number(totalSupply_sETR);
   const USDC_APR =
     (100 * 31536000 * Number(tokensPerInterval_sbfETR) * 10 ** 12) / (Number(totalSupply_sbfETR) * price);
-  const boosted_APR = (Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR);
-  const boosted_Percentage = (Number(depositBalances_bnETR) / Number(depositBalances_sbETR)) * 100;
+  const boosted_APR = depositBalances_bnETR || depositBalances_sbETR ? (Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR) : 0;
+  const boosted_Percentage = depositBalances_bnETR || depositBalances_sbETR ?  (Number(depositBalances_bnETR) / Number(depositBalances_sbETR)) * 100 : 0;
   const Total_APR = isNaN(boosted_APR) ? esETR_APR + USDC_APR : esETR_APR + USDC_APR + boosted_APR;
 
   const totalSupply = formatUnits((totalSupply_ETR - balanceOf_addressDead_ETR) as bigint, 18);
-  const stakedMultiplierPoints = Number(depositBalances_bnETR) / 10 ** 18;
+  const stakedMultiplierPoints = depositBalances_bnETR ? formatUnits(depositBalances_bnETR, 18) : 0 //Number(depositBalances_bnETR) / 10 ** 18;
+  
   return (
     <>
       <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>

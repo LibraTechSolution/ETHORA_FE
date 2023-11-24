@@ -399,7 +399,6 @@ const EarnView = () => {
   const balanceOf_fBLP_BLP = data_BLP_SC && data_BLP_SC[4].result;
   const maxLiquidity_BLP = data_BLP_SC && data_BLP_SC[5].result;
 
-  // console.log('totalSupply_sETR', totalSupply_sETR);
   const onFetch = () => {
     let timesRun = 0;
     const interval = setInterval(function () {
@@ -422,7 +421,6 @@ const EarnView = () => {
     }, 5000);
   };
 
-  // console.log('depositBalances_ETR', depositBalances_ETR)
 
   return (
     <EarnContext.Provider

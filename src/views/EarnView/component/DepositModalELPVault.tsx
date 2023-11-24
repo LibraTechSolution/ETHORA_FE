@@ -102,7 +102,6 @@ const DepositModalELPVault = ({
   const pairAmounts_VBLP = data_VBLP_SC && data_VBLP_SC[2].result;
   const getCombinedAverageStakedAmount_VBLP = data_VBLP_SC && data_VBLP_SC[2].result;
 
-  console.log('balance', balance);
   const SE = balance ? formatUnits(balance as bigint, 18) : 0;
   const WW = (Number(getMaxVestableAmount_VBLP) - Number(getVestedAmount_VBLP)) / 10 ** 18;
   const getMax = Math.min(+SE, WW);
@@ -158,7 +157,6 @@ const DepositModalELPVault = ({
       const data = await waitForTransaction({
         hash,
       });
-      console.log('data-hash', data);
       setLoadingApproved(false);
       setIsApproved(true);
       toast({
@@ -229,7 +227,6 @@ const DepositModalELPVault = ({
       const data = await waitForTransaction({
         hash,
       });
-      console.log('dataStake', data);
       setLoadingStake(false);
       onFetchData();
       onDismiss();
@@ -289,7 +286,6 @@ const DepositModalELPVault = ({
   }, [formik.errors]);
 
   useEffect(() => {
-    console.log(getAllowance);
     setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)));
   }, [getAllowance]);
 

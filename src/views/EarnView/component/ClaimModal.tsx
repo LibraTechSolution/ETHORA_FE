@@ -47,7 +47,6 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
       claimUsdc: true,
     },
     onSubmit: (values) => {
-      console.log('onSubmit');
       onClaim(values);
     },
     // validationSchema: validationSchema,
@@ -55,15 +54,6 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
 
   const onClaim = async (data: any) => {
     const { claimETR, claimEsETR, claimUsdc } = data;
-    console.log(claimETR, claimEsETR, claimUsdc);
-    // handleRewards(
-    //     bool _shouldClaimBfr,
-    //     bool _shouldStakeBfr,
-    //     bool _shouldClaimEsBfr,
-    //     bool _shouldStakeEsBfr,
-    //     bool _shouldStakeMultiplierPoints,
-    //     bool _shouldClaimUsdc
-    // )
     try {
       setLoadingClaim(true)
       const configStake = await prepareWriteContract({
@@ -77,7 +67,6 @@ const ClaimModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => v
       const data = await waitForTransaction({
         hash,
       });
-      console.log('dataStake', data);
       setLoadingClaim(false);
       onFetchData();
       onDismiss();

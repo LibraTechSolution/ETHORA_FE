@@ -53,8 +53,6 @@ const TotalRewardsItem = ({
 
   const total = total1.plus(total2USD).plus(total3USD);
 
-  console.log('total=========', total.toFixed());
-
   return (
     <>
       <Heading as="h5" fontSize={'20px'} fontWeight={600} marginBottom={'20px'}>

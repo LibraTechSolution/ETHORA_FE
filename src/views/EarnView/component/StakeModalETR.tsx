@@ -108,7 +108,6 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
       const data = await waitForTransaction({
         hash,
       });
-      console.log('data-hash', data);
       setLoadingApproved(false);
       setIsApproved(true);
       toast({
@@ -179,7 +178,6 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
       const data = await waitForTransaction({
         hash,
       });
-      console.log('dataStake', data);
       setLoadingStake(false);
       onFetchData();
       onDismiss();

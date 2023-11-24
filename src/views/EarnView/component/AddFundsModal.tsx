@@ -86,7 +86,6 @@ const AddFundsModal = ({
       rememberMe: false,
     },
     onSubmit: (values) => {
-      console.log('onSubmit');
       onAddFund(values.amount);
     },
     validationSchema: validationSchema,
@@ -108,7 +107,6 @@ const AddFundsModal = ({
       const data = await waitForTransaction({
         hash,
       });
-      console.log('data-hash', data);
       setLoadingApproved(false);
       setIsApproved(true);
       toast({
@@ -192,7 +190,6 @@ const AddFundsModal = ({
       const data = await waitForTransaction({
         hash,
       });
-      console.log('dataStake', data);
       setLoadingDeposit(false);
       onFetchData();
       onDismiss();
@@ -252,7 +249,6 @@ const AddFundsModal = ({
   }, [formik.errors]);
 
   useEffect(() => {
-    console.log('getAllowance', getAllowance);
     setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)));
   }, [getAllowance]);
 
