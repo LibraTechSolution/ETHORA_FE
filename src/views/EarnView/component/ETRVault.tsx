@@ -14,6 +14,7 @@ import { Status } from '@/types/faucet.type';
 import { BaseError, formatUnits } from 'viem';
 import Currency from '@/components/Currency';
 import { Tooltip } from 'antd';
+import BigNumber from 'bignumber.js';
 
 const ETRVault = ({
   depositBalances_ETR,
@@ -157,7 +158,11 @@ const ETRVault = ({
                       ETR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{stakedTokensETR !== undefined ? addComma(stakedTokensETR, 6) : '0.00'}</Box>
+                    <Box padding={'0 8px'}>
+                      {stakedTokensETR !== undefined
+                        ? BigNumber(stakedTokensETR).toFormat(6, BigNumber.ROUND_DOWN)
+                        : '0.000000'}
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -165,7 +170,9 @@ const ETRVault = ({
                     </Box>
                     <Spacer />
                     <Box padding={'0 8px'}>
-                      {stakedTokens_esETR !== undefined ? addComma(stakedTokens_esETR, 6) : '0.00'}
+                      {stakedTokens_esETR !== undefined
+                        ? BigNumber(stakedTokens_esETR).toFormat(6, BigNumber.ROUND_DOWN)
+                        : '0.000000'}
                     </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
@@ -174,7 +181,9 @@ const ETRVault = ({
                     </Box>
                     <Spacer />
                     <Box padding={'0 8px'}>
-                      {multiplierPoints !== undefined ? addComma(multiplierPoints, 6) : '0.00'}
+                      {multiplierPoints !== undefined
+                        ? BigNumber(multiplierPoints).toFormat(6, BigNumber.ROUND_DOWN)
+                        : '0.000000'}
                     </Box>
                   </Flex>
                 </Box>
@@ -185,7 +194,9 @@ const ETRVault = ({
               // minWidth="215px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '215px' }}
             >
-              <Text as="u">{stakedTokens !== undefined ? addComma(stakedTokens, 2) : '0.00'}</Text>
+              <Text as="u">
+                {stakedTokens !== undefined ? BigNumber(stakedTokens).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}
+              </Text>
             </Tooltip>
           </Text>
         </Box>
@@ -208,8 +219,10 @@ const ETRVault = ({
               title={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
-                    {claimed !== undefined ? addComma(claimed, 6) : '0.00'} esETR tokens have been converted to ETR from
-                    the {vested !== undefined ? addComma(vested, 6) : '0.00'} esETR deposited for vesting.
+                    {claimed !== undefined ? BigNumber(claimed).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'} esETR
+                    tokens have been converted to ETR from the{' '}
+                    {vested !== undefined ? BigNumber(vested).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'} esETR
+                    deposited for vesting.
                   </Text>
                 </Box>
               }
@@ -220,8 +233,8 @@ const ETRVault = ({
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
               <Text as="u">
-                {claimed !== undefined ? addComma(claimed, 2) : '0.00'} /{' '}
-                {vested !== undefined ? addComma(vested, 2) : '0.00'}
+                {claimed !== undefined ? BigNumber(claimed).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'} /{' '}
+                {vested !== undefined ? BigNumber(vested).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}
               </Text>
             </Tooltip>
           </Text>
@@ -236,7 +249,7 @@ const ETRVault = ({
               title={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
-                    {claimable !== undefined ? addComma(claimable, 6) : '0.00'} ETR tokens can be claimed, use the
+                    {claimable !== undefined ? BigNumber(claimable).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'} ETR tokens can be claimed, use the
                     options under the Total Rewards section to claim them.
                   </Text>
                 </Box>
@@ -247,7 +260,7 @@ const ETRVault = ({
               // minWidth="288px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
-              <Text as="u">{claimable !== undefined ? addComma(claimable, 2) : '0.00'} ETR</Text>
+              <Text as="u">{claimable !== undefined ? BigNumber(claimable).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'} ETR</Text>
             </Tooltip>
           </Text>
         </Box>

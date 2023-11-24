@@ -364,8 +364,8 @@ const DepositModalELPVault = ({
                         }}
                         onClick={() => {
                           if (getMax !== undefined) {
-                            formik.setFieldValue('amount', roundDown(getMax, 6));
-                            setAmoutBigNumer(parseEther(roundDown(+getMax, 6)?.toString()));
+                            formik.setFieldValue('amount', BigNumber(getMax).toFixed(6, BigNumber.ROUND_DOWN));
+                            setAmoutBigNumer(parseEther(BigNumber(getMax).toFixed(6, BigNumber.ROUND_DOWN)));
                           }
                         }}
                       >

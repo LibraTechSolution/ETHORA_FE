@@ -154,28 +154,39 @@ const ETRItem = ({
                       Boosted APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{boosted_APR !== undefined ? addComma(boosted_APR, 6) : '0.00'}%</Box>
+                    <Box padding={'0 8px'}>
+                      {boosted_APR !== undefined
+                        ? BigNumber(boosted_APR).toFormat(6, BigNumber.ROUND_DOWN)
+                        : '0.000000'}
+                      %
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Escrowed ETR APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{esETR_APR !== undefined ? addComma(esETR_APR, 6) : '0.00'}%</Box>
+                    <Box padding={'0 8px'}>
+                      {esETR_APR !== undefined ? BigNumber(esETR_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Base USDC APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{USDC_APR !== undefined ? addComma(USDC_APR, 6) : '0.00'}%</Box>
+                    <Box padding={'0 8px'}>
+                      {USDC_APR !== undefined ? BigNumber(USDC_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Total APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{Total_APR !== undefined ? addComma(Total_APR, 6) : '0.00'}%</Box>
+                    <Box padding={'0 8px'}>
+                      {Total_APR !== undefined ? BigNumber(Total_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%
+                    </Box>
                   </Flex>
                   <Text fontSize={'12px'} color={'#9E9E9F'}>
                     The Boosted APR is from your staked Multiplier Points. APRs are updated weekly on Wednesday and will
@@ -189,7 +200,10 @@ const ETRItem = ({
               // minWidth="450px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '350px' }}
             >
-              <Text as="u"> {Total_APR !== undefined ? addComma(Total_APR, 2) : '0.00'}%</Text>
+              <Text as="u">
+                {' '}
+                {Total_APR !== undefined ? BigNumber(Total_APR).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}%
+              </Text>
             </Tooltip>
           </Text>
         </Box>
@@ -207,15 +221,19 @@ const ETRItem = ({
                       USDC
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{USDC_Rewards !== undefined ? addComma(USDC_Rewards, 6) : '0.00'}</Box>
+                    <Box padding={'0 8px'}>
+                      {USDC_Rewards !== undefined ? BigNumber(USDC_Rewards).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Escrowed ETR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{`${esETR_Rewards !== undefined ? addComma(esETR_Rewards, 6) : '0.00'}($${
-                      esETR_USD_Rewards !== undefined ? esETR_USD_Rewards.toFormat(6, BigNumber.ROUND_DOWN) : '0.00'
+                    <Box padding={'0 8px'}>{`${
+                      esETR_Rewards !== undefined ? BigNumber(esETR_Rewards).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'
+                    }($${
+                      esETR_USD_Rewards !== undefined ? esETR_USD_Rewards.toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'
                     })`}</Box>
                   </Flex>
                 </Box>
@@ -257,11 +275,14 @@ const ETRItem = ({
               // hasArrow
               title={
                 <>
-                  <Text fontSize={'12px'} marginBottom={'16px'}>{`You are earning  ${addComma(
-                    boosted_Percentage,
-                    6,
-                  )}% more USDC rewards using ${
-                    stakedMultiplierPoints !== undefined ? addComma(stakedMultiplierPoints, 6) : '0.00'
+                  <Text fontSize={'12px'} marginBottom={'16px'}>{`You are earning  ${
+                    boosted_Percentage !== undefined
+                      ? BigNumber(boosted_Percentage).toFormat(6, BigNumber.ROUND_DOWN)
+                      : '0.000000'
+                  }% more USDC rewards using ${
+                    stakedMultiplierPoints !== undefined
+                      ? BigNumber(stakedMultiplierPoints).toFormat(6, BigNumber.ROUND_DOWN)
+                      : '0.000000'
                   } Staked Multiplier Points.`}</Text>
                   <Text fontSize={'12px'}>Use the &quot;Compound&ldquo; button to stake your Multiplier Points.</Text>
                 </>
@@ -272,7 +293,12 @@ const ETRItem = ({
               // minWidth="215px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '215px' }}
             >
-              <Text as="u">{boosted_Percentage !== undefined ? addComma(boosted_Percentage, 2) : '0.00'}%</Text>
+              <Text as="u">
+                {boosted_Percentage !== undefined
+                  ? BigNumber(boosted_Percentage).toFormat(2, BigNumber.ROUND_DOWN)
+                  : '0.00'}
+                %
+              </Text>
             </Tooltip>
           </Text>
         </Box>

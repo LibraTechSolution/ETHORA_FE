@@ -41,12 +41,19 @@ const USDCVaultItem = ({
   const [openAddFundModal, setOpenAddFundModal] = useState<boolean>(false);
   const [openWithdrawFundModal, setOpenWithdrawFundModal] = useState<boolean>(false);
 
-  // console.log('exchangeRate', totalTokenXBalance_BLP , totalSupply_BLP , !totalTokenXBalance_BLP,!totalSupply_BLP)
+  console.log(
+    'exchangeRate',
+    totalTokenXBalance_BLP,
+    totalSupply_BLP,
+    !totalTokenXBalance_BLP,
+    !totalSupply_BLP,
+    !totalTokenXBalance_BLP || !totalSupply_BLP,
+  );
   const exchangeRate =
     !totalTokenXBalance_BLP || !totalSupply_BLP
       ? BigNumber(0)
       : BigNumber(totalTokenXBalance_BLP?.toString()).dividedBy(totalSupply_BLP?.toString());
-
+  console.log('exchangeRate', exchangeRate.toFixed());
   const wallet = Number(stakedAmounts_fsBLP) / 10 ** 6;
   const USDC_APR = (100 * 31536000 * Number(tokensPerInterval_fBLP)) / Number(balanceOf_BLP_USDC);
   const esETR_APR =
@@ -119,7 +126,8 @@ const USDCVaultItem = ({
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
               <Text as="u">
-                1.00 ELP = {!exchangeRate.toFixed() ? addComma(exchangeRate.toString(), 2) : '0.00'} USDC
+                1.00 ELP = {exchangeRate.toFixed() ? BigNumber(exchangeRate).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}{' '}
+                USDC
               </Text>
             </Tooltip>
           </Text>
@@ -179,14 +187,18 @@ const USDCVaultItem = ({
                       Escrowed ETR APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{esETR_APR !== undefined && addComma(esETR_APR, 6)}%</Box>
+                    <Box padding={'0 8px'}>
+                      {esETR_APR !== undefined ? BigNumber(esETR_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       USDC APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{USDC_APR !== undefined && addComma(USDC_APR, 6)}%</Box>
+                    <Box padding={'0 8px'}>
+                      {USDC_APR !== undefined ? BigNumber(USDC_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%
+                    </Box>
                   </Flex>
                   <Text fontSize={'12px'} color={'#9E9E9F'}>
                     APRs are updated weekly on Wednesday and will depend on the fees collected for the week.
@@ -199,7 +211,9 @@ const USDCVaultItem = ({
               // minWidth="450px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
-              <Text as="u">{Total_APR !== undefined && addComma(Total_APR, 2)}%</Text>
+              <Text as="u">
+                {Total_APR !== undefined ? BigNumber(Total_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.00'}%
+              </Text>
             </Tooltip>
           </Text>
         </Box>
@@ -217,15 +231,25 @@ const USDCVaultItem = ({
                       USDC
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{USDC_Rewards !== undefined ? addComma(USDC_Rewards, 6) : '0.00'}</Box>
+                    <Box padding={'0 8px'}>
+                      {USDC_Rewards !== undefined
+                        ? BigNumber(USDC_Rewards).toFormat(6, BigNumber.ROUND_DOWN)
+                        : '0.000000'}
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Escrowed ETR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{`${esETR_Rewards !== undefined ? addComma(esETR_Rewards, 6) : '0.00'}($${
-                      esETR_USD_Rewards !== undefined ? addComma(esETR_USD_Rewards, 6) : '0.00'
+                    <Box padding={'0 8px'}>{`${
+                      esETR_Rewards !== undefined
+                        ? BigNumber(esETR_Rewards).toFormat(6, BigNumber.ROUND_DOWN)
+                        : '0.000000'
+                    }($${
+                      esETR_USD_Rewards !== undefined
+                        ? BigNumber(esETR_USD_Rewards).toFormat(6, BigNumber.ROUND_DOWN)
+                        : '0.000000'
                     })`}</Box>
                   </Flex>
                 </Box>
@@ -236,7 +260,9 @@ const USDCVaultItem = ({
               // minWidth="350px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '350px' }}
             >
-              <Text as="u">${rewards !== undefined ? addComma(rewards, 2) : '0.00'}</Text>
+              <Text as="u">
+                ${rewards !== undefined ? BigNumber(rewards).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}
+              </Text>
             </Tooltip>
           </Text>
         </Box>
@@ -279,13 +305,13 @@ const USDCVaultItem = ({
           </Text>
           <Text fontSize={'14px'} textAlign={'right'} fontWeight={500} color={'#fffff'}>
             <span>
-              <Currency value={totalSupply  !== undefined ? totalSupply : 0} decimal={2} unit="ELP" />
+              <Currency value={totalSupply !== undefined ? totalSupply : 0} decimal={2} unit="ELP" />
               {' ELP  '}
             </span>
             <span>
               {' '}
               {'('}
-              <Currency value={ totalSupply_USD !== undefined ? totalSupply_USD : 0} decimal={2} unit="USDC" />
+              <Currency value={totalSupply_USD !== undefined ? totalSupply_USD : 0} decimal={2} unit="USDC" />
               {' USDC)'}
             </span>
           </Text>

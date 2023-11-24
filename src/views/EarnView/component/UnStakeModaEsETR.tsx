@@ -75,7 +75,7 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
   });
 
   const onUnStake = async (amount: string) => {
-    const amoutBigint =  parseEther(BigNumber(amount).toFixed())
+    const amoutBigint = parseEther(BigNumber(amount).toFixed());
 
     try {
       setLoadingUnStake(true);
@@ -178,7 +178,11 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                       <Text as="span" fontSize={'14px'}>
                         Max:{' '}
                         <Currency
-                          value={dataDepositBalances !== undefined ? BigNumber(formatUnits(dataDepositBalances as bigint, 18)).toFixed() : 0}
+                          value={
+                            dataDepositBalances !== undefined
+                              ? BigNumber(formatUnits(dataDepositBalances as bigint, 18)).toFixed()
+                              : 0
+                          }
                           decimal={2}
                           unit="esETR"
                         />{' '}
@@ -219,7 +223,10 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                         }}
                         onClick={() => {
                           if (dataDepositBalances !== undefined) {
-                            formik.setFieldValue('amount', roundDown(+formatEther(BigInt(dataDepositBalances)), 6));
+                            formik.setFieldValue(
+                              'amount',
+                              BigNumber(+formatEther(BigInt(dataDepositBalances))).toFixed(6, BigNumber.ROUND_DOWN),
+                            );
                           }
                         }}
                       >

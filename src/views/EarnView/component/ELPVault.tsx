@@ -12,6 +12,7 @@ import { Status } from '@/types/faucet.type';
 import { BaseError, formatUnits } from 'viem';
 import Currency from '@/components/Currency';
 import { Tooltip } from 'antd';
+import BigNumber from 'bignumber.js';
 
 const ELPVault = ({
   depositBalances_fBLP,
@@ -157,8 +158,10 @@ const ELPVault = ({
               title={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
-                    {claimed !== undefined ? addComma(claimed, 6) : '0.00'} esETR tokens have been converted to ETR from
-                    the {vested !== undefined ? addComma(vested, 6) : '0.00'} esETR deposited for vesting.
+                    {claimed !== undefined ? BigNumber(claimed).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'} esETR tokens
+                    have been converted to ETR from the{' '}
+                    {vested !== undefined ? BigNumber(vested).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'} esETR
+                    deposited for vesting.
                   </Text>
                 </Box>
               }
@@ -169,8 +172,8 @@ const ELPVault = ({
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
               <Text as="u">
-                {claimed !== undefined ? addComma(claimed, 2) : '0.00'} /{' '}
-                {vested !== undefined ? addComma(vested, 2) : '0.00'}
+                {claimed !== undefined ? BigNumber(claimed).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'} /{' '}
+                {vested !== undefined ? BigNumber(vested).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}
               </Text>
             </Tooltip>
           </Text>
@@ -185,8 +188,8 @@ const ELPVault = ({
               title={
                 <Box>
                   <Text fontSize={'12px'} marginBottom={'16px'}>
-                    {addComma(claimable, 6)} ETR tokens can be claimed, use the options under the Total Rewards section
-                    to claim them.
+                    {BigNumber(claimable).toFormat(6, BigNumber.ROUND_DOWN)} ETR tokens can be claimed, use the options
+                    under the Total Rewards section to claim them.
                   </Text>
                 </Box>
               }
@@ -196,7 +199,9 @@ const ELPVault = ({
               // minWidth="288px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
-              <Text as="u">{claimable !== undefined ? addComma(claimable, 2) : '0.00'} ETR</Text>
+              <Text as="u">
+                {claimable !== undefined ? BigNumber(claimable).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'} ETR
+              </Text>
             </Tooltip>
           </Text>
         </Box>

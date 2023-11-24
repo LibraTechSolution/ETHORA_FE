@@ -44,7 +44,7 @@ const getValue = (
       const valueStr = valueBig.toFormat(decimal, BigNumber.ROUND_DOWN);
       // valueShow = BigNumber(valueStr).toFormat();
       valueShow = valueStr;
-      fullValue = valueBig.toFormat(6);
+      fullValue = valueBig.toFormat(6, BigNumber.ROUND_DOWN);
       isRounded = valueShow !== fullValue;
 
       if (rounded && valueBig.gt(10 ** 3)) {
