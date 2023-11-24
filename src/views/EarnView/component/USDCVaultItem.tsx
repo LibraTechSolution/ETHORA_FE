@@ -41,32 +41,28 @@ const USDCVaultItem = ({
   const [openAddFundModal, setOpenAddFundModal] = useState<boolean>(false);
   const [openWithdrawFundModal, setOpenWithdrawFundModal] = useState<boolean>(false);
 
-  console.log(
-    'exchangeRate',
-    totalTokenXBalance_BLP,
-    totalSupply_BLP,
-    !totalTokenXBalance_BLP,
-    !totalSupply_BLP,
-    !totalTokenXBalance_BLP || !totalSupply_BLP,
-  );
   const exchangeRate =
     !totalTokenXBalance_BLP || !totalSupply_BLP
       ? BigNumber(0)
       : BigNumber(totalTokenXBalance_BLP?.toString()).dividedBy(totalSupply_BLP?.toString());
-  console.log('exchangeRate', exchangeRate.toFixed());
+
   const wallet = Number(stakedAmounts_fsBLP) / 10 ** 6;
   const USDC_APR = (100 * 31536000 * Number(tokensPerInterval_fBLP)) / Number(balanceOf_BLP_USDC);
   const esETR_APR =
     (100 * 31536000 * Number(tokensPerInterval_fsBLP) * price) / (Number(balanceOf_BLP_USDC) * 10 ** 12);
   const Total_APR = USDC_APR + esETR_APR;
 
-  const USDC_Rewards = Number(claimable_fBLP) / 10 ** 6;
-  const esETR_Rewards = Number(claimable_fsBLP) / 10 ** 18;
-  const esETR_USD_Rewards = (Number(claimable_fsBLP) * price) / 10 ** 18;
-  const rewards = USDC_Rewards + esETR_USD_Rewards;
-  const withdrawableAmount = Number(getUnlockedLiquidity_BLP) / 10 ** 6;
-  const totalStaked = Number(balanceOf_fBLP_BLP) / 10 ** 6;
-  const totalStaked_USD = Number(exchangeRate.multipliedBy(balanceOf_fBLP_BLP?.toString())) / 10 ** 6;
+  const USDC_Rewards = !!claimable_fBLP ? formatUnits(claimable_fBLP, 6) : 0;
+  const esETR_Rewards = !!claimable_fsBLP ? formatUnits(claimable_fsBLP, 18) : 0;
+  const esETR_USD_Rewards = BigNumber(esETR_Rewards).multipliedBy(price);
+
+  const rewards = Number(USDC_Rewards) + Number(esETR_USD_Rewards);
+
+  const withdrawableAmount = !!getUnlockedLiquidity_BLP ? formatUnits(getUnlockedLiquidity_BLP, 6) : 0 //Number(getUnlockedLiquidity_BLP) / 10 ** 6;
+
+  const totalStaked = !!balanceOf_fBLP_BLP ? formatUnits(balanceOf_fBLP_BLP, 6) : 0 //Number(balanceOf_fBLP_BLP) / 10 ** 6;
+  const totalStaked_USD =  BigNumber(totalStaked).multipliedBy(exchangeRate);
+  
   const totalSupply =
     !Number(exchangeRate) || !balanceOf_BLP_USDC ? 0 : Number(balanceOf_BLP_USDC) / (Number(exchangeRate) * 10 ** 6);
   const totalSupply_USD = !Number(exchangeRate) ? 0 : Number(balanceOf_BLP_USDC) / 10 ** 6;

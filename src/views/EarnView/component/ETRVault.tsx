@@ -39,7 +39,6 @@ const ETRVault = ({
   const [openDepositModal, setOpenDepositModal] = useState<boolean>(false);
   const { onFetchData } = useContext(EarnContext);
   const [loadingWithdraw, setLoadingWithdraw] = useState<boolean>(false);
-  console.log('depositBalances_ETR', depositBalances_ETR);
   const stakedTokensETR = depositBalances_ETR ? formatUnits(depositBalances_ETR, 18) : 0;
   const stakedTokens_esETR = depositBalances_esETR ? formatUnits(depositBalances_esETR, 18) : 0;
   const multiplierPoints = depositBalances_bnETR ? formatUnits(depositBalances_bnETR, 18) : 0;
@@ -56,8 +55,6 @@ const ETRVault = ({
     Number(claimable_vETR ? formatUnits(claimable_vETR, 18) : 0);
   const vested = getVestedAmount_vETR ? formatUnits(getVestedAmount_vETR, 18) : 0;
   const claimable = claimable_vETR ? formatUnits(claimable_vETR, 18) : 0;
-
-  console.log('stakedTokensETR', stakedTokensETR);
 
   const onWithdraw = async () => {
     if (+claimable === 0) {

@@ -102,9 +102,7 @@ const DepositModalETRVault = ({
   const getVestedAmount_VETR = data_VETR_SC && data_VETR_SC[1].result;
   const getCombinedAverageStakedAmount_VETR = data_VETR_SC && data_VETR_SC[2].result;
   const pairAmounts_VETR = data_VETR_SC && data_VETR_SC[3].result;
-  console.log('SE', balance);
-  console.log('SE', balance);
-
+  
   const SE = balance ? formatEther(balance as bigint) : 0;
   const GW = BigNumber(getMaxVestableAmount_VETR ? formatEther(getMaxVestableAmount_VETR as bigint) : 0).minus(
     getVestedAmount_VETR ? formatEther(getVestedAmount_VETR as bigint) : 0,
@@ -148,8 +146,6 @@ const DepositModalETRVault = ({
     getVestedAmount_VETR,
   );
 
-  console.log('reserveFirst', formatEther(reserveFirst));
-
   const onApprove = async () => {
     // if (!isApproved) {
     try {
@@ -165,7 +161,6 @@ const DepositModalETRVault = ({
       const data = await waitForTransaction({
         hash,
       });
-      console.log('data-hash', data);
       setLoadingApproved(false);
       setIsApproved(true);
       toast({
@@ -236,7 +231,6 @@ const DepositModalETRVault = ({
       const data = await waitForTransaction({
         hash,
       });
-      console.log('dataStake', data);
       setLoadingStake(false);
       onFetchData();
       onDismiss();
@@ -296,7 +290,6 @@ const DepositModalETRVault = ({
   }, [formik.errors]);
 
   useEffect(() => {
-    console.log(getAllowance);
     setIsApproved(getAllowance !== undefined && BigNumber(getAllowance?.toString()).isGreaterThan(BigNumber(0)));
   }, [getAllowance]);
 
@@ -350,7 +343,6 @@ const DepositModalETRVault = ({
                         if (validNumber.test(e.target.value)) {
                           formik.handleChange(e);
                           setAmoutBigNumer(e.target.value ? parseEther(e.target.value) : parseEther('0'));
-                          console.log(e.target.value);
                         } else {
                           console.log('field value change');
                           return;
@@ -374,7 +366,6 @@ const DepositModalETRVault = ({
                           if (getMax !== undefined) {
                             formik.setFieldValue('amount', BigNumber(getMax).toFixed(6, BigNumber.ROUND_DOWN));
                             setAmoutBigNumer(parseEther(BigNumber(getMax).toFixed(6, BigNumber.ROUND_DOWN)));
-                            console.log(BigNumber(getMax).toFixed(6, BigNumber.ROUND_DOWN));
                           }
                         }}
                       >

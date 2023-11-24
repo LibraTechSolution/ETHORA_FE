@@ -53,7 +53,6 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
       clainUSDC: true,
     },
     onSubmit: (values) => {
-      console.log('onSubmit',values);
       onCompoundReward(values);
     },
     // validationSchema: validationSchema,
@@ -83,7 +82,6 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
       const data = await waitForTransaction({
         hash,
       });
-      console.log('dataStake', data);
       setLoadingCompound(false);
       setClaimETRValue(false);
       setClaimEsETRValue(false);
@@ -203,7 +201,6 @@ const CompoundRewardsModal = ({ isOpen, onDismiss }: { isOpen: boolean; onDismis
                   fontWeight={400}
                   fontSize={'14px'}
                   onChange={(e) => {
-                    console.log(e.target.checked);
                     setClaimETRValue(!claimETRValue);
                     if (e.target.checked) {
                       formik.setFieldValue('claimETR', true);

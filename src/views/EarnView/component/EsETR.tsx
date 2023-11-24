@@ -44,7 +44,6 @@ const EsETR = ({
     (100 * 31536000 * Number(tokensPerInterval_sbfETR) * 10 ** 12) / (Number(totalSupply_sbfETR) * price);
   const boosted_APR = (Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR);
 
-  // console.log('totalSupply_sETR - balanceOf_sETR_ETR', totalSupply_sETR, balanceOf_sETR_ETR);
   const total_APR = isNaN(boosted_APR) ? esETR_APR + USDC_APR : esETR_APR + USDC_APR + boosted_APR;
   const totalStaked =
     totalSupply_sETR !== undefined && balanceOf_sETR_ETR !== undefined
