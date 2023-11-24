@@ -150,21 +150,21 @@ const EsETR = ({
                       Escrowed ETR APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{esETR_APR !== undefined ? addComma(esETR_APR, 6) : '0.00'}%</Box>
+                    <Box padding={'0 8px'}>{esETR_APR !== undefined ? BigNumber(esETR_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Base USDC APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{USDC_APR !== undefined ? addComma(USDC_APR, 6) : '0.00'}%</Box>
+                    <Box padding={'0 8px'}>{USDC_APR !== undefined ? BigNumber(USDC_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%</Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Boosted APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{boosted_APR !== undefined ? addComma(boosted_APR, 6) : '0.00'}%</Box>
+                    <Box padding={'0 8px'}>{boosted_APR !== undefined ? BigNumber(boosted_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%</Box>
                   </Flex>
                 </Box>
               }
@@ -174,7 +174,7 @@ const EsETR = ({
               // minWidth="215px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '280px' }}
             >
-              <Text as="u">{total_APR !== undefined ? addComma(total_APR, 2) : '0.00'}%</Text>
+              <Text as="u">{total_APR !== undefined ? BigNumber(total_APR).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}%</Text>
             </Tooltip>
           </Text>
         </Box>

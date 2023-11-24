@@ -222,7 +222,7 @@ const UnStakeModaETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () 
                         }}
                         onClick={() => {
                           if (dataDepositBalances !== undefined) {
-                            formik.setFieldValue('amount', roundDown(+formatEther(BigInt(dataDepositBalances)), 6));
+                            formik.setFieldValue('amount', BigNumber(+formatEther(BigInt(dataDepositBalances))).toFixed(6, BigNumber.ROUND_DOWN));
                           }
                         }}
                       >

@@ -280,7 +280,7 @@ const WithdrawFundsModal = ({
                         }}
                         onClick={() => {
                           if (getMax !== undefined) {
-                            formik.setFieldValue('amount', roundDown(getMax, 6));
+                            formik.setFieldValue('amount', BigNumber(getMax).toFixed(6, BigNumber.ROUND_DOWN));
                           }
                         }}
                       >
