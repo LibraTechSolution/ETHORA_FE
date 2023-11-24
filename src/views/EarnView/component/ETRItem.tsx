@@ -47,10 +47,10 @@ const ETRItem = ({
   const [openStakeModal, setOpenStakeModal] = useState<boolean>(false);
   const [openUnStakeModal, setOpenUnStakeModal] = useState<boolean>(false);
 
-  const USDC_Rewards = formatUnits(claimable_sbfETR, 6); //Number(claimable_sbfETR) / 10 ** 6;
-  const esETR_Rewards = formatUnits(claimables_sETR, 18); //Number(claimables_sETR) / 10 ** 18;
+  const USDC_Rewards = claimable_sbfETR ? formatUnits(claimable_sbfETR, 6) : 0; //Number(claimable_sbfETR) / 10 ** 6;
+  const esETR_Rewards = claimables_sETR ? formatUnits(claimables_sETR, 18) : 0; //Number(claimables_sETR) / 10 ** 18;
   const esETR_USD_Rewards = BigNumber(claimables_sETR ? formatUnits(claimables_sETR, 18) : 0).multipliedBy(price); //(Number(claimables_sETR) * price) / 10 ** 18;
-  const rewards = USDC_Rewards + esETR_USD_Rewards;
+  const rewards = esETR_USD_Rewards.plus(USDC_Rewards); // USDC_Rewards + esETR_USD_Rewards
 
   const esETR_APR = (100 * 31536000 * Number(tokensPerInterval_sETR)) / Number(totalSupply_sETR);
   const USDC_APR =
@@ -215,7 +215,7 @@ const ETRItem = ({
                     </Box>
                     <Spacer />
                     <Box padding={'0 8px'}>{`${esETR_Rewards !== undefined ? addComma(esETR_Rewards, 6) : '0.00'}($${
-                      esETR_USD_Rewards !== undefined ? esETR_USD_Rewards.toFormat(2, BigNumber.ROUND_DOWN) : '0.00'
+                      esETR_USD_Rewards !== undefined ? esETR_USD_Rewards.toFormat(6, BigNumber.ROUND_DOWN) : '0.00'
                     })`}</Box>
                   </Flex>
                 </Box>
@@ -226,7 +226,7 @@ const ETRItem = ({
               // minWidth="215px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '250px' }}
             >
-              <Text as="u"> ${rewards !== undefined ? addComma(rewards, 2) : '0.00'}</Text>
+              <Text as="u"> ${rewards !== undefined ? rewards.toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}</Text>
             </Tooltip>
           </Text>
         </Box>
