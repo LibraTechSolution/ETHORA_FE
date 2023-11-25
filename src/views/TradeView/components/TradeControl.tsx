@@ -345,8 +345,8 @@ const TradeControl = () => {
       setTimeError('Maximum duration is 4 hours');
       hasError = true;
     }
-    if (!balance || (balance && +divide(balance.toString(), 6) < +tradeSize)) {
-      setIsShowWarning(true);
+    if (!balance || (balance && +divide(balance.toString(), 6) < +tradeSize + +(appConfig?.FEE ?? 0.1))) {
+      setTradeSizeError('You dont have enough USDC for platform fee');
       hasError = true;
     }
 
