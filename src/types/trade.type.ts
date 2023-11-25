@@ -34,7 +34,8 @@ export interface CreateTradeReq {
   isLimitOrder: boolean,
   limitOrderDuration: number,
   token: string,
-  pair: string
+  pair: string,
+  allowPartialFill: boolean,
 }
 
 export enum State {
