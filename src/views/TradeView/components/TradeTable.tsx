@@ -42,42 +42,76 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
   const { pnl: earlyPnl } = useEarlyPnl({
     trade,
   });
+  const [isTimeOut, setIsTimeOut] = useState<boolean>(false);
   const { earlycloseAmount, probability } = earlyPnl;
+  const timeOutCallBack = () => {
+    setIsTimeOut(true);
+  };
   return (
-    <Box>
-      <Box>
-        <Tooltip
-          hasArrow
-          label={
-            <Box p={1} color="white">
-              {addComma(+earlycloseAmount, 6)} USDC
-            </Box>
-          }
-          color="white"
-          placement="top"
-          bg="#050506"
-        >
-          <span className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}>
-            {addComma(earlycloseAmount, 2)} USDC
-          </span>
-        </Tooltip>
-      </Box>
-      <Box>
-        <Tooltip
-          hasArrow
-          label={
-            <Box p={1} color="white">
-              {addComma(probability, 6)}%
-            </Box>
-          }
-          color="white"
-          placement="top"
-          bg="#050506"
-        >
-          <span className="text-[ #9E9E9F] text-xs font-normal">{addComma(probability, 2)}%</span>
-        </Tooltip>
-      </Box>
-    </Box>
+    <>
+      {!isTimeOut ? (
+        <Box>
+          <Box>
+            <Tooltip
+              hasArrow
+              label={
+                <Box p={1} color="white">
+                  {addComma(+earlycloseAmount, 6)} USDC
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+            >
+              <span
+                className={`pr-1 text-sm font-normal ${+earlycloseAmount < 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}`}
+              >
+                {addComma(earlycloseAmount, 2)} USDC
+              </span>
+            </Tooltip>
+          </Box>
+          <Box>
+            <Tooltip
+              hasArrow
+              label={
+                <Box p={1} color="white">
+                  {addComma(probability, 6)}%
+                </Box>
+              }
+              color="white"
+              placement="top"
+              bg="#050506"
+            >
+              <span className="text-[ #9E9E9F] text-xs font-normal">{addComma(probability, 2)}%</span>
+            </Tooltip>
+          </Box>
+        </Box>
+      ) : (
+        <Box display="inline-block">
+          <Text
+            className="inline-block rounded border px-2 font-normal"
+            background={'rgba(46, 96, 255, 0.10)'}
+            borderColor={'#2E60FF'}
+            textColor={'#2E60FF'}
+            display="flex"
+            alignItems={'center'}
+          >
+            <RotateCw color="#1E3EF0" size={12} className="mr-1" /> Processing
+          </Text>
+        </Box>
+      )}
+      <CountDown
+        endTime={
+          trade?.userCloseDate
+            ? dayjs(trade.userCloseDate).utc().unix()
+            : dayjs(trade.openDate).utc().unix() + trade.period
+        }
+        period={trade.period}
+        hideBar={true}
+        timeOutCallBack={timeOutCallBack}
+        hideCount={true}
+      />
+    </>
   );
 };
 
@@ -165,7 +199,9 @@ const ActionCell = ({
         </Box>
       )}
       <CountDown
-        endTime={dayjs(item.openDate).utc().unix() + item.period}
+        endTime={
+          item?.userCloseDate ? dayjs(item.userCloseDate).utc().unix() : dayjs(item.openDate).utc().unix() + item.period
+        }
         period={item.period}
         hideBar={true}
         timeOutCallBack={timeOutCallBack}
@@ -295,7 +331,15 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       title: 'Time Left',
       render: (value: ITradingData) =>
         value.state === State.OPENED ? (
-          <CountDown endTime={dayjs(value.openDate).utc().unix() + value.period} period={value.period} hideBar={true} />
+          <CountDown
+            endTime={
+              value.userCloseDate
+                ? dayjs(value.userCloseDate).utc().unix()
+                : dayjs(value.openDate).utc().unix() + value.period
+            }
+            period={value.period}
+            hideBar={true}
+          />
         ) : (
           <span className="flex items-center text-xs font-normal text-[#9E9E9F]">
             <span className="mr-1">{value.state === State.QUEUED ? 'In queue' : 'Processing...'}</span>
@@ -378,7 +422,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
       console.log(error);
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,
+        render: ({ onClose }) => <ToastLayout title="Close unsuccessfully" status={Status.ERROR} close={onClose} />,
       });
     }
   };

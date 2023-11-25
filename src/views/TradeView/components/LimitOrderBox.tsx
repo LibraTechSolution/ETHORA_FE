@@ -59,7 +59,7 @@ const LimitOrderBox = (props: PropsType) => {
       setIsDisabled(false);
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Cancel Unsuccessfully" status={Status.ERROR} close={onClose} />,
+        render: ({ onClose }) => <ToastLayout title="Cancel unsuccessfully" status={Status.ERROR} close={onClose} />,
       });
     }
   };

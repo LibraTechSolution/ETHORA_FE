@@ -142,7 +142,7 @@ const ReferralView = () => {
             position: 'top',
             render: ({ onClose }) => (
               <ToastLayout
-                title="Add Referral Code Unsuccessfully"
+                title="Add Referral Code unsuccessfully"
                 content={'User rejected the request!'}
                 status={Status.ERROR}
                 close={onClose}
@@ -198,7 +198,7 @@ const ReferralView = () => {
             position: 'top',
             render: ({ onClose }) => (
               <ToastLayout
-                title="Activate Referral Code Unsuccessfully"
+                title="Activate Referral Code unsuccessfully"
                 content={'User rejected the request!'}
                 status={Status.ERROR}
                 close={onClose}

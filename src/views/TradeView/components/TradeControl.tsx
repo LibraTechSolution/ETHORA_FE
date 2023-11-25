@@ -212,7 +212,7 @@ const TradeControl = () => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Approve account Unsuccessfully"
+            title="Approve account unsuccessfully"
             content={'Something went wrong. Please try again later.'}
             status={Status.ERROR}
             close={onClose}
@@ -263,7 +263,7 @@ const TradeControl = () => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Approve account Unsuccessfully"
+            title="Approve account unsuccessfully"
             content={msgContent}
             status={Status.ERROR}
             close={onClose}
@@ -431,7 +431,12 @@ const TradeControl = () => {
       toast({
         position: 'top',
         render: ({ onClose }) => (
-          <ToastLayout title="Create trade Unsuccessfully" status={Status.ERROR} close={onClose} />
+          <ToastLayout
+            title="Create trade unsuccessfully"
+            content={`Invalid liquidity`}
+            status={Status.ERROR}
+            close={onClose}
+          />
         ),
       });
     }
