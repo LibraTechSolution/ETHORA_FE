@@ -96,7 +96,7 @@ const PnLCell = ({ trade }: { trade: ITradingData }) => {
             display="flex"
             alignItems={'center'}
           >
-            <RotateCw color="#1E3EF0" size={12} className="mr-1" /> Processing
+            <RotateCw color="#1E3EF0" size={12} className="mr-1" /> Calculating...
           </Text>
         </Box>
       )}
