@@ -166,7 +166,8 @@ export const HeaderLanding = () => {
                       </MenuItem>
                       <MenuItem background="transparent">
                         <Link
-                          href="/docs"
+                          href="https://docs.ethora.io"
+                          target="_blank"
                           className={`w-full text-center ${currentRoute === '/docs' ? 'text-[#fff]' : ''}`}
                         >
                           Docs
@@ -289,7 +290,8 @@ export const HeaderLanding = () => {
             </Center>
             <Center justifyContent={'flex-start'}>
               <Link
-                href="/docs"
+                href="https://docs.ethora.io"
+                target="_blank"
                 className={`w-full text-left ${currentRoute === '/docs' ? 'text-[#fff]' : nonActiveStyle}`}
               >
                 Docs

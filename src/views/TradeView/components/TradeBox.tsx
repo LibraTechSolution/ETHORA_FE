@@ -175,7 +175,7 @@ const TradeBox = (props: PropsType) => {
       setIsDisabled(false);
       toast({
         position: 'top',
-        render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,
+        render: ({ onClose }) => <ToastLayout title="Close unsuccessfully" status={Status.ERROR} close={onClose} />,
       });
     }
   };
@@ -227,7 +227,11 @@ const TradeBox = (props: PropsType) => {
       </Flex>
       {item.state === State.OPENED ? (
         <CountDown
-          endTime={dayjs(item.openDate).utc().unix() + item.period}
+          endTime={
+            item?.userCloseDate
+              ? dayjs(item.userCloseDate).utc().unix()
+              : dayjs(item.openDate).utc().unix() + item.period
+          }
           period={item.period}
           timeOutCallBack={timeOutCallBack}
         />

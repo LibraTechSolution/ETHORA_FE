@@ -177,7 +177,7 @@ export const TradingViewChart = () => {
         isDisabledTrade.current = false;
         toast({
           position: 'top',
-          render: ({ onClose }) => <ToastLayout title="Close Unsuccessfully" status={Status.ERROR} close={onClose} />,
+          render: ({ onClose }) => <ToastLayout title="Close unsuccessfully" status={Status.ERROR} close={onClose} />,
         });
       }
     },
@@ -218,7 +218,7 @@ export const TradingViewChart = () => {
         isDisabledLimit.current = false;
         toast({
           position: 'top',
-          render: ({ onClose }) => <ToastLayout title="Cancel Unsuccessfully" status={Status.ERROR} close={onClose} />,
+          render: ({ onClose }) => <ToastLayout title="Cancel unsuccessfully" status={Status.ERROR} close={onClose} />,
         });
       }
     },

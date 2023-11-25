@@ -89,7 +89,7 @@ export const ActiveAccountModal = () => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Create account Unsuccessfully"
+            title="Create account unsuccessfully"
             content={msgContent}
             status={Status.ERROR}
             close={onClose}
@@ -143,7 +143,7 @@ export const ActiveAccountModal = () => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Create account Unsuccessfully"
+            title="Create account unsuccessfully"
             content={error.response.data.message}
             status={Status.ERROR}
             close={onClose}
@@ -177,7 +177,7 @@ export const ActiveAccountModal = () => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Registered account Unsuccessfully"
+            title="Registered account unsuccessfully"
             content={error.response.data.message}
             status={Status.ERROR}
             close={onClose}
@@ -218,7 +218,7 @@ export const ActiveAccountModal = () => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Register account Unsuccessfully"
+            title="Register account unsuccessfully"
             content={msgContent}
             status={Status.ERROR}
             close={onClose}

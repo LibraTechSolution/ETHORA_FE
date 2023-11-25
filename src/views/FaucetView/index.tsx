@@ -56,7 +56,7 @@ export const FaucetView = () => {
       toast({
         position: 'top',
         render: ({ onClose }) => (
-          <ToastLayout title="Claim USDC Unsuccessfully" content={msgContent} status={Status.ERROR} close={onClose} />
+          <ToastLayout title="Claim USDC unsuccessfully" content={msgContent} status={Status.ERROR} close={onClose} />
         ),
       });
     }

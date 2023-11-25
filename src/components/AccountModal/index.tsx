@@ -99,7 +99,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
   //       position: 'top',
   //       render: ({ onClose }) => (
   //         <ToastLayout
-  //           title="Deactive account Unsuccessfully"
+  //           title="Deactive account unsuccessfully"
   //           content={msgContent}
   //           status={Status.ERROR}
   //           close={onClose}
@@ -130,7 +130,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Deactive account Unsuccessfully"
+            title="Deactive account unsuccessfully"
             content={error.response.data.message}
             status={Status.ERROR}
             close={onClose}
@@ -197,7 +197,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Deactive account Unsuccessfully"
+            title="Deactive account unsuccessfully"
             content={msgContent}
             status={Status.ERROR}
             close={onClose}
@@ -240,7 +240,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Approve account Unsuccessfully"
+            title="Approve account unsuccessfully"
             content={'Something went wrong. Please try again later.'}
             status={Status.ERROR}
             close={onClose}
@@ -291,7 +291,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
         position: 'top',
         render: ({ onClose }) => (
           <ToastLayout
-            title="Approve account Unsuccessfully"
+            title="Approve account unsuccessfully"
             content={msgContent}
             status={Status.ERROR}
             close={onClose}
