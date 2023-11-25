@@ -294,6 +294,16 @@ const EarnView = () => {
         functionName: 'balanceOf',
         args: [appConfig.SETR_SC as `0x${string}`],
       },
+      {
+        ...ESETR_SC,
+        functionName: 'balanceOf',
+        args: [appConfig.FSBLP_DISTRIBUTOR_SC as `0x${string}`],
+      },
+      {
+        ...ESETR_SC,
+        functionName: 'balanceOf',
+        args: [appConfig.SETR_DISTRIBUTOR_SC as `0x${string}`],
+      },
     ],
   });
 
@@ -389,6 +399,9 @@ const EarnView = () => {
   const balanceOf_esETR = data_ESETR_SC && data_ESETR_SC[0].result;
   const balanceOf_fsBLP_esETR = data_ESETR_SC && data_ESETR_SC[1].result;
   const balanceOf_sETR_esETR = data_ESETR_SC && data_ESETR_SC[2].result;
+  const balanceOf_fsBLPDistributor_esETR = data_ESETR_SC && data_ESETR_SC[3].result;
+  const balanceOf_sETRDistributor_esETR = data_ESETR_SC && data_ESETR_SC[4].result;
+
 
   const balanceOf_BLP_USDC = data_USDC_SC && data_USDC_SC[0].result;
 
@@ -502,8 +515,10 @@ const EarnView = () => {
                   depositBalances_bnETR={depositBalances_bnETR as bigint}
                   depositBalances_sbETR={depositBalances_sbETR as bigint}
                   balanceOf_sETR_ETR={balanceOf_sETR_ETR as bigint}
-                  balanceOf_fsBLP_esETR={balanceOf_fsBLP_esETR as bigint}
-                  balanceOf_sETR_esETR={balanceOf_sETR_esETR as bigint}
+                  // balanceOf_fsBLP_esETR={balanceOf_fsBLP_esETR as bigint}
+                  // balanceOf_sETR_esETR={balanceOf_sETR_esETR as bigint}
+                  balanceOf_fsBLPDistributor_esETR={balanceOf_fsBLPDistributor_esETR as bigint}
+                  balanceOf_sETRDistributor_esETR={balanceOf_sETRDistributor_esETR as bigint}
                 />
               )}
             </CardEarn>

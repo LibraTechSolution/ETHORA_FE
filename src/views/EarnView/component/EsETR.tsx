@@ -20,8 +20,10 @@ const EsETR = ({
   depositBalances_bnETR,
   depositBalances_sbETR,
   balanceOf_sETR_ETR,
-  balanceOf_fsBLP_esETR,
-  balanceOf_sETR_esETR,
+  // balanceOf_fsBLP_esETR,
+  // balanceOf_sETR_esETR,
+  balanceOf_fsBLPDistributor_esETR,
+  balanceOf_sETRDistributor_esETR,
 }: {
   price: number;
   balanceOf_esETR: bigint;
@@ -33,8 +35,10 @@ const EsETR = ({
   depositBalances_bnETR: bigint;
   depositBalances_sbETR: bigint;
   balanceOf_sETR_ETR: bigint;
-  balanceOf_fsBLP_esETR: bigint;
-  balanceOf_sETR_esETR: bigint;
+  // balanceOf_fsBLP_esETR: bigint;
+  // balanceOf_sETR_esETR: bigint;
+  balanceOf_fsBLPDistributor_esETR: bigint;
+  balanceOf_sETRDistributor_esETR: bigint;
 }) => {
   const [openStakeModal, setOpenStakeModal] = useState<boolean>(false);
   const [openUnStakeModal, setOpenUnStakeModal] = useState<boolean>(false);
@@ -42,7 +46,10 @@ const EsETR = ({
   const esETR_APR = (100 * 31536000 * Number(tokensPerInterval_sETR)) / Number(totalSupply_sETR);
   const USDC_APR =
     (100 * 31536000 * Number(tokensPerInterval_sbfETR) * 10 ** 12) / (Number(totalSupply_sbfETR) * price);
-  const boosted_APR = (Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR);
+  const boosted_APR =
+    depositBalances_bnETR || depositBalances_sbETR
+      ? (Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR)
+      : 0;
 
   const total_APR = isNaN(boosted_APR) ? esETR_APR + USDC_APR : esETR_APR + USDC_APR + boosted_APR;
   const totalStaked =
@@ -50,8 +57,8 @@ const EsETR = ({
       ? formatUnits((totalSupply_sETR - balanceOf_sETR_ETR) as bigint, 18)
       : undefined;
   const totalSupply =
-    balanceOf_fsBLP_esETR !== undefined && balanceOf_sETR_esETR !== undefined
-      ? formatUnits((balanceOf_fsBLP_esETR + balanceOf_sETR_esETR) as bigint, 18)
+    balanceOf_fsBLPDistributor_esETR !== undefined && balanceOf_sETRDistributor_esETR !== undefined
+      ? formatUnits((balanceOf_fsBLPDistributor_esETR + balanceOf_sETRDistributor_esETR) as bigint, 18)
       : undefined;
 
   return (
@@ -149,21 +156,30 @@ const EsETR = ({
                       Escrowed ETR APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{esETR_APR !== undefined ? BigNumber(esETR_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%</Box>
+                    <Box padding={'0 8px'}>
+                      {esETR_APR !== undefined ? BigNumber(esETR_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Base USDC APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{USDC_APR !== undefined ? BigNumber(USDC_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%</Box>
+                    <Box padding={'0 8px'}>
+                      {USDC_APR !== undefined ? BigNumber(USDC_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%
+                    </Box>
                   </Flex>
                   <Flex margin={'0 -8px'} alignItems={'center'}>
                     <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
                       Boosted APR
                     </Box>
                     <Spacer />
-                    <Box padding={'0 8px'}>{boosted_APR !== undefined ? BigNumber(boosted_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.000000'}%</Box>
+                    <Box padding={'0 8px'}>
+                      {boosted_APR !== undefined
+                        ? BigNumber(boosted_APR).toFormat(6, BigNumber.ROUND_DOWN)
+                        : '0.000000'}
+                      %
+                    </Box>
                   </Flex>
                 </Box>
               }
@@ -173,7 +189,9 @@ const EsETR = ({
               // minWidth="215px"
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '280px' }}
             >
-              <Text as="u">{total_APR !== undefined ? BigNumber(total_APR).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}%</Text>
+              <Text as="u">
+                {total_APR !== undefined ? BigNumber(total_APR).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}%
+              </Text>
             </Tooltip>
           </Text>
         </Box>

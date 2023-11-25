@@ -29,7 +29,7 @@ import { useContext, useEffect, useState } from 'react';
 import { formatEther, formatUnits, BaseError, parseEther } from 'viem';
 import * as Yup from 'yup';
 import { EarnContext } from '..';
-import { useContractRead } from 'wagmi';
+import { useContractRead, useContractReads } from 'wagmi';
 import SETR_ABI from '@/config/abi/SETR_ABI';
 import useActiveWeb3React from '@/hooks/useActiveWeb3React';
 import { addComma, roundDown } from '@/utils/number';
@@ -37,6 +37,8 @@ import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import BigNumber from 'bignumber.js';
 import Currency from '@/components/Currency';
+import VETR_ABI from '@/config/abi/VETR_ABI';
+import SBFETR_ABI from '@/config/abi/SBFETR_ABI';
 
 const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => {
   const { onFetchData } = useContext(EarnContext);
@@ -53,15 +55,45 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
     args: [address as `0x${string}`, appConfig.ESETR_SC as `0x${string}`],
   });
 
+  const { data: dataPairAmounts } = useContractRead({
+    address: appConfig.VETR_SC as `0x${string}`,
+    abi: VETR_ABI,
+    functionName: 'pairAmounts',
+    args: [address as `0x${string}`],
+  });
+
+  const sbfETR_SC = {
+    address: appConfig.SBFETR_SC as `0x${string}`,
+    abi: SBFETR_ABI,
+  };
+
+  const { data: data_sbfETR_SC, refetch: refetchSBFETR_SC } = useContractReads({
+    contracts: [
+      {
+        ...sbfETR_SC,
+        functionName: 'depositBalances',
+        args: [address as `0x${string}`, appConfig.BNETR_SC as `0x${string}`],
+      },
+      {
+        ...sbfETR_SC,
+        functionName: 'depositBalances',
+        args: [address as `0x${string}`, appConfig.SBETR_SC as `0x${string}`],
+      },
+    ],
+  });
+  const depositBalances_bnETR = data_sbfETR_SC ? formatUnits(data_sbfETR_SC[0].result as bigint, 18) : 0;
+  const depositBalances_sbETR = data_sbfETR_SC ? formatUnits(data_sbfETR_SC[1].result as bigint, 18) : 0;
+  const pairAmounts_vETR = dataPairAmounts !== undefined ? formatUnits(dataPairAmounts, 18) : 0;
+
+  const ku = Number(depositBalances_bnETR) + Number(depositBalances_sbETR) - Number(pairAmounts_vETR);
+  const pe = dataDepositBalances !== undefined ? formatUnits(dataDepositBalances, 18) : 0;
+  const max = BigNumber.minimum(ku, pe);
+
   const validationSchema = Yup.object({
     amount: Yup.string()
       .required('Amount is required')
       .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
-      .test(
-        'Greater amount?',
-        'Not enough funds!',
-        (value) => +value <= +formatUnits(dataDepositBalances as bigint, 18),
-      ),
+      .test('Greater amount?', 'Not enough funds!', (value) => +value <= +max.toFixed(6, BigNumber.ROUND_DOWN)),
   });
 
   const formik = useFormik({
@@ -175,17 +207,7 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                         UnStake
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
-                        Max:{' '}
-                        <Currency
-                          value={
-                            dataDepositBalances !== undefined
-                              ? BigNumber(formatUnits(dataDepositBalances as bigint, 18)).toFixed()
-                              : 0
-                          }
-                          decimal={2}
-                          unit="esETR"
-                        />{' '}
-                        esETR
+                        Max: <Currency value={max !== undefined ? max.toFixed() : 0} decimal={2} unit="esETR" /> esETR
                       </Text>
                     </Flex>
                   </FormLabel>
@@ -222,10 +244,7 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
                         }}
                         onClick={() => {
                           if (dataDepositBalances !== undefined) {
-                            formik.setFieldValue(
-                              'amount',
-                              BigNumber(+formatEther(BigInt(dataDepositBalances))).toFixed(6, BigNumber.ROUND_DOWN),
-                            );
+                            formik.setFieldValue('amount', max.toFixed(6, BigNumber.ROUND_DOWN));
                           }
                         }}
                       >

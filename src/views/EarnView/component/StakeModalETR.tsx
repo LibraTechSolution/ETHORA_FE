@@ -322,7 +322,7 @@ const StakeModalETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () =
                         }}
                         onClick={() => {
                           if (balance !== undefined) {
-                            formik.setFieldValue('amount', BigNumber(Number(balance) / 10 ** 18).toFixed(6, BigNumber.ROUND_DOWN));
+                            formik.setFieldValue('amount', BigNumber(Number(balance) / 10 ** 18).toFixed(6, BigNumber.ROUND_DOWN)); //formatUnits(balance as bigint, 18)
                           }
                         }}
                       >

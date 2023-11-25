@@ -18,7 +18,7 @@ import {
   InputRightElement,
   Box,
   Flex,
-  Tooltip,
+  // Tooltip,
   Spacer,
   useToast,
   Link,
@@ -39,6 +39,7 @@ import { formatUnits, BaseError, parseEther, formatEther } from 'viem';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import Currency from '@/components/Currency';
+import { Tooltip } from 'antd';
 
 const DepositModalETRVault = ({
   isOpen,
@@ -102,7 +103,7 @@ const DepositModalETRVault = ({
   const getVestedAmount_VETR = data_VETR_SC && data_VETR_SC[1].result;
   const getCombinedAverageStakedAmount_VETR = data_VETR_SC && data_VETR_SC[2].result;
   const pairAmounts_VETR = data_VETR_SC && data_VETR_SC[3].result;
-  
+
   const SE = balance ? formatEther(balance as bigint) : 0;
   const GW = BigNumber(getMaxVestableAmount_VETR ? formatEther(getMaxVestableAmount_VETR as bigint) : 0).minus(
     getVestedAmount_VETR ? formatEther(getVestedAmount_VETR as bigint) : 0,
@@ -402,8 +403,8 @@ const DepositModalETRVault = ({
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
                         <Tooltip
-                          hasArrow
-                          label={
+                          // hasArrow
+                          title={
                             <Box w="100%" p={4} color="white">
                               <Flex margin={'0 -8px'} alignItems={'center'}>
                                 <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -411,7 +412,10 @@ const DepositModalETRVault = ({
                                 </Box>
                                 <Spacer />
                                 <Box padding={'0 8px'}>
-                                  {deposited ? BigNumber(deposited).toFormat(6, BigNumber.ROUND_DOWN) : BigNumber(0).toFormat(2, BigNumber.ROUND_DOWN)} esETR
+                                  {deposited
+                                    ? BigNumber(deposited).toFormat(6, BigNumber.ROUND_DOWN)
+                                    : BigNumber(0).toFormat(2, BigNumber.ROUND_DOWN)}{' '}
+                                  esETR
                                 </Box>
                               </Flex>
                               <Flex margin={'0 -8px'} alignItems={'center'}>
@@ -420,15 +424,19 @@ const DepositModalETRVault = ({
                                 </Box>
                                 <Spacer />
                                 <Box padding={'0 8px'}>
-                                  {maxCapacity ? BigNumber(maxCapacity).toFormat(6, BigNumber.ROUND_DOWN) : BigNumber(0).toFormat(2, BigNumber.ROUND_DOWN)} esETR
+                                  {maxCapacity
+                                    ? BigNumber(maxCapacity).toFormat(6, BigNumber.ROUND_DOWN)
+                                    : BigNumber(0).toFormat(2, BigNumber.ROUND_DOWN)}{' '}
+                                  esETR
                                 </Box>
                               </Flex>
                             </Box>
                           }
-                          color="white"
+                          // color="white"
                           placement="top"
-                          bg="#050506"
-                          minWidth="300px"
+                          // bg="#050506"
+                          // minWidth="300px"
+                          overlayStyle={{ color: 'white', background: '#050506', maxWidth: '300px', zIndex: 9999 }}
                         >
                           <Text as="u">
                             {BigNumber(formik?.values?.amount ? formik?.values?.amount : 0)
@@ -450,8 +458,8 @@ const DepositModalETRVault = ({
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
                         <Tooltip
-                          hasArrow
-                          label={
+                          // hasArrow
+                          title={
                             <Box w="100%" p={4} color="white">
                               <Flex margin={'0 -8px'} alignItems={'center'}>
                                 <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -482,10 +490,11 @@ const DepositModalETRVault = ({
                               </Flex>
                             </Box>
                           }
-                          color="white"
+                          // color="white"
                           placement="top"
-                          bg="#050506"
-                          minWidth="400px"
+                          // bg="#050506"
+                          // minWidth="400px"
+                          overlayStyle={{ color: 'white', background: '#050506', maxWidth: '400px', zIndex: 9999 }}
                         >
                           <Text as="u">
                             {reserveFirst !== undefined

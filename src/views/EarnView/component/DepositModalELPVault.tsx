@@ -18,7 +18,6 @@ import {
   InputRightElement,
   Box,
   Flex,
-  Tooltip,
   Spacer,
   useToast,
   Link,
@@ -39,6 +38,7 @@ import { addComma, roundDown } from '@/utils/number';
 import { ToastLayout } from '@/components/ToastLayout';
 import { Status } from '@/types/faucet.type';
 import Currency from '@/components/Currency';
+import { Tooltip } from 'antd';
 
 const DepositModalELPVault = ({
   isOpen,
@@ -398,8 +398,8 @@ const DepositModalELPVault = ({
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
                         <Tooltip
-                          hasArrow
-                          label={
+                          // hasArrow
+                          title={
                             <Box w="100%" p={4} color="white">
                               <Flex margin={'0 -8px'} alignItems={'center'}>
                                 <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -427,10 +427,11 @@ const DepositModalELPVault = ({
                               </Flex>
                             </Box>
                           }
-                          color="white"
+                          // color="white"
                           placement="top"
-                          bg="#050506"
-                          minWidth="215px"
+                          // bg="#050506"
+                          // minWidth="215px"
+                          overlayStyle={{ color: 'white', background: '#050506', maxWidth: '300px', zIndex: 9999 }}
                         >
                           <Text as="u">
                             {BigNumber(formik?.values?.amount ? formik?.values?.amount : 0)
@@ -452,8 +453,8 @@ const DepositModalELPVault = ({
                       </Text>{' '}
                       <Text as="span" fontSize={'14px'}>
                         <Tooltip
-                          hasArrow
-                          label={
+                          // hasArrow
+                          title={
                             <Box w="100%" p={4} color="white">
                               <Flex margin={'0 -8px'} alignItems={'center'}>
                                 <Box fontSize={'12px'} color={'#9E9E9F'} padding={'0 8px'}>
@@ -484,10 +485,11 @@ const DepositModalELPVault = ({
                               </Flex>
                             </Box>
                           }
-                          color="white"
+                          // color="white"
                           placement="top"
-                          bg="#050506"
-                          minWidth="400px"
+                          // bg="#050506"
+                          // minWidth="400px"
+                          overlayStyle={{ color: 'white', background: '#050506', maxWidth: '400px', zIndex: 9999 }}
                         >
                           <Text as="u">
                             {reserveFirst !== undefined ? BigNumber(formatEther(reserveFirst)).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'} /{' '}
