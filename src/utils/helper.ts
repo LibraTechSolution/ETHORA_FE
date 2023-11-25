@@ -2,6 +2,8 @@ import { ITradingData } from '@/types/trade.type';
 import { PublicClient, WriteContractResult } from '@wagmi/core';
 import dayjs from 'dayjs';
 import { BlackScholes } from './blackscholes';
+import { divide } from './operationBigNumber';
+import { configDecimal } from '@/views/TradeView/components/TradeTable';
 
 export const getReceiptTxs = async (writeAsync: () => Promise<WriteContractResult>, provider: PublicClient) => {
   const { hash } = await writeAsync();
@@ -32,7 +34,7 @@ export const getProbabilityByTime = (
   IV: number,
 ) => {
   const probability =
-    BlackScholes(true, trade.isAbove, price, +trade.strike / 100000000, expirationTime - currentTime, 0, IV) * 100;
+    BlackScholes(true, trade.isAbove, price, +divide(trade.strike, trade?.pair ? configDecimal[trade?.pair.replace('-', '').toUpperCase()] : 8), expirationTime - currentTime, 0, IV) * 100;
 
   return probability;
 };
