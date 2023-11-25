@@ -21,7 +21,9 @@ export default function SidebarLayout({
       // position={isMobile ? 'relative' : 'static'}
     >
       <NavBar />
-      <Box flex={1} paddingX={{ base: '12px', lg: '80px' }}>
+      <Box flex={1} paddingX={{ base: '12px', lg: '80px' }} 
+      marginBottom={{base: '40px', lg:'0px'}}
+      >
         {children}
       </Box>
     </Flex>
