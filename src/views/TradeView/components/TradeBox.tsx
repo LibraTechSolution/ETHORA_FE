@@ -1,7 +1,7 @@
 'use client';
 import { addComma } from '@/utils/number';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import { Flex, Center, GridItem, Button, Box, Grid, Image, useToast, Tooltip } from '@chakra-ui/react';
+import { Flex, Center, GridItem, Button, Box, Grid, Image, useToast, Tooltip, Text } from '@chakra-ui/react';
 import CountDown from './CountDown';
 import dayjs from 'dayjs';
 import { ITradingData, State } from '@/types/trade.type';
@@ -245,7 +245,24 @@ const TradeBox = (props: PropsType) => {
         <span className="rounded bg-[#252528] px-2 py-1 text-sm text-[#fff]">USDC</span>
       </Box>
       <Grid templateColumns="repeat(2, 1fr)" borderBottom="1px solid #242428" paddingBottom="3" marginBottom="3">
-        <ShowPnL item={item} />
+        {isTimeOut ? (
+          <GridItem>
+            <Box display="inline-block">
+              <Text
+                className="inline-block rounded border px-2 font-normal"
+                background={'rgba(46, 96, 255, 0.10)'}
+                borderColor={'#2E60FF'}
+                textColor={'#2E60FF'}
+                display="flex"
+                alignItems={'center'}
+              >
+                <RotateCw color="#1E3EF0" size={12} className="mr-1" /> Calculating...
+              </Text>
+            </Box>
+          </GridItem>
+        ) : (
+          <ShowPnL item={item} />
+        )}
         <GridItem>
           <p className="mb-2 text-xs font-normal text-[#9E9E9F]">Current Price</p>
           {item?.pair && (
