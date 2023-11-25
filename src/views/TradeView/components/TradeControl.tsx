@@ -386,6 +386,8 @@ const TradeControl = () => {
         token: TRADE_TOKEN.USDC,
         pair: currentPair?.pair ? currentPair?.pair.replace('/', '-').toLowerCase() : '',
         referralCode: referCode ?? '',
+        allowPartialFill:
+          address && advanceSetting && advanceSetting[address] ? +advanceSetting[address].isPartialFill : true,
       };
       const res = await createTrade(data);
       setListLines(res.data.data);
