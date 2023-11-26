@@ -449,7 +449,7 @@ const EarnView = () => {
           <Text className="flex w-full items-center" color={'#9E9E9F'}>
             Stake ETR and ELP to earn rewards.{' '}
             <Link
-              href="https://coinbase.com/faucets/base-ethereum-goerli-faucet"
+              href="https://docs.ethora.io/stake-esetr"
               target="_blank"
               className="group ml-1 flex text-center align-middle text-[#1E3EF0]"
             >
@@ -554,7 +554,7 @@ const EarnView = () => {
           <Text className="flex w-full items-center">
             Convert esETR tokens to ETR tokens.
             <Link
-              href="https://coinbase.com/faucets/base-ethereum-goerli-faucet"
+              href="https://docs.ethora.io/vest-esetr"
               target="_blank"
               className="group ml-1 flex text-center align-middle text-[#1E3EF0]"
             >
