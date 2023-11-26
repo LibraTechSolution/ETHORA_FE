@@ -463,7 +463,7 @@ const DepositModalELPVault = ({
                                 <Spacer />
                                 <Box padding={'0 8px'}>
                                   {pairAmounts_VBLP !== undefined
-                                    ? BigNumber(formatEther(pairAmounts_VBLP as bigint)).toFormat(
+                                    ? BigNumber(formatUnits(pairAmounts_VBLP as bigint, 6)).toFormat(
                                         6,
                                         BigNumber.ROUND_DOWN,
                                       )
@@ -478,7 +478,7 @@ const DepositModalELPVault = ({
                                 <Box padding={'0 8px'}>
                                   {pairAmounts_VBLP !== undefined && reserveFirst !== undefined
                                     ? BigNumber(
-                                        +formatEther(reserveFirst as bigint) - +formatEther(pairAmounts_VBLP as bigint),
+                                        +formatUnits(reserveFirst as bigint, 6) - +formatUnits(pairAmounts_VBLP as bigint, 6),
                                       ).toFormat(6, BigNumber.ROUND_DOWN)
                                     : '0.000000'}
                                 </Box>
@@ -492,8 +492,8 @@ const DepositModalELPVault = ({
                           overlayStyle={{ color: 'white', background: '#050506', maxWidth: '400px', zIndex: 9999 }}
                         >
                           <Text as="u">
-                            {reserveFirst !== undefined ? BigNumber(formatEther(reserveFirst)).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'} /{' '}
-                            {depositBalances !== undefined ?BigNumber(formatEther(depositBalances)).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}
+                            {reserveFirst !== undefined ? BigNumber(formatUnits(reserveFirst,6)).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'} /{' '}
+                            {depositBalances !== undefined ?BigNumber(formatUnits(depositBalances,6)).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}
                           </Text>
                         </Tooltip>
                       </Text>
