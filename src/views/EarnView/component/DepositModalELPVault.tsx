@@ -100,7 +100,7 @@ const DepositModalELPVault = ({
   const getMaxVestableAmount_VBLP = data_VBLP_SC && data_VBLP_SC[0].result;
   const getVestedAmount_VBLP = data_VBLP_SC && data_VBLP_SC[1].result;
   const pairAmounts_VBLP = data_VBLP_SC && data_VBLP_SC[2].result;
-  const getCombinedAverageStakedAmount_VBLP = data_VBLP_SC && data_VBLP_SC[2].result;
+  const getCombinedAverageStakedAmount_VBLP = data_VBLP_SC && data_VBLP_SC[3].result;
 
   const SE = balance ? formatUnits(balance as bigint, 18) : 0;
   const WW = (Number(getMaxVestableAmount_VBLP) - Number(getVestedAmount_VBLP)) / 10 ** 18;
