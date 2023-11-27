@@ -11,6 +11,8 @@ import PlatformTradesTable from './components/PlatformTradesTable';
 import PlatformHistoryTable from './components/PlatformHistoryTable';
 import TradeLeftSide from './components/TradeLeftSide';
 import { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getConfigTrade } from '@/services/config';
 
 const TradingViewChart = dynamic(
   () => import('@/components/TradingView/TradingView').then((mod) => mod.TradingViewChart),
@@ -50,6 +52,13 @@ const TradeView = () => {
     setContainerDim({ top: d.top, height: window.innerHeight - 300 });
     isFirstLoad.current = false;
   }, []);
+
+  const { data: dataConfigPair } = useQuery({
+    queryKey: ['getDataConfigPair'],
+    queryFn: () => getConfigTrade(),
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
     document.addEventListener('mousemove', onMouseMove);

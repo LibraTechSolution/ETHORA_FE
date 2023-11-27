@@ -21,7 +21,7 @@ export const getSVR = (sig: string) => {
 };
 
 export const getProbability = (trade: ITradingData, price: number, IV: number, expiryTs?: string) => {
-  const currentEpoch = dayjs().utc().unix();
+  const currentEpoch = dayjs().unix();
   const expiryTime = getExpiry(trade, expiryTs);
   return getProbabilityByTime(trade, price, currentEpoch, expiryTime, IV);
 };
@@ -34,13 +34,21 @@ export const getProbabilityByTime = (
   IV: number,
 ) => {
   const probability =
-    BlackScholes(true, trade.isAbove, price, +divide(trade.strike, trade?.pair ? configDecimal[trade?.pair.replace('-', '').toUpperCase()] : 8), expirationTime - currentTime, 0, IV) * 100;
+    BlackScholes(
+      true,
+      trade.isAbove,
+      price,
+      +divide(trade.strike, trade?.pair ? configDecimal[trade?.pair.replace('-', '').toUpperCase()] : 8),
+      expirationTime - currentTime,
+      0,
+      IV,
+    ) * 100;
 
   return probability;
 };
 
 export const getExpiry = (trade: ITradingData, deb?: string) => {
-  return dayjs(trade.closeDate).utc().unix() || dayjs(trade.openDate).utc().unix() + trade.period;
+  return dayjs(trade.closeDate).unix() || dayjs(trade.openDate).unix() + trade.period;
 };
 
 export const DataTickFormater = (number: number) => {
@@ -56,5 +64,5 @@ export const DataTickFormater = (number: number) => {
 };
 
 export const DataTickDateFormater = (time: number | string) => {
-  return dayjs(+time * 1000).format('DD.MM')
+  return dayjs(+time * 1000).format('DD.MM');
 };
