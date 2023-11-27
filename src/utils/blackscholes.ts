@@ -10,11 +10,13 @@
 // a=Above
 // y=Yes
 
+import { divide } from "./operationBigNumber";
+
 const BlackScholes = (y: any, a: any, s: any, x: any, t: any, r: any, v: any) => {
   // console.log(`y, a, s, x, t, r, v: `, y, a, s, x, t, r, v);
   var d1, d2;
   var DAYS_365 = 86400 * 365;
-  t = t / DAYS_365;
+  t = +divide(t, DAYS_365.toString());
   d1 = (Math.log(s / x) + (r + (v * v) / 2.0) * t) / (v * Math.sqrt(t));
   d2 = d1 - v * Math.sqrt(t);
   if (y) {
@@ -28,13 +30,12 @@ const BlackScholes = (y: any, a: any, s: any, x: any, t: any, r: any, v: any) =>
 
 /* Calculate Choudhury’s approximation of the Black-Scholes CDF*/
 const CDF = (input: any) => {
-  var inputSquared = input * input;
-  var CDF_CONST_0, CDF_CONST_1, CDF_CONST_2;
-  (CDF_CONST_0 = 2260 / 3989),
-    (CDF_CONST_1 = 6400 / 3989),
-    (CDF_CONST_2 = 3300 / 3989);
+  const inputSquared = input * input;
+  const CDF_CONST_0 = 2260 / 3989;
+  const CDF_CONST_1 = 6400 / 3989;
+  const CDF_CONST_2 = 3300 / 3989;
 
-  var value =
+  const value =
     Math.exp(-inputSquared / 2) /
     (CDF_CONST_0 +
       CDF_CONST_1 * Math.abs(input) +
