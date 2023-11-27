@@ -6,6 +6,7 @@ import { Flex } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import { useEarlyPnl } from './TradeBox';
 import { divide } from '@/utils/operationBigNumber';
+import { useEffect, useRef, useState } from 'react';
 
 interface ToastUIType {
   item: ITradingData;
@@ -17,16 +18,23 @@ export const ToastCloseTrade = (props: ToastUIType) => {
   const { pnl: earlyPnl } = useEarlyPnl({
     trade: item,
   });
+  const [amount, setAmount] = useState<string>('0');
   const { earlycloseAmount } = earlyPnl;
+  const firstTime = useRef(true);
+  useEffect(() => {
+    if (firstTime.current) {
+      setAmount(earlycloseAmount);
+      firstTime.current = false;
+    }
+  }, []);
+
   return (
     <ToastLayout status={Status.SUCCESSS} close={onClose}>
       <p className="text-[#9E9E9F]">
         <span className="text-[#fff]">{item.pair.toUpperCase()}</span>{' '}
         <span className="text-[#fff]">{item.isAbove ? 'Up' : 'Down'}</span> @{' '}
         <span className="pr-2 text-[#fff]">{addComma(divide(item.strike, 8), 2)}</span>
-        <span className={+earlycloseAmount <= 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>
-          {(+earlycloseAmount).toFixed(2)}
-        </span>
+        <span className={+amount <= 0 ? 'text-[#F03D3E]' : 'text-[#1ED768]'}>{(+amount).toFixed(2)}</span>
       </p>
       <Flex className="text-[#9E9E9F]">
         <span>
