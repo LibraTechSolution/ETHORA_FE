@@ -40,7 +40,7 @@ const CancelTable = () => {
         <Flex justifyContent={'space-between'}>
           <Flex>
             <Image alt="" src={`/images/icons/${value.pair}.png`} w="20px" h="20px" />
-            <span className="ml-2">{value?.pair && value.pair.toUpperCase()}</span>
+            <span className="ml-2 mr-4">{value?.pair && value.pair.toUpperCase()}</span>
           </Flex>
           {value.isAbove ? (
             <span className="h-6 rounded border border-[#1ED768] px-[6px] text-sm font-normal text-[#1ED768]">
