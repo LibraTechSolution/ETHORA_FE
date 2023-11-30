@@ -248,18 +248,18 @@ const Utilization = ({ pair }: { pair: string }) => {
 };
 
 const ContractWithPair: Record<string, string> = {
-  '0x9c4c031a88f3ddd9d29cd9c8e6513a3988964d9b': 'BTCUSD',
-  '0xebacafbcb0ac27b67319827f6b09cc84b9017baa': 'ETHUSD',
-  '0xd25b64ce363c03054591cad3d69b86e571e1acf6': 'LINKUSD',
-  '0x65ceb3cd7241894d189f686a5603ce2ed08ce9b0': 'TONUSD',
-  '0xaf88116f29eb365ce6519a5612f7c9a85a950210': 'ARBUSD',
-  '0x69287935bea51cf4e6a50fcf51997343ddb6760f': 'XRPUSD',
-  '0xf3d2691552a48e0fb1b601e1d9c4b68a17c228f7': 'SOLUSD',
-  '0x0d2c4a4849b9445df604d9e24d01c906daaf360f': 'BNBUSD',
-  '0x25ed2e9ec55522c19dcf46921dff4706c3e4ca82': 'EURUSD',
-  '0x41167b680f71451c7592ca1e6ddbd4406eeaae08': 'XAUUSD',
-  '0x19feffffc93ba557331136fbbec38b1c2a08557c': 'GBPUSD',
-  '0x0df7811a8f1878f844dc4485cffad9dff1f8e10b': 'XAGUSD',
+  '0x90055e89fa3ed19a7855d86cdd39d4f688f83e48': 'BTCUSD',
+  '0x5b5cb70e334888a485bd410f1fb87aa81d3cee3e': 'ETHUSD',
+  '0x3207aa0b75d20b790196d1998066887c8bd97d63': 'LINKUSD',
+  '0x07edec238b1cbfcce98669f0a7b61349162cc278': 'TONUSD',
+  '0x89d2b1455b3a49dc0b19541745cc9080e3226b38': 'ARBUSD',
+  '0x7d3c0d846907136281d486a667f41579c63a1aa2': 'XRPUSD',
+  '0x01c059dca520ce23cd5635f699c2012a6e9d9b78': 'SOLUSD',
+  '0x8edf4f76a8ae9f80cee8a10107927ba1997c2609': 'BNBUSD',
+  '0xdc45cbc2e65306cde17cc4e7af2fe23611eb7e4e': 'EURUSD',
+  '0x9b689852c790812d303e80b489009f8e5abbd01b': 'XAUUSD',
+  '0x37ec5a0847331ecee6944827ea3ef7468d12c69e': 'GBPUSD',
+  '0x2144a883db914540a9b6c50a4eccaeaad089c1d9': 'XAGUSD',
 };
 
 const TableMarket = () => {
