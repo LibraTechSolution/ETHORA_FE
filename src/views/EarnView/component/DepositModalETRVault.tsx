@@ -65,7 +65,7 @@ const DepositModalETRVault = ({
     address: appConfig.ESETR_SC as `0x${string}`,
     abi: ESETR_ABI,
     functionName: 'allowance',
-    args: [address as `0x${string}`, appConfig.SETR_SC as `0x${string}`],
+    args: [address as `0x${string}`, appConfig.VETR_SC as `0x${string}`],
     enabled: !!(address && appConfig.ESETR_SC),
   });
 

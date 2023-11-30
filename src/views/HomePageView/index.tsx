@@ -6,6 +6,16 @@ import CardEthora from './conponent/cardEthora';
 import CardDualToken from './conponent/cartDualToken';
 import Link from 'next/link';
 import FooterLadingPage from '@/components/layout/FooterLandingPage';
+import { appConfig } from '@/config';
+import useActiveWeb3React from '@/hooks/useActiveWeb3React';
+import FBLP_ABI from '@/config/abi/FBLP_ABI';
+import USDC_ABI from '@/config/abi/USDC_ABI';
+import { useContractReads } from 'wagmi';
+import FSBLP_ABI from '@/config/abi/FSBLP_ABI';
+import BigNumber from 'bignumber.js';
+import SETR_ABI from '@/config/abi/SETR_ABI';
+import SBFETR_ABI from '@/config/abi/SBFETR_ABI';
+import { useIsMounted } from '@/hooks/useIsMounted';
 
 const dataCardEthora = [
   {
@@ -34,6 +44,177 @@ const dataCardEthora = [
   },
 ];
 export const HomeView = () => {
+  const { address } = useActiveWeb3React();
+  const price = 0.055;
+  const sETR_SC = {
+    address: appConfig.SETR_SC as `0x${string}`,
+    abi: SETR_ABI,
+  };
+
+  const { data: data_sETR_SC, refetch: refetchSETR_SC } = useContractReads({
+    contracts: [
+      {
+        ...sETR_SC,
+        functionName: 'depositBalances',
+        args: [address as `0x${string}`, appConfig.ETR_SC as `0x${string}`],
+        // enabled: !!(address && appConfig.SETR_SC),
+      },
+      {
+        ...sETR_SC,
+        functionName: 'tokensPerInterval',
+      },
+      {
+        ...sETR_SC,
+        functionName: 'totalSupply',
+      },
+      {
+        ...sETR_SC,
+        functionName: 'claimable',
+        args: [address as `0x${string}`],
+      },
+      {
+        ...sETR_SC,
+        functionName: 'depositBalances',
+        args: [address as `0x${string}`, appConfig.ESETR_SC as `0x${string}`],
+        // enabled: !!(address && appConfig.SETR_SC),
+      },
+    ],
+    // args: [address as `0x${string}`, appConfig.ETR_SC as `0x${string}`],
+    // enabled: !!appConfig.SETR_SC,
+  });
+
+  const sbfETR_SC = {
+    address: appConfig.SBFETR_SC as `0x${string}`,
+    abi: SBFETR_ABI,
+  };
+
+  const { data: data_sbfETR_SC, refetch: refetchSBFETR_SC } = useContractReads({
+    contracts: [
+      {
+        ...sbfETR_SC,
+        functionName: 'tokensPerInterval',
+      },
+      {
+        ...sbfETR_SC,
+        functionName: 'totalSupply',
+      },
+      {
+        ...sbfETR_SC,
+        functionName: 'depositBalances',
+        args: [address as `0x${string}`, appConfig.BNETR_SC as `0x${string}`],
+      },
+      {
+        ...sbfETR_SC,
+        functionName: 'depositBalances',
+        args: [address as `0x${string}`, appConfig.SBETR_SC as `0x${string}`],
+      },
+      {
+        ...sbfETR_SC,
+        functionName: 'claimable',
+        args: [address as `0x${string}`],
+      },
+    ],
+  });
+
+  const FBLP_SC = {
+    address: appConfig.FBLP_SC as `0x${string}`,
+    abi: FBLP_ABI,
+  };
+
+  const { data: data_FBLP_SC, refetch: refetchFBLP_SC } = useContractReads({
+    contracts: [
+      {
+        ...FBLP_SC,
+        functionName: 'claimable',
+        args: [address as `0x${string}`],
+      },
+      {
+        ...FBLP_SC,
+        functionName: 'tokensPerInterval',
+      },
+      {
+        ...FBLP_SC,
+        functionName: 'depositBalances',
+        args: [address as `0x${string}`, appConfig.BLP_SC as `0x${string}`],
+      },
+    ],
+  });
+
+  const USDC_SC = {
+    address: appConfig.USDC_SC as `0x${string}`,
+    abi: USDC_ABI,
+  };
+
+  const { data: data_USDC_SC, refetch: refetchUSDC_SC } = useContractReads({
+    contracts: [
+      {
+        ...USDC_SC,
+        functionName: 'balanceOf',
+        args: [appConfig.BLP_SC as `0x${string}`],
+      },
+    ],
+  });
+
+  const FSBLP_SC = {
+    address: appConfig.FSBLP_SC as `0x${string}`,
+    abi: FSBLP_ABI,
+  };
+
+  const { data: data_FSBLP_SC, refetch: refetchFSBLP_SC } = useContractReads({
+    contracts: [
+      {
+        ...FSBLP_SC,
+        functionName: 'claimable',
+        args: [address as `0x${string}`],
+      },
+      {
+        ...FSBLP_SC,
+        functionName: 'stakedAmounts',
+        args: [address as `0x${string}`],
+      },
+      {
+        ...FSBLP_SC,
+        functionName: 'tokensPerInterval',
+      },
+    ],
+  });
+
+  // const depositBalances_ETR = data_sETR_SC && data_sETR_SC[0].result;
+  const tokensPerInterval_sETR = data_sETR_SC && data_sETR_SC[1].result;
+  const totalSupply_sETR = data_sETR_SC && data_sETR_SC[2].result;
+  // const claimables_sETR = data_sETR_SC && data_sETR_SC[3].result;
+  // const depositBalances_esETR = data_sETR_SC && data_sETR_SC[4].result;
+
+  const tokensPerInterval_sbfETR = data_sbfETR_SC && data_sbfETR_SC[0].result;
+  const totalSupply_sbfETR = data_sbfETR_SC && data_sbfETR_SC[1].result;
+  const depositBalances_bnETR = data_sbfETR_SC && data_sbfETR_SC[2].result;
+  const depositBalances_sbETR = data_sbfETR_SC && data_sbfETR_SC[3].result;
+  // const claimable_sbfETR = data_sbfETR_SC && data_sbfETR_SC[4].result;
+
+  const esETR_APR = (100 * 31536000 * Number(tokensPerInterval_sETR)) / Number(totalSupply_sETR);
+  const USDC_APR =
+    (100 * 31536000 * Number(tokensPerInterval_sbfETR) * 10 ** 12) / (Number(totalSupply_sbfETR) * price);
+  const boosted_APR =
+    depositBalances_bnETR || depositBalances_sbETR
+      ? (Number(depositBalances_bnETR) * USDC_APR) / Number(depositBalances_sbETR)
+      : 0;
+  // const boosted_Percentage = depositBalances_bnETR || depositBalances_sbETR ?  (Number(depositBalances_bnETR) / Number(depositBalances_sbETR)) * 100 : 0;
+  const Total_APR_ETR = isNaN(boosted_APR) ? esETR_APR + USDC_APR : esETR_APR + USDC_APR + boosted_APR;
+
+  // const claimable_fBLP = data_FBLP_SC && data_FBLP_SC[0].result;
+  const tokensPerInterval_fBLP = data_FBLP_SC && data_FBLP_SC[1].result;
+  // const depositBalances_fBLP = data_FBLP_SC && data_FBLP_SC[2].result;
+
+  const balanceOf_BLP_USDC = data_USDC_SC && data_USDC_SC[0].result;
+
+  // const claimable_fsBLP = data_FSBLP_SC && data_FSBLP_SC[0].result;
+  // const stakedAmounts_fsBLP = data_FSBLP_SC && data_FSBLP_SC[1].result;
+  const tokensPerInterval_fsBLP = data_FSBLP_SC && data_FSBLP_SC[2].result;
+
+  const USDC_APR_ELP = (100 * 31536000 * Number(tokensPerInterval_fBLP)) / Number(balanceOf_BLP_USDC);
+  const esETR_APR_ELP =
+    (100 * 31536000 * Number(tokensPerInterval_fsBLP) * price) / (Number(balanceOf_BLP_USDC) * 10 ** 12);
+  const Total_APR_ELP = USDC_APR_ELP + esETR_APR_ELP;
   return (
     <Flex flexDirection={'column'} height="100%" w={'100%'}>
       <Grid
@@ -246,19 +427,25 @@ export const HomeView = () => {
               image="/images/landingpage/logo.svg"
               title="ETR"
               desc="ETR is the utility and governance token that accrues up to X% of the fees generated by the platform."
-              percent="APR: 9.97%"
+              percent={`APR: ${
+                Total_APR_ETR !== undefined ? BigNumber(Total_APR_ETR).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'
+              }%`}
               isButton={true}
               textBtnLeft="Buy"
               textBtnRight="Stake"
+              linkBtnRight="/earn"
             />
             <CardDualToken
               image="/images/landingpage/logo.svg"
               title="ELP"
               desc="
               ELP is the token issued to liquidity providers and accrues up to 70% of the fees generated by the platform."
-              percent="APR: 26.56%"
+              percent={`APR: ${
+                Total_APR_ELP !== undefined ? BigNumber(Total_APR_ELP).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'
+              }%`}
               isButton={true}
               textBtnCenter="Earn Real Yield"
+              linkBtnCenter="/earn"
             />
           </Grid>
         </Box>

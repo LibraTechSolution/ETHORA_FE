@@ -208,7 +208,7 @@ const USDCVaultItem = ({
               overlayStyle={{ color: 'white', background: '#050506', maxWidth: '288px' }}
             >
               <Text as="u">
-                {Total_APR !== undefined ? BigNumber(Total_APR).toFormat(6, BigNumber.ROUND_DOWN) : '0.00'}%
+                {Total_APR !== undefined ? BigNumber(Total_APR).toFormat(2, BigNumber.ROUND_DOWN) : '0.00'}%
               </Text>
             </Tooltip>
           </Text>
