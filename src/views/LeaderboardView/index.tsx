@@ -29,6 +29,7 @@ import utc from 'dayjs/plugin/utc.js';
 import TableLeaderBoard from './conponent/tableLeaderBoard';
 import CustomConnectButton from '@/components/CustomConnectButton';
 import CountDownWithDay from './conponent/CountDownWithDay';
+import { appConfig } from '@/config';
 dayjs.extend(utc);
 // import { Flex } from "@chakra-ui/react";
 
@@ -44,7 +45,7 @@ export enum TableTabType {
 const defaultParams: ILeaderBoardParams = {
   offset: 0,
   type: 'daily',
-  network: 421613,
+  network: Number(appConfig.chainId),
 };
 
 enum StatusType {
@@ -122,7 +123,7 @@ const LeaderboardView = () => {
 
   const { data: leaderBoardOffset } = useQuery({
     queryKey: ['getLeaderBoardOffset'],
-    queryFn: () => getLeaderboardOffset(421613),
+    queryFn: () => getLeaderboardOffset(Number(appConfig.chainId)),
     onError: (error: any) => {
       // notification.error({ message: error.message });
       console.log(error);
@@ -135,7 +136,7 @@ const LeaderboardView = () => {
   useEffect(() => {
     if (leaderBoardOffset) {
       const offset = isDaily ? leaderBoardOffset?.data?.data?.dailyOffset : leaderBoardOffset?.data?.data?.weeklyOffset;
-      setFilter({ offset, network: 421613, type: isDaily ? 'daily' : 'weekly' });
+      setFilter({ offset, network: Number(appConfig.chainId), type: isDaily ? 'daily' : 'weekly' });
       const tempList = new Array(offset).fill('');
       setListOffset(tempList);
       setSelectedOffset(offset);

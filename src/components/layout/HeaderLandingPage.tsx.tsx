@@ -27,6 +27,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getLeaderboards } from '@/services/leaderboard';
 import dayjs from 'dayjs';
+import { appConfig } from '@/config';
 
 export const HeaderLanding = () => {
   const [isMobile] = useMediaQuery('(max-width: 768px)');
@@ -56,7 +57,7 @@ export const HeaderLanding = () => {
 
   const { data: leaderBoardData, isSuccess } = useQuery({
     queryKey: ['getLeaderBoard'],
-    queryFn: () => getLeaderboards({ type: 'daily', network: 421613 }),
+    queryFn: () => getLeaderboards({ type: 'daily', network: Number(appConfig.chainId) }),
     onError: (error: any) => {
       // notification.error({ message: error.message });
       console.log(error);

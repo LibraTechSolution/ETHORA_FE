@@ -16,11 +16,12 @@ import { formatAddress } from '@/utils/address';
 import useUserStore from '@/store/useUserStore';
 import Link from 'next/link';
 import { configDecimal } from './TradeTable';
+import { appConfig } from '@/config';
 
 const defaultParams: ITradingParams = {
   limit: 10,
   page: 1,
-  network: '421613',
+  network: Number(appConfig.chainId),
 };
 
 const PlatformHistoryTable = () => {
@@ -31,7 +32,7 @@ const PlatformHistoryTable = () => {
 
   useEffect(() => {
     if (chain) {
-      setFilter({ ...defaultParams, network: chain.id.toString() });
+      setFilter({ ...defaultParams, network: chain.id });
     }
   }, [chain]);
 

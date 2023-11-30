@@ -25,6 +25,7 @@ import HistoryTable from '../TradeView/components/HistoryTable';
 import Currency from '@/components/Currency';
 import BigNumber from 'bignumber.js';
 import CustomConnectButton from '@/components/CustomConnectButton';
+import { appConfig } from '@/config';
 
 export type Person = {
   firstName: string;
@@ -74,7 +75,7 @@ const ProfileView = () => {
 
   useEffect(() => {
     setProfileInfoFilter({
-      network: 421613,
+      network: Number(appConfig.chainId),
       ...((addressURL ? addressURL : address ? address : undefined) && {
         userAddress: addressURL ? addressURL : address ? address : undefined,
       }),
@@ -110,7 +111,7 @@ const ProfileView = () => {
             <Box>
               {address ? (
                 <Link
-                  href={`https://goerli.arbiscan.io/address/${addressURL ?? address}`}
+                  href={`${appConfig.scan}/address/${addressURL ?? address}`}
                   isExternal
                   fontSize={'20px'}
                   fontWeight={600}

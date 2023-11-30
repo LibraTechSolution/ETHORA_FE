@@ -22,6 +22,7 @@ import { ShowPrice } from './ShowPrice';
 import { ToastCloseTrade } from './ToastCloseTrade';
 import { useSearchParams } from 'next/navigation';
 import { TradeContext } from '..';
+import { appConfig } from '@/config';
 
 export const configDecimal: { [key: string]: number } = {
   BTCUSD: 8,
@@ -223,7 +224,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
   const defaultParams: ITradingParams = {
     limit: 10,
     page: 1,
-    network: '421613',
+    network: Number(appConfig.chainId),
     ...(!!isProfile && { userAddress: checkAddress }),
   };
 
@@ -235,7 +236,7 @@ const TradeTable = ({ isProfile }: { isProfile?: boolean }) => {
 
   useEffect(() => {
     if (chain) {
-      setFilter({ ...defaultParams, network: chain.id.toString() });
+      setFilter({ ...defaultParams, network: chain.id });
     }
   }, [chain]);
 

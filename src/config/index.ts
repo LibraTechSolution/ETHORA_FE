@@ -7,7 +7,7 @@ export const appConfig = {
   includeTestnet: (process.env.NEXT_PUBLIC_INCLUDE_TESTNET ?? 'false') === 'true',
   cdnUrl: process.env.NEXT_PUBLIC_CDN_URL,
   faucetSC: process.env.NEXT_PUBLIC_FAUCET_SC,
-  arbiscan: process.env.NEXT_PUBLIC_ARBISCAN,
+  scan: process.env.NEXT_PUBLIC_SCAN,
   registerSC: process.env.NEXT_PUBLIC_REGISTER_SC,
   referralSC: process.env.NEXT_PUBLIC_REFERRAL_SC,
   bufferRouterSC: process.env.NEXT_PUBLIC_BUFFER_ROUTER_SC,

@@ -8,11 +8,12 @@ import { ITradingData, ITradingParams } from '@/types/trade.type';
 import LimitOrderBox from './LimitOrderBox';
 import EditLimitOrderModal from './EditLimitOrderModal';
 import useUserStore from '@/store/useUserStore';
+import { appConfig } from '@/config';
 
 const defaultParams: ITradingParams = {
   limit: 30,
   page: 1,
-  network: '421613',
+  network: Number(appConfig.chainId),
 };
 
 const LimitOrderTab = () => {
@@ -24,7 +25,7 @@ const LimitOrderTab = () => {
 
   useEffect(() => {
     if (chain) {
-      setFilter({ ...defaultParams, network: chain.id.toString() });
+      setFilter({ ...defaultParams, network: chain.id });
     }
   }, [chain]);
 

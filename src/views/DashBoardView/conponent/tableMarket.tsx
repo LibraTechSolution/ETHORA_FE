@@ -273,7 +273,7 @@ const TableMarket = () => {
   const [listPriceShow, setListPriceShow] = useState<{ [key: string]: number }>();
   const { listPairData } = usePairStore();
   const { listPairPriceSlow } = useListPairPriceSlow();
-  const networkID = appConfig.includeTestnet ? 421613 : 8453;
+  const networkID = appConfig.includeTestnet ? Number(appConfig.chainId) : 8453;
 
   const transferData = (data: IDashboardMarketData) => {
     if (!data?.volumePerContracts) return;

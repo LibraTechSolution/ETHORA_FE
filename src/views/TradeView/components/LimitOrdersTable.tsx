@@ -22,6 +22,7 @@ import { useSearchParams } from 'next/navigation';
 import { convertDurationToHourAndMinutes, convertDurationToHourMinutesSeconds } from '@/utils/time';
 import { TradeContext } from '..';
 import { configDecimal } from './TradeTable';
+import { appConfig } from '@/config';
 
 const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
@@ -33,7 +34,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
   const defaultParams: ITradingParams = {
     limit: 10,
     page: 1,
-    network: '421613',
+    network: Number(appConfig.chainId),
     ...(!!isProfile && { userAddress: checkAddress }),
   };
 
@@ -49,7 +50,7 @@ const LimitOrdersTable = ({ isProfile }: { isProfile?: boolean }) => {
 
   useEffect(() => {
     if (chain) {
-      setFilter({ ...defaultParams, network: chain.id.toString() });
+      setFilter({ ...defaultParams, network: chain.id });
     }
   }, [chain]);
 

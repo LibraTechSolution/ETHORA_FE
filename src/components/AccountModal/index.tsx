@@ -360,7 +360,7 @@ export const AccountModal = ({ isOpen, onClose }: ModalProp) => {
               </Center>
             </GridItem>
             <GridItem w="100%" paddingX="2.5" borderRight="1px solid #38383A" cursor="pointer">
-              <Link href={`${appConfig.arbiscan}/address/${address}`} target="_blank">
+              <Link href={`${appConfig.scan}/address/${address}`} target="_blank">
                 <Center>
                   <ExternalLink color="#1E3EF0" />
                 </Center>

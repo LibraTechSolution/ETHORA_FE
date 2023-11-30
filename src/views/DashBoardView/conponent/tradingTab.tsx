@@ -6,9 +6,10 @@ import { notification } from 'antd';
 import { divide } from '@/utils/operationBigNumber';
 import { addComma } from '@/utils/number';
 import dayjs from 'dayjs';
+import { appConfig } from '@/config';
 
 const TradingTab = () => {
-  const networkID = 421613;
+  const networkID = Number(appConfig.chainId);
   const { data: dataDashboardOverviews } = useQuery({
     queryKey: ['getDashboardOverview', networkID],
     queryFn: () => getDashboardOverview({ network: networkID }),

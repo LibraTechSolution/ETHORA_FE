@@ -15,11 +15,12 @@ import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import useUserStore from '@/store/useUserStore';
 import { ShowPrice } from './ShowPrice';
 import { configDecimal } from './TradeTable';
+import { appConfig } from '@/config';
 
 const defaultParams: ITradingParams = {
   limit: 10,
   page: 1,
-  network: '421613',
+  network: Number(appConfig.chainId),
 };
 
 const PlatformTradesTable = () => {
@@ -30,7 +31,7 @@ const PlatformTradesTable = () => {
 
   useEffect(() => {
     if (chain) {
-      setFilter({ ...defaultParams, network: chain.id.toString() });
+      setFilter({ ...defaultParams, network: chain.id });
     }
   }, [chain]);
 
