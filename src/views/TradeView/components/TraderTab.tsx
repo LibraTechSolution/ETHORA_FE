@@ -10,11 +10,12 @@ import useUserStore from '@/store/useUserStore';
 import React from 'react';
 import { IPaginationResponse } from '@/types/api.type';
 import useListShowLinesStore from '@/store/useListShowLinesStore';
+import { appConfig } from '@/config';
 
 const defaultParams: ITradingParams = {
   limit: 30,
   page: 1,
-  network: '421613',
+  network: Number(appConfig.chainId),
 };
 
 const TraderTab = () => {
@@ -28,7 +29,7 @@ const TraderTab = () => {
 
   useEffect(() => {
     if (chain) {
-      setFilter({ ...defaultParams, network: chain.id.toString() });
+      setFilter({ ...defaultParams, network: chain.id });
     }
   }, [chain]);
 

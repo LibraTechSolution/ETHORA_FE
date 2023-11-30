@@ -44,6 +44,7 @@ import { DataTickDateFormater, DataTickFormater } from '@/utils/helper';
 import DownloadCSV from './DownloadCSV';
 import type { RangePickerProps } from 'antd/es/date-picker';
 import Currency from '@/components/Currency';
+import { appConfig } from '@/config';
 
 const dataLine = [
   {
@@ -138,7 +139,7 @@ const StatsView = () => {
   const { RangePicker } = DatePicker;
   const [dateRange, setDateRange] = useState<Dayjs[]>(defaultDay.rangeDay);
   const [filter, setFilter] = useState<IStatsParams | undefined>({
-    network: 421613,
+    network: Number(appConfig.chainId),
     start: defaultDay.rangeDayTimeStem[0],
     end: defaultDay.rangeDayTimeStem[1],
   });

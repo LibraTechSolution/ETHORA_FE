@@ -130,7 +130,7 @@ const UnStakeModaEsETR = ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: (
         render: ({ onClose }) => (
           <ToastLayout title="Successful transaction" status={Status.SUCCESSS} close={onClose}>
             <p className="text-[14px] font-medium text-white">{'Successful transaction'}</p>
-            <Link href={`https://goerli.arbiscan.io/tx/${hash}`} isExternal color="#3396FF" fontSize={'12px'}>
+            <Link href={`${appConfig.scan}/tx/${hash}`} isExternal color="#3396FF" fontSize={'12px'}>
               View on explorer
             </Link>
           </ToastLayout>

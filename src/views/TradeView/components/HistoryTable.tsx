@@ -17,6 +17,7 @@ import ShareModal from './ShareModal';
 import useAdvanceSetting from '@/store/useAdvanceSetting';
 import { useSearchParams } from 'next/navigation';
 import { configDecimal } from './TradeTable';
+import { appConfig } from '@/config';
 
 const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
   const { address } = useAccount();
@@ -28,7 +29,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
   const defaultParams: ITradingParams = {
     limit: 10,
     page: 1,
-    network: '421613',
+    network: Number(appConfig.chainId),
     ...(!!isProfile && { userAddress: checkAddress }),
   };
 
@@ -41,7 +42,7 @@ const HistoryTable = ({ isProfile }: { isProfile?: boolean }) => {
 
   useEffect(() => {
     if (chain) {
-      setFilter({ ...defaultParams, network: chain.id.toString() });
+      setFilter({ ...defaultParams, network: chain.id });
     }
   }, [chain]);
 

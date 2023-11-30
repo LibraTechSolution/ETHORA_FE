@@ -53,7 +53,7 @@ export enum TRADE_TOKEN {
 export interface ITradingParams {
   page: number,
   limit: number,
-  network: string,
+  network: number,
   sortBy?: string,
   sortType?: string,
   userAddress?: string,

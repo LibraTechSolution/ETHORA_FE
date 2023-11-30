@@ -93,8 +93,8 @@ export const Header = () => {
   }, [settingRef]);
 
   const { data: leaderBoardData, isSuccess } = useQuery({
-    queryKey: ['getLeaderBoard', { type: 'daily', network: 421613 }],
-    queryFn: () => getLeaderboards({ type: 'daily', network: 421613 }),
+    queryKey: ['getLeaderBoard', { type: 'daily', network: Number(appConfig.chainId) }],
+    queryFn: () => getLeaderboards({ type: 'daily', network: Number(appConfig.chainId) }),
     onError: (error: any) => {
       // notification.error({ message: error.message });
       console.log(error);
