@@ -1,4 +1,6 @@
+import { useIsMounted } from '@/hooks/useIsMounted';
 import { Box, Image, Text, Button } from '@chakra-ui/react';
+import Link from 'next/link';
 
 interface ICardDualToken {
   image: string;
@@ -8,6 +10,9 @@ interface ICardDualToken {
   textBtnRight?: string;
   textBtnLeft?: string;
   textBtnCenter?: string;
+  linkBtnRight?: string;
+  linkBtnLeft?: string;
+  linkBtnCenter?: string;
   isButton?: boolean;
 }
 const CardDualToken = ({
@@ -18,8 +23,12 @@ const CardDualToken = ({
   textBtnRight,
   textBtnLeft,
   textBtnCenter,
+  linkBtnRight,
+  linkBtnLeft,
+  linkBtnCenter,
   isButton = false,
 }: ICardDualToken) => {
+  const isMounted = useIsMounted();
   return (
     <Box
       boxShadow="1px 0.5px 0px 0px #38383A inset"
@@ -54,49 +63,58 @@ const CardDualToken = ({
         {desc}
       </Text>
       <Text as="span" fontSize={'16px'} textColor={'#9E9E9F'}>
-        {percent}
+        {isMounted ? percent : '--'}
       </Text>
       <Box display={'flex'} alignItems={'center'} gap={'20px'}>
         {isButton &&
           (textBtnCenter ? (
-            <Button
-              flex={1}
-              borderColor="#0052FF"
-              bgColor={'#0052FF'}
-              borderRadius={'10px'}
-              textColor="white"
-              variant="outline"
-              _hover={{ bg: 'transparent' }}
-              padding={'8px 16px'}
-            >
-              {textBtnCenter}
-            </Button>
+            <Link href={linkBtnCenter ? linkBtnCenter : '/'} passHref className="flex-1">
+              <Button
+                // flex={1}
+                width={'100%'}
+                borderColor="#0052FF"
+                bgColor={'#0052FF'}
+                borderRadius={'10px'}
+                textColor="white"
+                variant="outline"
+                _hover={{ bg: 'transparent' }}
+                padding={'8px 16px'}
+              >
+                {textBtnCenter}
+              </Button>
+            </Link>
           ) : (
             <>
-              <Button
-                flex={1}
-                borderColor="#0052FF"
-                bgColor={'#0052FF'}
-                borderRadius={'10px'}
-                textColor="white"
-                variant="outline"
-                _hover={{ bg: 'transparent' }}
-                padding={'8px 16px'}
-              >
-                {textBtnLeft}
-              </Button>
-              <Button
-                flex={1}
-                borderColor="#0052FF"
-                bgColor={'#0052FF'}
-                borderRadius={'10px'}
-                textColor="white"
-                variant="outline"
-                _hover={{ bg: 'transparent' }}
-                padding={'8px 16px'}
-              >
-                {textBtnRight}
-              </Button>
+              <Link href={linkBtnLeft ? linkBtnLeft : '/'} passHref className="flex-1">
+                <Button
+                  // flex={1}
+                  width={'100%'}
+                  borderColor="#0052FF"
+                  bgColor={'#0052FF'}
+                  borderRadius={'10px'}
+                  textColor="white"
+                  variant="outline"
+                  _hover={{ bg: 'transparent' }}
+                  padding={'8px 16px'}
+                >
+                  {textBtnLeft}
+                </Button>
+              </Link>
+              <Link href={linkBtnRight ? linkBtnRight : '/'} passHref className="flex-1">
+                <Button
+                  // flex={1}
+                  width={'100%'}
+                  borderColor="#0052FF"
+                  bgColor={'#0052FF'}
+                  borderRadius={'10px'}
+                  textColor="white"
+                  variant="outline"
+                  _hover={{ bg: 'transparent' }}
+                  padding={'8px 16px'}
+                >
+                  {textBtnRight}
+                </Button>
+              </Link>
             </>
           ))}
       </Box>
