@@ -449,7 +449,7 @@ const EarnView = () => {
           <Text className="flex w-full items-center" color={'#9E9E9F'}>
             Stake ETR and ELP to earn rewards.{' '}
             <Link
-              href="https://docs.ethora.io/stake-esetr"
+              href="https://docs.ethora.io/stake-etr"
               target="_blank"
               className="group ml-1 flex text-center align-middle text-[#1E3EF0]"
             >
