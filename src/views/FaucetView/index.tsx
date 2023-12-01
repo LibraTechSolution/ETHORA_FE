@@ -181,6 +181,7 @@ export const FaucetView = () => {
                             textColor="#1E3EF0"
                             variant="outline"
                             _hover={{ borderColor: '#4B65F3', textColor: '#4B65F3' }}
+                            _active={{ borderColor: '#122590', textColor: '#122590' }}
                             onClick={openConnectModal}
                           >
                             Connect Wallet

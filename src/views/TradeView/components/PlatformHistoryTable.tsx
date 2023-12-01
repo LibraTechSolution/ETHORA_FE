@@ -282,7 +282,6 @@ const PlatformHistoryTable = () => {
         pageSize: tradingData?.meta.limit,
         current: tradingData?.meta.page,
         total: tradingData?.meta.totalDocs,
-        hideOnSinglePage: true,
         showTotal: (total: number, range: [number, number]) => `Results: ${range[0]} - ${range[1]}  of ${total}`,
       }}
       // scroll={{ y: 300 }}
