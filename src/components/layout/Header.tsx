@@ -432,8 +432,8 @@ export const Header = () => {
                                 width: ' calc(100% - 60px)',
                               }}
                             >
-                              {account.displayBalance ? ` ${addComma(account.displayBalance, 2)}` : ''}{' '}
-                              {!isMobile && account?.balanceSymbol}
+                              {account?.balanceFormatted ? ` ${addComma(account?.balanceFormatted, 2)}` : '0'}
+                              <span className="ml-1">{!isMobile && account?.balanceSymbol}</span>
                             </Text>
                           </Button>
                         </Flex>
