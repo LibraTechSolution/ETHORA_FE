@@ -190,7 +190,7 @@ const ReferralView = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       let msgContent = '';
-      console.log(error.shortMessage);
+      console.log(error);
       if (error instanceof BaseError) {
         setIsLoadingUserRef(false);
         if (error.shortMessage.includes('User rejected the request.')) {
