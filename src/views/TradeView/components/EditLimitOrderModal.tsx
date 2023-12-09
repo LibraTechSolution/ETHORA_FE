@@ -198,7 +198,7 @@ const EditLimitOrderModal = (props: PropsType) => {
           fontWeight="600"
           display="flex"
         >
-          <Image alt="bitcoin" src={`/images/icons/${item?.pair}.png`} w="32px" h="32px" marginRight={'10px'} />$
+          <Image alt="bitcoin" src={`/images/icons/${item?.pair}.png`} w="32px" h="32px" marginRight={'10px'} />
           {item?.pair.toUpperCase()}
         </ModalHeader>
         <ModalCloseButton color="#fff" top="22px" right="32px" />
