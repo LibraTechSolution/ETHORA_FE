@@ -40,6 +40,7 @@ export enum TableTabType {
   Winners = 'Winners',
   Losers = 'Losers',
   Rate = 'Rate',
+  Volume = 'Volume',
 }
 
 const defaultParams: ILeaderBoardParams = {
@@ -136,7 +137,7 @@ const LeaderboardView = () => {
   useEffect(() => {
     if (leaderBoardOffset) {
       const offset = isDaily ? leaderBoardOffset?.data?.data?.dailyOffset : leaderBoardOffset?.data?.data?.weeklyOffset;
-      setFilter({ offset, network: Number(appConfig.chainId), type: isDaily ? 'daily' : 'weekly' });
+      setFilter({ offset: 1, network: Number(appConfig.chainId), type: isDaily ? 'daily' : 'weekly' });
       const tempList = new Array(offset).fill('');
       setListOffset(tempList);
       setSelectedOffset(offset);
@@ -595,21 +596,38 @@ const LeaderboardView = () => {
                     Losers (by PnL)
                   </Box>
                   {!isDaily && (
-                    <Box
-                      className="mr-2"
-                      role="presentation"
-                      onClick={() => {
-                        setDefaultTabs(TableTabType.Rate);
-                      }}
-                      borderBottom={'2px solid'}
-                      borderColor={defaultTabs === TableTabType.Rate ? '#1E3EF0' : 'transparent'}
-                      pointerEvents={defaultTabs === TableTabType.Rate ? 'none' : 'auto'}
-                      cursor={defaultTabs === TableTabType.Rate ? 'default' : 'pointer'}
-                      color={defaultTabs === TableTabType.Rate ? '#1E3EF0' : '#9E9E9F'}
-                      padding={'20px 0'}
-                    >
-                      Winners (by Win rate)
-                    </Box>
+                    <>
+                      <Box
+                        className="mr-2"
+                        role="presentation"
+                        onClick={() => {
+                          setDefaultTabs(TableTabType.Rate);
+                        }}
+                        borderBottom={'2px solid'}
+                        borderColor={defaultTabs === TableTabType.Rate ? '#1E3EF0' : 'transparent'}
+                        pointerEvents={defaultTabs === TableTabType.Rate ? 'none' : 'auto'}
+                        cursor={defaultTabs === TableTabType.Rate ? 'default' : 'pointer'}
+                        color={defaultTabs === TableTabType.Rate ? '#1E3EF0' : '#9E9E9F'}
+                        padding={'20px 0'}
+                      >
+                        Winners (by Win rate)
+                      </Box>
+                      <Box
+                        className="mr-2"
+                        role="presentation"
+                        onClick={() => {
+                          setDefaultTabs(TableTabType.Volume);
+                        }}
+                        borderBottom={'2px solid'}
+                        borderColor={defaultTabs === TableTabType.Volume ? '#1E3EF0' : 'transparent'}
+                        pointerEvents={defaultTabs === TableTabType.Volume ? 'none' : 'auto'}
+                        cursor={defaultTabs === TableTabType.Volume ? 'default' : 'pointer'}
+                        color={defaultTabs === TableTabType.Volume ? '#1E3EF0' : '#9E9E9F'}
+                        padding={'20px 0'}
+                      >
+                        Winner (by Volume)
+                      </Box>
+                    </>
                   )}
                 </Flex>
                 <Box display={{ base: 'none', sm: 'block' }}>
@@ -652,7 +670,9 @@ const LeaderboardView = () => {
                       ? leaderBoardData?.winners
                       : defaultTabs === TableTabType.Losers
                       ? leaderBoardData?.losers
-                      : leaderBoardData?.winnersWinrate
+                      : defaultTabs === TableTabType.Rate
+                      ? leaderBoardData?.winnersWinrate
+                      : leaderBoardData?.winnersVolume
                   }
                   isWinnderByRate={defaultTabs === TableTabType.Rate}
                   loading={isLoading}
