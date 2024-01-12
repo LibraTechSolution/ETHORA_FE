@@ -44,6 +44,7 @@ export interface ILeaderBoard {
   winners: ILeaderBoardDetail[],
   winnersWinrate: ILeaderBoardDetail[],
   losers: ILeaderBoardDetail[],
+  winnersVolume: ILeaderBoardDetail[],
   config: IConfig
 }
 
