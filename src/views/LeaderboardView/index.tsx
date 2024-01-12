@@ -137,7 +137,7 @@ const LeaderboardView = () => {
   useEffect(() => {
     if (leaderBoardOffset) {
       const offset = isDaily ? leaderBoardOffset?.data?.data?.dailyOffset : leaderBoardOffset?.data?.data?.weeklyOffset;
-      setFilter({ offset: 1, network: Number(appConfig.chainId), type: isDaily ? 'daily' : 'weekly' });
+      setFilter({ offset, network: Number(appConfig.chainId), type: isDaily ? 'daily' : 'weekly' });
       const tempList = new Array(offset).fill('');
       setListOffset(tempList);
       setSelectedOffset(offset);
