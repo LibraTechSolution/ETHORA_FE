@@ -18,9 +18,40 @@ import {
 import { mainnet, goerli, arbitrumGoerli, arbitrum, baseGoerli, base } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import '@rainbow-me/rainbowkit/styles.css';
+import { defineChain } from 'viem';
+
+console.log('baseGoerli', baseGoerli);
+
+export const baseSepolia = defineChain({
+  id: 84532,
+  name: 'Base Sepolia',
+  network: 'base-sepolia',
+  nativeCurrency: {
+    name: 'Ether',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://base-sepolia-rpc.publicnode.com'],
+      webSocket: ['wss://sepolia-rpc.scroll.io/ws'],
+    },
+    public: {
+      http: ['https://base-sepolia-rpc.publicnode.com'],
+      webSocket: ['wss://sepolia-rpc.scroll.io/ws'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Base Sepolia Explorer',
+      url: 'https://sepolia.basescan.org',
+    },
+  },
+  testnet: true,
+});
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [...(process.env.NEXT_PUBLIC_INCLUDE_TESTNET === 'true' ? [baseGoerli] : [base, mainnet])],
+  [...(process.env.NEXT_PUBLIC_INCLUDE_TESTNET === 'true' ? [baseSepolia] : [base, mainnet])],
   [publicProvider()],
 );
 

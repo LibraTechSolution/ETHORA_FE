@@ -17,9 +17,9 @@ export const configPair: {
   }
 } = {
   BTCUSD: {
-    bufferBOSC: '0x90055e89fa3ed19a7855d86cdd39d4f688f83e48',
-    optionConfigSC: '0x3f4e6764ECf7F985Cf03C70877F2c251a497474C',
-    marketOIConfigSC: '0xfaBCf9295883A5131F28A2151C501F69011c09fA',
+    bufferBOSC: '0xFbD781cc27c2373b4d69C42Ff401bDAd305044D3',
+    optionConfigSC: '0x4a745d3927EDE05FE1a86F8D47f867B81F933e57',
+    marketOIConfigSC: '0x83665D27bc54F7322D3df9Aab9ca5d6C3C944cD8',
     settlementFee: 1250
   },
   ETHUSD: {

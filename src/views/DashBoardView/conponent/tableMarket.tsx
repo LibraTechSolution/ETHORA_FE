@@ -248,7 +248,7 @@ const Utilization = ({ pair }: { pair: string }) => {
 };
 
 const ContractWithPair: Record<string, string> = {
-  '0x90055e89fa3ed19a7855d86cdd39d4f688f83e48': 'BTCUSD',
+  '0xFbD781cc27c2373b4d69C42Ff401bDAd305044D3': 'BTCUSD',
   '0x5b5cb70e334888a485bd410f1fb87aa81d3cee3e': 'ETHUSD',
   '0x3207aa0b75d20b790196d1998066887c8bd97d63': 'LINKUSD',
   '0x07edec238b1cbfcce98669f0a7b61349162cc278': 'TONUSD',

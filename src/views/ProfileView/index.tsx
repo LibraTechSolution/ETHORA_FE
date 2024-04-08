@@ -195,7 +195,7 @@ const ProfileView = () => {
                   Weekly Rank
                 </Text>
                 {profileInfoFilter?.userAddress ? (
-                  <Text fontSize={'2xl'}>
+                  <Text fontSize={'2xl'} fontWeight={600}>
                     {dataProfileInfo && dataProfileInfo?.stats?.weekly >= 0
                       ? `#${dataProfileInfo?.stats?.weekly}`
                       : '--'}
@@ -215,7 +215,7 @@ const ProfileView = () => {
                   Win Rate
                 </Text>
                 {profileInfoFilter?.userAddress ? (
-                  <Text fontSize={'2xl'}>
+                  <Text fontSize={'2xl'} fontWeight={600}>
                     {dataProfileInfo && dataProfileInfo?.stats?.winTrade && dataProfileInfo?.stats?.totalTrade
                       ? ((dataProfileInfo?.stats?.winTrade / dataProfileInfo?.stats?.totalTrade) * 100).toFixed(2)
                       : '0.00'}
