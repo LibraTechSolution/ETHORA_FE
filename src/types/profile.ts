@@ -163,6 +163,7 @@ export interface IProfileResponse {
     winTrade: number;
     totalTrade: number;
     mostTradedContract: any;
+    point: number;
   };
   metrics: {
     referral: {
