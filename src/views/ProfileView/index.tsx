@@ -139,7 +139,7 @@ const ProfileView = () => {
               base: 'repeat(2, 1fr)',
               sm: 'repeat(2, 1fr)',
               md: 'repeat(3, 1fr)',
-              lg: 'repeat(6, 1fr)',
+              lg: 'repeat(7, 1fr)',
             }}
             mx={'auto'}
             rowGap={3}
@@ -199,6 +199,24 @@ const ProfileView = () => {
                     {dataProfileInfo && dataProfileInfo?.stats?.weekly >= 0
                       ? `#${dataProfileInfo?.stats?.weekly}`
                       : '--'}
+                  </Text>
+                ) : (
+                  <Text fontSize={'2xl'}>--</Text>
+                )}
+              </Flex>
+            </GridItem>
+            <GridItem
+              textAlign={'center'}
+              padding={3}
+              borderRight={{ md: '1px solid #242428', lg: '1px solid #242428' }}
+            >
+              <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
+                <Text fontSize={'sm'} marginBottom={'12px'}>
+                  Ethora Points
+                </Text>
+                {profileInfoFilter?.userAddress ? (
+                  <Text fontSize={'2xl'} fontWeight={600}>
+                    {dataProfileInfo?.stats?.point}
                   </Text>
                 ) : (
                   <Text fontSize={'2xl'}>--</Text>
