@@ -22,7 +22,7 @@ export function getNetworkName(chainId?: number) {
       return 'mumbai';
     }
 
-    case 84531: {
+    case 84532: {
       return 'goerli';
     }
 
