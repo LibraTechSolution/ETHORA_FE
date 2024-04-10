@@ -139,12 +139,12 @@ const ProfileView = () => {
               base: 'repeat(2, 1fr)',
               sm: 'repeat(2, 1fr)',
               md: 'repeat(3, 1fr)',
-              lg: 'repeat(7, 1fr)',
+              lg: 'repeat(6, 1fr)',
             }}
             mx={'auto'}
             rowGap={3}
           >
-            <GridItem textAlign={'center'} padding={3} borderRight={{ sm: '1px solid #242428' }}>
+            <GridItem textAlign={'center'} borderRight={{ sm: '1px solid #242428' }}>
               <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
                 <Text fontSize={'sm'} marginBottom={'12px'}>
                   Chain
@@ -212,24 +212,6 @@ const ProfileView = () => {
             >
               <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
                 <Text fontSize={'sm'} marginBottom={'12px'}>
-                  Ethora Points
-                </Text>
-                {profileInfoFilter?.userAddress ? (
-                  <Text fontSize={'2xl'} fontWeight={600}>
-                    {dataProfileInfo?.stats?.point}
-                  </Text>
-                ) : (
-                  <Text fontSize={'2xl'}>--</Text>
-                )}
-              </Flex>
-            </GridItem>
-            <GridItem
-              textAlign={'center'}
-              padding={3}
-              borderRight={{ md: '1px solid #242428', lg: '1px solid #242428' }}
-            >
-              <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'}>
-                <Text fontSize={'sm'} marginBottom={'12px'}>
                   Win Rate
                 </Text>
                 {profileInfoFilter?.userAddress ? (
@@ -273,6 +255,22 @@ const ProfileView = () => {
               </Flex>
             </GridItem>
           </Grid>
+          <Flex direction={'column'} w={'100%'} display={'flex'} alignItems={'center'} color={'#fff'}>
+            <Box padding={4} border="1px solid white" borderRadius={'20px'}>
+              <Text fontSize={'lg'} marginBottom={'12px'} textAlign={'center'} fontWeight={600}>
+                Ethora Points
+              </Text>
+              {profileInfoFilter?.userAddress ? (
+                <Text fontSize={'3xl'} fontWeight={600} textAlign={'center'}>
+                  {dataProfileInfo?.stats?.point}
+                </Text>
+              ) : (
+                <Text fontSize={'2xl'} textAlign={'center'}>
+                  --
+                </Text>
+              )}
+            </Box>
+          </Flex>
 
           {!addressURL && (
             <Flex
