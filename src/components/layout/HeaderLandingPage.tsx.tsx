@@ -136,11 +136,11 @@ export const HeaderLanding = () => {
                 </Link>
               )}
             </Center>
-            <Center>
+            {/* <Center>
               <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
                 Token sale
               </Link>
-            </Center>
+            </Center> */}
             <Center>
               <Link
                 href="/practice-trading"
