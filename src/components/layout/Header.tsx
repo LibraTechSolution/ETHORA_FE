@@ -201,14 +201,14 @@ export const Header = () => {
                             Earn
                           </Link>
                         </MenuItem>
-                        <MenuItem background="transparent">
+                        {/* <MenuItem background="transparent">
                           <Link
                             href="/sale-token"
                             className={`w-full text-center ${currentRoute === '/sale-token' ? 'text-[#fff]' : ''}`}
                           >
                             Token sale
                           </Link>
-                        </MenuItem>
+                        </MenuItem> */}
                         <MenuItem background="transparent">
                           <Link
                             href="/referral"
@@ -539,11 +539,11 @@ export const Header = () => {
                   Earn
                 </Link>
               </Center>
-              <Center justifyContent={'flex-start'}>
+              {/* <Center justifyContent={'flex-start'}>
                 <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
                   Token sale
                 </Link>
-              </Center>
+              </Center> */}
               <Center justifyContent={'flex-start'}>
                 <Link
                   href="/stats"
