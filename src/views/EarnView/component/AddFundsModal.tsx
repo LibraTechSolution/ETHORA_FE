@@ -249,8 +249,8 @@ const AddFundsModal = ({
   }, [formik.errors]);
 
   useEffect(() => {
-    setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThan(BigNumber(0)));
-  }, [getAllowance]);
+    setIsApproved(getAllowance !== undefined && BigNumber(getAllowance.toString()).isGreaterThanOrEqualTo(BigNumber(formik.values.amount != '' ? Number(formik.values.amount) * 10e5 : 0)));
+  }, [getAllowance, formik.values.amount]);
 
   return (
     <>
@@ -362,7 +362,7 @@ const AddFundsModal = ({
                   colorScheme="primary"
                   fontWeight={400}
                   fontSize={'14px'}
-                  // defaultChecked
+                // defaultChecked
                 >
                   <Text as="span" fontSize={'14px'}>
                     {' '}
