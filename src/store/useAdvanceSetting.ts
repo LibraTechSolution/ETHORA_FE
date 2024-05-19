@@ -19,7 +19,7 @@ export interface ISetting extends IObjectKeys {
 
 export const defaultSetting: ISetting = {
   isPartialFill: true,
-  slippage: '0.05',
+  slippage: '0.1',
   limitOrderExpiryTime: 5,
   limitOrderExpiryTimeType: 'h',
   isShowTradeSize: true,
