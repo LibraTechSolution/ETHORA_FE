@@ -43,6 +43,12 @@ export enum TableTabType {
   Volume = 'Volume',
 }
 
+export enum TabLeaderBoardType {
+  EthoraPoint = 'EthoraPoint',
+  Daily = 'Daily',
+  Weekly = 'Weekly'
+}
+
 const defaultParams: ILeaderBoardParams = {
   offset: 0,
   type: 'daily',
@@ -111,7 +117,7 @@ const ShowStatus = (props: StatusProp) => {
 const LeaderboardView = () => {
   const { Option } = Select;
   const [defaultTabs, setDefaultTabs] = useState<TableTabType>(TableTabType.Winners);
-  const [isDaily, setIsDaily] = useState<boolean>(true);
+  const [defaultLBTabs, setDefaultLBTabs] = useState<TabLeaderBoardType>(TabLeaderBoardType.EthoraPoint);
 
   const [filter, setFilter] = useState<ILeaderBoardParams>(defaultParams);
   const [listOffet, setListOffset] = useState<Array<string | number>>([]);
@@ -136,13 +142,18 @@ const LeaderboardView = () => {
 
   useEffect(() => {
     if (leaderBoardOffset) {
-      const offset = isDaily ? leaderBoardOffset?.data?.data?.dailyOffset : leaderBoardOffset?.data?.data?.weeklyOffset;
-      setFilter({ offset, network: Number(appConfig.chainId), type: isDaily ? 'daily' : 'weekly' });
-      const tempList = new Array(offset).fill('');
-      setListOffset(tempList);
-      setSelectedOffset(offset);
+      if(defaultLBTabs === TabLeaderBoardType.EthoraPoint){
+
+      }else{
+        const offset = defaultLBTabs === TabLeaderBoardType.Daily ? leaderBoardOffset?.data?.data?.dailyOffset : leaderBoardOffset?.data?.data?.weeklyOffset;
+        setFilter({ offset, network: Number(appConfig.chainId), type: defaultLBTabs === TabLeaderBoardType.Daily ? 'daily' : 'weekly' });
+        const tempList = new Array(offset).fill('');
+        setListOffset(tempList);
+        setSelectedOffset(offset);
+      }
+    
     }
-  }, [isDaily, leaderBoardOffset]);
+  }, [defaultLBTabs, leaderBoardOffset]);
 
   const selecOffet = (offset: number) => {
     setFilter({ ...filter, offset });
@@ -172,25 +183,30 @@ const LeaderboardView = () => {
 
   useEffect(() => {
     if (isDisableDaily && !isDisableWeekly) {
-      setIsDaily(false);
+      setDefaultLBTabs(TabLeaderBoardType.Weekly);
     }
   }, [isDisableDaily, isDisableWeekly]);
 
   useEffect(() => {
     console.log(leaderBoardData);
-    if (
-      !leaderBoardData ||
-      !leaderBoardData?.config ||
-      !leaderBoardData?.config?.dailyStart ||
-      !leaderBoardData?.config?.weeklyStart ||
-      !leaderBoardData?.config?.dailyEnd ||
-      !leaderBoardData?.config?.weeklyEnd
-    ) {
-      return;
+    // if (
+    //   !leaderBoardData ||
+    //   !leaderBoardData?.config ||
+    //   !leaderBoardData?.config?.dailyStart ||
+    //   !leaderBoardData?.config?.weeklyStart ||
+    //   !leaderBoardData?.config?.dailyEnd ||
+    //   !leaderBoardData?.config?.weeklyEnd
+    // ) {
+    //   return;
+    // }
+    if(defaultLBTabs === TabLeaderBoardType.EthoraPoint){
+
+    }else{
+      setStartTime(defaultLBTabs  === TabLeaderBoardType.Daily ? leaderBoardData.config.dailyStart : leaderBoardData.config.weeklyStart);
+      setEndTime(defaultLBTabs  === TabLeaderBoardType.Daily ? leaderBoardData.config.dailyEnd : leaderBoardData.config.weeklyEnd);
     }
-    setStartTime(isDaily ? leaderBoardData.config.dailyStart : leaderBoardData.config.weeklyStart);
-    setEndTime(isDaily ? leaderBoardData.config.dailyEnd : leaderBoardData.config.weeklyEnd);
-  }, [isDaily, leaderBoardData]);
+
+  }, [defaultLBTabs, leaderBoardData]);
 
   return (
     <Flex
@@ -229,21 +245,54 @@ const LeaderboardView = () => {
             rounded={'10px'}
             width={'300px'}
           >
-            <Button
+              <Button
               // borderBottom={isDaily ? '2px solid #1E3EF0' : 'none'}
-              bgColor={isDaily ? '#1E3EF0' : 'transparent'}
-              color={isDaily ? '#ffffff' : '#1E3EF0'}
+              bgColor={defaultLBTabs  === TabLeaderBoardType.EthoraPoint ? '#1E3EF0' : 'transparent'}
+              color={defaultLBTabs  === TabLeaderBoardType.EthoraPoint ? '#ffffff' : '#1E3EF0'}
               fontWeight="600"
               fontSize={'16px'}
               paddingX="7px"
               paddingY={'14px'}
               rounded={'10px'}
-              onClick={() => setIsDaily(true)}
+              onClick={() => setDefaultLBTabs(TabLeaderBoardType.EthoraPoint)}
               type="button"
               height={'50px'}
               _hover={{
-                bgColor: isDaily ? '#1E3EF0' : 'transparent',
-                color: isDaily ? '#ffffff' : '#1E3EF0',
+                bgColor: defaultLBTabs  === TabLeaderBoardType.EthoraPoint ? '#1E3EF0' : 'transparent',
+                color: defaultLBTabs  === TabLeaderBoardType.EthoraPoint ? '#ffffff' : '#1E3EF0',
+              }}
+              // _active={{
+              //   borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
+              //   bgColor: 'transparent',
+              // }}
+              flex={1}
+            >
+              EthoraPoint{' '}
+              <ShowStatus
+                isMobile={true}
+                start={leaderBoardData?.config?.dailyStart ?? ''}
+                end={leaderBoardData?.config?.dailyEnd ?? ''}
+                setDisable={(isDisable) => setIsDisableDaily(isDisable)}
+              />
+              {/* <span className="ml-2 inline-block rounded border border-[#2E60FF] px-2 py-1 font-normal text-[#2E60FF]">
+              In Progress
+            </span> */}
+            </Button>
+            <Button
+              // borderBottom={isDaily ? '2px solid #1E3EF0' : 'none'}
+              bgColor={defaultLBTabs  === TabLeaderBoardType.Daily ? '#1E3EF0' : 'transparent'}
+              color={defaultLBTabs  === TabLeaderBoardType.Daily ? '#ffffff' : '#1E3EF0'}
+              fontWeight="600"
+              fontSize={'16px'}
+              paddingX="7px"
+              paddingY={'14px'}
+              rounded={'10px'}
+              onClick={() => setDefaultLBTabs(TabLeaderBoardType.Daily)}
+              type="button"
+              height={'50px'}
+              _hover={{
+                bgColor: defaultLBTabs  === TabLeaderBoardType.Daily ? '#1E3EF0' : 'transparent',
+                color: defaultLBTabs  === TabLeaderBoardType.Daily ? '#ffffff' : '#1E3EF0',
               }}
               // _active={{
               //   borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
@@ -264,19 +313,19 @@ const LeaderboardView = () => {
             </Button>
             <Button
               // borderBottom={!isDaily ? '2px solid #1E3EF0' : 'none'}
-              bgColor={!isDaily ? '#1E3EF0' : 'transparent'}
-              color={!isDaily ? '#ffffff' : '#1E3EF0'}
+              bgColor={defaultLBTabs  != TabLeaderBoardType.Daily ? '#1E3EF0' : 'transparent'}
+              color={defaultLBTabs  != TabLeaderBoardType.Daily ? '#ffffff' : '#1E3EF0'}
               fontWeight="600"
               fontSize={'16px'}
               paddingX="7px"
               paddingY={'14px'}
               rounded={'10px'}
-              onClick={() => setIsDaily(false)}
+              onClick={() => setDefaultLBTabs(TabLeaderBoardType.Weekly)}
               type="button"
               height={'50px'}
               _hover={{
-                bgColor: !isDaily ? '#1E3EF0' : 'transparent',
-                color: !isDaily ? '#ffffff' : '#1E3EF0',
+                bgColor: defaultLBTabs  != TabLeaderBoardType.Daily ? '#1E3EF0' : 'transparent',
+                color: defaultLBTabs  != TabLeaderBoardType.Daily ? '#ffffff' : '#1E3EF0',
               }}
               // _active={{
               //   borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
@@ -343,22 +392,22 @@ const LeaderboardView = () => {
             marginBottom={'20px'}
           >
             <Button
-              borderBottom={isDaily ? '2px solid #1E3EF0' : 'none'}
+              borderBottom={defaultLBTabs  === TabLeaderBoardType.Daily ? '2px solid #1E3EF0' : 'none'}
               bgColor="transparent"
-              color={isDaily ? '#1E3EF0' : '#6D6D70'}
+              color={defaultLBTabs  === TabLeaderBoardType.Daily ? '#1E3EF0' : '#6D6D70'}
               fontWeight="400"
               paddingX="12px"
               paddingY={'14px'}
               rounded={0}
-              onClick={() => setIsDaily(true)}
+              onClick={() => setDefaultLBTabs(TabLeaderBoardType.Daily)}
               type="button"
               height={'50px'}
               _hover={{
-                borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
+                borderBottom: defaultLBTabs  === TabLeaderBoardType.Daily ? '2px solid #1E3EF0' : 'none',
                 bgColor: 'transparent',
               }}
               _active={{
-                borderBottom: isDaily ? '2px solid #1E3EF0' : 'none',
+                borderBottom: defaultLBTabs  === TabLeaderBoardType.Daily ? '2px solid #1E3EF0' : 'none',
                 bgColor: 'transparent',
               }}
               isDisabled={isDisableDaily}
@@ -376,22 +425,22 @@ const LeaderboardView = () => {
               />
             </Button>
             <Button
-              borderBottom={!isDaily ? '2px solid #1E3EF0' : 'none'}
+              borderBottom={defaultLBTabs  != TabLeaderBoardType.Daily ? '2px solid #1E3EF0' : 'none'}
               bgColor="transparent"
-              color={!isDaily ? '#1E3EF0' : '#6D6D70'}
+              color={defaultLBTabs  != TabLeaderBoardType.Daily ? '#1E3EF0' : '#6D6D70'}
               fontWeight="400"
               paddingX="12px"
               paddingY={'14px'}
               rounded={0}
-              onClick={() => setIsDaily(false)}
+              onClick={() => setDefaultLBTabs(TabLeaderBoardType.Weekly)}
               type="button"
               height={'50px'}
               _hover={{
-                borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
+                borderBottom: defaultLBTabs  != TabLeaderBoardType.Daily ? '2px solid #1E3EF0' : 'none',
                 bgColor: 'transparent',
               }}
               _active={{
-                borderBottom: !isDaily ? '2px solid #1E3EF0' : 'none',
+                borderBottom: defaultLBTabs  != TabLeaderBoardType.Daily ? '2px solid #1E3EF0' : 'none',
                 bgColor: 'transparent',
               }}
               _disabled={{
@@ -455,7 +504,7 @@ const LeaderboardView = () => {
                     Time Left
                   </Text>
                   {leaderBoardData?.summary?.endDate ? (
-                    <CountDownWithDay showDay={!isDaily} endTime={dayjs(leaderBoardData?.summary?.endDate).unix()} />
+                    <CountDownWithDay showDay={defaultLBTabs  != TabLeaderBoardType.Daily} endTime={dayjs(leaderBoardData?.summary?.endDate).unix()} />
                   ) : (
                     '---'
                   )}
@@ -595,7 +644,7 @@ const LeaderboardView = () => {
                   >
                     Losers (by PnL)
                   </Box>
-                  {!isDaily && (
+                  {defaultLBTabs  != TabLeaderBoardType.Daily && (
                     <>
                       <Box
                         className="mr-2"
