@@ -60,3 +60,21 @@ export interface ILeaderBoardOffset {
   dailyId: number,
   weeklyId: number
 }
+
+export interface IEthoraPointParams {
+  page: number,
+  limit: number,
+  network: number,
+  sortBy?: string,
+  sortType?: string
+}
+
+export interface IEthoraPointData {
+  id: string
+  point: string
+  totalTrades: number
+  volume: string
+  usdcVolume: string
+  usdcTotalTrades: number
+  totalRebateEarned: string
+}
