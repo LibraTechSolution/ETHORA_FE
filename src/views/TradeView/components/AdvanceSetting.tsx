@@ -27,7 +27,7 @@ const AdvanceSetting = (props: Props) => {
   const { address } = useAccount();
   const { advanceSetting, setListAdvanceSetting } = useAdvanceSetting();
   const { isShow, onClose } = props;
-  const [slippage, setSlippage] = useState<string>('0.1');
+  const [slippage, setSlippage] = useState<string>('0.2');
   const [slippageError, setSlippageError] = useState<string>('');
   const [timeType, setTimeType] = useState<string>('h');
   const [timeNumber, setTimeNumber] = useState<string>('5');
@@ -222,7 +222,7 @@ const AdvanceSetting = (props: Props) => {
         </Tooltip>
       </Box>
       <Box display={'flex'} marginBottom={'8px'}>
-        {['0.15', '0.25', '0.5'].map((item) => (
+        {['0.25', '0.5', '0.6'].map((item) => (
           <Button
             key={item}
             border={slippage === item ? '1px solid #1E3EF0' : ''}
