@@ -129,6 +129,11 @@ export function startStreaming() {
     }
   });
   socket.addEventListener("error", (event) => {
+    (async () => { await sleep(5000); startStreaming() })()
+    console.log("WebSocket error: ", event);
+  });
+  socket.addEventListener("close", (event) => {
+    (async () => { await sleep(5000); startStreaming() })()
     console.log("WebSocket error: ", event);
   });
 }
