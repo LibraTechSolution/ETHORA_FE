@@ -381,13 +381,13 @@ export const TradingViewChart = () => {
       disabled_features:
         window.innerWidth < 600
           ? [
-              'header_compare',
-              'header_symbol_search',
-              'header_widget',
-              'go_to_date',
-              'display_market_status',
-              'left_toolbar',
-            ]
+            'header_compare',
+            'header_symbol_search',
+            'header_widget',
+            'go_to_date',
+            'display_market_status',
+            'left_toolbar',
+          ]
           : ['header_compare', 'header_symbol_search', 'header_widget', 'go_to_date', 'display_market_status'],
     };
     widgetRef.current = new widget(widgetOptions);
