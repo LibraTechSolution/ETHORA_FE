@@ -138,6 +138,11 @@ export function startStreaming() {
   });
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
 function getNextDailyBarTime(barTime) {
   const date = new Date(barTime * 1000)
   date.setDate(date.getDate() + 1)
