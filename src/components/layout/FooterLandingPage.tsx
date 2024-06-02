@@ -24,12 +24,12 @@ const FooterLadingPage = () => {
             Medium
           </Text>
         </Link>
-        <Link href="/" className="z-10 flex items-center gap-1 text-sm">
+        {/* <Link href="/" className="z-10 flex items-center gap-1 text-sm">
           <Image alt="ethora" src="/images/icons/instagram.svg" w="24p" h="24p" />
           <Text as={'span'} display={{ base: 'none', sm: 'none', md: 'inline-block', lg: 'inline-block' }}>
             Instagram
           </Text>
-        </Link>
+        </Link> */}
       </Box>
   );
 };

@@ -265,11 +265,11 @@ export const Header = () => {
                             Medium
                           </Link>
                         </MenuItem>
-                        <MenuItem background="transparent">
+                        {/* <MenuItem background="transparent">
                           <Link href="https://www.instagram.com" target="_blank" className="w-full text-center">
                             Instagram
                           </Link>
-                        </MenuItem>
+                        </MenuItem> */}
                       </MenuList>
                     </>
                   )}
@@ -576,7 +576,7 @@ export const Header = () => {
                   Medium
                 </Link>
               </Center>
-              <Center justifyContent={'flex-start'}>
+              {/* <Center justifyContent={'flex-start'}>
                 <Link
                   href="https://www.instagram.com/"
                   target="_blank"
@@ -584,7 +584,7 @@ export const Header = () => {
                 >
                   Instagram
                 </Link>
-              </Center>
+              </Center> */}
             </DrawerBody>
           </DrawerContent>
         </Drawer>
