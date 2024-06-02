@@ -14,3 +14,15 @@ export interface ILoginRes {
   user: IUser;
   tokens: ITokens;
 }
+
+export interface INonce {
+  address: string;
+  nonce: string;
+}
+
+export interface IPermit {
+  deadline: number,
+  v: number,
+  r: string,
+  s: string
+}

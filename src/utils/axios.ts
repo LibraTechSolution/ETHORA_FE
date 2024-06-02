@@ -3,6 +3,7 @@ import axios from 'axios';
 import { appConfig } from '@/config';
 import useUserStore from '@/store/useUserStore';
 import { ILoginRes, ITokens } from '@/types/auth.type';
+import { IResponData } from '@/types/api.type';
 
 const baseURL = appConfig.publicUrl;
 const contentType = 'application/json';
@@ -20,7 +21,7 @@ export const axiosInstance = axios.create({
 });
 
 const getToken = () => useUserStore.getState()?.tokens;
-const setTokens = (tokens: ITokens | null) => useUserStore.getState().setTokens(tokens);
+const setTokens = (tokens: ITokens | null) => useUserStore.getState().setUserAndTokens(null, tokens);
 const logoutUser = () => {
   const userStore = useUserStore.getState();
   userStore.setUserAndTokens(null, null);
@@ -31,9 +32,9 @@ const isExpired = (date: string) => {
 };
 
 const getRefreshToken = async (refreshToken: string) => {
-  const tokensData = await axiosNoAuthInstance.post<ILoginRes>('/auth/refresh-tokens', { refreshToken });
+  const tokensData = await axiosNoAuthInstance.post<IResponData<ILoginRes>>('/auth/refresh-tokens', { refreshToken });
   if (![200, 201].includes(tokensData?.status)) throw tokensData;
-  return tokensData.data.tokens;
+  return tokensData.data.data.tokens;
 };
 
 const refreshToken = async (tokens?: ITokens | null) => {

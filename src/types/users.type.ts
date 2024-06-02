@@ -1,8 +1,10 @@
 export interface IUser {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  status: number;
+  address: `0x${string}`;
+  banned: boolean;
+  faucet: boolean;
+  isRegistered: boolean;
+  isApproved: boolean;
+  nonce: string;
+  oneCT: `0x${string}`;
+  _id: string;
 }
