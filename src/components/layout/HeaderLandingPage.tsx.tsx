@@ -191,17 +191,17 @@ export const HeaderLanding = () => {
                         </Link>
                       </MenuItem>
                       <MenuItem background="transparent">
-                        <Link href="https://twitter.com/" target="_blank" className="w-full text-center">
+                        <Link href="https://x.com/ethora_" target="_blank" className="w-full text-center">
                           Twitter
                         </Link>
                       </MenuItem>
                       <MenuItem background="transparent">
-                        <Link href="https://discord.com/" target="_blank" className="w-full text-center">
+                        <Link href="https://discord.gg/YPS57gmv" target="_blank" className="w-full text-center">
                           Discord
                         </Link>
                       </MenuItem>
                       <MenuItem background="transparent">
-                        <Link href="https://medium.com/" target="_blank" className="w-full text-center">
+                        <Link href="https://medium.com/@ethora" target="_blank" className="w-full text-center">
                           Medium
                         </Link>
                       </MenuItem>
@@ -299,7 +299,7 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link href="https://twitter.com" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
+              <Link href="https://x.com/ethora_" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
                 Twitter
               </Link>
             </Center>
@@ -309,7 +309,7 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link href="https://medium.com/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
+              <Link href="https://medium.com/@ethora" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
                 Medium
               </Link>
             </Center>
