@@ -12,7 +12,7 @@ const FooterLadingPage = () => {
             Twitter
           </Text>
         </Link>
-        <Link href="https://discord.gg/YPS57gmv" className="z-10  flex items-center gap-1 text-sm">
+        <Link href="https://discord.com/invite/ethora" className="z-10  flex items-center gap-1 text-sm">
           <Image alt="ethora" src="/images/icons/discord.svg" w="24p" h="24p" />
           <Text as={'span'} display={{ base: 'none', sm: 'none', md: 'inline-block', lg: 'inline-block' }}>
             Discord

@@ -256,7 +256,7 @@ export const Header = () => {
                           </Link>
                         </MenuItem>
                         <MenuItem background="transparent">
-                          <Link href="https://discord.gg/YPS57gmv" target="_blank" className="w-full text-center">
+                          <Link href="https://discord.com/invite/ethora" target="_blank" className="w-full text-center">
                             Discord
                           </Link>
                         </MenuItem>
@@ -568,7 +568,7 @@ export const Header = () => {
               </Center>
               <Center justifyContent={'flex-start'}>
                 <Link
-                  href="https://discord.gg/YPS57gmv"
+                  href="https://discord.com/invite/ethora"
                   target="_blank"
                   className={`w-full text-left ${nonActiveStyle}`}
                 >
