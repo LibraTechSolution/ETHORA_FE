@@ -196,7 +196,7 @@ export const HeaderLanding = () => {
                         </Link>
                       </MenuItem>
                       <MenuItem background="transparent">
-                        <Link href="https://discord.gg/YPS57gmv" target="_blank" className="w-full text-center">
+                        <Link href="https://discord.com/invite/ethora" target="_blank" className="w-full text-center">
                           Discord
                         </Link>
                       </MenuItem>
@@ -304,7 +304,7 @@ export const HeaderLanding = () => {
               </Link>
             </Center>
             <Center justifyContent={'flex-start'}>
-              <Link href="https://discord.com/" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
+              <Link href="https://discord.com/invite/ethora" target="_blank" className={`w-full text-left ${nonActiveStyle}`}>
                 Discord
               </Link>
             </Center>
