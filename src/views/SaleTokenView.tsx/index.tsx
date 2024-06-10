@@ -78,6 +78,7 @@ export const SaleTokenView = () => {
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [loadingApproved, setLoadingApproved] = useState<boolean>(false);
   const [loadingBuy, setLoadingBuy] = useState<boolean>(false);
+  const [loadingClaim, setLoadingClaim] = useState<boolean>(false);
   const toast = useToast();
   const { data: poolInfor, isLoading } = useContractRead({
     watch: true,
@@ -93,6 +94,15 @@ export const SaleTokenView = () => {
     abi: saleABI,
     address: appConfig.TOKEN_SALE_SC as `0x${string}`,
     functionName: 'startTime',
+    enabled: !!appConfig.TOKEN_SALE_SC,
+    chainId: +(appConfig.TOKEN_SALE_CHAIN_ID || 0),
+  });
+
+  const { data: publicTime } = useContractRead({
+    watch: true,
+    abi: saleABI,
+    address: appConfig.TOKEN_SALE_SC as `0x${string}`,
+    functionName: 'publicTime',
     enabled: !!appConfig.TOKEN_SALE_SC,
     chainId: +(appConfig.TOKEN_SALE_CHAIN_ID || 0),
   });
@@ -147,16 +157,30 @@ export const SaleTokenView = () => {
   });
 
   const isBuy = useMemo(() => {
-    return (
-      dayjs().unix() >= Number(startTime as bigint) && dayjs().unix() <= Number(endTime as bigint) && isWhitelisted
-    );
-  }, [startTime, endTime, isWhitelisted]);
+    if (isWhitelisted) {
+      return dayjs().unix() >= Number(startTime as bigint) && dayjs().unix() <= Number(endTime as bigint);
+    } else {
+      return dayjs().unix() >= Number(publicTime as bigint) && dayjs().unix() <= Number(endTime as bigint);
+    }
+  }, [startTime, endTime, isWhitelisted, publicTime]);
+
+  const startAt = useMemo(() => {
+    if (address) {
+      if (isWhitelisted) {
+        return Number(startTime as bigint);
+      } else {
+        return Number(publicTime as bigint);
+      }
+    } else {
+      return Number(publicTime as bigint);
+    }
+  }, [startTime, endTime, isWhitelisted, publicTime, address]);
 
   const isClaimable = useMemo(() => {
     return (
       dayjs().unix() >= Number(endTime as bigint) &&
       BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(BigNumber(0)) &&
-      !(userInfo as Array<boolean>)?.[1]
+      !(userInfo as Array<boolean>)?.[2]
     );
   }, [offeringAndRefundingAmounts, endTime, userInfo]);
 
@@ -175,7 +199,8 @@ export const SaleTokenView = () => {
     amount: Yup.string()
       .required('Amount is required')
       .test('Is positive?', 'Entered amount must be greater than 0', (value) => +value > 0)
-      .test('Greater amount?', 'Max is 1000 USDC!', (value) => +value <= 1000),
+      .test('Greater amount?', 'Not enough funds!', (value) => +value <= +formatUnits(balance as bigint, 6))
+      .test('Greater amount?', `Max is ${max} USDC!`, (value) => +value <= +max),
   });
 
   const formik = useFormik({
@@ -328,7 +353,7 @@ export const SaleTokenView = () => {
 
   const onClaim = async () => {
     try {
-      setLoadingBuy(true);
+      setLoadingClaim(true);
       const configStake = await prepareWriteContract({
         address: appConfig.TOKEN_SALE_SC as `0x${string}`,
         abi: saleABI,
@@ -340,7 +365,7 @@ export const SaleTokenView = () => {
       const data = await waitForTransaction({
         hash,
       });
-      setLoadingBuy(false);
+      setLoadingClaim(false);
       setOpenModal(false);
       toast({
         position: 'top',
@@ -388,7 +413,7 @@ export const SaleTokenView = () => {
           ),
         });
       }
-      setLoadingBuy(false);
+      setLoadingClaim(false);
     }
   };
 
@@ -403,7 +428,7 @@ export const SaleTokenView = () => {
   const setMaxValue = () => {
     if (balance !== undefined) {
       let maxTemp = subtract(max.toString(), divide(((userInfo as Array<bigint>)?.[0] || 0).toString(), 6).toString());
-      if (BigNumber(Number(balance) / 10 ** 6).isLessThanOrEqualTo(BigNumber(max))) {
+      if (BigNumber(Number(balance) / 10 ** 6).isLessThanOrEqualTo(BigNumber(maxTemp))) {
         maxTemp = divide(balance.toString(), 6).toString();
       }
       formik.setFieldValue('amount', maxTemp); //formatUnits(balance as bigint, 18)
@@ -514,7 +539,7 @@ export const SaleTokenView = () => {
               <Text fontSize="18px" fontWeight={600} color={'#fff'}>
                 {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
                   BigNumber(0),
-                ) && !(userInfo as Array<boolean>)?.[1]
+                ) && !(userInfo as Array<boolean>)?.[2]
                   ? addComma(divide((offeringAndRefundingAmounts as Array<bigint>)?.[0].toString() || '0', 18), 6)
                   : 0}{' '}
                 ETR
@@ -525,7 +550,7 @@ export const SaleTokenView = () => {
               <Text ml="4px" color={'#fff'}>
                 {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
                   BigNumber(0),
-                ) && !(userInfo as Array<boolean>)?.[1]
+                ) && !(userInfo as Array<boolean>)?.[2]
                   ? addComma(divide((offeringAndRefundingAmounts as Array<bigint>)?.[1].toString() || '0', 6), 2)
                   : 0}{' '}
                 USDC
@@ -544,6 +569,7 @@ export const SaleTokenView = () => {
                 minW="251px"
                 _disabled={{ bg: '#0052FF', opacity: 0.5 }}
                 isDisabled={!isClaimable}
+                isLoading={loadingClaim}
                 onClick={onClaim}
               >
                 Claim
@@ -591,7 +617,7 @@ export const SaleTokenView = () => {
         flexDirection={'column'}
       >
         <Box maxWidth={'1150px'} margin={'0 auto'}>
-          {dayjs().unix() < Number(startTime as bigint) && (
+          {dayjs().unix() < startAt && (
             <Text
               fontSize={{ base: '32px', md: '56px' }}
               textColor={'white'}
@@ -601,11 +627,11 @@ export const SaleTokenView = () => {
               marginBottom={{ base: '40px', md: '80px' }}
             >
               Sale starts at{' '}
-              {dayjs(Number(startTime as bigint) * 1000)
+              {dayjs(startAt * 1000)
                 .utc()
                 .format('HH:mm A')}{' '}
               on{' '}
-              {dayjs(Number(startTime as bigint) * 1000)
+              {dayjs(startAt * 1000)
                 .utc()
                 .format('DD MMM YYYY')}{' '}
               UTC
@@ -623,7 +649,7 @@ export const SaleTokenView = () => {
               Sale Finished!
             </Text>
           )}
-          {dayjs().unix() >= Number(startTime as bigint) && dayjs().unix() <= Number(endTime as bigint) && (
+          {dayjs().unix() >= startAt && dayjs().unix() <= Number(endTime as bigint) && (
             <Text
               fontSize={{ base: '32px', md: '56px' }}
               textColor={'white'}
