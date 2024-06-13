@@ -51,20 +51,28 @@ import CustomConnectSaleTokenButton from '@/components/CustomConnectButton/Custo
 
 const dataFAQ = [
   {
-    title: 'What’s the difference between a Public Sale and a Private Sale?',
-    desc: 'In a Private Sale, you need to meet certain requirements listed on the IDO card to join. You can commit any amount of tokens, up to a maximum limit, if you are eligible. In a Public Sale, anyone can join and make a commitment.',
+    title: 'What is the structure of the Pre-Sale?',
+    desc: 'Overflow Structure: Basically, the more you invest, the more you will get, and you’ll get back the USDC that doesn’t get spent. In the “Overflow” method, users can subscribe as much or as little as they want to the presale, and their final allocation will be based on the amount of funds they put in as a percentage of all funds put in by other users at the time the sale ends. Users will receive back any leftover funds when they claim their tokens after the sale.',
   },
   {
-    title: 'Which sale should I participate in? Can I participate in both?',
-    desc: 'You have the option to choose one or participate in both simultaneously! We suggest checking your eligibility for the Private Sale first. In the Public Sale, if the amount you commit is too small, you might not receive a significant number of IDO tokens.',
+    title: 'What is the discounted rate compared to IDO?',
+    desc: 'The current presale offers $ETR at a lower price (20% cheaper) compared to the IDO on launchpads, making it a fantastic opportunity to invest early.',
   },
   {
-    title: 'How much is the participation fee?',
-    desc: 'There is a participation fee only for the Public Sale; there is no participation fee for the Private Sale.',
+    title: 'How to get my wallet whitelisted?',
+    desc: 'Please go to our Discord to submit your wallet address so we could whitelist you before 24th June.',
   },
   {
-    title: 'Where does the participation fee go?',
-    desc: 'After the IDO concludes, the participation fee will be transferred to the team’s treasury. These funds can then be utilized for purchasing and removing ETR tokens from circulation in the future.',
+    title: 'On what chain is the Pre-Sale happening?',
+    desc: 'ETR Pre-sale is on Base chain.',
+  },
+  {
+    title: 'What is the vesting period for Pre-sale?',
+    desc: 'The vesting period is the same as IDO round: 25% TGE, 25% each month after',
+  },
+  {
+    title: 'When will be ETR listing?',
+    desc: 'ETR will be listed on MEXC and Uniswap on 10th July',
   },
 ];
 
@@ -474,10 +482,12 @@ export const SaleTokenView = () => {
               >
                 Ethora (ETR){' '}
                 <Box as="br" display={{ base: 'none', sm: 'none', md: 'inline-block', lg: 'inline-block' }} />
-                IDO
+                Pre-Sale
               </Heading>
               <Text as="p" fontSize={'xs'} color={'#9E9E9F'} marginBottom={'30px'} textAlign={'start'}>
-                Access to the future of decentralized options trading
+                Date: 26th June 2024, 9am UTC <br />
+                Presale Price: $0.008 (20% cheaper than IDO) <br />
+                Listing Date: 10th July on MEXC and Uniswap
               </Text>
               <Button
                 borderColor="#0052FF"
@@ -590,7 +600,7 @@ export const SaleTokenView = () => {
               You have no tokens available for claiming
             </Text>
             <Text as="p" fontSize={'xs'} color={'#9E9E9F'} marginBottom={'30px'} textAlign={'start'}>
-              Participate in our next IDO. Follow us on our social networks for more information!
+              Vesting: 25% unlock TGE, then 25% each months thereafter
             </Text>
           </Box>
         )}
@@ -626,15 +636,7 @@ export const SaleTokenView = () => {
               textAlign={'center'}
               marginBottom={{ base: '40px', md: '80px' }}
             >
-              Sale starts at{' '}
-              {dayjs(startAt * 1000)
-                .utc()
-                .format('HH:mm A')}{' '}
-              on{' '}
-              {dayjs(startAt * 1000)
-                .utc()
-                .format('DD MMM YYYY')}{' '}
-              UTC
+              Pre-Sale Starting on 26th June 2024
             </Text>
           )}
           {dayjs().unix() >= Number(endTime as bigint) && (
@@ -691,7 +693,7 @@ export const SaleTokenView = () => {
           >
             <Box flex={'1'} gap={'20px'} display={'flex'} flexDirection={'column'}>
               <Text fontSize="20px" textColor={'white'} fontWeight={600}>
-                Public Sale
+                Pre-Sale
               </Text>
               <Text fontSize="32px" textColor={'white'} fontWeight={600}>
                 {!isLoading && (poolInfor as Array<bigint>)?.length > 0
@@ -760,7 +762,7 @@ export const SaleTokenView = () => {
           marginBottom={{ base: '40px', md: '80px' }}
         >
           How to Take Part in <br />
-          the Public Sale
+          the Pre-Sale
         </Text>
         <Grid
           templateColumns={{
@@ -794,13 +796,13 @@ export const SaleTokenView = () => {
             image="/images/saleToken/calendar.svg"
           />
           <ItemCardPublicSale
-            title="Enable ETH"
-            desc="Connect your wallet and approve the contract to use your ETH"
+            title="Enable USDC"
+            desc="Connect your wallet and approve the contract to use your USDC"
             image="/images/saleToken/enable-eth.svg"
           />
           <ItemCardPublicSale
-            title="Commit ETH"
-            desc="Enter the number of ETH you intend to commit in the sale"
+            title="Commit USDC"
+            desc="Enter the number of USDC you intend to commit in the sale"
             image="/images/saleToken/commit-eth.svg"
           />
         </Grid>
@@ -817,7 +819,7 @@ export const SaleTokenView = () => {
         >
           <ItemCardPublicSale
             title="Claim Your Tokens"
-            desc="Claim your ETR tokens and unused ETH after the sale ended"
+            desc="Claim your ETR tokens and unused USDC after the sale ended"
             image="/images/saleToken/claim-token.svg"
           />
           <ItemCardPublicSale
