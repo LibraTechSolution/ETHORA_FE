@@ -792,7 +792,7 @@ export const SaleTokenView = () => {
         >
           <ItemCardPublicSale
             title="Mark Your Calendar"
-            desc="Get ready to participate in ETR IDO"
+            desc="Get ready to participate in ETR Pre-Sale"
             image="/images/saleToken/calendar.svg"
           />
           <ItemCardPublicSale
