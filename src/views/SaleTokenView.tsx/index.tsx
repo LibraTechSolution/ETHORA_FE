@@ -194,9 +194,9 @@ export const SaleTokenView = () => {
 
   const tokenPrice = poolInfor
     ? divide(
-        divide((poolInfor as Array<bigint>)[0].toString(), 6),
-        divide((poolInfor as Array<bigint>)[1].toString(), 18),
-      )
+      divide((poolInfor as Array<bigint>)[0].toString(), 6),
+      divide((poolInfor as Array<bigint>)[1].toString(), 18),
+    )
     : 0;
 
   const max = divide(poolInfor ? (poolInfor as Array<bigint>)[2].toString() : 0, 6);
@@ -509,111 +509,7 @@ export const SaleTokenView = () => {
           </Box>
         </Box>
       </Box>
-      <Grid
-        maxW={'1242px'}
-        margin={'auto'}
-        templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }}
-        gap={'52px'}
-        px={'12px'}
-      >
-        {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
-          BigNumber(0),
-        ) ? (
-          <Box>
-            <Image alt="base" src="/images/saleToken/logo-token.png" w="87.74" h="87.74" />
-            <Text
-              as="h3"
-              fontSize={{ base: 'xl', sm: 'xl', md: '2xl', lg: '2xl' }}
-              textColor={'white'}
-              lineHeight={1.3}
-              marginTop={{ base: '20px', sm: '20px', md: '20px', lg: '20px' }}
-              marginBottom={{ base: '20px', sm: '20px', md: '20px', lg: '20px' }}
-            >
-              Claim your token{' '}
-              {dayjs().unix() >= Number(endTime as bigint)
-                ? 'now'
-                : ` after ${dayjs(Number(endTime as bigint) * 1000)
-                    .utc()
-                    .format('DD MMM YYYY(hh:mm a)')} UTC`}
-            </Text>
-            <Flex
-              background="#1C1C1E80"
-              p="20px 12px"
-              alignItems={'center'}
-              justifyContent={'space-between'}
-              borderRadius={'10px'}
-            >
-              <Text fontSize="16px" fontWeight={400} color={'#9E9E9F'}>
-                Claimable
-              </Text>
-              <Text fontSize="18px" fontWeight={600} color={'#fff'}>
-                {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
-                  BigNumber(0),
-                ) && !(userInfo as Array<boolean>)?.[2]
-                  ? addComma(divide((offeringAndRefundingAmounts as Array<bigint>)?.[0].toString() || '0', 18), 6)
-                  : 0}{' '}
-                ETR
-              </Text>
-            </Flex>
-            <Flex justifyContent="flex-end" mr={'12px'} mt={'10px'}>
-              Refund:{' '}
-              <Text ml="4px" color={'#fff'}>
-                {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
-                  BigNumber(0),
-                ) && !(userInfo as Array<boolean>)?.[2]
-                  ? addComma(divide((offeringAndRefundingAmounts as Array<bigint>)?.[1].toString() || '0', 6), 2)
-                  : 0}{' '}
-                USDC
-              </Text>
-            </Flex>
-            <Center>
-              <Button
-                borderColor="#0052FF"
-                bgColor={'#0052FF'}
-                borderRadius={'10px'}
-                textColor="white"
-                variant="outline"
-                _hover={{ bg: 'transparent' }}
-                padding={'8px 16px'}
-                mt="20px"
-                minW="251px"
-                _disabled={{ bg: '#0052FF', opacity: 0.5 }}
-                isDisabled={!isClaimable}
-                isLoading={loadingClaim}
-                onClick={onClaim}
-              >
-                Claim
-              </Button>
-            </Center>
-          </Box>
-        ) : (
-          <Box>
-            <Image alt="base" src="/images/saleToken/logo-token.png" w="87.74" h="87.74" />
-            <Text
-              as="h3"
-              fontSize={{ base: 'xl', sm: 'xl', md: '2xl', lg: '2xl' }}
-              textColor={'white'}
-              lineHeight={1.3}
-              marginTop={{ base: '20px', sm: '20px', md: '20px', lg: '20px' }}
-              marginBottom={{ base: '20px', sm: '20px', md: '20px', lg: '20px' }}
-            >
-              You have no tokens available for claiming
-            </Text>
-            <Text as="p" fontSize={'xs'} color={'#9E9E9F'} marginBottom={'30px'} textAlign={'start'}>
-              Vesting: 25% unlock TGE, then 25% each months thereafter
-            </Text>
-          </Box>
-        )}
-        <Box
-          display={{ base: 'none', sm: 'none', md: 'block', lg: 'block' }}
-          flex={{ base: 'none', sm: 'none', md: '1', lg: '1' }}
-        >
-          <Image alt="base" src="/images/saleToken/ethora-twitter.png" w="627px" h="full" />
-        </Box>
-        <Box display={{ base: 'block', sm: 'block', md: 'none', lg: 'none' }}>
-          <Image alt="base" src="/images/saleToken/ethora-twitter-mobile.png" w="627px" h="full" />
-        </Box>
-      </Grid>
+
       <Box
         display={'flex'}
         alignItems={'center'}
@@ -622,7 +518,6 @@ export const SaleTokenView = () => {
         bgRepeat="no-repeat"
         bgPosition={'center'}
         bgSize={{ base: '400% 370%', sm: '400% 370%', md: '195% 295%', lg: '125% 250%' }}
-        paddingTop={{ base: '50px', md: '251px' }}
         position={'relative'}
         flexDirection={'column'}
       >
@@ -725,20 +620,19 @@ export const SaleTokenView = () => {
               <ItemCardSale title="Additional fee:" value="0%" />
               <ItemCardSale
                 title="Total committed:"
-                value={`${addComma(divide(poolInfor ? (poolInfor as Array<bigint>)[4].toString() : 0, 6))} (${
-                  poolInfor
+                value={`${addComma(divide(poolInfor ? (poolInfor as Array<bigint>)[4].toString() : 0, 6))} (${poolInfor
                     ? addComma(
-                        multiply(
-                          divide(
-                            divide((poolInfor as Array<bigint>)[4].toString(), 6),
-                            divide((poolInfor as Array<bigint>)[0].toString(), 6),
-                          ).toString(),
-                          '100',
-                        ),
-                        2,
-                      )
+                      multiply(
+                        divide(
+                          divide((poolInfor as Array<bigint>)[4].toString(), 6),
+                          divide((poolInfor as Array<bigint>)[0].toString(), 6),
+                        ).toString(),
+                        '100',
+                      ),
+                      2,
+                    )
                     : 0
-                }%)`}
+                  }%)`}
               />
               <ItemCardSale
                 title="Funds to raise:"
@@ -749,6 +643,112 @@ export const SaleTokenView = () => {
           </Box>
         </Grid>
       </Box>
+      <Grid
+        maxW={'1242px'}
+        margin={'auto'}
+        paddingTop={{ base: '50px', md: '251px' }}
+        templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }}
+        gap={'52px'}
+        px={'12px'}
+      >
+        {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
+          BigNumber(0),
+        ) ? (
+          <Box>
+            <Image alt="base" src="/images/saleToken/logo-token.png" w="87.74" h="87.74" />
+            <Text
+              as="h3"
+              fontSize={{ base: 'xl', sm: 'xl', md: '2xl', lg: '2xl' }}
+              textColor={'white'}
+              lineHeight={1.3}
+              marginTop={{ base: '20px', sm: '20px', md: '20px', lg: '20px' }}
+              marginBottom={{ base: '20px', sm: '20px', md: '20px', lg: '20px' }}
+            >
+              Claim your token{' '}
+              {dayjs().unix() >= Number(endTime as bigint)
+                ? 'now'
+                : ` after ${dayjs(Number(endTime as bigint) * 1000)
+                  .utc()
+                  .format('DD MMM YYYY(hh:mm a)')} UTC`}
+            </Text>
+            <Flex
+              background="#1C1C1E80"
+              p="20px 12px"
+              alignItems={'center'}
+              justifyContent={'space-between'}
+              borderRadius={'10px'}
+            >
+              <Text fontSize="16px" fontWeight={400} color={'#9E9E9F'}>
+                Claimable
+              </Text>
+              <Text fontSize="18px" fontWeight={600} color={'#fff'}>
+                {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
+                  BigNumber(0),
+                ) && !(userInfo as Array<boolean>)?.[2]
+                  ? addComma(divide((offeringAndRefundingAmounts as Array<bigint>)?.[0].toString() || '0', 18), 6)
+                  : 0}{' '}
+                ETR
+              </Text>
+            </Flex>
+            <Flex justifyContent="flex-end" mr={'12px'} mt={'10px'}>
+              Refund:{' '}
+              <Text ml="4px" color={'#fff'}>
+                {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
+                  BigNumber(0),
+                ) && !(userInfo as Array<boolean>)?.[2]
+                  ? addComma(divide((offeringAndRefundingAmounts as Array<bigint>)?.[1].toString() || '0', 6), 2)
+                  : 0}{' '}
+                USDC
+              </Text>
+            </Flex>
+            <Center>
+              <Button
+                borderColor="#0052FF"
+                bgColor={'#0052FF'}
+                borderRadius={'10px'}
+                textColor="white"
+                variant="outline"
+                _hover={{ bg: 'transparent' }}
+                padding={'8px 16px'}
+                mt="20px"
+                minW="251px"
+                _disabled={{ bg: '#0052FF', opacity: 0.5 }}
+                isDisabled={!isClaimable}
+                isLoading={loadingClaim}
+                onClick={onClaim}
+              >
+                Claim
+              </Button>
+            </Center>
+          </Box>
+        ) : (
+          <Box>
+            <Image alt="base" src="/images/saleToken/logo-token.png" w="87.74" h="87.74" />
+            <Text
+              as="h3"
+              fontSize={{ base: 'xl', sm: 'xl', md: '2xl', lg: '2xl' }}
+              textColor={'white'}
+              lineHeight={1.3}
+              marginTop={{ base: '20px', sm: '20px', md: '20px', lg: '20px' }}
+              marginBottom={{ base: '20px', sm: '20px', md: '20px', lg: '20px' }}
+            >
+              You have no tokens available for claiming
+            </Text>
+            <Text as="p" fontSize={'xs'} color={'#9E9E9F'} marginBottom={'30px'} textAlign={'start'}>
+              Vesting: 25% unlock TGE, then 25% each months thereafter
+            </Text>
+          </Box>
+        )}
+        <Box
+          display={{ base: 'none', sm: 'none', md: 'block', lg: 'block' }}
+          flex={{ base: 'none', sm: 'none', md: '1', lg: '1' }}
+        >
+          <Image alt="base" src="/images/saleToken/ethora-twitter.png" w="627px" h="full" />
+        </Box>
+        <Box display={{ base: 'block', sm: 'block', md: 'none', lg: 'none' }}>
+          <Image alt="base" src="/images/saleToken/ethora-twitter-mobile.png" w="627px" h="full" />
+        </Box>
+      </Grid>
       <Box
         margin={{ base: '100px 12px 0px', sm: '30px 12px 0px', md: '160px 20px 0px', lg: '160px 240px 24px' }}
         ref={faqRef}
@@ -780,14 +780,14 @@ export const SaleTokenView = () => {
             isMobile
               ? {}
               : {
-                  content: '" "',
-                  height: '1px',
-                  position: 'absolute',
-                  bottom: 0,
-                  width: '80%',
-                  background:
-                    'radial-gradient(circle, rgba(37,37,40,0.8435749299719888) 57%, rgba(12,12,16,0.3561799719887955) 100%);',
-                }
+                content: '" "',
+                height: '1px',
+                position: 'absolute',
+                bottom: 0,
+                width: '80%',
+                background:
+                  'radial-gradient(circle, rgba(37,37,40,0.8435749299719888) 57%, rgba(12,12,16,0.3561799719887955) 100%);',
+              }
           }
         >
           <ItemCardPublicSale
