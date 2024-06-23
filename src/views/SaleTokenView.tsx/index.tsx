@@ -134,6 +134,18 @@ export const SaleTokenView = () => {
     chainId: +(appConfig.TOKEN_SALE_CHAIN_ID || 0),
   });
 
+  const { data: claimable } = useContractRead({
+    watch: true,
+    abi: saleABI,
+    address: appConfig.TOKEN_SALE_SC as `0x${string}`,
+    functionName: 'claimable',
+    args: [address as `0x${string}`],
+    enabled: !!(address && appConfig.TOKEN_SALE_SC),
+    chainId: +(appConfig.TOKEN_SALE_CHAIN_ID || 0),
+  });
+
+  console.log('claimable', claimable);
+
   const { data: userInfo } = useContractRead({
     watch: true,
     abi: saleABI,
@@ -194,9 +206,9 @@ export const SaleTokenView = () => {
 
   const tokenPrice = poolInfor
     ? divide(
-      divide((poolInfor as Array<bigint>)[0].toString(), 6),
-      divide((poolInfor as Array<bigint>)[1].toString(), 18),
-    )
+        divide((poolInfor as Array<bigint>)[0].toString(), 6),
+        divide((poolInfor as Array<bigint>)[1].toString(), 18),
+      )
     : 0;
 
   const max = divide(poolInfor ? (poolInfor as Array<bigint>)[2].toString() : 0, 6);
@@ -531,7 +543,17 @@ export const SaleTokenView = () => {
               textAlign={'center'}
               marginBottom={{ base: '40px', md: '80px' }}
             >
-              Pre-Sale Starting on 26th June 2024
+              {/* Pre-Sale Starting on 26th June 2024 */}
+              Pre-Sale Starting at{' '}
+              {dayjs(startAt * 1000)
+                .utc()
+                .format('HH:mm A')}
+              <br />
+              on{' '}
+              {dayjs(startAt * 1000)
+                .utc()
+                .format('DD MMM YYYY')}{' '}
+              UTC
             </Text>
           )}
           {dayjs().unix() >= Number(endTime as bigint) && (
@@ -620,19 +642,20 @@ export const SaleTokenView = () => {
               <ItemCardSale title="Additional fee:" value="0%" />
               <ItemCardSale
                 title="Total committed:"
-                value={`${addComma(divide(poolInfor ? (poolInfor as Array<bigint>)[4].toString() : 0, 6))} (${poolInfor
+                value={`${addComma(divide(poolInfor ? (poolInfor as Array<bigint>)[3].toString() : 0, 6))} (${
+                  poolInfor
                     ? addComma(
-                      multiply(
-                        divide(
-                          divide((poolInfor as Array<bigint>)[4].toString(), 6),
-                          divide((poolInfor as Array<bigint>)[0].toString(), 6),
-                        ).toString(),
-                        '100',
-                      ),
-                      2,
-                    )
+                        multiply(
+                          divide(
+                            divide((poolInfor as Array<bigint>)[3].toString(), 6),
+                            divide((poolInfor as Array<bigint>)[0].toString(), 6),
+                          ).toString(),
+                          '100',
+                        ),
+                        2,
+                      )
                     : 0
-                  }%)`}
+                }%)`}
               />
               <ItemCardSale
                 title="Funds to raise:"
@@ -651,9 +674,7 @@ export const SaleTokenView = () => {
         gap={'52px'}
         px={'12px'}
       >
-        {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
-          BigNumber(0),
-        ) ? (
+        {claimable ? (
           <Box>
             <Image alt="base" src="/images/saleToken/logo-token.png" w="87.74" h="87.74" />
             <Text
@@ -668,8 +689,8 @@ export const SaleTokenView = () => {
               {dayjs().unix() >= Number(endTime as bigint)
                 ? 'now'
                 : ` after ${dayjs(Number(endTime as bigint) * 1000)
-                  .utc()
-                  .format('DD MMM YYYY(hh:mm a)')} UTC`}
+                    .utc()
+                    .format('DD MMM YYYY(hh:mm a)')} UTC`}
             </Text>
             <Flex
               background="#1C1C1E80"
@@ -682,12 +703,7 @@ export const SaleTokenView = () => {
                 Claimable
               </Text>
               <Text fontSize="18px" fontWeight={600} color={'#fff'}>
-                {BigNumber(((offeringAndRefundingAmounts as Array<bigint>)?.[0] || 0).toString()).isGreaterThan(
-                  BigNumber(0),
-                ) && !(userInfo as Array<boolean>)?.[2]
-                  ? addComma(divide((offeringAndRefundingAmounts as Array<bigint>)?.[0].toString() || '0', 18), 6)
-                  : 0}{' '}
-                ETR
+                {addComma(divide((claimable as Array<bigint>).toString() || '0', 18), 6)} ETR
               </Text>
             </Flex>
             <Flex justifyContent="flex-end" mr={'12px'} mt={'10px'}>
@@ -713,7 +729,7 @@ export const SaleTokenView = () => {
                 mt="20px"
                 minW="251px"
                 _disabled={{ bg: '#0052FF', opacity: 0.5 }}
-                isDisabled={!isClaimable}
+                isDisabled={!claimable}
                 isLoading={loadingClaim}
                 onClick={onClaim}
               >
@@ -780,14 +796,14 @@ export const SaleTokenView = () => {
             isMobile
               ? {}
               : {
-                content: '" "',
-                height: '1px',
-                position: 'absolute',
-                bottom: 0,
-                width: '80%',
-                background:
-                  'radial-gradient(circle, rgba(37,37,40,0.8435749299719888) 57%, rgba(12,12,16,0.3561799719887955) 100%);',
-              }
+                  content: '" "',
+                  height: '1px',
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '80%',
+                  background:
+                    'radial-gradient(circle, rgba(37,37,40,0.8435749299719888) 57%, rgba(12,12,16,0.3561799719887955) 100%);',
+                }
           }
         >
           <ItemCardPublicSale
