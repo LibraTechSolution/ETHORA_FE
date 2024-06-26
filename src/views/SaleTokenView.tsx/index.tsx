@@ -81,7 +81,7 @@ export const SaleTokenView = () => {
   const { chain } = useNetwork();
   const [isMobile] = useMediaQuery('(max-width: 768px)');
   const faqRef = useRef<HTMLDivElement>(null);
-  const balance = useBalanceOf(appConfig.USDC_SC as `0x${string}`);
+  const balance = useBalanceOf(appConfig.USDC_SC_MAIN as `0x${string}`);
   const [isOpen, setOpenModal] = useState<boolean>(false);
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [loadingApproved, setLoadingApproved] = useState<boolean>(false);
