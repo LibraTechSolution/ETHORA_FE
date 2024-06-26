@@ -110,7 +110,7 @@ export const SaleTokenView = () => {
     watch: true,
     abi: saleABI,
     address: appConfig.TOKEN_SALE_SC as `0x${string}`,
-    functionName: 'publicTime',
+    functionName: 'startTime',
     enabled: !!appConfig.TOKEN_SALE_SC,
     chainId: +(appConfig.TOKEN_SALE_CHAIN_ID || 0),
   });
