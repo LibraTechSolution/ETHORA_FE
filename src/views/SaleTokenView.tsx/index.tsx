@@ -168,11 +168,11 @@ export const SaleTokenView = () => {
 
   const { data: getAllowance } = useContractRead({
     watch: true,
-    address: appConfig.USDC_SC as `0x${string}`,
+    address: appConfig.USDC_SC_MAIN as `0x${string}`,
     abi: USDC_ABI,
     functionName: 'allowance',
     args: [address as `0x${string}`, appConfig.TOKEN_SALE_SC as `0x${string}`],
-    enabled: !!(address && appConfig.USDC_SC),
+    enabled: !!(address && appConfig.USDC_SC_MAIN),
     chainId: +(appConfig.TOKEN_SALE_CHAIN_ID || 0),
   });
 
@@ -306,7 +306,7 @@ export const SaleTokenView = () => {
       setLoadingApproved(true);
 
       const config = await prepareWriteContract({
-        address: appConfig.USDC_SC as `0x${string}`,
+        address: appConfig.USDC_SC_MAIN as `0x${string}`,
         abi: USDC_ABI,
         functionName: 'approve',
         args: [appConfig.TOKEN_SALE_SC as `0x${string}`, BigInt(2 ** 256 / 1.1)],
