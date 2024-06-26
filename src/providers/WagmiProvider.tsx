@@ -51,7 +51,7 @@ export const baseSepolia = defineChain({
 });
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [...(process.env.NEXT_PUBLIC_INCLUDE_TESTNET === 'true' ? [baseSepolia] : [base, mainnet])],
+  [...(process.env.NEXT_PUBLIC_INCLUDE_TESTNET === 'true' ? [baseSepolia, base] : [base, mainnet])],
   [publicProvider()],
 );
 
