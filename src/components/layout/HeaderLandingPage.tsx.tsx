@@ -167,6 +167,14 @@ export const HeaderLanding = () => {
                       </MenuItem>
                       <MenuItem background="transparent">
                         <Link
+                          href="/sale-token"
+                          className={`w-full text-center ${currentRoute === '/sale-token' ? 'text-[#fff]' : ''}`}
+                        >
+                          Token Sale
+                        </Link>
+                      </MenuItem>
+                      <MenuItem background="transparent">
+                        <Link
                           href="https://docs.ethora.io"
                           target="_blank"
                           className={`w-full text-center ${currentRoute === '/docs' ? 'text-[#fff]' : ''}`}
@@ -276,11 +284,11 @@ export const HeaderLanding = () => {
                 Earn
               </Link>
             </Center>
-            {/* <Center justifyContent={'flex-start'}>
+            <Center justifyContent={'flex-start'}>
               <Link href="/sale-token" className={currentRoute === '/sale-token' ? activeStyle : nonActiveStyle}>
                 Token sale
               </Link>
-            </Center> */}
+            </Center>
             <Center justifyContent={'flex-start'}>
               <Link
                 href="/stats"
