@@ -110,7 +110,7 @@ export const SaleTokenView = () => {
     watch: true,
     abi: saleABI,
     address: appConfig.TOKEN_SALE_SC as `0x${string}`,
-    functionName: 'startTime',
+    functionName: 'publicTime',
     enabled: !!appConfig.TOKEN_SALE_SC,
     chainId: +(appConfig.TOKEN_SALE_CHAIN_ID || 0),
   });
@@ -185,16 +185,8 @@ export const SaleTokenView = () => {
   }, [startTime, endTime, isWhitelisted, publicTime]);
 
   const startAt = useMemo(() => {
-    if (address) {
-      if (isWhitelisted) {
-        return Number(startTime as bigint);
-      } else {
-        return Number(publicTime as bigint);
-      }
-    } else {
-      return Number(publicTime as bigint);
-    }
-  }, [startTime, endTime, isWhitelisted, publicTime, address]);
+    return Number(startTime as bigint);
+  }, [startTime]);
 
   const isClaimable = useMemo(() => {
     return (
@@ -455,6 +447,19 @@ export const SaleTokenView = () => {
     }
   };
 
+  const buyETR = () => {
+    if (isBuy) {
+      setOpenModal(true);
+    } else {
+      toast({
+        position: 'top',
+        render: ({ onClose }) => (
+          <ToastLayout title="You are not in Whitelist!" status={Status.ERROR} close={onClose} />
+        ),
+      });
+    }
+  };
+
   return (
     <Flex flexDirection={'column'} height="100%" w={'100%'}>
       <Box
@@ -630,8 +635,7 @@ export const SaleTokenView = () => {
                   _disabled={{ bg: '#0052FF', opacity: 0.5 }}
                   padding={'8px 16px'}
                   width={'100%'}
-                  isDisabled={!isBuy}
-                  onClick={() => setOpenModal(true)}
+                  onClick={buyETR}
                 >
                   Buy ETR
                 </Button>
